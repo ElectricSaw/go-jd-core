@@ -1,5 +1,7 @@
 package java
 
+import "bitbucket.org/coontec/javaClass/java/attribute"
+
 type ClassFile struct {
 	MajorVersion       int
 	MinorVersion       int
@@ -7,7 +9,7 @@ type ClassFile struct {
 	InternalTypeName   string
 	SuperTypeName      string
 	InterfaceTypeNames []string
-	Field              []interface{}          // []Field
-	Method             []interface{}          // []Method
-	Attributes         map[string]interface{} // map[string]Attribute
+	Field              []Field
+	Method             []Method
+	Attributes         map[string]attribute.Attribute
 }
