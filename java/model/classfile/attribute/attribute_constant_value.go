@@ -1,6 +1,8 @@
 package attribute
 
-import "bitbucket.org/coontec/javaClass/java/constant"
+import (
+	"bitbucket.org/coontec/javaClass/java/model/classfile/constant"
+)
 
 func NewAttributeConstantValue(constantValue constant.ConstantValue) AttributeConstantValue {
 	return AttributeConstantValue{constantValue}

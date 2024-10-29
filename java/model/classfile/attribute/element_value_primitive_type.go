@@ -1,6 +1,8 @@
 package attribute
 
-import "bitbucket.org/coontec/javaClass/java/constant"
+import (
+	"bitbucket.org/coontec/javaClass/java/model/classfile/constant"
+)
 
 func NewElementValuePrimitiveType(type_ int, constValue constant.ConstantValue) ElementValuePrimitiveType {
 	return ElementValuePrimitiveType{

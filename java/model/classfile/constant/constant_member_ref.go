@@ -9,19 +9,19 @@ func NewConstantMemberRef(classIndex int, nameAndTypeIndex int) ConstantMemberRe
 }
 
 type ConstantMemberRef struct {
-	tag              ACC
+	tag              TAG
 	classIndex       int
 	nameAndTypeIndex int
 }
 
-func (c *ConstantMemberRef) Tag() ACC {
+func (c ConstantMemberRef) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantMemberRef) ClassIndex() int {
+func (c ConstantMemberRef) ClassIndex() int {
 	return c.classIndex
 }
 
-func (c *ConstantMemberRef) NameAndTypeIndex() int {
+func (c ConstantMemberRef) NameAndTypeIndex() int {
 	return c.nameAndTypeIndex
 }

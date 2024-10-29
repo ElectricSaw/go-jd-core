@@ -8,14 +8,14 @@ func NewConstantMethodType(descriptorIndex int) ConstantMethodType {
 }
 
 type ConstantMethodType struct {
-	tag             ACC
+	tag             TAG
 	descriptorIndex int
 }
 
-func (c *ConstantMethodType) Tag() ACC {
+func (c ConstantMethodType) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantMethodType) DescriptorIndex() int {
+func (c ConstantMethodType) DescriptorIndex() int {
 	return c.descriptorIndex
 }

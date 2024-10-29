@@ -1,9 +1,9 @@
 package constant
 
-type ACC byte
+type TAG byte
 
 const (
-	ConstTagUnknown            ACC = 0
+	ConstTagUnknown            TAG = 0
 	ConstTagUtf8                   = 1
 	ConstTagInteger                = 3
 	ConstTagFloat                  = 4
@@ -22,5 +22,5 @@ const (
 )
 
 type Constant interface {
-	Tag() ACC
+	Tag() TAG
 }

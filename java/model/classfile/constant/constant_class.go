@@ -8,14 +8,14 @@ func NewConstantClass(nameIndex int) ConstantClass {
 }
 
 type ConstantClass struct {
-	tag       ACC
+	tag       TAG
 	nameIndex int
 }
 
-func (c *ConstantClass) Tag() ACC {
+func (c ConstantClass) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantClass) NameIndex() int {
+func (c ConstantClass) NameIndex() int {
 	return c.nameIndex
 }

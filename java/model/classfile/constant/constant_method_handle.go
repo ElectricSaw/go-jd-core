@@ -9,19 +9,19 @@ func NewConstantMethodHandle(referenceKind int, referenceIndex int) ConstantMeth
 }
 
 type ConstantMethodHandle struct {
-	tag            ACC
+	tag            TAG
 	referenceKind  int
 	referenceIndex int
 }
 
-func (c *ConstantMethodHandle) Tag() ACC {
+func (c ConstantMethodHandle) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantMethodHandle) ReferenceKind() int {
+func (c ConstantMethodHandle) ReferenceKind() int {
 	return c.referenceKind
 }
 
-func (c *ConstantMethodHandle) ReferenceIndex() int {
+func (c ConstantMethodHandle) ReferenceIndex() int {
 	return c.referenceIndex
 }

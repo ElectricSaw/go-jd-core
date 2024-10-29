@@ -8,16 +8,16 @@ func NewConstantDouble(value float64) ConstantDouble {
 }
 
 type ConstantDouble struct {
-	tag   ACC
+	tag   TAG
 	value float64
 }
 
-func (c *ConstantDouble) Tag() ACC {
+func (c ConstantDouble) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantDouble) Value() float64 {
+func (c ConstantDouble) Value() float64 {
 	return c.value
 }
 
-func (c *ConstantDouble) constantValueIgnoreFunc() {}
+func (c ConstantDouble) constantValueIgnoreFunc() {}

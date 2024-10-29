@@ -9,19 +9,19 @@ func NewConstantNameAndType(nameIndex int, descriptorIndex int) ConstantNameAndT
 }
 
 type ConstantNameAndType struct {
-	tag             ACC
+	tag             TAG
 	nameIndex       int
 	descriptorIndex int
 }
 
-func (c *ConstantNameAndType) Tag() ACC {
+func (c ConstantNameAndType) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantNameAndType) NameIndex() int {
+func (c ConstantNameAndType) NameIndex() int {
 	return c.nameIndex
 }
 
-func (c *ConstantNameAndType) DescriptorIndex() int {
+func (c ConstantNameAndType) DescriptorIndex() int {
 	return c.descriptorIndex
 }

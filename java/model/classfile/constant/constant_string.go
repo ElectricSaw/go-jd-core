@@ -8,14 +8,14 @@ func NewConstantString(stringIndex int) ConstantString {
 }
 
 type ConstantString struct {
-	tag         ACC
+	tag         TAG
 	stringIndex int
 }
 
-func (c *ConstantString) Tag() ACC {
+func (c ConstantString) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantString) StringIndex() int {
+func (c ConstantString) StringIndex() int {
 	return c.stringIndex
 }

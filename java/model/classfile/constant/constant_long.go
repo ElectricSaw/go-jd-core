@@ -8,16 +8,16 @@ func NewConstantLong(value int64) ConstantLong {
 }
 
 type ConstantLong struct {
-	tag   ACC
+	tag   TAG
 	value int64
 }
 
-func (c *ConstantLong) Tag() ACC {
+func (c ConstantLong) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantLong) Value() int64 {
+func (c ConstantLong) Value() int64 {
 	return c.value
 }
 
-func (c *ConstantLong) constantValueIgnoreFunc() {}
+func (c ConstantLong) constantValueIgnoreFunc() {}

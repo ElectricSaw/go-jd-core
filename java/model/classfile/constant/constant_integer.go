@@ -8,16 +8,16 @@ func NewConstantInteger(value int32) ConstantInteger {
 }
 
 type ConstantInteger struct {
-	tag   ACC
+	tag   TAG
 	value int32
 }
 
-func (c *ConstantInteger) Tag() ACC {
+func (c ConstantInteger) Tag() TAG {
 	return c.tag
 }
 
-func (c *ConstantInteger) Value() int32 {
+func (c ConstantInteger) Value() int32 {
 	return c.value
 }
 
-func (c *ConstantInteger) constantValueIgnoreFunc() {}
+func (c ConstantInteger) constantValueIgnoreFunc() {}
