@@ -10,7 +10,7 @@ type ElementValueClassInfo struct {
 	classInfo string
 }
 
-func (e ElementValueClassInfo) ClassInfo() string {
+func (e *ElementValueClassInfo) ClassInfo() string {
 	return e.classInfo
 }
 

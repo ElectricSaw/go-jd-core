@@ -10,7 +10,7 @@ type ElementValueAnnotationValue struct {
 	annotationValue Annotation
 }
 
-func (e ElementValueAnnotationValue) AnnotationValue() Annotation {
+func (e *ElementValueAnnotationValue) AnnotationValue() Annotation {
 	return e.annotationValue
 }
 

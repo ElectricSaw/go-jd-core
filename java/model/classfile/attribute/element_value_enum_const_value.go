@@ -12,11 +12,11 @@ type ElementValueEnumConstValue struct {
 	constName  string
 }
 
-func (e ElementValueEnumConstValue) Descriptor() string {
+func (e *ElementValueEnumConstValue) Descriptor() string {
 	return e.descriptor
 }
 
-func (e ElementValueEnumConstValue) ConstName() string {
+func (e *ElementValueEnumConstValue) ConstName() string {
 	return e.constName
 }
 

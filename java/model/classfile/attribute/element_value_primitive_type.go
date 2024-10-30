@@ -19,11 +19,11 @@ type ElementValuePrimitiveType struct {
 	constValue constant.ConstantValue
 }
 
-func (e ElementValuePrimitiveType) Type() int {
+func (e *ElementValuePrimitiveType) Type() int {
 	return e.type_
 }
 
-func (e ElementValuePrimitiveType) ConstValue() constant.ConstantValue {
+func (e *ElementValuePrimitiveType) ConstValue() constant.ConstantValue {
 	return e.constValue
 }
 

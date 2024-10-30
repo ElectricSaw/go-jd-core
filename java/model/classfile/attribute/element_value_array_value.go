@@ -10,7 +10,7 @@ type ElementValueArrayValue struct {
 	values []ElementValue
 }
 
-func (e ElementValueArrayValue) Values() []ElementValue {
+func (e *ElementValueArrayValue) Values() []ElementValue {
 	return e.values
 }
 
