@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeMethodParameters(parameters []MethodParameter) AttributeMethodParameters {
-	return AttributeMethodParameters{parameters}
+func NewAttributeMethodParameters(parameters []MethodParameter) *AttributeMethodParameters {
+	return &AttributeMethodParameters{parameters}
 }
 
 type AttributeMethodParameters struct {

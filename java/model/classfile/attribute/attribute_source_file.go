@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeSourceFile(sourceFile string) AttributeSourceFile {
-	return AttributeSourceFile{sourceFile}
+func NewAttributeSourceFile(sourceFile string) *AttributeSourceFile {
+	return &AttributeSourceFile{sourceFile}
 }
 
 type AttributeSourceFile struct {

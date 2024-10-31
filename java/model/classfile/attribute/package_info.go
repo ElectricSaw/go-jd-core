@@ -1,7 +1,7 @@
 package attribute
 
-func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) PackageInfo {
-	return PackageInfo{internalName, flags, moduleInfoNames}
+func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) *PackageInfo {
+	return &PackageInfo{internalName, flags, moduleInfoNames}
 }
 
 type PackageInfo struct {

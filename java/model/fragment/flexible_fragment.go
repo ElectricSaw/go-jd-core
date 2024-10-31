@@ -5,45 +5,46 @@ import (
 	"strings"
 )
 
-func NewFlexibleFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) FlexibleFragment {
-	return FlexibleFragment{minimalLineCount, maximalLineCount, lineCount, lineCount, weight, label}
+func NewFlexibleFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *FlexibleFragment {
+	return &FlexibleFragment{
+		MinimalLineCount: minimalLineCount,
+		MaximalLineCount: maximalLineCount,
+		InitialLineCount: lineCount,
+		LineCount:        lineCount,
+		Weight:           weight,
+		Label:            label,
+	}
 }
 
 type IFlexibleFragment interface {
-	LineCount() int
-	SetLineCount(lineCount int)
-	IncLineCount(force bool) bool
-	DecLineCount(force bool) bool
+	GetLineCount() int
+	flexibleFragmentIgnore()
 }
 
 type FlexibleFragment struct {
 	MinimalLineCount int
 	MaximalLineCount int
 	InitialLineCount int
-	lineCount        int
+	LineCount        int
 	Weight           int
 	Label            string
 }
 
-func (f *FlexibleFragment) LineCount() int {
-	return f.lineCount
-}
-
-func (f *FlexibleFragment) SetLineCount(lineCount int) {
-	f.lineCount = lineCount
+func (f *FlexibleFragment) GetLineCount() int {
+	return f.LineCount
 }
 
 func (f *FlexibleFragment) IncLineCount(force bool) bool {
-	if f.lineCount < f.MaximalLineCount {
-		f.lineCount++
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount++
 		return true
 	}
 	return false
 }
 
 func (f *FlexibleFragment) DecLineCount(force bool) bool {
-	if f.lineCount > f.MinimalLineCount {
-		f.lineCount--
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount--
 		return true
 	}
 	return false
@@ -70,3 +71,5 @@ func (f *FlexibleFragment) String() string {
 
 	return msg.String()
 }
+
+func (f *FlexibleFragment) flexibleFragmentIgnore() {}

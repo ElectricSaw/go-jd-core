@@ -6,9 +6,9 @@ var StartMovableTypeBlock = NewStartMovableJavaBlockFragment(1)
 var StartMovableFieldBlock = NewStartMovableJavaBlockFragment(2)
 var StartMovableMethodBlock = NewStartMovableJavaBlockFragment(3)
 
-func NewStartMovableJavaBlockFragment(typ int) StartMovableJavaBlockFragment {
-	return StartMovableJavaBlockFragment{
-		StartMovableBlockFragment: fragment.NewStartMovableBlockFragment(typ),
+func NewStartMovableJavaBlockFragment(typ int) *StartMovableJavaBlockFragment {
+	return &StartMovableJavaBlockFragment{
+		StartMovableBlockFragment: *fragment.NewStartMovableBlockFragment(typ),
 	}
 }
 

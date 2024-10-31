@@ -9,8 +9,8 @@ var EndParametersBlock = NewEndBlockToken(")")
 var EndResourcesBlock = NewEndBlockToken(")")
 var EndDeclarationOrStatementBlock = NewEndBlockToken("")
 
-func NewEndBlockToken(text string) EndBlockToken {
-	return EndBlockToken{text}
+func NewEndBlockToken(text string) *EndBlockToken {
+	return &EndBlockToken{text}
 }
 
 type EndBlockToken struct {

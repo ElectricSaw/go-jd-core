@@ -1,8 +1,8 @@
 package fragment
 
-func NewEndMovableBlockFragment() EndMovableBlockFragment {
-	return EndMovableBlockFragment{
-		FlexibleFragment: NewFlexibleFragment(0, 0, 0, 0, "End movable block"),
+func NewEndMovableBlockFragment() *EndMovableBlockFragment {
+	return &EndMovableBlockFragment{
+		FlexibleFragment: *NewFlexibleFragment(0, 0, 0, 0, "End movable block"),
 	}
 }
 

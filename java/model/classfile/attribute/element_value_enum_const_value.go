@@ -1,7 +1,7 @@
 package attribute
 
-func NewElementValueEnumConstValue(descriptor string, constName string) ElementValueEnumConstValue {
-	return ElementValueEnumConstValue{
+func NewElementValueEnumConstValue(descriptor string, constName string) *ElementValueEnumConstValue {
+	return &ElementValueEnumConstValue{
 		descriptor: descriptor,
 		constName:  constName,
 	}

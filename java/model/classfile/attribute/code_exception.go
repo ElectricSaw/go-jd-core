@@ -1,7 +1,7 @@
 package attribute
 
-func NewCodeException(index int, startPc int, endPc int, handlerPc int, catchType int) CodeException {
-	return CodeException{index, startPc, endPc, handlerPc, catchType}
+func NewCodeException(index int, startPc int, endPc int, handlerPc int, catchType int) *CodeException {
+	return &CodeException{index, startPc, endPc, handlerPc, catchType}
 }
 
 type CodeException struct {

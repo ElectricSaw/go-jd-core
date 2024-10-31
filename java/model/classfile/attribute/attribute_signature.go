@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeSignature(signature string) AttributeSignature {
-	return AttributeSignature{signature: signature}
+func NewAttributeSignature(signature string) *AttributeSignature {
+	return &AttributeSignature{signature: signature}
 }
 
 type AttributeSignature struct {

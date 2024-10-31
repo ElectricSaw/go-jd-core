@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeBootstrapMethods(bootstrapMethod []BootstrapMethod) AttributeBootstrapMethods {
-	return AttributeBootstrapMethods{bootstrapMethod: bootstrapMethod}
+func NewAttributeBootstrapMethods(bootstrapMethod []BootstrapMethod) *AttributeBootstrapMethods {
+	return &AttributeBootstrapMethods{bootstrapMethod: bootstrapMethod}
 }
 
 type AttributeBootstrapMethods struct {

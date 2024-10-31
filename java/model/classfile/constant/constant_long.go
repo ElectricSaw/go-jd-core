@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantLong(value int64) ConstantLong {
-	return ConstantLong{
+func NewConstantLong(value int64) *ConstantLong {
+	return &ConstantLong{
 		tag:   ConstTagLong,
 		value: value,
 	}

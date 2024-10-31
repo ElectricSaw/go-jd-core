@@ -7,8 +7,8 @@ var StartJavaDocToken = NewStartMarkerToken(JavaDocToken)
 var StartErrorToken = NewStartMarkerToken(ErrorToken)
 var StartImportStatementsToken = NewStartMarkerToken(ImportStatementsToken)
 
-func NewStartMarkerToken(typ int) StartMarkerToken {
-	return StartMarkerToken{typ}
+func NewStartMarkerToken(typ int) *StartMarkerToken {
+	return &StartMarkerToken{typ}
 }
 
 type StartMarkerToken struct {

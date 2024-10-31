@@ -2,8 +2,8 @@ package token
 
 import "fmt"
 
-func NewNumericConstantToken(text string) NumericConstantToken {
-	return NumericConstantToken{text}
+func NewNumericConstantToken(text string) *NumericConstantToken {
+	return &NumericConstantToken{text}
 }
 
 type NumericConstantToken struct {

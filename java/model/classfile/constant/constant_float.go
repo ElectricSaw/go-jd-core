@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantFloat(value float32) ConstantFloat {
-	return ConstantFloat{
+func NewConstantFloat(value float32) *ConstantFloat {
+	return &ConstantFloat{
 		tag:   ConstTagFloat,
 		value: value,
 	}

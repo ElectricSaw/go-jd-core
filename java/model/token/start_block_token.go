@@ -9,8 +9,8 @@ var StartParametersBlock = NewStartBlockToken("(")
 var StartResourcesBlock = NewStartBlockToken("(")
 var StartDeclarationOrStatementBlock = NewStartBlockToken("")
 
-func NewStartBlockToken(text string) StartBlockToken {
-	return StartBlockToken{text}
+func NewStartBlockToken(text string) *StartBlockToken {
+	return &StartBlockToken{text}
 }
 
 type StartBlockToken struct {

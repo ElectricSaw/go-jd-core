@@ -4,8 +4,8 @@ import (
 	"bitbucket.org/coontec/javaClass/java/model/classfile/attribute"
 )
 
-func NewMethod(accessFlags int, name string, descriptor string, attributes map[string]attribute.Attribute, constants ConstantPool) Method {
-	return Method{accessFlags: accessFlags, name: name, descriptor: descriptor, attributes: attributes, constants: constants}
+func NewMethod(accessFlags int, name string, descriptor string, attributes map[string]attribute.Attribute, constants ConstantPool) *Method {
+	return &Method{accessFlags: accessFlags, name: name, descriptor: descriptor, attributes: attributes, constants: constants}
 }
 
 type Method struct {

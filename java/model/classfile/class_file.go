@@ -4,8 +4,8 @@ import (
 	"bitbucket.org/coontec/javaClass/java/model/classfile/attribute"
 )
 
-func NewClassFile(majorVersion int, minorVersion int, accessFlags int, internalTypeName string, superTypeName string, interfaceTypeNames []string, field []Field, method []Method, attributes map[string]attribute.Attribute) ClassFile {
-	return ClassFile{
+func NewClassFile(majorVersion int, minorVersion int, accessFlags int, internalTypeName string, superTypeName string, interfaceTypeNames []string, field []Field, method []Method, attributes map[string]attribute.Attribute) *ClassFile {
+	return &ClassFile{
 		majorVersion:       majorVersion,
 		minorVersion:       minorVersion,
 		accessFlags:        accessFlags,

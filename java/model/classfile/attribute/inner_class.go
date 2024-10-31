@@ -1,7 +1,7 @@
 package attribute
 
-func NewInnerClass(innerTypeName string, outerTypeName string, innerName string, innerAccessFlags int) InnerClass {
-	return InnerClass{innerTypeName, outerTypeName, innerName, innerAccessFlags}
+func NewInnerClass(innerTypeName string, outerTypeName string, innerName string, innerAccessFlags int) *InnerClass {
+	return &InnerClass{innerTypeName, outerTypeName, innerName, innerAccessFlags}
 }
 
 type InnerClass struct {

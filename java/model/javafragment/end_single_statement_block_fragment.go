@@ -2,13 +2,13 @@ package javafragment
 
 import "bitbucket.org/coontec/javaClass/java/model/fragment"
 
-func NewEndSingleStatementBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, start *StartSingleStatementBlockFragment) EndSingleStatementBlockFragment {
-	f := EndSingleStatementBlockFragment{
-		EndFlexibleBlockFragment: fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+func NewEndSingleStatementBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, start *StartSingleStatementBlockFragment) *EndSingleStatementBlockFragment {
+	f := &EndSingleStatementBlockFragment{
+		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
 		start:                    start,
 	}
 
-	f.start.SetEndSingleStatementBlockFragment(&f)
+	f.start.SetEndSingleStatementBlockFragment(f)
 
 	return f
 }
@@ -24,12 +24,12 @@ func (f *EndSingleStatementBlockFragment) StartSingleStatementBlockFragment() *S
 }
 
 func (f *EndSingleStatementBlockFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount++
 
 		if !force {
-			if f.start.LineCount() == 0 {
-				f.start.SetLineCount(1)
+			if f.start.LineCount == 0 {
+				f.start.LineCount = 1
 			}
 		}
 
@@ -39,12 +39,12 @@ func (f *EndSingleStatementBlockFragment) IncLineCount(force bool) bool {
 }
 
 func (f *EndSingleStatementBlockFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount--
 
 		if !force {
-			if f.LineCount() == 0 {
-				f.start.SetLineCount(0)
+			if f.LineCount == 0 {
+				f.start.LineCount = 0
 			}
 		}
 

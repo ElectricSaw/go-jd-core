@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeAnnotationDefault(defaultValue ElementValue) AttributeAnnotationDefault {
-	return AttributeAnnotationDefault{defaultValue: defaultValue}
+func NewAttributeAnnotationDefault(defaultValue ElementValue) *AttributeAnnotationDefault {
+	return &AttributeAnnotationDefault{defaultValue: defaultValue}
 }
 
 type AttributeAnnotationDefault struct {

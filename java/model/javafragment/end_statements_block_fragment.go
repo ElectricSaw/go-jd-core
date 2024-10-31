@@ -2,12 +2,12 @@ package javafragment
 
 import "bitbucket.org/coontec/javaClass/java/model/fragment"
 
-func NewEndStatementsBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, group *StartStatementsBlockFragmentGroup) EndStatementsBlockFragment {
-	f := EndStatementsBlockFragment{
-		EndFlexibleBlockFragment: fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+func NewEndStatementsBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, group *StartStatementsBlockFragmentGroup) *EndStatementsBlockFragment {
+	f := &EndStatementsBlockFragment{
+		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
 		Group:                    group,
 	}
-	f.Group.add(&f)
+	f.Group.add(f)
 	return f
 }
 

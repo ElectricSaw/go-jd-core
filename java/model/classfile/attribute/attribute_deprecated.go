@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeDeprecated() AttributeDeprecated {
-	return AttributeDeprecated{}
+func NewAttributeDeprecated() *AttributeDeprecated {
+	return &AttributeDeprecated{}
 }
 
 type AttributeDeprecated struct {

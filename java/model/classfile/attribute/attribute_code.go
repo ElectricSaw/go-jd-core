@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeCode(maxStack int, maxLocals int, code []byte, exceptionTable []CodeException, attribute map[string]Attribute) AttributeCode {
-	return AttributeCode{maxStack, maxLocals, code, exceptionTable, attribute}
+func NewAttributeCode(maxStack int, maxLocals int, code []byte, exceptionTable []CodeException, attribute map[string]Attribute) *AttributeCode {
+	return &AttributeCode{maxStack, maxLocals, code, exceptionTable, attribute}
 }
 
 type AttributeCode struct {

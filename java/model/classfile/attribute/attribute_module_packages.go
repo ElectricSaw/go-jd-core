@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeModulePackages(packageNames []string) AttributeModulePackages {
-	return AttributeModulePackages{packageNames: packageNames}
+func NewAttributeModulePackages(packageNames []string) *AttributeModulePackages {
+	return &AttributeModulePackages{packageNames: packageNames}
 }
 
 type AttributeModulePackages struct {

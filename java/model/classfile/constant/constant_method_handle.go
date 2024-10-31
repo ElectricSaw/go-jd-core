@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantMethodHandle(referenceKind int, referenceIndex int) ConstantMethodHandle {
-	return ConstantMethodHandle{
+func NewConstantMethodHandle(referenceKind int, referenceIndex int) *ConstantMethodHandle {
+	return &ConstantMethodHandle{
 		tag:            ConstTagMethodHandle,
 		referenceKind:  referenceKind,
 		referenceIndex: referenceIndex,

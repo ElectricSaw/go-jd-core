@@ -4,8 +4,8 @@ import (
 	"bitbucket.org/coontec/javaClass/java/model/classfile/constant"
 )
 
-func NewAttributeModuleMainClass(mainClass constant.ConstantClass) AttributeModuleMainClass {
-	return AttributeModuleMainClass{mainClass: mainClass}
+func NewAttributeModuleMainClass(mainClass constant.ConstantClass) *AttributeModuleMainClass {
+	return &AttributeModuleMainClass{mainClass: mainClass}
 }
 
 type AttributeModuleMainClass struct {

@@ -1,7 +1,7 @@
 package attribute
 
-func NewModuleInfo(name string, flags int, version string) ModuleInfo {
-	return ModuleInfo{name: name, flags: flags, version: version}
+func NewModuleInfo(name string, flags int, version string) *ModuleInfo {
+	return &ModuleInfo{name: name, flags: flags, version: version}
 }
 
 type ModuleInfo struct {

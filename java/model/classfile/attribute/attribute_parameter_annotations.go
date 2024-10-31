@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeParameterAnnotations(parameterAnnotations []Annotations) AttributeParameterAnnotations {
-	return AttributeParameterAnnotations{parameterAnnotations: parameterAnnotations}
+func NewAttributeParameterAnnotations(parameterAnnotations []Annotations) *AttributeParameterAnnotations {
+	return &AttributeParameterAnnotations{parameterAnnotations: parameterAnnotations}
 }
 
 type AttributeParameterAnnotations struct {

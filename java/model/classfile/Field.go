@@ -4,8 +4,8 @@ import (
 	"bitbucket.org/coontec/javaClass/java/model/classfile/attribute"
 )
 
-func NewField(accessFlags int, name string, descriptor string, attributes map[string]attribute.Attribute) Field {
-	return Field{accessFlags: accessFlags, name: name, descriptor: descriptor, attributes: attributes}
+func NewField(accessFlags int, name string, descriptor string, attributes map[string]attribute.Attribute) *Field {
+	return &Field{accessFlags: accessFlags, name: name, descriptor: descriptor, attributes: attributes}
 }
 
 type Field struct {

@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantNameAndType(nameIndex int, descriptorIndex int) ConstantNameAndType {
-	return ConstantNameAndType{
+func NewConstantNameAndType(nameIndex int, descriptorIndex int) *ConstantNameAndType {
+	return &ConstantNameAndType{
 		tag:             ConstTagNameAndType,
 		nameIndex:       nameIndex,
 		descriptorIndex: descriptorIndex,

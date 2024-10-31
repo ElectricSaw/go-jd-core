@@ -2,8 +2,8 @@ package token
 
 import "fmt"
 
-func NewKeywordToken(keyword string) KeywordToken {
-	return KeywordToken{keyword}
+func NewKeywordToken(keyword string) *KeywordToken {
+	return &KeywordToken{keyword}
 }
 
 type KeywordToken struct {

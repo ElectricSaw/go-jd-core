@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeLocalVariableTypeTable(localVariableTypeTable []LocalVariableType) AttributeLocalVariableTypeTable {
-	return AttributeLocalVariableTypeTable{localVariableTypeTable: localVariableTypeTable}
+func NewAttributeLocalVariableTypeTable(localVariableTypeTable []LocalVariableType) *AttributeLocalVariableTypeTable {
+	return &AttributeLocalVariableTypeTable{localVariableTypeTable: localVariableTypeTable}
 }
 
 type AttributeLocalVariableTypeTable struct {

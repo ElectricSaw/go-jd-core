@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantDouble(value float64) ConstantDouble {
-	return ConstantDouble{
+func NewConstantDouble(value float64) *ConstantDouble {
+	return &ConstantDouble{
 		tag:   ConstTagDouble,
 		value: value,
 	}

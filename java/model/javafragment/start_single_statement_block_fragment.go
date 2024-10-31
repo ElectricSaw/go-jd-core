@@ -2,9 +2,9 @@ package javafragment
 
 import "bitbucket.org/coontec/javaClass/java/model/fragment"
 
-func NewStartSingleStatementBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) StartSingleStatementBlockFragment {
-	return StartSingleStatementBlockFragment{
-		StartFlexibleBlockFragment: fragment.NewStartFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+func NewStartSingleStatementBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartSingleStatementBlockFragment {
+	return &StartSingleStatementBlockFragment{
+		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
 	}
 }
 
@@ -23,12 +23,12 @@ func (f *StartSingleStatementBlockFragment) SetEndSingleStatementBlockFragment(e
 }
 
 func (f *StartSingleStatementBlockFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount {
-		f.SetLineCount(f.LineCount() + 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount++
 
 		if !force {
-			if f.end.LineCount() == 0 {
-				f.end.SetLineCount(1)
+			if f.end.LineCount == 0 {
+				f.end.LineCount = 1
 			}
 		}
 
@@ -38,12 +38,12 @@ func (f *StartSingleStatementBlockFragment) IncLineCount(force bool) bool {
 }
 
 func (f *StartSingleStatementBlockFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount--
 
 		if !force {
-			if f.LineCount() == 1 {
-				f.end.SetLineCount(1)
+			if f.LineCount == 1 {
+				f.end.LineCount = 1
 			}
 		}
 

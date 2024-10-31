@@ -4,8 +4,8 @@ import (
 	"bitbucket.org/coontec/javaClass/java/model/classfile/constant"
 )
 
-func NewElementValuePrimitiveType(type_ int, constValue constant.ConstantValue) ElementValuePrimitiveType {
-	return ElementValuePrimitiveType{
+func NewElementValuePrimitiveType(type_ int, constValue constant.ConstantValue) *ElementValuePrimitiveType {
+	return &ElementValuePrimitiveType{
 		type_:      type_,
 		constValue: constValue,
 	}

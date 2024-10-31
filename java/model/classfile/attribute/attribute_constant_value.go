@@ -4,8 +4,8 @@ import (
 	"bitbucket.org/coontec/javaClass/java/model/classfile/constant"
 )
 
-func NewAttributeConstantValue(constantValue constant.ConstantValue) AttributeConstantValue {
-	return AttributeConstantValue{constantValue}
+func NewAttributeConstantValue(constantValue constant.ConstantValue) *AttributeConstantValue {
+	return &AttributeConstantValue{constantValue}
 }
 
 type AttributeConstantValue struct {

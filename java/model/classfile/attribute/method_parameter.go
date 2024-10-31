@@ -1,7 +1,7 @@
 package attribute
 
-func NewMethodParameter(name string, access int) MethodParameter {
-	return MethodParameter{name: name, access: access}
+func NewMethodParameter(name string, access int) *MethodParameter {
+	return &MethodParameter{name: name, access: access}
 }
 
 type MethodParameter struct {

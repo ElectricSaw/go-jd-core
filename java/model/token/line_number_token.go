@@ -8,8 +8,8 @@ const (
 
 var UnknownLineNumber = NewLineNumberToken(UnknownLineNumberToken)
 
-func NewLineNumberToken(lineNumber int) LineNumberToken {
-	return LineNumberToken{lineNumber}
+func NewLineNumberToken(lineNumber int) *LineNumberToken {
+	return &LineNumberToken{lineNumber}
 }
 
 type LineNumberToken struct {

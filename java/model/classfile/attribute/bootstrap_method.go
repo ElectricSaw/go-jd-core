@@ -1,7 +1,7 @@
 package attribute
 
-func NewBootstrapMethod(bootstrapMethodRef int, bootstrapArguments []int) BootstrapMethod {
-	return BootstrapMethod{
+func NewBootstrapMethod(bootstrapMethodRef int, bootstrapArguments []int) *BootstrapMethod {
+	return &BootstrapMethod{
 		bootstrapMethodRef: bootstrapMethodRef,
 		bootstrapArguments: bootstrapArguments,
 	}

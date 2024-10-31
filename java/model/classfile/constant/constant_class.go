@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantClass(nameIndex int) ConstantClass {
-	return ConstantClass{
+func NewConstantClass(nameIndex int) *ConstantClass {
+	return &ConstantClass{
 		tag:       ConstTagClass,
 		nameIndex: nameIndex,
 	}

@@ -1,8 +1,8 @@
 package fragment
 
-func NewEndFlexibleBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) EndFlexibleBlockFragment {
-	return EndFlexibleBlockFragment{
-		FlexibleFragment: NewFlexibleFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+func NewEndFlexibleBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *EndFlexibleBlockFragment {
+	return &EndFlexibleBlockFragment{
+		FlexibleFragment: *NewFlexibleFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
 	}
 }
 

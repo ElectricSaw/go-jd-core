@@ -33,8 +33,8 @@ var VarArgs = NewTextToken("... ")
 var VerticalLine = NewTextToken("|")
 var Exclamation = NewTextToken("!")
 
-func NewTextToken(text string) TextToken {
-	return TextToken{text}
+func NewTextToken(text string) *TextToken {
+	return &TextToken{text}
 }
 
 type TextToken struct {

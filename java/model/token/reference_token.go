@@ -2,8 +2,8 @@ package token
 
 import "fmt"
 
-func NewReferenceToken(typ int, internalTypeName string, name string, descriptor string, ownerInternalName string) ReferenceToken {
-	return ReferenceToken{
+func NewReferenceToken(typ int, internalTypeName string, name string, descriptor string, ownerInternalName string) *ReferenceToken {
+	return &ReferenceToken{
 		DeclarationToken:  NewDeclarationToken(typ, internalTypeName, name, descriptor),
 		ownerInternalName: ownerInternalName,
 	}

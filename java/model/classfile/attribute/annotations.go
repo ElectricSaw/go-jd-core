@@ -1,7 +1,7 @@
 package attribute
 
-func NewAnnotations(annotations []Annotation) Annotations {
-	return Annotations{
+func NewAnnotations(annotations []Annotation) *Annotations {
+	return &Annotations{
 		annotations: annotations,
 	}
 }

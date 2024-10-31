@@ -2,8 +2,8 @@ package token
 
 import "fmt"
 
-func NewBooleanConstantToken(value bool) BooleanConstantToken {
-	return BooleanConstantToken{value}
+func NewBooleanConstantToken(value bool) *BooleanConstantToken {
+	return &BooleanConstantToken{value}
 }
 
 type BooleanConstantToken struct {

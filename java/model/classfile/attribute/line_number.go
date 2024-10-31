@@ -1,7 +1,7 @@
 package attribute
 
-func NewLineNumber(startPc int, lineNumber int) LineNumber {
-	return LineNumber{startPc, lineNumber}
+func NewLineNumber(startPc int, lineNumber int) *LineNumber {
+	return &LineNumber{startPc, lineNumber}
 }
 
 type LineNumber struct {

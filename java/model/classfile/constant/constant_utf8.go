@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantUtf8(value string) ConstantUtf8 {
-	return ConstantUtf8{
+func NewConstantUtf8(value string) *ConstantUtf8 {
+	return &ConstantUtf8{
 		tag:   ConstTagUtf8,
 		value: value,
 	}

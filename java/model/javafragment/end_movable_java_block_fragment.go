@@ -4,9 +4,9 @@ import "bitbucket.org/coontec/javaClass/java/model/fragment"
 
 var EndMovableBlock = NewEndMovableJavaBlockFragment()
 
-func NewEndMovableJavaBlockFragment() EndMovableJavaBlockFragment {
-	return EndMovableJavaBlockFragment{
-		EndMovableBlockFragment: fragment.NewEndMovableBlockFragment(),
+func NewEndMovableJavaBlockFragment() *EndMovableJavaBlockFragment {
+	return &EndMovableJavaBlockFragment{
+		EndMovableBlockFragment: *fragment.NewEndMovableBlockFragment(),
 	}
 }
 

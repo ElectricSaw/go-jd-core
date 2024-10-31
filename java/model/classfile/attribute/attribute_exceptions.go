@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeExceptions(exceptionTypeNames []string) AttributeExceptions {
-	return AttributeExceptions{exceptionTypeNames}
+func NewAttributeExceptions(exceptionTypeNames []string) *AttributeExceptions {
+	return &AttributeExceptions{exceptionTypeNames}
 }
 
 type AttributeExceptions struct {

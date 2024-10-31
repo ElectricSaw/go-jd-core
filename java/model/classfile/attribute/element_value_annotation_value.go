@@ -1,7 +1,7 @@
 package attribute
 
-func NewElementValueAnnotationValue(annotationValue Annotation) ElementValueAnnotationValue {
-	return ElementValueAnnotationValue{
+func NewElementValueAnnotationValue(annotationValue Annotation) *ElementValueAnnotationValue {
+	return &ElementValueAnnotationValue{
 		annotationValue: annotationValue,
 	}
 }

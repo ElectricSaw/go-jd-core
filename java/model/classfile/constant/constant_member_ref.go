@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantMemberRef(classIndex int, nameAndTypeIndex int) ConstantMemberRef {
-	return ConstantMemberRef{
+func NewConstantMemberRef(classIndex int, nameAndTypeIndex int) *ConstantMemberRef {
+	return &ConstantMemberRef{
 		tag:              ConstTagMemberRef,
 		classIndex:       classIndex,
 		nameAndTypeIndex: nameAndTypeIndex,

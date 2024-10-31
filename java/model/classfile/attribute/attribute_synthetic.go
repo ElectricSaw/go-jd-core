@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeSynthetic() AttributeSynthetic {
-	return AttributeSynthetic{}
+func NewAttributeSynthetic() *AttributeSynthetic {
+	return &AttributeSynthetic{}
 }
 
 type AttributeSynthetic struct{}

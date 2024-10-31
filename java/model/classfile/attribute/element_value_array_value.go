@@ -1,7 +1,7 @@
 package attribute
 
-func NewElementValueArrayValue(values []ElementValue) ElementValueArrayValue {
-	return ElementValueArrayValue{
+func NewElementValueArrayValue(values []ElementValue) *ElementValueArrayValue {
+	return &ElementValueArrayValue{
 		values: values,
 	}
 }

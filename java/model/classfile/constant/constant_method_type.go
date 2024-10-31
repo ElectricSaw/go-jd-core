@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantMethodType(descriptorIndex int) ConstantMethodType {
-	return ConstantMethodType{
+func NewConstantMethodType(descriptorIndex int) *ConstantMethodType {
+	return &ConstantMethodType{
 		tag:             ConstTagMethodType,
 		descriptorIndex: descriptorIndex,
 	}

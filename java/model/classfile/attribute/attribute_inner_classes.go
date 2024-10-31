@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeInnerClasses(classes []InnerClass) AttributeInnerClasses {
-	return AttributeInnerClasses{classes}
+func NewAttributeInnerClasses(classes []InnerClass) *AttributeInnerClasses {
+	return &AttributeInnerClasses{classes}
 }
 
 type AttributeInnerClasses struct {

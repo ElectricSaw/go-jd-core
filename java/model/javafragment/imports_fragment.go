@@ -7,9 +7,9 @@ import (
 
 var CountComparator = ImportsCountComparator{}
 
-func NewImportsFragment(weight int) ImportsFragment {
-	return ImportsFragment{
-		FlexibleFragment: fragment.NewFlexibleFragment(0, -1, -1, weight, "Imports"),
+func NewImportsFragment(weight int) *ImportsFragment {
+	return &ImportsFragment{
+		FlexibleFragment: *fragment.NewFlexibleFragment(0, -1, -1, weight, "Imports"),
 	}
 }
 
@@ -24,7 +24,7 @@ func (f *ImportsFragment) addImport(internalName string, qualifiedName string) {
 	if ok {
 		imp.IncCounter()
 	} else {
-		f.importMap[internalName] = NewImport(internalName, qualifiedName)
+		f.importMap[internalName] = *NewImport(internalName, qualifiedName)
 	}
 }
 
@@ -45,7 +45,7 @@ func (f *ImportsFragment) isEmpty() bool {
 func (f *ImportsFragment) InitLineCounts() {
 	f.MaximalLineCount = len(f.importMap)
 	f.InitialLineCount = f.MaximalLineCount
-	f.SetLineCount(f.MaximalLineCount)
+	f.LineCount = f.MaximalLineCount
 }
 
 func (f *ImportsFragment) Contains(internalName string) bool {
@@ -54,7 +54,7 @@ func (f *ImportsFragment) Contains(internalName string) bool {
 }
 
 func (f *ImportsFragment) Imports() []Import {
-	lineCount := f.LineCount()
+	lineCount := f.LineCount
 	size := len(f.importMap)
 
 	imports := make([]Import, 0, len(f.importMap))
@@ -80,8 +80,8 @@ func (f *ImportsFragment) Accept(visitor JavaFragmentVisitor) {
 	visitor.VisitImportsFragment(f)
 }
 
-func NewImport(internalName string, qualifiedName string) Import {
-	return Import{
+func NewImport(internalName string, qualifiedName string) *Import {
+	return &Import{
 		internalName:  internalName,
 		qualifiedName: qualifiedName,
 		counter:       1,

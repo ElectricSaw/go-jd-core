@@ -14,8 +14,8 @@ var EndJavaDoc = NewEndMarkerToken(JavaDocToken)
 var EndError = NewEndMarkerToken(ErrorToken)
 var EndImportStatements = NewEndMarkerToken(ImportStatementsToken)
 
-func NewEndMarkerToken(typ int) EndMarkerToken {
-	return EndMarkerToken{typ}
+func NewEndMarkerToken(typ int) *EndMarkerToken {
+	return &EndMarkerToken{typ}
 }
 
 type EndMarkerToken struct {

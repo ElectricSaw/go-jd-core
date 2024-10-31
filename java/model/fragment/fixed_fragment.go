@@ -2,8 +2,8 @@ package fragment
 
 import "fmt"
 
-func NewFixedFragment(firstLineNumber int, lastLineNumber int) FixedFragment {
-	return FixedFragment{firstLineNumber, lastLineNumber}
+func NewFixedFragment(firstLineNumber int, lastLineNumber int) *FixedFragment {
+	return &FixedFragment{firstLineNumber, lastLineNumber}
 }
 
 type FixedFragment struct {

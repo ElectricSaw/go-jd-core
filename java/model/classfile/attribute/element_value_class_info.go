@@ -1,7 +1,7 @@
 package attribute
 
-func NewElementValueClassInfo(classInfo string) ElementValueClassInfo {
-	return ElementValueClassInfo{
+func NewElementValueClassInfo(classInfo string) *ElementValueClassInfo {
+	return &ElementValueClassInfo{
 		classInfo: classInfo,
 	}
 }

@@ -1,7 +1,7 @@
 package attribute
 
-func NewAnnotation(descriptor string, elementValuePairs []ElementValuePair) Annotation {
-	return Annotation{
+func NewAnnotation(descriptor string, elementValuePairs []ElementValuePair) *Annotation {
+	return &Annotation{
 		descriptor:        descriptor,
 		elementValuePairs: elementValuePairs,
 	}

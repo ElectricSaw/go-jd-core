@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantInteger(value int32) ConstantInteger {
-	return ConstantInteger{
+func NewConstantInteger(value int32) *ConstantInteger {
+	return &ConstantInteger{
 		tag:   ConstTagInteger,
 		value: value,
 	}

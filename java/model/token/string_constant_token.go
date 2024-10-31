@@ -2,8 +2,8 @@ package token
 
 import "fmt"
 
-func NewStringConstantToken(text string, ownerInternalName string) StringConstantToken {
-	return StringConstantToken{text, ownerInternalName}
+func NewStringConstantToken(text string, ownerInternalName string) *StringConstantToken {
+	return &StringConstantToken{text, ownerInternalName}
 }
 
 type StringConstantToken struct {

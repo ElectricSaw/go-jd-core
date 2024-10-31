@@ -11,8 +11,8 @@ const (
 	ModuleToken      = 6
 )
 
-func NewDeclarationToken(typ int, internalTypeName string, name string, descriptor string) DeclarationToken {
-	return DeclarationToken{typ, internalTypeName, name, descriptor}
+func NewDeclarationToken(typ int, internalTypeName string, name string, descriptor string) *DeclarationToken {
+	return &DeclarationToken{typ, internalTypeName, name, descriptor}
 }
 
 type DeclarationToken struct {

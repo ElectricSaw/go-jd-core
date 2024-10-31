@@ -1,7 +1,7 @@
 package attribute
 
-func NewAttributeLineNumberTable(lineNumberTable []LineNumber) AttributeLineNumberTable {
-	return AttributeLineNumberTable{lineNumberTable}
+func NewAttributeLineNumberTable(lineNumberTable []LineNumber) *AttributeLineNumberTable {
+	return &AttributeLineNumberTable{lineNumberTable}
 }
 
 type AttributeLineNumberTable struct {

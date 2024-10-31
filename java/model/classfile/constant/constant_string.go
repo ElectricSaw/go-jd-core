@@ -1,7 +1,7 @@
 package constant
 
-func NewConstantString(stringIndex int) ConstantString {
-	return ConstantString{
+func NewConstantString(stringIndex int) *ConstantString {
+	return &ConstantString{
 		tag:         ConstTagString,
 		stringIndex: stringIndex,
 	}

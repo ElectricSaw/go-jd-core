@@ -2,8 +2,8 @@ package token
 
 import "fmt"
 
-func NewNewLineToken(count int) NewLineToken {
-	return NewLineToken{count}
+func NewNewLineToken(count int) *NewLineToken {
+	return &NewLineToken{count}
 }
 
 type NewLineToken struct {

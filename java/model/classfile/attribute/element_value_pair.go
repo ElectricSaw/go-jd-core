@@ -1,7 +1,7 @@
 package attribute
 
-func NewElementValuePair(elementName string, elementValue ElementValue) ElementValuePair {
-	return ElementValuePair{
+func NewElementValuePair(elementName string, elementValue ElementValue) *ElementValuePair {
+	return &ElementValuePair{
 		ElementName:  elementName,
 		ElementValue: elementValue,
 	}

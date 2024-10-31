@@ -1,7 +1,7 @@
 package attribute
 
-func NewServiceInfo(interfaceTypeName string, implementationTypeNames []string) ServiceInfo {
-	return ServiceInfo{interfaceTypeName, implementationTypeNames}
+func NewServiceInfo(interfaceTypeName string, implementationTypeNames []string) *ServiceInfo {
+	return &ServiceInfo{interfaceTypeName, implementationTypeNames}
 }
 
 type ServiceInfo struct {

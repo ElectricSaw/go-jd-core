@@ -2,13 +2,13 @@ package javafragment
 
 import "bitbucket.org/coontec/javaClass/java/model/fragment"
 
-func NewEndBodyFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, start *StartBodyFragment) EndBodyFragment {
-	f := EndBodyFragment{
-		EndFlexibleBlockFragment: fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+func NewEndBodyFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, start *StartBodyFragment) *EndBodyFragment {
+	f := &EndBodyFragment{
+		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
 		start:                    start,
 	}
 
-	f.start.SetEndBodyFragment(&f)
+	f.start.SetEndBodyFragment(f)
 
 	return f
 }
@@ -24,12 +24,12 @@ func (f *EndBodyFragment) StartBodyFragment() *StartBodyFragment {
 }
 
 func (f *EndBodyFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount {
-		f.SetLineCount(f.LineCount() + 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount++
 
 		if !force {
-			if f.LineCount() == 1 && f.start.LineCount() == 0 {
-				f.start.SetLineCount(f.LineCount())
+			if f.LineCount == 1 && f.start.LineCount == 0 {
+				f.start.LineCount = f.LineCount
 			}
 		}
 
@@ -39,12 +39,12 @@ func (f *EndBodyFragment) IncLineCount(force bool) bool {
 }
 
 func (f *EndBodyFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount--
 
 		if !force {
-			if f.LineCount() == 0 {
-				f.start.SetLineCount(f.LineCount())
+			if f.LineCount == 0 {
+				f.start.LineCount = f.LineCount
 			}
 		}
 

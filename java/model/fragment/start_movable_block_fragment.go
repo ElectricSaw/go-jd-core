@@ -1,8 +1,8 @@
 package fragment
 
-func NewStartMovableBlockFragment(typ int) StartMovableBlockFragment {
-	return StartMovableBlockFragment{
-		FlexibleFragment: NewFlexibleFragment(0, 0, 0, 0, "Start movable block"),
+func NewStartMovableBlockFragment(typ int) *StartMovableBlockFragment {
+	return &StartMovableBlockFragment{
+		FlexibleFragment: *NewFlexibleFragment(0, 0, 0, 0, "Start movable block"),
 		Type:             typ,
 	}
 }
