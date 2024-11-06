@@ -18,7 +18,7 @@ func (v *AbstractNopDeclarationVisitor) VisitConstructorDeclaration(declaration 
 
 func (v *AbstractNopDeclarationVisitor) VisitEnumDeclaration(declaration *EnumDeclaration) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitEnumDeclarationConstant(declaration *EnumDeclarationConstant) {
+func (v *AbstractNopDeclarationVisitor) VisitEnumDeclarationConstant(declaration *Constant) {
 }
 
 func (v *AbstractNopDeclarationVisitor) VisitExpressionVariableInitializer(declaration *ExpressionVariableInitializer) {

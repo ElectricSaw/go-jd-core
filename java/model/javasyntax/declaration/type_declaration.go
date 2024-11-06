@@ -1,45 +1,43 @@
 package declaration
 
-func NewTypeDeclaration(annotationReferences BaseAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration) *TypeDeclaration {
+import "bitbucket.org/coontec/javaClass/java/model/javasyntax/reference"
+
+func NewTypeDeclaration(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration) *TypeDeclaration {
 	return &TypeDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
 		internalTypeName:     internalTypeName,
 		name:                 name,
-		BodyDeclaration:      bodyDeclaration,
+		bodyDeclaration:      bodyDeclaration,
 	}
 }
 
 type TypeDeclaration struct {
-	annotationReferences BaseAnnotationReference
+	AbstractTypeDeclaration
+
+	annotationReferences reference.IAnnotationReference
 	flags                int
 	internalTypeName     string
 	name                 string
 	bodyDeclaration      *BodyDeclaration
 }
 
-func (d *TypeDeclaration) AnnotationReferences() BaseAnnotationReference {
+func (d *TypeDeclaration) GetAnnotationReferences() reference.IAnnotationReference {
 	return d.annotationReferences
 }
 
-func (d *TypeDeclaration) Flags() int {
+func (d *TypeDeclaration) GetFlags() int {
 	return d.flags
 }
 
-func (d *TypeDeclaration) InternalTypeName() string {
+func (d *TypeDeclaration) GetInternalTypeName() string {
 	return d.internalTypeName
 }
 
-func (d *TypeDeclaration) Name() string {
+func (d *TypeDeclaration) GetName() string {
 	return d.name
 }
 
-func (d *TypeDeclaration) BodyDeclaration() *BodyDeclaration {
+func (d *TypeDeclaration) GetBodyDeclaration() *BodyDeclaration {
 	return d.bodyDeclaration
-}
-
-func (d *TypeDeclaration) ignoreBaseTypeDeclaration() {
-}
-
-func (d *TypeDeclaration) ignoreMemberDeclaration() {
 }

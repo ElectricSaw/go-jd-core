@@ -1,21 +1,24 @@
 package declaration
 
-import "fmt"
+import (
+	"bitbucket.org/coontec/javaClass/java/model/javasyntax/reference"
+	"fmt"
+)
 
-func NewAnnotationDeclaration(annotationDeclaratiors BaseFieldDeclarator, annotationReferences BaseAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration) *AnnotationDeclaration {
+func NewAnnotationDeclaration(annotationDeclarators IFieldDeclarator, annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration) *AnnotationDeclaration {
 	return &AnnotationDeclaration{
 		TypeDeclaration:        *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration),
-		annotationDeclaratiors: annotationDeclaratiors,
+		annotationDeclaratiors: annotationDeclarators,
 	}
 }
 
 type AnnotationDeclaration struct {
 	TypeDeclaration
 
-	annotationDeclaratiors BaseFieldDeclarator
+	annotationDeclaratiors IFieldDeclarator
 }
 
-func (d *AnnotationDeclaration) AnnotationDeclarator() BaseFieldDeclarator {
+func (d *AnnotationDeclaration) GetAnnotationDeclarator() IFieldDeclarator {
 	return d.annotationDeclaratiors
 }
 

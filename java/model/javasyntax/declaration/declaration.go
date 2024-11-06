@@ -1,5 +1,7 @@
 package declaration
 
+import "bitbucket.org/coontec/javaClass/java/model/javasyntax/expression"
+
 const (
 	// Access flags for Class, Field, Method, Nested class, Module, Module Requires, Module Exports, Module Opens
 	FlagPublic       = 0x0001 // C  F  M  N  .  .  .  .
@@ -42,7 +44,7 @@ type DeclarationVisitor interface {
 	VisitClassDeclaration(declaration *ClassDeclaration)
 	VisitConstructorDeclaration(declaration *ConstructorDeclaration)
 	VisitEnumDeclaration(declaration *EnumDeclaration)
-	VisitEnumDeclarationConstant(declaration *EnumDeclarationConstant)
+	VisitEnumDeclarationConstant(declaration *Constant)
 	VisitExpressionVariableInitializer(declaration *ExpressionVariableInitializer)
 	VisitFieldDeclaration(declaration *FieldDeclaration)
 	VisitFieldDeclarator(declaration *FieldDeclarator)
@@ -61,40 +63,45 @@ type DeclarationVisitor interface {
 	VisitTypeDeclarations(declarations *TypeDeclarations)
 }
 
-type BaseFieldDeclarator interface {
+type IFieldDeclarator interface {
 	Declaration
 
 	SetFieldDeclaration(fieldDeclaration *FieldDeclaration)
 }
 
-type BaseFormalParameter interface {
+type IFormalParameter interface {
 	Declaration
-
-	ignoreBaseFormalParameter()
 }
 
-type BaseLocalVariableDeclarator interface {
+type ILocalVariableDeclarator interface {
 	Declaration
 
 	GetLineNumber() int
 }
 
-type BaseMemberDeclaration interface {
+type IMemberDeclaration interface {
 	Declaration
 
 	IsClassDeclaration() bool
 }
 
-type BaseTypeDeclaration interface {
-	BaseMemberDeclaration
-
-	ignoreBaseTypeDeclaration()
+type AbstractMemberDeclaration struct {
 }
 
-type MemberDeclaration interface {
-	BaseMemberDeclaration
+func (d *AbstractMemberDeclaration) IsClassDeclaration() bool {
+	return false
+}
 
-	ignoreMemberDeclaration()
+func (d *AbstractMemberDeclaration) Accept(visitor DeclarationVisitor) {
+
+}
+
+type ITypeDeclaration interface {
+	IMemberDeclaration
+}
+
+type AbstractTypeDeclaration struct {
+	AbstractMemberDeclaration
 }
 
 type VariableInitializer interface {
@@ -102,5 +109,24 @@ type VariableInitializer interface {
 
 	GetLineNumber() int
 	IsExpressionVariableInitializer() bool
-	GetExpression() Expression
+	GetExpression() expression.Expression
+}
+
+type AbstractVariableInitializer struct {
+}
+
+func (d *AbstractVariableInitializer) GetLineNumber() int {
+	return -1
+}
+
+func (d *AbstractVariableInitializer) IsExpressionVariableInitializer() bool {
+	return false
+}
+
+func (d *AbstractVariableInitializer) GetExpression() expression.Expression {
+	return expression.NeNoExpression
+}
+
+func (d *AbstractVariableInitializer) Accept(visitor DeclarationVisitor) {
+
 }

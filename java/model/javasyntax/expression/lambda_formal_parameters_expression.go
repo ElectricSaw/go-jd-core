@@ -7,14 +7,14 @@ import (
 	"fmt"
 )
 
-func NewLambdaFormalParametersExpression(typ _type.IType, formalParameters declaration.BaseFormalParameter, statements statement.Statement) *LambdaFormalParametersExpression {
+func NewLambdaFormalParametersExpression(typ _type.IType, formalParameters declaration.IFormalParameter, statements statement.Statement) *LambdaFormalParametersExpression {
 	return &LambdaFormalParametersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpression(typ, statements),
 		formalParameters:         formalParameters,
 	}
 }
 
-func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ _type.IType, formalParameters declaration.BaseFormalParameter, statements statement.Statement) *LambdaFormalParametersExpression {
+func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ _type.IType, formalParameters declaration.IFormalParameter, statements statement.Statement) *LambdaFormalParametersExpression {
 	return &LambdaFormalParametersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpressionWithAll(lineNumber, typ, statements),
 		formalParameters:         formalParameters,
@@ -24,14 +24,14 @@ func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ _type.IType,
 type LambdaFormalParametersExpression struct {
 	AbstractLambdaExpression
 
-	formalParameters declaration.BaseFormalParameter
+	formalParameters declaration.IFormalParameter
 }
 
-func (e *LambdaFormalParametersExpression) GetFormalParameters() declaration.BaseFormalParameter {
+func (e *LambdaFormalParametersExpression) GetFormalParameters() declaration.IFormalParameter {
 	return e.formalParameters
 }
 
-func (e *LambdaFormalParametersExpression) SetFormalParameters(formalParameters declaration.BaseFormalParameter) {
+func (e *LambdaFormalParametersExpression) SetFormalParameters(formalParameters declaration.IFormalParameter) {
 	e.formalParameters = formalParameters
 }
 
