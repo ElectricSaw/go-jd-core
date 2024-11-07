@@ -17,8 +17,8 @@ type IType interface {
 
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsTypeArgumentList() bool
-	TypeArgumentFirst() ITypeArgument  // ITypeArgument
-	TypeArgumentList() []ITypeArgument // ITypeArgument
+	TypeArgumentFirst() ITypeArgument
+	TypeArgumentList() []ITypeArgument
 	TypeArgumentSize() int
 	IsGenericTypeArgument() bool
 	IsInnerObjectTypeArgument() bool
