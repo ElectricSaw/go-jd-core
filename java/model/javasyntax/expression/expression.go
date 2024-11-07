@@ -39,15 +39,15 @@ func (e *AbstractExpression) IsSuperExpression() bool                      { ret
 func (e *AbstractExpression) IsTernaryOperatorExpression() bool            { return false }
 func (e *AbstractExpression) IsThisExpression() bool                       { return false }
 
-func (e *AbstractExpression) GetDimensionExpressionList() Expression { return NO_EXPRESSION }
-func (e *AbstractExpression) GetParameters() Expression              { return NO_EXPRESSION }
-func (e *AbstractExpression) GetCondition() Expression               { return NO_EXPRESSION }
-func (e *AbstractExpression) GetExpression() Expression              { return NO_EXPRESSION }
-func (e *AbstractExpression) GetTrueExpression() Expression          { return NO_EXPRESSION }
-func (e *AbstractExpression) GetFalseExpression() Expression         { return NO_EXPRESSION }
-func (e *AbstractExpression) GetIndex() Expression                   { return NO_EXPRESSION }
-func (e *AbstractExpression) GetLeftExpression() Expression          { return NO_EXPRESSION }
-func (e *AbstractExpression) GetRightExpression() Expression         { return NO_EXPRESSION }
+func (e *AbstractExpression) GetDimensionExpressionList() Expression { return NeNoExpression }
+func (e *AbstractExpression) GetParameters() Expression              { return NeNoExpression }
+func (e *AbstractExpression) GetCondition() Expression               { return NeNoExpression }
+func (e *AbstractExpression) GetExpression() Expression              { return NeNoExpression }
+func (e *AbstractExpression) GetTrueExpression() Expression          { return NeNoExpression }
+func (e *AbstractExpression) GetFalseExpression() Expression         { return NeNoExpression }
+func (e *AbstractExpression) GetIndex() Expression                   { return NeNoExpression }
+func (e *AbstractExpression) GetLeftExpression() Expression          { return NeNoExpression }
+func (e *AbstractExpression) GetRightExpression() Expression         { return NeNoExpression }
 func (e *AbstractExpression) GetDescriptor() string                  { return "" }
 func (e *AbstractExpression) GetDoubleValue() float64                { return 0 }
 func (e *AbstractExpression) GetFloatValue() float32                 { return 0 }
