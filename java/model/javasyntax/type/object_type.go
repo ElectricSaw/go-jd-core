@@ -105,15 +105,21 @@ type ObjectType struct {
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *ObjectType) GetName() string {
+func (t *ObjectType) QualifiedName() string {
+	return t.qualifiedName
+}
+
+/////////////////////////////////////////////////////////////////////
+
+func (t *ObjectType) Name() string {
 	return t.name
 }
 
-func (t *ObjectType) GetDescriptor() string {
+func (t *ObjectType) Descriptor() string {
 	return t.descriptor
 }
 
-func (t *ObjectType) GetDimension() int {
+func (t *ObjectType) Dimension() int {
 	return t.dimension
 }
 
@@ -135,7 +141,7 @@ func (t *ObjectType) IsObjectType() bool {
 	return true
 }
 
-func (t *ObjectType) GetInternalName() string {
+func (t *ObjectType) InternalName() string {
 	return t.internalName
 }
 
@@ -146,29 +152,25 @@ func (t *ObjectType) AcceptTypeVisitor(visitor TypeVisitor) {
 /////////////////////////////////////////////////////////////////////
 
 func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
-	switch v := typeArgument.(type) {
-	case *ObjectType, *InnerObjectType:
-		ot := v.(*ObjectType)
-
-		if t.dimension != ot.dimension || t.internalName != ot.internalName {
+	switch meta := typeArgument.(type) {
+	case IObjectType:
+		if t.dimension != meta.Dimension() || t.internalName != meta.InternalName() {
 			return false
 		}
 
-		if ot.GetTypeArguments() == nil {
+		if meta.TypeArguments() == nil {
 			return t.typeArguments == nil
 		} else if t.typeArguments == nil {
 			return false
 		} else {
-			return t.typeArguments.IsTypeArgumentAssignableFrom(typeBounds, ot.typeArguments)
+			return t.typeArguments.IsTypeArgumentAssignableFrom(typeBounds, meta.TypeArguments())
 		}
 	case *GenericType:
-		bt := typeBounds[v.GetName()]
-		_, ok1 := bt.(*ObjectType)
-		_, ok2 := bt.(*InnerObjectType)
+		bt := typeBounds[meta.Name()]
+		ot, ok := bt.(IObjectType)
 
-		if ok1 || ok2 {
-			ot, _ := bt.(*ObjectType)
-			if t.internalName == ot.internalName {
+		if ok {
+			if t.internalName == ot.InternalName() {
 				return true
 			}
 		}
@@ -182,7 +184,7 @@ func (t *ObjectType) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]I
 		return false
 	}
 
-	if objectType.GetTypeArguments() == nil {
+	if objectType.TypeArguments() == nil {
 		return t.typeArguments == nil
 	} else if t.typeArguments == nil {
 		return false
@@ -201,11 +203,7 @@ func (t *ObjectType) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *ObjectType) GetQualifiedName() string {
-	return t.qualifiedName
-}
-
-func (t *ObjectType) GetTypeArguments() ITypeArgument {
+func (t *ObjectType) TypeArguments() ITypeArgument {
 	return t.typeArguments
 }
 

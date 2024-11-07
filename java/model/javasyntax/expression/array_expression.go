@@ -23,7 +23,7 @@ func NewArrayExpressionWithLineNumber(lineNumber int, expression Expression, ind
 
 func CreateItemType(expression Expression) _type.IType {
 	typ := expression.GetType()
-	dimension := typ.GetDimension()
+	dimension := typ.Dimension()
 
 	if dimension > 0 {
 		return typ.CreateType(dimension - 1)

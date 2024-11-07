@@ -24,14 +24,14 @@ func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t *PrimitiveType) {
 }
 
 func (v *AbstractTypeArgumentVisitor) VisitObjectType(t *ObjectType) {
-	if visitable, ok := t.GetTypeArguments().(TypeArgumentVisitable); ok {
+	if visitable, ok := t.TypeArguments().(TypeArgumentVisitable); ok {
 		v.safeAccept(visitable)
 	}
 }
 
 func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t *InnerObjectType) {
 	t.outerType.AcceptTypeArgumentVisitor(v)
-	if visitable, ok := t.GetTypeArguments().(TypeArgumentVisitable); ok {
+	if visitable, ok := t.TypeArguments().(TypeArgumentVisitable); ok {
 		v.safeAccept(visitable)
 	}
 }

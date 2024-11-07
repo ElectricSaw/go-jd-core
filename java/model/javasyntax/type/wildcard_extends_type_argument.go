@@ -14,13 +14,13 @@ type WildcardExtendsTypeArgument struct {
 	typ IType
 }
 
-func (t *WildcardExtendsTypeArgument) Type() ITypeArgument {
+func (t *WildcardExtendsTypeArgument) Type() IType {
 	return t.typ
 }
 
 func (t *WildcardExtendsTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	if typeArgument.IsWildcardExtendsTypeArgument() {
-		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument.GetType())
+		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument.Type())
 	} else if _, ok := typeArgument.(ITypeArgument); ok {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
 	}

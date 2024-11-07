@@ -3,8 +3,8 @@ package _type
 type ITypeArgument interface {
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsTypeArgumentList() bool
-	GetTypeArgumentFirst() ITypeArgument  // ITypeArgument
-	GetTypeArgumentLIst() []ITypeArgument // ITypeArgument
+	TypeArgumentFirst() ITypeArgument  // ITypeArgument
+	TypeArgumentList() []ITypeArgument // ITypeArgument
 	TypeArgumentSize() int
 	IsGenericTypeArgument() bool
 	IsInnerObjectTypeArgument() bool
@@ -13,7 +13,7 @@ type ITypeArgument interface {
 	IsWildcardExtendsTypeArgument() bool
 	IsWildcardSuperTypeArgument() bool
 	IsWildcardTypeArgument() bool
-	GetType() IType
+	Type() IType
 }
 
 type TypeArgumentVisitable interface {
@@ -35,24 +35,28 @@ type TypeArgumentVisitor interface {
 type AbstractTypeArgument struct {
 }
 
+func (t *AbstractTypeArgument) TypeArgumentFirst() ITypeArgument {
+	return t
+}
+
+func (t *AbstractTypeArgument) TypeArgumentList() []ITypeArgument {
+	return nil
+}
+
+func (t *AbstractTypeArgument) TypeArgumentSize() int {
+	return 1
+}
+
+func (t *AbstractTypeArgument) Type() IType {
+	return TypeUndefinedObject
+}
+
 func (t *AbstractTypeArgument) IsTypeArgumentAssignableFrom(_ map[string]IType, _ ITypeArgument) bool {
 	return false
 }
 
 func (t *AbstractTypeArgument) IsTypeArgumentList() bool {
 	return false
-}
-
-func (t *AbstractTypeArgument) GetTypeArgumentFirst() ITypeArgument {
-	return t
-}
-
-func (t *AbstractTypeArgument) GetTypeArgumentLIst() []ITypeArgument {
-	return nil
-}
-
-func (t *AbstractTypeArgument) TypeArgumentSize() int {
-	return 1
 }
 
 func (t *AbstractTypeArgument) IsGenericTypeArgument() bool {
@@ -81,10 +85,6 @@ func (t *AbstractTypeArgument) IsWildcardSuperTypeArgument() bool {
 
 func (t *AbstractTypeArgument) IsWildcardTypeArgument() bool {
 	return false
-}
-
-func (t *AbstractTypeArgument) GetType() IType {
-	return TypeUndefinedObject
 }
 
 func (t *AbstractTypeArgument) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {

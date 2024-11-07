@@ -86,7 +86,7 @@ func (d *FormalParameter) String() string {
 	}
 
 	if d.varargs {
-		msg += fmt.Sprintf("%v... ", d.typ.CreateType(d.typ.GetDimension()-1))
+		msg += fmt.Sprintf("%v... ", d.typ.CreateType(d.typ.Dimension()-1))
 	} else {
 		msg += fmt.Sprintf("%v ", d.typ)
 	}

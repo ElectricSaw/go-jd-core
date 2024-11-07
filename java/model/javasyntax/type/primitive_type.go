@@ -92,15 +92,15 @@ type PrimitiveType struct {
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *PrimitiveType) GetName() string {
+func (t *PrimitiveType) Name() string {
 	return t.name
 }
 
-func (t *PrimitiveType) GetDescriptor() string {
+func (t *PrimitiveType) Descriptor() string {
 	return t.descriptor
 }
 
-func (t *PrimitiveType) GetDimension() int {
+func (t *PrimitiveType) Dimension() int {
 	return 0
 }
 

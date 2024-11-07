@@ -10,6 +10,10 @@ type Types struct {
 	Types []IType
 }
 
+func (t *Types) Add(ty IType) {
+	t.Types = append(t.Types, ty)
+}
+
 func (t *Types) IsTypes() bool {
 	return true
 }

@@ -1,9 +1,9 @@
 package _type
 
 type IType interface {
-	GetName() string
-	GetDescriptor() string
-	GetDimension() int
+	Name() string
+	Descriptor() string
+	Dimension() int
 	CreateType(dimension int) IType
 
 	IsGenericType() bool
@@ -12,13 +12,13 @@ type IType interface {
 	IsPrimitiveType() bool
 	IsTypes() bool
 
-	GetOuterType() *ObjectType
-	GetInternalName() string
+	//OuterType() IObjectType
+	//InternalName() string
 
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsTypeArgumentList() bool
-	GetTypeArgumentFirst() ITypeArgument  // ITypeArgument
-	GetTypeArgumentLIst() []ITypeArgument // ITypeArgument
+	TypeArgumentFirst() ITypeArgument  // ITypeArgument
+	TypeArgumentList() []ITypeArgument // ITypeArgument
 	TypeArgumentSize() int
 	IsGenericTypeArgument() bool
 	IsInnerObjectTypeArgument() bool
@@ -27,7 +27,7 @@ type IType interface {
 	IsWildcardExtendsTypeArgument() bool
 	IsWildcardSuperTypeArgument() bool
 	IsWildcardTypeArgument() bool
-	GetType() IType
+	Type() IType
 }
 
 type TypeVisitor interface {
@@ -40,6 +40,16 @@ type TypeVisitor interface {
 
 type TypeVisitable interface {
 	AcceptTypeVisitor(visitor TypeVisitor)
+}
+
+type IObjectType interface {
+	Dimension() int
+	QualifiedName() string
+	OuterType() IObjectType
+	InternalName() string
+	TypeArguments() ITypeArgument
+	AcceptTypeVisitor(visitor TypeVisitor)
+	AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor)
 }
 
 type AbstractType struct {
@@ -81,11 +91,11 @@ func (t *AbstractType) IsTypes() bool {
 	return false
 }
 
-func (t *AbstractType) GetOuterType() *ObjectType {
+func (t *AbstractType) OuterType() IObjectType {
 	return TypeUndefinedObject
 }
 
-func (t *AbstractType) GetInternalName() string {
+func (t *AbstractType) InternalName() string {
 	return ""
 }
 

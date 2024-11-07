@@ -19,15 +19,15 @@ type GenericType struct {
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *GenericType) GetName() string {
+func (t *GenericType) Name() string {
 	return t.name
 }
 
-func (t *GenericType) GetDescriptor() string {
+func (t *GenericType) Descriptor() string {
 	return t.name
 }
 
-func (t *GenericType) GetDimension() int {
+func (t *GenericType) Dimension() int {
 	return t.dimension
 }
 

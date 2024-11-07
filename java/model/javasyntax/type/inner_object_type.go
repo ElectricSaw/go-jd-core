@@ -2,19 +2,19 @@ package _type
 
 import "fmt"
 
-func NewInnerObjectType(internalName, qualifiedName, name string, outerType *ObjectType) *InnerObjectType {
+func NewInnerObjectType(internalName, qualifiedName, name string, outerType IObjectType) *InnerObjectType {
 	return NewInnerObjectTypeWithAll(internalName, qualifiedName, name, nil, 0, outerType)
 }
 
-func NewInnerObjectTypeWithDim(internalName, qualifiedName, name string, dimension int, outerType *ObjectType) *InnerObjectType {
+func NewInnerObjectTypeWithDim(internalName, qualifiedName, name string, dimension int, outerType IObjectType) *InnerObjectType {
 	return NewInnerObjectTypeWithAll(internalName, qualifiedName, name, nil, dimension, outerType)
 }
 
-func NewInnerObjectTypeWithArgs(internalName, qualifiedName, name string, typeArguments ITypeArgument, outerType *ObjectType) *InnerObjectType {
+func NewInnerObjectTypeWithArgs(internalName, qualifiedName, name string, typeArguments ITypeArgument, outerType IObjectType) *InnerObjectType {
 	return NewInnerObjectTypeWithAll(internalName, qualifiedName, name, typeArguments, 0, outerType)
 }
 
-func NewInnerObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments ITypeArgument, dimension int, outerType *ObjectType) *InnerObjectType {
+func NewInnerObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments ITypeArgument, dimension int, outerType IObjectType) *InnerObjectType {
 	return &InnerObjectType{
 		ObjectType: ObjectType{
 			internalName:  internalName,
@@ -31,8 +31,10 @@ func NewInnerObjectTypeWithAll(internalName, qualifiedName, name string, typeArg
 type InnerObjectType struct {
 	ObjectType
 
-	outerType *ObjectType
+	outerType IObjectType
 }
+
+/////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////
 
@@ -48,7 +50,7 @@ func (t *InnerObjectType) IsInnerObjectType() bool {
 	return true
 }
 
-func (t *InnerObjectType) GetOuterType() *ObjectType {
+func (t *InnerObjectType) OuterType() IObjectType {
 	return t.outerType
 }
 
@@ -70,8 +72,8 @@ func (t *InnerObjectType) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor)
 
 func (t *InnerObjectType) String() string {
 	if t.typeArguments == nil {
-		return fmt.Sprintf("InnerObjectType { %s.%s }", t.outerType.String(), t.descriptor)
+		return fmt.Sprintf("InnerObjectType { %s.%s }", t.outerType, t.descriptor)
 	} else {
-		return fmt.Sprintf("InnerObjectType { %s.%s<%s> }", t.outerType.String(), t.descriptor, t.typeArguments)
+		return fmt.Sprintf("InnerObjectType { %s.%s<%s> }", t.outerType, t.descriptor, t.typeArguments)
 	}
 }
