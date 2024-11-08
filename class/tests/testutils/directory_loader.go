@@ -1,4 +1,4 @@
-package service
+package testutils
 
 import (
 	"errors"
@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func NewClassLoader(path string) *DirectoryLoader {
+func NewDirectoryLoader(path string) *DirectoryLoader {
 	loader := &DirectoryLoader{
 		Path: path,
 		Map:  make(map[string][]byte),

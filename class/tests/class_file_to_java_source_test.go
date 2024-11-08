@@ -1,20 +1,24 @@
-package service
+package tests
 
 import (
 	"bitbucket.org/coontec/javaClass/class/model/message"
 	"bitbucket.org/coontec/javaClass/class/service/deserializer"
+	"bitbucket.org/coontec/javaClass/class/tests/testutils"
 	"strings"
 	"testing"
 )
 
 func TestLog4j(t *testing.T) {
 	// 설정 클래스 선언.
-	classLoader := NewClassLoader("./test-features")
+	classLoader := testutils.NewDirectoryLoader("./test-features")
+	printer := testutils.NewCounterPrinterEmpty()
+	//statistics := make(map[string]int)
+	configuration := make(map[string]interface{})
 
 	message := message.NewMessage()
 	message.Headers["loader"] = classLoader
-	message.Headers["printer"] = nil
-	message.Headers["configuration"] = make(map[string]interface{})
+	message.Headers["printer"] = printer
+	message.Headers["configuration"] = configuration
 
 	// 실행 테스트.
 	deserializer := deserializer.NewDeserializeClassFileProcessor()
