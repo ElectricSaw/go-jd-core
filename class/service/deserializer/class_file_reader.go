@@ -6,7 +6,9 @@ import (
 	"io"
 )
 
-const JavaMagicNumber = 0xcafebabe
+type Magic uint32
+
+const JavaMagicNumber Magic = 0xCAFEBABE
 
 func NewClassFileReader(data []byte) *ClassFileReader {
 	return &ClassFileReader{
@@ -36,42 +38,48 @@ func (r *ClassFileReader) Read() byte {
 
 func (r *ClassFileReader) ReadUnsignedByte() int {
 	var b uint8
-	_ = binary.Read(r.reader, binary.LittleEndian, &b)
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
 	return int(b)
 }
 
 func (r *ClassFileReader) ReadUnsignedShort() int {
 	var b uint16
-	_ = binary.Read(r.reader, binary.LittleEndian, &b)
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
 	return int(b)
 }
 
+func (r *ClassFileReader) ReadMagic() Magic {
+	var b uint32
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
+	return Magic(b)
+}
+
 func (r *ClassFileReader) ReadInt() int {
-	var b int32
-	_ = binary.Read(r.reader, binary.LittleEndian, &b)
+	var b uint32
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
 	return int(b)
 }
 
 func (r *ClassFileReader) ReadFloat() float32 {
 	var b float32
-	_ = binary.Read(r.reader, binary.LittleEndian, &b)
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
 	return b
 }
 
 func (r *ClassFileReader) ReadLong() int64 {
 	var b int64
-	_ = binary.Read(r.reader, binary.LittleEndian, &b)
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
 	return b
 }
 
 func (r *ClassFileReader) ReadDouble() float64 {
 	var b float64
-	_ = binary.Read(r.reader, binary.LittleEndian, &b)
+	_ = binary.Read(r.reader, binary.BigEndian, &b)
 	return b
 }
 
 func (r *ClassFileReader) ReadFully(length int) []byte {
-	ret := r.data[r.Offset():length]
+	ret := r.data[r.Offset() : r.Offset()+length]
 	r.Skip(length)
 	return ret
 }

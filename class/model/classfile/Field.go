@@ -32,5 +32,5 @@ func (f Field) Attributes() map[string]attribute.Attribute {
 }
 
 func (f Field) String() string {
-	return "Field { name: " + f.Name() + ", descriptor: " + f.Descriptor() + " }"
+	return "Field{" + f.Name() + " " + f.Descriptor() + " }"
 }

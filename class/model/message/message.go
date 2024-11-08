@@ -1,12 +1,15 @@
 package message
 
 func NewMessage() *Message {
-	return &Message{}
+	return &Message{
+		Headers: make(map[string]interface{}),
+	}
 }
 
 func NewMessageWithBody(body interface{}) *Message {
 	return &Message{
-		Body: body,
+		Headers: make(map[string]interface{}),
+		Body:    body,
 	}
 }
 

@@ -1,6 +1,8 @@
 package attribute
 
-func NewAttributeModule(name string, flags int, version string, requires []ModuleInfo, exports []PackageInfo, opens []PackageInfo, uses []string, provides []ServiceInfo) *AttributeModule {
+func NewAttributeModule(name string, flags int, version string,
+	requires []ModuleInfo, exports []PackageInfo, opens []PackageInfo,
+	uses []string, provides []ServiceInfo) *AttributeModule {
 	return &AttributeModule{name, flags, version, requires, exports, opens, uses, provides}
 }
 
