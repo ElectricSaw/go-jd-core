@@ -9,7 +9,7 @@ func NewFieldDeclaration(flags int, typ _type.IType, fieldDeclaration IFieldDecl
 	return &FieldDeclaration{
 		flags:            flags,
 		typ:              typ,
-		fieldDeclaration: fieldDeclaration,
+		fieldDeclarators: fieldDeclaration,
 	}
 }
 
@@ -18,7 +18,7 @@ func NewFieldDeclarationWithAll(annotationReferences reference.IAnnotationRefere
 		annotationReferences: annotationReferences,
 		flags:                flags,
 		typ:                  typ,
-		fieldDeclaration:     fieldDeclaration,
+		fieldDeclarators:     fieldDeclaration,
 	}
 }
 
@@ -28,7 +28,7 @@ type FieldDeclaration struct {
 	annotationReferences reference.IAnnotationReference
 	flags                int
 	typ                  _type.IType
-	fieldDeclaration     IFieldDeclarator
+	fieldDeclarators     IFieldDeclarator
 }
 
 func (d *FieldDeclaration) Flags() int {
@@ -51,12 +51,12 @@ func (d *FieldDeclaration) SetType(t _type.IType) {
 	d.typ = t
 }
 
-func (d *FieldDeclaration) FieldDeclaration() IFieldDeclarator {
-	return d.fieldDeclaration
+func (d *FieldDeclaration) FieldDeclarators() IFieldDeclarator {
+	return d.fieldDeclarators
 }
 
-func (d *FieldDeclaration) SetFieldDeclaration(fd IFieldDeclarator) {
-	d.fieldDeclaration = fd
+func (d *FieldDeclaration) SetFieldDeclarators(fd IFieldDeclarator) {
+	d.fieldDeclarators = fd
 }
 
 func (d *FieldDeclaration) Accept(visitor DeclarationVisitor) {

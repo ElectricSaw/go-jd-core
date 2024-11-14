@@ -1,18 +1,19 @@
 package expression
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import (
+	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
 
 var UnknownLineNumber = 0
 
 type AbstractExpression struct {
+	util.DefaultBase[Expression]
 }
 
 func (e *AbstractExpression) LineNumber() int   { return UnknownLineNumber }
 func (e *AbstractExpression) Type() _type.IType { return nil }
 func (e *AbstractExpression) Priority() int     { return -1 }
-func (e *AbstractExpression) Size() int {
-	return 1
-}
 
 func (e *AbstractExpression) Accept(visitor ExpressionVisitor) {}
 
@@ -63,10 +64,11 @@ func (e *AbstractExpression) Operator() string                    { return "" }
 func (e *AbstractExpression) StringValue() string                 { return "" }
 
 type Expression interface {
+	util.Base[Expression]
+
 	LineNumber() int
 	Type() _type.IType
 	Priority() int
-	Size() int
 
 	Accept(visitor ExpressionVisitor)
 

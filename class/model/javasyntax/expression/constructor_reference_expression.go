@@ -2,7 +2,7 @@ package expression
 
 import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 
-func NewConstructorReferenceExpression(typ _type.IType, objectType _type.ObjectType, descriptor string) *ConstructorReferenceExpression {
+func NewConstructorReferenceExpression(typ _type.IType, objectType _type.IObjectType, descriptor string) *ConstructorReferenceExpression {
 	return &ConstructorReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		objectType:                       objectType,
@@ -10,7 +10,7 @@ func NewConstructorReferenceExpression(typ _type.IType, objectType _type.ObjectT
 	}
 }
 
-func NewConstructorReferenceExpressionWithAll(lineNumber int, typ _type.IType, objectType _type.ObjectType, descriptor string) *ConstructorReferenceExpression {
+func NewConstructorReferenceExpressionWithAll(lineNumber int, typ _type.IType, objectType _type.IObjectType, descriptor string) *ConstructorReferenceExpression {
 	return &ConstructorReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		objectType:                       objectType,
@@ -21,15 +21,15 @@ func NewConstructorReferenceExpressionWithAll(lineNumber int, typ _type.IType, o
 type ConstructorReferenceExpression struct {
 	AbstractLineNumberTypeExpression
 
-	objectType _type.ObjectType
+	objectType _type.IObjectType
 	descriptor string
 }
 
-func (e *ConstructorReferenceExpression) GetObjectType() *_type.ObjectType {
-	return &e.objectType
+func (e *ConstructorReferenceExpression) ObjectType() _type.IObjectType {
+	return e.objectType
 }
 
-func (e *ConstructorReferenceExpression) GetDescriptor() string {
+func (e *ConstructorReferenceExpression) Descriptor() string {
 	return e.descriptor
 }
 

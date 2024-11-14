@@ -5,14 +5,14 @@ import (
 	"fmt"
 )
 
-func NewConstructorInvocationExpression(objectType _type.ObjectType, descriptor string, parameters Expression) *ConstructorInvocationExpression {
+func NewConstructorInvocationExpression(objectType _type.IObjectType, descriptor string, parameters Expression) *ConstructorInvocationExpression {
 	return &ConstructorInvocationExpression{
 		ConstructorReferenceExpression: *NewConstructorReferenceExpression(_type.PtTypeVoid, objectType, descriptor),
 		parameters:                     parameters,
 	}
 }
 
-func NewConstructorInvocationExpressionWithAll(lineNumber int, objectType _type.ObjectType, descriptor string, parameters Expression) *ConstructorInvocationExpression {
+func NewConstructorInvocationExpressionWithAll(lineNumber int, objectType _type.IObjectType, descriptor string, parameters Expression) *ConstructorInvocationExpression {
 	return &ConstructorInvocationExpression{
 		ConstructorReferenceExpression: *NewConstructorReferenceExpressionWithAll(lineNumber, _type.PtTypeVoid, objectType, descriptor),
 		parameters:                     parameters,

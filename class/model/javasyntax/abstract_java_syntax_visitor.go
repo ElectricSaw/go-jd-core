@@ -19,17 +19,17 @@ func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit Compila
 // --- DeclarationVisitor ---
 
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(decl *declaration.AnnotationDeclaration) {
-	v.safeAcceptDeclaration(decl.AnnotationDeclarators())
-	v.safeAcceptDeclaration(decl.BodyDeclaration())
-	v.safeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.AnnotationDeclarators())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+	v.SafeAcceptReference(decl.AnnotationReferences())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitArrayVariableInitializer(decl *declaration.ArrayVariableInitializer) {
-	v.acceptListDeclaration(decl.List())
+	v.AcceptListDeclaration(decl.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitBodyDeclaration(decl *declaration.BodyDeclaration) {
-	v.safeAcceptDeclaration(decl.MemberDeclaration())
+	v.SafeAcceptDeclaration(decl.MemberDeclarations())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(decl *declaration.ClassDeclaration) {
@@ -39,30 +39,30 @@ func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(decl *declaration.Clas
 		superType.AcceptTypeVisitor(v)
 	}
 
-	v.safeAcceptTypeParameter(decl.TypeParameters())
-	v.safeAcceptType(decl.Interfaces())
-	v.safeAcceptReference(decl.AnnotationReferences())
-	v.safeAcceptDeclaration(decl.BodyDeclaration())
+	v.SafeAcceptTypeParameter(decl.TypeParameters())
+	v.SafeAcceptType(decl.Interfaces())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitConstructorDeclaration(decl *declaration.ConstructorDeclaration) {
-	v.safeAcceptReference(decl.AnnotationReferences())
-	v.safeAcceptDeclaration(decl.FormalParameters())
-	v.safeAcceptType(decl.ExceptionTypes())
-	v.safeAcceptStatement(decl.Statements())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.FormalParameters())
+	v.SafeAcceptType(decl.ExceptionTypes())
+	v.SafeAcceptStatement(decl.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclaration(decl *declaration.EnumDeclaration) {
 	v.VisitTypeDeclaration(&decl.TypeDeclaration)
-	v.safeAcceptType(decl.Interfaces())
-	v.safeAcceptListConstant(decl.Constants())
-	v.safeAcceptDeclaration(decl.BodyDeclaration())
+	v.SafeAcceptType(decl.Interfaces())
+	v.SafeAcceptListConstant(decl.Constants())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclarationConstant(decl *declaration.Constant) {
-	v.safeAcceptReference(decl.AnnotationReferences())
-	v.safeAcceptExpression(decl.Arguments())
-	v.safeAcceptDeclaration(decl.BodyDeclaration())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptExpression(decl.Arguments())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitExpressionVariableInitializer(decl *declaration.ExpressionVariableInitializer) {
@@ -72,62 +72,62 @@ func (v *AbstractJavaSyntaxVisitor) VisitExpressionVariableInitializer(decl *dec
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(decl *declaration.FieldDeclaration) {
 	t := decl.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptReference(decl.AnnotationReferences())
-	decl.FieldDeclaration().Accept(v)
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	decl.FieldDeclarators().Accept(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarator(decl *declaration.FieldDeclarator) {
-	v.safeAcceptDeclaration(decl.VariableInitializer())
+	v.SafeAcceptDeclaration(decl.VariableInitializer())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarators(decl *declaration.FieldDeclarators) {
-	v.acceptListDeclaration(decl.List())
+	v.AcceptListDeclaration(decl.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFormalParameter(decl *declaration.FormalParameter) {
 	t := decl.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptReference(decl.AnnotationReferences())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFormalParameters(decl *declaration.FormalParameters) {
-	v.acceptListDeclaration(decl.List())
+	v.AcceptListDeclaration(decl.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitInstanceInitializerDeclaration(decl *declaration.InstanceInitializerDeclaration) {
-	v.safeAcceptStatement(decl.Statements())
+	v.SafeAcceptStatement(decl.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitInterfaceDeclaration(decl *declaration.InterfaceDeclaration) {
-	v.safeAcceptType(decl.Interfaces())
-	v.safeAcceptReference(decl.AnnotationReferences())
-	v.safeAcceptDeclaration(decl.BodyDeclaration())
+	v.SafeAcceptType(decl.Interfaces())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclaration(decl *declaration.LocalVariableDeclaration) {
-	v.safeAcceptDeclaration(decl.LocalVariableDeclarators())
+	v.SafeAcceptDeclaration(decl.LocalVariableDeclarators())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarator(decl *declaration.LocalVariableDeclarator) {
-	v.safeAcceptDeclaration(decl.VariableInitializer())
+	v.SafeAcceptDeclaration(decl.VariableInitializer())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarators(decl *declaration.LocalVariableDeclarators) {
-	v.acceptListDeclaration(decl.List())
+	v.AcceptListDeclaration(decl.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(decl *declaration.MethodDeclaration) {
-	t := decl.ReturnType()
+	t := decl.ReturnedType()
 	t.AcceptTypeVisitor(v)
 
-	v.safeAcceptReference(decl.AnnotationReferences())
-	v.safeAcceptDeclaration(decl.FormalParameter())
-	v.safeAcceptType(decl.ExceptionTypes())
-	v.safeAcceptStatement(decl.Statements())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.FormalParameter())
+	v.SafeAcceptType(decl.ExceptionTypes())
+	v.SafeAcceptStatement(decl.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitMemberDeclarations(decl *declaration.MemberDeclarations) {
-	v.acceptListDeclaration(decl.List())
+	v.AcceptListDeclaration(decl.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitModuleDeclaration(decl *declaration.ModuleDeclaration) {
@@ -139,7 +139,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitStaticInitializerDeclaration(decl *decl
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarations(decl *declaration.TypeDeclarations) {
-	v.acceptListDeclaration(decl.List())
+	v.AcceptListDeclaration(decl.List())
 }
 
 // --- ExpressionVisitor ---
@@ -173,7 +173,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitCommentExpression(expr *expression.Comm
 func (v *AbstractJavaSyntaxVisitor) VisitConstructorInvocationExpression(expression *expression.ConstructorInvocationExpression) {
 	t := expression.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptExpression(expression.Parameters())
+	v.SafeAcceptExpression(expression.Parameters())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitConstructorReferenceExpression(expr *expression.ConstructorReferenceExpression) {
@@ -192,14 +192,14 @@ func (v *AbstractJavaSyntaxVisitor) VisitEnumConstantReferenceExpression(expr *e
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitExpressions(expr *expression.Expressions) {
-	v.acceptListExpression(expr.List())
+	v.AcceptListExpression(expr.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldReferenceExpression(expr *expression.FieldReferenceExpression) {
 	t := expr.Type()
 	t.AcceptTypeVisitor(v)
 
-	v.safeAcceptExpression(expr.Expression())
+	v.SafeAcceptExpression(expr.Expression())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFloatConstantExpression(expr *expression.FloatConstantExpression) {
@@ -219,12 +219,12 @@ func (v *AbstractJavaSyntaxVisitor) VisitInstanceOfExpression(expr *expression.I
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLambdaFormalParametersExpression(expr *expression.LambdaFormalParametersExpression) {
-	v.safeAcceptDeclaration(expr.FormalParameters())
+	v.SafeAcceptDeclaration(expr.FormalParameters())
 	expr.Statements().Accept(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLambdaIdentifiersExpression(expr *expression.LambdaIdentifiersExpression) {
-	v.safeAcceptStatement(expr.Statements())
+	v.SafeAcceptStatement(expr.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLengthExpression(expr *expression.LengthExpression) {
@@ -244,7 +244,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitLongConstantExpression(expr *expression
 func (v *AbstractJavaSyntaxVisitor) VisitMethodInvocationExpression(expr *expression.MethodInvocationExpression) {
 	expr.Expression().Accept(v)
 	v.SafeAcceptTypeArgumentVisitable(expr.NonWildcardTypeArguments().(*_type.WildcardSuperTypeArgument))
-	v.safeAcceptExpression(expr.Parameters())
+	v.SafeAcceptExpression(expr.Parameters())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitMethodReferenceExpression(expr *expression.MethodReferenceExpression) {
@@ -254,19 +254,19 @@ func (v *AbstractJavaSyntaxVisitor) VisitMethodReferenceExpression(expr *express
 func (v *AbstractJavaSyntaxVisitor) VisitNewArray(expr *expression.NewArray) {
 	t := expr.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptExpression(expr.DimensionExpressionList())
+	v.SafeAcceptExpression(expr.DimensionExpressionList())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitNewExpression(expr *expression.NewExpression) {
 	t := expr.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptExpression(expr.Parameters())
+	v.SafeAcceptExpression(expr.Parameters())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitNewInitializedArray(expr *expression.NewInitializedArray) {
 	t := expr.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptDeclaration(expr.ArrayInitializer())
+	v.SafeAcceptDeclaration(expr.ArrayInitializer())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitNoExpression(expr *expression.NoExpression) {
@@ -302,7 +302,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitStringConstantExpression(expr *expressi
 func (v *AbstractJavaSyntaxVisitor) VisitSuperConstructorInvocationExpression(expr *expression.SuperConstructorInvocationExpression) {
 	t := expr.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptExpression(expr.Parameters())
+	v.SafeAcceptExpression(expr.Parameters())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSuperExpression(expr *expression.SuperExpression) {
@@ -329,25 +329,25 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeReferenceDotClassExpression(expr *e
 // --- ReferenceVisitor ---
 
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationElementValue(ref *reference.AnnotationElementValue) {
-	v.safeAcceptReference(ref.ElementValue())
-	v.safeAcceptReference(ref.ElementValuePairs())
+	v.SafeAcceptReference(ref.ElementValue())
+	v.SafeAcceptReference(ref.ElementValuePairs())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationReference(ref *reference.AnnotationReference) {
-	v.safeAcceptReference(ref.ElementValue())
-	v.safeAcceptReference(ref.ElementValuePairs())
+	v.SafeAcceptReference(ref.ElementValue())
+	v.SafeAcceptReference(ref.ElementValuePairs())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationReferences(ref *reference.AnnotationReferences) {
-	v.acceptListReference(ref.List())
+	v.AcceptListReference(ref.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitElementValueArrayInitializerElementValue(ref *reference.ElementValueArrayInitializerElementValue) {
-	v.safeAcceptReference(ref.ElementValueArrayInitializer())
+	v.SafeAcceptReference(ref.ElementValueArrayInitializer())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitElementValues(ref *reference.ElementValues) {
-	v.acceptListReference(ref.List())
+	v.AcceptListReference(ref.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitElementValuePair(ref *reference.ElementValuePair) {
@@ -355,7 +355,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitElementValuePair(ref *reference.Element
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitElementValuePairs(ref *reference.ElementValuePairs) {
-	v.acceptListReference(ref.List())
+	v.AcceptListReference(ref.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitExpressionElementValue(ref *reference.ExpressionElementValue) {
@@ -374,7 +374,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitObjectReference(ref *reference.ObjectRe
 
 func (v *AbstractJavaSyntaxVisitor) VisitAssertStatement(stat *statement.AssertStatement) {
 	stat.Condition().Accept(v)
-	v.safeAcceptExpression(stat.Message())
+	v.SafeAcceptExpression(stat.Message())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitBreakStatement(stat *statement.BreakStatement) {
@@ -394,8 +394,8 @@ func (v *AbstractJavaSyntaxVisitor) VisitContinueStatement(stat *statement.Conti
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitDoWhileStatement(stat *statement.DoWhileStatement) {
-	v.safeAcceptExpression(stat.Condition())
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptExpression(stat.Condition())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitExpressionStatement(stat *statement.ExpressionStatement) {
@@ -406,30 +406,30 @@ func (v *AbstractJavaSyntaxVisitor) VisitForEachStatement(stat *statement.ForEac
 	t := stat.Type()
 	t.AcceptTypeVisitor(v)
 	stat.Expression().Accept(v)
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitForStatement(stat *statement.ForStatement) {
-	v.safeAcceptDeclaration(stat.Declaration())
-	v.safeAcceptExpression(stat.Init())
-	v.safeAcceptExpression(stat.Condition())
-	v.safeAcceptExpression(stat.Update())
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptDeclaration(stat.Declaration())
+	v.SafeAcceptExpression(stat.Init())
+	v.SafeAcceptExpression(stat.Condition())
+	v.SafeAcceptExpression(stat.Update())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitIfStatement(stat *statement.IfStatement) {
 	stat.Condition().Accept(v)
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitIfElseStatement(stat *statement.IfElseStatement) {
 	stat.Condition().Accept(v)
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 	stat.ElseStatements().Accept(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLabelStatement(stat *statement.LabelStatement) {
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLambdaExpressionStatement(stat *statement.LambdaExpressionStatement) {
@@ -453,12 +453,12 @@ func (v *AbstractJavaSyntaxVisitor) VisitReturnStatement(stat *statement.ReturnS
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitStatements(stat *statement.Statements) {
-	v.acceptListStatement(stat.List())
+	v.AcceptListStatement(stat.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatement(stat *statement.SwitchStatement) {
 	stat.Condition().Accept(v)
-	v.acceptListStatement(stat.List())
+	v.AcceptListStatement(stat.List())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementDefaultLabel(stat *statement.DefaultLabe1) {
@@ -475,13 +475,13 @@ func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementLabelBlock(stat *stateme
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementMultiLabelsBlock(stat *statement.MultiLabelsBlock) {
-	v.safeAcceptListStatement(stat.List())
+	v.SafeAcceptListStatement(stat.List())
 	stat.Statements().Accept(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSynchronizedStatement(stat *statement.SynchronizedStatement) {
 	stat.Monitor().Accept(v)
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitThrowStatement(stat *statement.ThrowStatement) {
@@ -489,10 +489,10 @@ func (v *AbstractJavaSyntaxVisitor) VisitThrowStatement(stat *statement.ThrowSta
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTryStatement(stat *statement.TryStatement) {
-	v.safeAcceptListStatement(stat.ResourceList())
+	v.SafeAcceptListStatement(stat.ResourceList())
 	stat.TryStatements().Accept(v)
-	v.safeAcceptListStatement(stat.CatchClauseList())
-	v.safeAcceptStatement(stat.FinallyStatements())
+	v.SafeAcceptListStatement(stat.CatchClauseList())
+	v.SafeAcceptStatement(stat.FinallyStatements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTryStatementResource(stat *statement.Resource) {
@@ -504,7 +504,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTryStatementResource(stat *statement.Re
 func (v *AbstractJavaSyntaxVisitor) VisitTryStatementCatchClause(stat *statement.CatchClause) {
 	t := stat.Type()
 	t.AcceptTypeVisitor(v)
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarationStatement(stat *statement.TypeDeclarationStatement) {
@@ -513,7 +513,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarationStatement(stat *statemen
 
 func (v *AbstractJavaSyntaxVisitor) VisitWhileStatement(stat *statement.WhileStatement) {
 	stat.Condition().Accept(v)
-	v.safeAcceptStatement(stat.Statements())
+	v.SafeAcceptStatement(stat.Statements())
 }
 
 // --- TypeVisitor ---
@@ -568,70 +568,70 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeParameters(parameters *_type.TypePa
 //func (v *AbstractJavaSyntaxVisitor) VisitGenericType(t *_type.GenericType) {}
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclaration(decl *declaration.TypeDeclaration) {
-	v.safeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptReference(decl.AnnotationReferences())
 }
 
-func (v *AbstractJavaSyntaxVisitor) acceptListDeclaration(list []declaration.Declaration) {
+func (v *AbstractJavaSyntaxVisitor) AcceptListDeclaration(list []declaration.Declaration) {
 	for _, value := range list {
 		value.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) acceptListExpression(list []expression.Expression) {
+func (v *AbstractJavaSyntaxVisitor) AcceptListExpression(list []expression.Expression) {
 	for _, value := range list {
 		value.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) acceptListReference(list []reference.IReference) {
+func (v *AbstractJavaSyntaxVisitor) AcceptListReference(list []reference.IReference) {
 	for _, value := range list {
 		value.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) acceptListStatement(list []statement.Statement) {
+func (v *AbstractJavaSyntaxVisitor) AcceptListStatement(list []statement.Statement) {
 	for _, value := range list {
 		value.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptDeclaration(decl declaration.Declaration) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptDeclaration(decl declaration.Declaration) {
 	if decl != nil {
 		decl.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptExpression(expr expression.Expression) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptExpression(expr expression.Expression) {
 	if expr != nil {
 		expr.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptReference(ref reference.IReference) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptReference(ref reference.IReference) {
 	if ref != nil {
 		ref.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptStatement(list statement.Statement) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptStatement(list statement.Statement) {
 	if list != nil {
 		list.Accept(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptType(list _type.IType) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptType(list _type.IType) {
 	if list != nil {
 		list.AcceptTypeVisitor(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptTypeParameter(list _type.ITypeParameter) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptTypeParameter(list _type.ITypeParameter) {
 	if list != nil {
 		list.AcceptTypeParameterVisitor(v)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptListDeclaration(list []declaration.Declaration) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptListDeclaration(list []declaration.Declaration) {
 	if list != nil {
 		for _, value := range list {
 			value.Accept(v)
@@ -639,7 +639,7 @@ func (v *AbstractJavaSyntaxVisitor) safeAcceptListDeclaration(list []declaration
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptListConstant(list []declaration.Constant) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptListConstant(list []declaration.Constant) {
 	if list != nil {
 		for _, value := range list {
 			value.Accept(v)
@@ -647,7 +647,7 @@ func (v *AbstractJavaSyntaxVisitor) safeAcceptListConstant(list []declaration.Co
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) safeAcceptListStatement(list []statement.Statement) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptListStatement(list []statement.Statement) {
 	if list != nil {
 		for _, value := range list {
 			value.Accept(v)

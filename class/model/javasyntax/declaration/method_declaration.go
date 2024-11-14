@@ -59,7 +59,7 @@ func NewMethodDeclaration5(flags int, name string, returnedType _type.IType, for
 	}
 }
 
-func NewMethodDeclaration6(annotationReferences reference.IAnnotationReference, flags int, name string, typeParameters _type.TypeParameter, returnedType _type.IType, formalParameter IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement, defaultAnnotationValue reference.IElementValue) *MethodDeclaration {
+func NewMethodDeclaration6(annotationReferences reference.IAnnotationReference, flags int, name string, typeParameters *_type.TypeParameter, returnedType _type.IType, formalParameter IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement, defaultAnnotationValue reference.IElementValue) *MethodDeclaration {
 	return &MethodDeclaration{
 		annotationReferences:   annotationReferences,
 		flags:                  flags,
@@ -80,7 +80,7 @@ type MethodDeclaration struct {
 	annotationReferences   reference.IAnnotationReference
 	flags                  int
 	name                   string
-	typeParameters         _type.TypeParameter
+	typeParameters         *_type.TypeParameter
 	returnedType           _type.IType
 	formalParameter        IFormalParameter
 	exceptionTypes         _type.IType
@@ -89,12 +89,16 @@ type MethodDeclaration struct {
 	defaultAnnotationValue reference.IElementValue
 }
 
-func (d *MethodDeclaration) AnnotationReferences() reference.IAnnotationReference {
-	return d.annotationReferences
-}
-
 func (d *MethodDeclaration) Flags() int {
 	return d.flags
+}
+
+func (d *MethodDeclaration) SetFlags(flags int) {
+	d.flags = flags
+}
+
+func (d *MethodDeclaration) AnnotationReferences() reference.IAnnotationReference {
+	return d.annotationReferences
 }
 
 func (d *MethodDeclaration) IsStatic() bool {
@@ -105,16 +109,20 @@ func (d *MethodDeclaration) Name() string {
 	return d.name
 }
 
-func (d *MethodDeclaration) TypeParameters() _type.TypeParameter {
+func (d *MethodDeclaration) TypeParameters() _type.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *MethodDeclaration) ReturnType() _type.IType {
+func (d *MethodDeclaration) ReturnedType() _type.IType {
 	return d.returnedType
 }
 
 func (d *MethodDeclaration) FormalParameter() IFormalParameter {
 	return d.formalParameter
+}
+
+func (d *MethodDeclaration) SetFormalParameters(formalParameter IFormalParameter) {
+	d.formalParameter = formalParameter
 }
 
 func (d *MethodDeclaration) ExceptionTypes() _type.IType {
@@ -127,6 +135,10 @@ func (d *MethodDeclaration) Descriptor() string {
 
 func (d *MethodDeclaration) Statements() statement.Statement {
 	return d.statements
+}
+
+func (d *MethodDeclaration) SetStatements(statements statement.Statement) {
+	d.statements = statements
 }
 
 func (d *MethodDeclaration) DefaultAnnotationValue() reference.IElementValue {

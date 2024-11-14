@@ -35,23 +35,23 @@ func (e *TernaryOperatorExpression) Condition() Expression {
 	return e.condition
 }
 
-func (e *TernaryOperatorExpression) GetTrueCondition() Expression {
-	return e.trueExpression
-}
-
-func (e *TernaryOperatorExpression) GetFalseCondition() Expression {
-	return e.falseExpression
-}
-
 func (e *TernaryOperatorExpression) SetCondition(expression Expression) {
 	e.condition = expression
 }
 
-func (e *TernaryOperatorExpression) SetTrueCondition(expression Expression) {
+func (e *TernaryOperatorExpression) TrueExpression() Expression {
+	return e.trueExpression
+}
+
+func (e *TernaryOperatorExpression) SetTrueExpression(expression Expression) {
 	e.trueExpression = expression
 }
 
-func (e *TernaryOperatorExpression) SetFalseCondition(expression Expression) {
+func (e *TernaryOperatorExpression) FalseExpression() Expression {
+	return e.falseExpression
+}
+
+func (e *TernaryOperatorExpression) SetFalseExpression(expression Expression) {
 	e.falseExpression = expression
 }
 

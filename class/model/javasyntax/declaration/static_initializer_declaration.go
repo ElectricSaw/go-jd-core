@@ -16,12 +16,16 @@ type StaticInitializerDeclaration struct {
 	statements statement.Statement
 }
 
-func (d *StaticInitializerDeclaration) GetDescription() string {
+func (d *StaticInitializerDeclaration) Description() string {
 	return d.descriptor
 }
 
-func (d *StaticInitializerDeclaration) GetStatement() statement.Statement {
+func (d *StaticInitializerDeclaration) Statements() statement.Statement {
 	return d.statements
+}
+
+func (d *StaticInitializerDeclaration) SetStatements(statements statement.Statement) {
+	d.statements = statements
 }
 
 func (d *StaticInitializerDeclaration) Accept(visitor DeclarationVisitor) {

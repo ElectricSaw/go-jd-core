@@ -1,6 +1,8 @@
 package declaration
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import (
+	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+)
 
 const (
 	// Access flags for Class, Field, Method, Nested class, Module, Module Requires, Module Exports, Module Opens
