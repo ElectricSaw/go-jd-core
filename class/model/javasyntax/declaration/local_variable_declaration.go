@@ -23,11 +23,11 @@ func (d *LocalVariableDeclaration) SetFinal(final bool) {
 	d.final = final
 }
 
-func (d *LocalVariableDeclaration) GetType() _type.IType {
+func (d *LocalVariableDeclaration) Type() _type.IType {
 	return d.typ
 }
 
-func (d *LocalVariableDeclaration) GetLocalVariableDeclarators() ILocalVariableDeclarator {
+func (d *LocalVariableDeclaration) LocalVariableDeclarators() ILocalVariableDeclarator {
 	return d.localVariableDeclarators
 }
 

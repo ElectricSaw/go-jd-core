@@ -24,19 +24,19 @@ type BinaryOperatorExpression struct {
 	priority        int
 }
 
-func (e *BinaryOperatorExpression) GetLeftExpression() Expression {
+func (e *BinaryOperatorExpression) LeftExpression() Expression {
 	return e.leftExpression
 }
 
-func (e *BinaryOperatorExpression) GetOperator() string {
+func (e *BinaryOperatorExpression) Operator() string {
 	return e.operator
 }
 
-func (e *BinaryOperatorExpression) GetRightExpression() Expression {
+func (e *BinaryOperatorExpression) RightExpression() Expression {
 	return e.rightExpression
 }
 
-func (e *BinaryOperatorExpression) GetPriority() int {
+func (e *BinaryOperatorExpression) Priority() int {
 	return e.priority
 }
 

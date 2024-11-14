@@ -25,11 +25,11 @@ type LengthExpression struct {
 	expression Expression
 }
 
-func (e *LengthExpression) GetType() _type.IType {
+func (e *LengthExpression) Type() _type.IType {
 	return _type.PtTypeInt
 }
 
-func (e *LengthExpression) GetExpression() Expression {
+func (e *LengthExpression) Expression() Expression {
 	return e.expression
 }
 

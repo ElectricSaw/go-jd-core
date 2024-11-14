@@ -8,6 +8,12 @@ func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer IE
 	}
 }
 
+func NewElementValueArrayInitializerElementValueList(elementValueArrayInitializer IElementValuePair) *ElementValueArrayInitializerElementValue {
+	return &ElementValueArrayInitializerElementValue{
+		elementValueArrayInitializer: elementValueArrayInitializer,
+	}
+}
+
 func NewElementValueArrayInitializerElementValueEmpty() *ElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{elementValueArrayInitializer: nil}
 }
@@ -18,7 +24,7 @@ type ElementValueArrayInitializerElementValue struct {
 	elementValueArrayInitializer IElementValue
 }
 
-func (e *ElementValueArrayInitializerElementValue) GetElementValueArrayInitializer() IElementValue {
+func (e *ElementValueArrayInitializerElementValue) ElementValueArrayInitializer() IElementValue {
 	return e.elementValueArrayInitializer
 }
 

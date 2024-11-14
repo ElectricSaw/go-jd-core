@@ -38,7 +38,7 @@ type MethodInvocationExpression struct {
 	parameters               Expression
 }
 
-func (e *MethodInvocationExpression) GetNonWildcardTypeArguments() _type.ITypeArgument {
+func (e *MethodInvocationExpression) NonWildcardTypeArguments() _type.ITypeArgument {
 	return e.nonWildcardTypeArguments
 }
 
@@ -46,7 +46,7 @@ func (e *MethodInvocationExpression) SetNonWildcardTypeArguments(arguments _type
 	e.nonWildcardTypeArguments = arguments
 }
 
-func (e *MethodInvocationExpression) GetParameters() Expression {
+func (e *MethodInvocationExpression) Parameters() Expression {
 	return e.parameters
 }
 
@@ -54,7 +54,7 @@ func (e *MethodInvocationExpression) SetParameters(params Expression) {
 	e.parameters = params
 }
 
-func (e *MethodInvocationExpression) GetPriority() int {
+func (e *MethodInvocationExpression) Priority() int {
 	return 1
 }
 

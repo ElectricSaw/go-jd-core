@@ -92,6 +92,12 @@ type PrimitiveType struct {
 
 /////////////////////////////////////////////////////////////////////
 
+func (t *PrimitiveType) HashCode() int {
+	return 750039781 + t.flags
+}
+
+/////////////////////////////////////////////////////////////////////
+
 func (t *PrimitiveType) Name() string {
 	return t.name
 }
@@ -157,19 +163,19 @@ func (t *PrimitiveType) Equals(o ITypeArgument) bool {
 	return true
 }
 
-func (t *PrimitiveType) GetFlags() int {
+func (t *PrimitiveType) Flags() int {
 	return t.flags
 }
 
-func (t *PrimitiveType) GetLeftFlags() int {
+func (t *PrimitiveType) LeftFlags() int {
 	return t.leftFlags
 }
 
-func (t *PrimitiveType) GetRightFlags() int {
+func (t *PrimitiveType) RightFlags() int {
 	return t.rightFlags
 }
 
-func (t *PrimitiveType) GetJavaPrimitiveFlags() int {
+func (t *PrimitiveType) JavaPrimitiveFlags() int {
 	if t.flags&FlagBoolean != 0 {
 		return FlagBoolean
 	} else if t.flags&FlagInt != 0 {

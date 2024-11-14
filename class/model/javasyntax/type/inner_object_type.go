@@ -36,6 +36,12 @@ type InnerObjectType struct {
 
 /////////////////////////////////////////////////////////////////////
 
+func (t *InnerObjectType) HashCode() int {
+	result := 111476860 + t.ObjectType.HashCode()
+	result = 31*result + t.outerType.HashCode()
+	return result
+}
+
 /////////////////////////////////////////////////////////////////////
 
 func (t *InnerObjectType) CreateType(dimension int) IType {

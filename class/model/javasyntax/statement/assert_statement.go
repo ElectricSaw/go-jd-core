@@ -16,7 +16,7 @@ type AssertStatement struct {
 	message   expression.Expression
 }
 
-func (s *AssertStatement) GetCondition() expression.Expression {
+func (s *AssertStatement) Condition() expression.Expression {
 	return s.condition
 }
 
@@ -24,7 +24,7 @@ func (s *AssertStatement) SetCondition(condition expression.Expression) {
 	s.condition = condition
 }
 
-func (s *AssertStatement) GetMessage() expression.Expression {
+func (s *AssertStatement) Message() expression.Expression {
 	return s.message
 }
 

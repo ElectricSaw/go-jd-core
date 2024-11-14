@@ -89,7 +89,11 @@ type MethodDeclaration struct {
 	defaultAnnotationValue reference.IElementValue
 }
 
-func (d *MethodDeclaration) GetFlags() int {
+func (d *MethodDeclaration) AnnotationReferences() reference.IAnnotationReference {
+	return d.annotationReferences
+}
+
+func (d *MethodDeclaration) Flags() int {
 	return d.flags
 }
 
@@ -97,35 +101,35 @@ func (d *MethodDeclaration) IsStatic() bool {
 	return d.flags&classfile.AccStatic != 0
 }
 
-func (d *MethodDeclaration) GetName() string {
+func (d *MethodDeclaration) Name() string {
 	return d.name
 }
 
-func (d *MethodDeclaration) GetTypeParameters() _type.TypeParameter {
+func (d *MethodDeclaration) TypeParameters() _type.TypeParameter {
 	return d.typeParameters
 }
 
-func (d *MethodDeclaration) GetReturnType() _type.IType {
+func (d *MethodDeclaration) ReturnType() _type.IType {
 	return d.returnedType
 }
 
-func (d *MethodDeclaration) GetFormalParameter() IFormalParameter {
+func (d *MethodDeclaration) FormalParameter() IFormalParameter {
 	return d.formalParameter
 }
 
-func (d *MethodDeclaration) GetExceptionTypes() _type.IType {
+func (d *MethodDeclaration) ExceptionTypes() _type.IType {
 	return d.exceptionTypes
 }
 
-func (d *MethodDeclaration) GetDescriptor() string {
+func (d *MethodDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *MethodDeclaration) GetStatements() statement.Statement {
+func (d *MethodDeclaration) Statements() statement.Statement {
 	return d.statements
 }
 
-func (d *MethodDeclaration) GetDefaultAnnotationValue() reference.IElementValue {
+func (d *MethodDeclaration) DefaultAnnotationValue() reference.IElementValue {
 	return d.defaultAnnotationValue
 }
 

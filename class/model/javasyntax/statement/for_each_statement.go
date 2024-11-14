@@ -23,15 +23,15 @@ type ForEachStatement struct {
 	statement  Statement
 }
 
-func (s *ForEachStatement) GetType() _type.IType {
+func (s *ForEachStatement) Type() _type.IType {
 	return s.typ
 }
 
-func (s *ForEachStatement) GetName() string {
+func (s *ForEachStatement) Name() string {
 	return s.name
 }
 
-func (s *ForEachStatement) GetExpression() expression.Expression {
+func (s *ForEachStatement) Expression() expression.Expression {
 	return s.expression
 }
 
@@ -39,7 +39,7 @@ func (s *ForEachStatement) SetExpression(expression expression.Expression) {
 	s.expression = expression
 }
 
-func (s *ForEachStatement) GetStatement() Statement {
+func (s *ForEachStatement) Statement() Statement {
 	return s.statement
 }
 

@@ -16,7 +16,7 @@ type IfStatement struct {
 	statements Statement
 }
 
-func (s *IfStatement) GetCondition() expression.Expression {
+func (s *IfStatement) Condition() expression.Expression {
 	return s.condition
 }
 
@@ -24,7 +24,7 @@ func (s *IfStatement) SetCondition(condition expression.Expression) {
 	s.condition = condition
 }
 
-func (s *IfStatement) GetStatements() Statement {
+func (s *IfStatement) Statements() Statement {
 	return s.statements
 }
 

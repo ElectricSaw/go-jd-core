@@ -30,7 +30,7 @@ type LocalVariableDeclarator struct {
 	variableInitializer VariableInitializer
 }
 
-func (d *LocalVariableDeclarator) GetName() string {
+func (d *LocalVariableDeclarator) Name() string {
 	return d.name
 }
 
@@ -38,7 +38,7 @@ func (d *LocalVariableDeclarator) SetName(name string) {
 	d.name = name
 }
 
-func (d *LocalVariableDeclarator) GetDimension() int {
+func (d *LocalVariableDeclarator) Dimension() int {
 	return d.dimension
 }
 
@@ -46,11 +46,11 @@ func (d *LocalVariableDeclarator) SetDimension(dimension int) {
 	d.dimension = dimension
 }
 
-func (d *LocalVariableDeclarator) GetLineNumber() int {
+func (d *LocalVariableDeclarator) LineNumber() int {
 	return d.lineNumber
 }
 
-func (d *LocalVariableDeclarator) GetVariableInitializer() VariableInitializer {
+func (d *LocalVariableDeclarator) VariableInitializer() VariableInitializer {
 	return d.variableInitializer
 }
 

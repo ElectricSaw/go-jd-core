@@ -26,11 +26,11 @@ type NewInitializedArray struct {
 	arrayInitializer declaration.ArrayVariableInitializer
 }
 
-func (e *NewInitializedArray) GetArrayInitializer() declaration.ArrayVariableInitializer {
-	return e.arrayInitializer
+func (e *NewInitializedArray) ArrayInitializer() *declaration.ArrayVariableInitializer {
+	return &e.arrayInitializer
 }
 
-func (e *NewInitializedArray) GetPriority() int {
+func (e *NewInitializedArray) Priority() int {
 	return 0
 }
 

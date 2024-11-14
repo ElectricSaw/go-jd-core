@@ -18,7 +18,7 @@ type NewArray struct {
 	dimensionExpressionList Expression
 }
 
-func (e *NewArray) GetDimensionExpressionList() Expression {
+func (e *NewArray) DimensionExpressionList() Expression {
 	return e.dimensionExpressionList
 }
 
@@ -26,7 +26,7 @@ func (e *NewArray) SetDimensionExpressionList(dimensionExpressionList Expression
 	e.dimensionExpressionList = dimensionExpressionList
 }
 
-func (e *NewArray) GetPriority() int {
+func (e *NewArray) Priority() int {
 	return 0
 }
 

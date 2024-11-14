@@ -25,7 +25,7 @@ type LocalVariableReferenceExpression struct {
 	name string
 }
 
-func (e *LocalVariableReferenceExpression) GetName() string {
+func (e *LocalVariableReferenceExpression) Name() string {
 	return e.name
 }
 

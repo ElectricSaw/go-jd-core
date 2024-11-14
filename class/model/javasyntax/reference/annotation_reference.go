@@ -2,27 +2,27 @@ package reference
 
 import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 
-func NewAnnotationReference(typ _type.ObjectType) *AnnotationReference {
+func NewAnnotationReference(typ _type.IObjectType) *AnnotationReference {
 	return &AnnotationReference{
 		typ: typ,
 	}
 }
 
-func NewAnnotationReferenceWithEv(typ _type.ObjectType, elementValue IElementValue) *AnnotationReference {
+func NewAnnotationReferenceWithEv(typ _type.IObjectType, elementValue IElementValue) *AnnotationReference {
 	return &AnnotationReference{
 		typ:          typ,
 		elementValue: elementValue,
 	}
 }
 
-func NewAnnotationReferenceWithEvp(typ _type.ObjectType, elementValuePairs IElementValuePair) *AnnotationReference {
+func NewAnnotationReferenceWithEvp(typ _type.IObjectType, elementValuePairs IElementValuePair) *AnnotationReference {
 	return &AnnotationReference{
 		typ:               typ,
 		elementValuePairs: elementValuePairs,
 	}
 }
 
-func NewAnnotationReferenceWithAll(typ _type.ObjectType, elementValue IElementValue, elementValuePairs IElementValuePair) *AnnotationReference {
+func NewAnnotationReferenceWithAll(typ _type.IObjectType, elementValue IElementValue, elementValuePairs IElementValuePair) *AnnotationReference {
 	return &AnnotationReference{
 		typ:               typ,
 		elementValue:      elementValue,
@@ -31,20 +31,22 @@ func NewAnnotationReferenceWithAll(typ _type.ObjectType, elementValue IElementVa
 }
 
 type AnnotationReference struct {
-	typ               _type.ObjectType
+	IAnnotationReference
+
+	typ               _type.IObjectType
 	elementValue      IElementValue
 	elementValuePairs IElementValuePair
 }
 
-func (r *AnnotationReference) GetType() _type.ObjectType {
+func (r *AnnotationReference) Type() _type.IObjectType {
 	return r.typ
 }
 
-func (r *AnnotationReference) GetElementValue() IElementValue {
+func (r *AnnotationReference) ElementValue() IElementValue {
 	return r.elementValue
 }
 
-func (r *AnnotationReference) GetElementValuePairs() IElementValuePair {
+func (r *AnnotationReference) ElementValuePairs() IElementValuePair {
 	return r.elementValuePairs
 }
 

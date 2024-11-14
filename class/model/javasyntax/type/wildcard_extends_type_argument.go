@@ -35,7 +35,15 @@ func (t *WildcardExtendsTypeArgument) AcceptTypeArgumentVisitor(visitor TypeArgu
 	visitor.VisitWildcardExtendsTypeArgument(t)
 }
 
-func (t *WildcardExtendsTypeArgument) equals(o ITypeArgument) bool {
+func (t *WildcardExtendsTypeArgument) HashCode() int {
+	if t.typ == nil {
+		return 957014778
+	}
+
+	return 957014778 + t.typ.HashCode()
+}
+
+func (t *WildcardExtendsTypeArgument) Equals(o ITypeArgument) bool {
 	if t == o {
 		return true
 	}

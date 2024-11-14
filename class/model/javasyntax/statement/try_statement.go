@@ -32,11 +32,19 @@ type TryStatement struct {
 	finallyStatement Statement
 }
 
-func (s *TryStatement) GetResources() []Resource {
+func (s *TryStatement) ResourceList() []Statement {
+	ret := make([]Statement, 0, len(s.resources))
+	for _, resource := range s.resources {
+		ret = append(ret, &resource)
+	}
+	return ret
+}
+
+func (s *TryStatement) Resources() []Resource {
 	return s.resources
 }
 
-func (s *TryStatement) GetTryStatement() Statement {
+func (s *TryStatement) TryStatement() Statement {
 	return s.tryStatements
 }
 
@@ -44,11 +52,19 @@ func (s *TryStatement) SetTryStatement(tryStatement Statement) {
 	s.tryStatements = tryStatement
 }
 
-func (s *TryStatement) GetCatchClauses() []CatchClause {
+func (s *TryStatement) CatchClauseList() []Statement {
+	ret := make([]Statement, 0, len(s.catchClauses))
+	for _, resource := range s.catchClauses {
+		ret = append(ret, &resource)
+	}
+	return ret
+}
+
+func (s *TryStatement) CatchClauses() []CatchClause {
 	return s.catchClauses
 }
 
-func (s *TryStatement) GetFinallyStatements() Statement {
+func (s *TryStatement) FinallyStatements() Statement {
 	return s.finallyStatement
 }
 
@@ -80,15 +96,15 @@ type Resource struct {
 	expression expression.Expression
 }
 
-func (r *Resource) GetType() *_type.ObjectType {
+func (r *Resource) Type() *_type.ObjectType {
 	return &r.typ
 }
 
-func (r *Resource) GetName() string {
+func (r *Resource) Name() string {
 	return r.name
 }
 
-func (r *Resource) GetExpression() expression.Expression {
+func (r *Resource) Expression() expression.Expression {
 	return r.expression
 }
 
@@ -119,23 +135,23 @@ type CatchClause struct {
 	statements Statement
 }
 
-func (c *CatchClause) GetLineNumber() int {
+func (c *CatchClause) LineNumber() int {
 	return c.lineNumber
 }
 
-func (c *CatchClause) GetType() *_type.ObjectType {
+func (c *CatchClause) Type() *_type.ObjectType {
 	return &c.typ
 }
 
-func (c *CatchClause) GetOtherType() []_type.ObjectType {
+func (c *CatchClause) OtherType() []_type.ObjectType {
 	return c.otherType
 }
 
-func (c *CatchClause) GetName() string {
+func (c *CatchClause) Name() string {
 	return c.name
 }
 
-func (c *CatchClause) GetStatements() Statement {
+func (c *CatchClause) Statements() Statement {
 	return c.statements
 }
 

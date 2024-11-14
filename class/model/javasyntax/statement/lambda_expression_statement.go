@@ -17,7 +17,7 @@ type LambdaExpressionStatement struct {
 	expression expression.Expression
 }
 
-func (s *LambdaExpressionStatement) GetExpression() expression.Expression {
+func (s *LambdaExpressionStatement) Expression() expression.Expression {
 	return s.expression
 }
 

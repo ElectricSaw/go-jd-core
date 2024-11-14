@@ -25,7 +25,7 @@ type FloatConstantExpression struct {
 	value float32
 }
 
-func (e *FloatConstantExpression) GetFloatValue() float32 {
+func (e *FloatConstantExpression) FloatValue() float32 {
 	return e.value
 }
 

@@ -12,12 +12,16 @@ type BodyDeclaration struct {
 	memberDeclaration IMemberDeclaration
 }
 
-func (d *BodyDeclaration) GetInternalTypeName() string {
+func (d *BodyDeclaration) InternalTypeName() string {
 	return d.internalTypeName
 }
 
-func (d *BodyDeclaration) GetMemberDeclaration() IMemberDeclaration {
+func (d *BodyDeclaration) MemberDeclaration() IMemberDeclaration {
 	return d.memberDeclaration
+}
+
+func (d *BodyDeclaration) SetMemberDeclaration(memberDeclaration IMemberDeclaration) {
+	d.memberDeclaration = memberDeclaration
 }
 
 func (d *BodyDeclaration) Accept(visitor DeclarationVisitor) {

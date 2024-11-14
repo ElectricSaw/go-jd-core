@@ -27,7 +27,7 @@ type LambdaFormalParametersExpression struct {
 	formalParameters declaration.IFormalParameter
 }
 
-func (e *LambdaFormalParametersExpression) GetFormalParameters() declaration.IFormalParameter {
+func (e *LambdaFormalParametersExpression) FormalParameters() declaration.IFormalParameter {
 	return e.formalParameters
 }
 

@@ -1,10 +1,19 @@
 package _type
 
+import (
+	"bytes"
+	"encoding/gob"
+	"hash/fnv"
+)
+
 type IType interface {
+	TypeVisitable
+	
 	Name() string
 	Descriptor() string
 	Dimension() int
 	CreateType(dimension int) IType
+	Size() int
 
 	IsGenericType() bool
 	IsInnerObjectType() bool
@@ -30,6 +39,10 @@ type IType interface {
 	IsWildcardSuperTypeArgument() bool
 	IsWildcardTypeArgument() bool
 	Type() IType
+
+	///////////////////////////////////////////////////////////////
+
+	HashCode() int
 }
 
 type TypeVisitor interface {
@@ -54,6 +67,7 @@ type IObjectType interface {
 	CreateTypeWithArgs(typeArguments ITypeArgument) IObjectType
 	AcceptTypeVisitor(visitor TypeVisitor)
 	AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor)
+	HashCode() int
 }
 
 type AbstractType struct {
@@ -74,6 +88,10 @@ func (t *AbstractType) Dimension() int {
 
 func (t *AbstractType) CreateType(dimension int) IType {
 	return nil
+}
+
+func (t *AbstractType) Size() int {
+	return 1
 }
 
 func (t *AbstractType) IsGenericType() bool {
@@ -97,7 +115,7 @@ func (t *AbstractType) IsTypes() bool {
 }
 
 func (t *AbstractType) OuterType() IObjectType {
-	return TypeUndefinedObject
+	return OtTypeUndefinedObject
 }
 
 func (t *AbstractType) InternalName() string {
@@ -105,4 +123,37 @@ func (t *AbstractType) InternalName() string {
 }
 
 func (t *AbstractType) AcceptTypeVisitor(visitor TypeVisitor) {
+}
+
+func hashCodeWithString(str string) int {
+	h := fnv.New32a()
+	_, err := h.Write([]byte(str))
+	if err != nil {
+		return -1
+	}
+	return int(h.Sum32())
+}
+
+func hashCodeWithStruct(data any) int {
+	bytes := toBytes(data)
+	if bytes == nil {
+		return -1
+	}
+
+	h := fnv.New32a()
+	_, err := h.Write(bytes)
+	if err != nil {
+		return -1
+	}
+
+	return int(h.Sum32())
+}
+
+func toBytes(data any) []byte {
+	buf := bytes.Buffer{}
+	enc := gob.NewEncoder(&buf)
+	if err := enc.Encode(data); err != nil {
+		return nil
+	}
+	return buf.Bytes()
 }

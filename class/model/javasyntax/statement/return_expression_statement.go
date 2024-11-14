@@ -7,7 +7,7 @@ import (
 
 func NewReturnExpressionStatement(expression expression.Expression) *ReturnExpressionStatement {
 	return &ReturnExpressionStatement{
-		lineNumber: expression.GetLineNumber(),
+		lineNumber: expression.LineNumber(),
 		expression: expression,
 	}
 }
@@ -26,7 +26,7 @@ type ReturnExpressionStatement struct {
 	expression expression.Expression
 }
 
-func (s *ReturnExpressionStatement) GetLineNumber() int {
+func (s *ReturnExpressionStatement) LineNumber() int {
 	return s.lineNumber
 }
 
@@ -34,7 +34,7 @@ func (s *ReturnExpressionStatement) SetLineNumber(lineNumber int) {
 	s.lineNumber = lineNumber
 }
 
-func (s *ReturnExpressionStatement) GetExpression() expression.Expression {
+func (s *ReturnExpressionStatement) Expression() expression.Expression {
 	return s.expression
 }
 

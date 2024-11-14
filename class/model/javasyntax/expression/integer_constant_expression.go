@@ -26,7 +26,7 @@ type IntegerConstantExpression struct {
 	value int
 }
 
-func (e *IntegerConstantExpression) GetIntegerValue() int {
+func (e *IntegerConstantExpression) IntegerValue() int {
 	return e.value
 }
 
@@ -40,7 +40,7 @@ func (e *IntegerConstantExpression) checkType(typ _type.IType) bool {
 		valueType := GetPrimitiveTypeFromValue(e.value)
 		pt, ok := e.typ.(*_type.PrimitiveType)
 		if ok {
-			return pt.GetFlags()&valueType.GetFlags() != 0
+			return pt.Flags()&valueType.Flags() != 0
 		}
 	}
 	return false

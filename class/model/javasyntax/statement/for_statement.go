@@ -34,15 +34,15 @@ type ForStatement struct {
 	statements  Statement
 }
 
-func (s *ForStatement) GetDeclaration() declaration.LocalVariableDeclaration {
-	return s.declaration
+func (s *ForStatement) Declaration() *declaration.LocalVariableDeclaration {
+	return &s.declaration
 }
 
 func (s *ForStatement) SetDeclaration(declaration declaration.LocalVariableDeclaration) {
 	s.declaration = declaration
 }
 
-func (s *ForStatement) GetInit() expression.Expression {
+func (s *ForStatement) Init() expression.Expression {
 	return s.init
 }
 
@@ -50,7 +50,7 @@ func (s *ForStatement) SetInit(init expression.Expression) {
 	s.init = init
 }
 
-func (s *ForStatement) GetCondition() expression.Expression {
+func (s *ForStatement) Condition() expression.Expression {
 	return s.condition
 }
 
@@ -58,7 +58,7 @@ func (s *ForStatement) SetCondition(condition expression.Expression) {
 	s.condition = condition
 }
 
-func (s *ForStatement) GetUpdate() expression.Expression {
+func (s *ForStatement) Update() expression.Expression {
 	return s.update
 }
 
@@ -66,7 +66,7 @@ func (s *ForStatement) SetUpdate(update expression.Expression) {
 	s.update = update
 }
 
-func (s *ForStatement) GetStatements() Statement {
+func (s *ForStatement) Statements() Statement {
 	return s.statements
 }
 

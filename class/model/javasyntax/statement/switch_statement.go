@@ -21,7 +21,7 @@ type SwitchStatement struct {
 	blocks    []Block
 }
 
-func (s *SwitchStatement) GetCondition() expression.Expression {
+func (s *SwitchStatement) Condition() expression.Expression {
 	return s.condition
 }
 
@@ -29,7 +29,15 @@ func (s *SwitchStatement) SetCondition(condition expression.Expression) {
 	s.condition = condition
 }
 
-func (s *SwitchStatement) GetBlocks() []Block {
+func (s *SwitchStatement) List() []Statement {
+	ret := make([]Statement, 0, len(s.blocks))
+	for _, block := range s.blocks {
+		ret = append(ret, &block)
+	}
+	return ret
+}
+
+func (s *SwitchStatement) Blocks() []Block {
 	return s.blocks
 }
 
@@ -44,7 +52,7 @@ func (s *SwitchStatement) Accept(visitor StatementVisitor) {
 // --- Label --- //
 
 type ILabel interface {
-	ignoreLabel()
+	Statement
 }
 
 func NewDefaultLabel() *DefaultLabe1 {
@@ -77,7 +85,7 @@ type ExpressionLabel struct {
 	expression expression.Expression
 }
 
-func (l *ExpressionLabel) GetExpression() expression.Expression {
+func (l *ExpressionLabel) Expression() expression.Expression {
 	return l.expression
 }
 
@@ -109,7 +117,7 @@ type Block struct {
 	statements Statement
 }
 
-func (b *Block) GetStatements() Statement {
+func (b *Block) Statements() Statement {
 	return b.statements
 }
 
@@ -128,7 +136,7 @@ type LabelBlock struct {
 	label ILabel
 }
 
-func (b *LabelBlock) GetLabel() ILabel {
+func (b *LabelBlock) Label() ILabel {
 	return b.label
 }
 
@@ -159,7 +167,15 @@ type MultiLabelsBlock struct {
 	labels []ILabel
 }
 
-func (b *MultiLabelsBlock) GetLabels() []ILabel {
+func (b *MultiLabelsBlock) List() []Statement {
+	ret := make([]Statement, 0, len(b.labels))
+	for _, label := range b.labels {
+		ret = append(ret, label)
+	}
+	return ret
+}
+
+func (b *MultiLabelsBlock) Labels() []ILabel {
 	return b.labels
 }
 

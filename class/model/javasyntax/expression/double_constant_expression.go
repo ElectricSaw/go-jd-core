@@ -25,7 +25,7 @@ type DoubleConstantExpression struct {
 	value float64
 }
 
-func (e *DoubleConstantExpression) GetDoubleValue() float64 {
+func (e *DoubleConstantExpression) DoubleValue() float64 {
 	return e.value
 }
 

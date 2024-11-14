@@ -34,19 +34,19 @@ func (d *FieldDeclarator) SetFieldDeclaration(fieldDeclaration *FieldDeclaration
 	d.fieldDeclaration = fieldDeclaration
 }
 
-func (d *FieldDeclarator) GetFieldDeclaration() *FieldDeclaration {
+func (d *FieldDeclarator) FieldDeclaration() *FieldDeclaration {
 	return d.fieldDeclaration
 }
 
-func (d *FieldDeclarator) GetName() string {
+func (d *FieldDeclarator) Name() string {
 	return d.name
 }
 
-func (d *FieldDeclarator) GetDimension() int {
+func (d *FieldDeclarator) Dimension() int {
 	return d.dimension
 }
 
-func (d *FieldDeclarator) GetVariableInitializer() VariableInitializer {
+func (d *FieldDeclarator) VariableInitializer() VariableInitializer {
 	return d.variableInitializer
 }
 

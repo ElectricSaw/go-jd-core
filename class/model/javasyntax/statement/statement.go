@@ -28,20 +28,20 @@ func (s *AbstractStatement) IsThrowStatement() bool                    { return 
 func (s *AbstractStatement) IsTryStatement() bool                      { return false }
 func (s *AbstractStatement) IsWhileStatement() bool                    { return false }
 
-func (s *AbstractStatement) GetCondition() expression.Expression  { return expression.NeNoExpression }
-func (s *AbstractStatement) GetExpression() expression.Expression { return expression.NeNoExpression }
-func (s *AbstractStatement) GetMonitor() expression.Expression    { return expression.NeNoExpression }
-func (s *AbstractStatement) GetElseStatements() Statement         { return NoStmt }
-func (s *AbstractStatement) GetFinallyStatements() Statement      { return NoStmt }
-func (s *AbstractStatement) GetStatements() Statement             { return NoStmt }
-func (s *AbstractStatement) GetTryStatements() Statement          { return NoStmt }
+func (s *AbstractStatement) Condition() expression.Expression  { return expression.NeNoExpression }
+func (s *AbstractStatement) Expression() expression.Expression { return expression.NeNoExpression }
+func (s *AbstractStatement) Monitor() expression.Expression    { return expression.NeNoExpression }
+func (s *AbstractStatement) ElseStatements() Statement         { return NoStmt }
+func (s *AbstractStatement) FinallyStatements() Statement      { return NoStmt }
+func (s *AbstractStatement) Statements() Statement             { return NoStmt }
+func (s *AbstractStatement) TryStatements() Statement          { return NoStmt }
 
-func (s *AbstractStatement) GetInit() expression.Expression   { return expression.NeNoExpression }
-func (s *AbstractStatement) GetUpdate() expression.Expression { return expression.NeNoExpression }
+func (s *AbstractStatement) Init() expression.Expression   { return expression.NeNoExpression }
+func (s *AbstractStatement) Update() expression.Expression { return expression.NeNoExpression }
 
-func (s *AbstractStatement) GetCatchClauses() []CatchClause { return nil }
+func (s *AbstractStatement) CatchClauses() []CatchClause { return nil }
 
-func (s *AbstractStatement) GetLineNumber() int { return expression.UnknownLineNumber }
+func (s *AbstractStatement) LineNumber() int { return expression.UnknownLineNumber }
 
 type Statement interface {
 	Accept(visitor StatementVisitor)
@@ -67,17 +67,17 @@ type Statement interface {
 	IsTryStatement() bool
 	IsWhileStatement() bool
 
-	GetCondition() expression.Expression
-	GetExpression() expression.Expression
-	GetMonitor() expression.Expression
-	GetElseStatements() Statement
-	GetFinallyStatements() Statement
-	GetStatements() Statement
-	GetTryStatements() Statement
-	GetInit() expression.Expression
-	GetUpdate() expression.Expression
-	GetCatchClauses() []CatchClause
-	GetLineNumber() int
+	Condition() expression.Expression
+	Expression() expression.Expression
+	Monitor() expression.Expression
+	ElseStatements() Statement
+	FinallyStatements() Statement
+	Statements() Statement
+	TryStatements() Statement
+	Init() expression.Expression
+	Update() expression.Expression
+	CatchClauses() []CatchClause
+	LineNumber() int
 }
 
 type StatementVisitor interface {

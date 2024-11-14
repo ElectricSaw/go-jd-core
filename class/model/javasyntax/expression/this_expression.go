@@ -28,7 +28,7 @@ type ThisExpression struct {
 	explicit bool
 }
 
-func (e *ThisExpression) GetType() _type.IType {
+func (e *ThisExpression) Type() _type.IType {
 	return e.typ
 }
 

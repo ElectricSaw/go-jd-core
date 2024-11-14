@@ -10,7 +10,7 @@ type Annotations struct {
 	annotations []Annotation
 }
 
-func (a Annotations) GetAnnotations() []Annotation {
+func (a Annotations) Annotations() []Annotation {
 	return a.annotations
 }
 

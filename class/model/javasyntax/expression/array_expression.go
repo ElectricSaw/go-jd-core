@@ -22,7 +22,7 @@ func NewArrayExpressionWithLineNumber(lineNumber int, expression Expression, ind
 }
 
 func CreateItemType(expression Expression) _type.IType {
-	typ := expression.GetType()
+	typ := expression.Type()
 	dimension := typ.Dimension()
 
 	if dimension > 0 {
@@ -39,15 +39,15 @@ type ArrayExpression struct {
 	index      Expression
 }
 
-func (e *ArrayExpression) GetExpression() Expression {
+func (e *ArrayExpression) Expression() Expression {
 	return e.expression
 }
 
-func (e *ArrayExpression) GetIndex() Expression {
+func (e *ArrayExpression) Index() Expression {
 	return e.index
 }
 
-func (e *ArrayExpression) GetPriority() int {
+func (e *ArrayExpression) Priority() int {
 	return 1
 }
 

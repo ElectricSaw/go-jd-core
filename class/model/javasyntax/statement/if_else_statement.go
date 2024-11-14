@@ -18,7 +18,7 @@ type IfElseStatement struct {
 	elseStatements Statement
 }
 
-func (s *IfElseStatement) GetElseStatements() Statement {
+func (s *IfElseStatement) ElseStatements() Statement {
 	return s.elseStatements
 }
 

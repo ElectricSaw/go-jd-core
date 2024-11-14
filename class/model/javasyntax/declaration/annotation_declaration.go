@@ -5,7 +5,7 @@ import (
 	"fmt"
 )
 
-func NewAnnotationDeclaration(annotationDeclarators IFieldDeclarator, annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration) *AnnotationDeclaration {
+func NewAnnotationDeclaration(annotationDeclarators IFieldDeclarator, annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration Declaration) *AnnotationDeclaration {
 	return &AnnotationDeclaration{
 		TypeDeclaration:        *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration),
 		annotationDeclaratiors: annotationDeclarators,
@@ -18,7 +18,7 @@ type AnnotationDeclaration struct {
 	annotationDeclaratiors IFieldDeclarator
 }
 
-func (d *AnnotationDeclaration) GetAnnotationDeclarator() IFieldDeclarator {
+func (d *AnnotationDeclaration) AnnotationDeclarators() IFieldDeclarator {
 	return d.annotationDeclaratiors
 }
 

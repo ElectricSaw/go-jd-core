@@ -28,7 +28,7 @@ type TypeReferenceDotClassExpression struct {
 	typ          _type.IType
 }
 
-func (e *TypeReferenceDotClassExpression) GetLineNumber() int {
+func (e *TypeReferenceDotClassExpression) LineNumber() int {
 	return e.lineNumber
 }
 
@@ -36,11 +36,11 @@ func (e *TypeReferenceDotClassExpression) GetTypeDotClass() _type.IType {
 	return e.typeDotClass
 }
 
-func (e *TypeReferenceDotClassExpression) GetType() _type.IType {
+func (e *TypeReferenceDotClassExpression) Type() _type.IType {
 	return e.typ
 }
 
-func (e *TypeReferenceDotClassExpression) GetPriority() int {
+func (e *TypeReferenceDotClassExpression) Priority() int {
 	return 0
 }
 

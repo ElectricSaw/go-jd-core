@@ -14,6 +14,7 @@ type ITypeArgument interface {
 	IsWildcardSuperTypeArgument() bool
 	IsWildcardTypeArgument() bool
 	Type() IType
+	HashCode() int
 }
 
 type TypeArgumentVisitable interface {
@@ -48,7 +49,7 @@ func (t *AbstractTypeArgument) TypeArgumentSize() int {
 }
 
 func (t *AbstractTypeArgument) Type() IType {
-	return TypeUndefinedObject
+	return OtTypeUndefinedObject
 }
 
 func (t *AbstractTypeArgument) IsTypeArgumentAssignableFrom(_ map[string]IType, _ ITypeArgument) bool {
@@ -89,4 +90,8 @@ func (t *AbstractTypeArgument) IsWildcardTypeArgument() bool {
 
 func (t *AbstractTypeArgument) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
 
+}
+
+func (t *AbstractTypeArgument) HashCode() int {
+	return hashCodeWithStruct(t)
 }

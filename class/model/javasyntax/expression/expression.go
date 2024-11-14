@@ -7,9 +7,12 @@ var UnknownLineNumber = 0
 type AbstractExpression struct {
 }
 
-func (e *AbstractExpression) GetLineNumber() int   { return UnknownLineNumber }
-func (e *AbstractExpression) GetType() _type.IType { return nil }
-func (e *AbstractExpression) GetPriority() int     { return -1 }
+func (e *AbstractExpression) LineNumber() int   { return UnknownLineNumber }
+func (e *AbstractExpression) Type() _type.IType { return nil }
+func (e *AbstractExpression) Priority() int     { return -1 }
+func (e *AbstractExpression) Size() int {
+	return 1
+}
 
 func (e *AbstractExpression) Accept(visitor ExpressionVisitor) {}
 
@@ -39,30 +42,31 @@ func (e *AbstractExpression) IsSuperExpression() bool                      { ret
 func (e *AbstractExpression) IsTernaryOperatorExpression() bool            { return false }
 func (e *AbstractExpression) IsThisExpression() bool                       { return false }
 
-func (e *AbstractExpression) GetDimensionExpressionList() Expression { return NeNoExpression }
-func (e *AbstractExpression) GetParameters() Expression              { return NeNoExpression }
-func (e *AbstractExpression) GetCondition() Expression               { return NeNoExpression }
-func (e *AbstractExpression) GetExpression() Expression              { return NeNoExpression }
-func (e *AbstractExpression) GetTrueExpression() Expression          { return NeNoExpression }
-func (e *AbstractExpression) GetFalseExpression() Expression         { return NeNoExpression }
-func (e *AbstractExpression) GetIndex() Expression                   { return NeNoExpression }
-func (e *AbstractExpression) GetLeftExpression() Expression          { return NeNoExpression }
-func (e *AbstractExpression) GetRightExpression() Expression         { return NeNoExpression }
-func (e *AbstractExpression) GetDescriptor() string                  { return "" }
-func (e *AbstractExpression) GetDoubleValue() float64                { return 0 }
-func (e *AbstractExpression) GetFloatValue() float32                 { return 0 }
-func (e *AbstractExpression) GetIntegerValue() int                   { return 0 }
-func (e *AbstractExpression) GetInternalTypeName() string            { return "" }
-func (e *AbstractExpression) GetLongValue() int64                    { return 0 }
-func (e *AbstractExpression) GetName() string                        { return "" }
-func (e *AbstractExpression) GetObjectType() *_type.ObjectType       { return _type.TypeUndefinedObject }
-func (e *AbstractExpression) GetOperator() string                    { return "" }
-func (e *AbstractExpression) GetStringValue() string                 { return "" }
+func (e *AbstractExpression) DimensionExpressionList() Expression { return NeNoExpression }
+func (e *AbstractExpression) Parameters() Expression              { return NeNoExpression }
+func (e *AbstractExpression) Condition() Expression               { return NeNoExpression }
+func (e *AbstractExpression) Expression() Expression              { return NeNoExpression }
+func (e *AbstractExpression) TrueExpression() Expression          { return NeNoExpression }
+func (e *AbstractExpression) FalseExpression() Expression         { return NeNoExpression }
+func (e *AbstractExpression) Index() Expression                   { return NeNoExpression }
+func (e *AbstractExpression) LeftExpression() Expression          { return NeNoExpression }
+func (e *AbstractExpression) RightExpression() Expression         { return NeNoExpression }
+func (e *AbstractExpression) Descriptor() string                  { return "" }
+func (e *AbstractExpression) DoubleValue() float64                { return 0 }
+func (e *AbstractExpression) FloatValue() float32                 { return 0 }
+func (e *AbstractExpression) IntegerValue() int                   { return 0 }
+func (e *AbstractExpression) InternalTypeName() string            { return "" }
+func (e *AbstractExpression) LongValue() int64                    { return 0 }
+func (e *AbstractExpression) Name() string                        { return "" }
+func (e *AbstractExpression) ObjectType() _type.IObjectType       { return _type.OtTypeUndefinedObject }
+func (e *AbstractExpression) Operator() string                    { return "" }
+func (e *AbstractExpression) StringValue() string                 { return "" }
 
 type Expression interface {
-	GetLineNumber() int
-	GetType() _type.IType
-	GetPriority() int
+	LineNumber() int
+	Type() _type.IType
+	Priority() int
+	Size() int
 
 	Accept(visitor ExpressionVisitor)
 
@@ -92,25 +96,25 @@ type Expression interface {
 	IsTernaryOperatorExpression() bool
 	IsThisExpression() bool
 
-	GetDimensionExpressionList() Expression
-	GetParameters() Expression
-	GetCondition() Expression
-	GetExpression() Expression
-	GetTrueExpression() Expression
-	GetFalseExpression() Expression
-	GetIndex() Expression
-	GetLeftExpression() Expression
-	GetRightExpression() Expression
-	GetDescriptor() string
-	GetDoubleValue() float64
-	GetFloatValue() float32
-	GetIntegerValue() int
-	GetInternalTypeName() string
-	GetLongValue() int64
-	GetName() string
-	GetObjectType() *_type.ObjectType
-	GetOperator() string
-	GetStringValue() string
+	DimensionExpressionList() Expression
+	Parameters() Expression
+	Condition() Expression
+	Expression() Expression
+	TrueExpression() Expression
+	FalseExpression() Expression
+	Index() Expression
+	LeftExpression() Expression
+	RightExpression() Expression
+	Descriptor() string
+	DoubleValue() float64
+	FloatValue() float32
+	IntegerValue() int
+	InternalTypeName() string
+	LongValue() int64
+	Name() string
+	ObjectType() _type.IObjectType
+	Operator() string
+	StringValue() string
 }
 
 type ExpressionVisitor interface {

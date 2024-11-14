@@ -21,7 +21,7 @@ type AbstractLineNumberTypeExpression struct {
 	typ _type.IType
 }
 
-func (e *AbstractLineNumberTypeExpression) GetType() _type.IType {
+func (e *AbstractLineNumberTypeExpression) Type() _type.IType {
 	return e.typ
 }
 

@@ -2,9 +2,9 @@ package reference
 
 import "fmt"
 
-func NewAnnotationElementValue(reference AnnotationReference) *AnnotationElementValue {
+func NewAnnotationElementValue(reference *AnnotationReference) *AnnotationElementValue {
 	return &AnnotationElementValue{
-		AnnotationReference: *NewAnnotationReferenceWithAll(reference.GetType(), reference.GetElementValue(), reference.GetElementValuePairs()),
+		AnnotationReference: *NewAnnotationReferenceWithAll(reference.Type(), reference.ElementValue(), reference.ElementValuePairs()),
 	}
 }
 
@@ -17,5 +17,5 @@ func (r *AnnotationElementValue) Accept(visitor ReferenceVisitor) {
 }
 
 func (r *AnnotationElementValue) String() string {
-	return fmt.Sprintf("AnnotationElementValue{type=%v, elementValue=%s, elementValuePairs=%v", r.GetType(), r.GetElementValue(), r.GetElementValuePairs())
+	return fmt.Sprintf("AnnotationElementValue{type=%v, elementValue=%s, elementValuePairs=%v", r.Type(), r.ElementValue(), r.ElementValuePairs())
 }

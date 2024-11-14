@@ -17,7 +17,7 @@ type ExpressionElementValue struct {
 	expression expression.Expression
 }
 
-func (e *ExpressionElementValue) GetExpression() expression.Expression {
+func (e *ExpressionElementValue) Expression() expression.Expression {
 	return e.expression
 }
 

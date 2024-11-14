@@ -25,11 +25,11 @@ type StringConstantExpression struct {
 	str string
 }
 
-func (e *StringConstantExpression) GetStringValue() string {
+func (e *StringConstantExpression) StringValue() string {
 	return e.str
 }
 
-func (e *StringConstantExpression) GetType() _type.IType {
+func (e *StringConstantExpression) Type() _type.IType {
 	return _type.OtTypeString
 }
 

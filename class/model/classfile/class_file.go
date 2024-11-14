@@ -21,13 +21,18 @@ func NewClassFile(majorVersion int, minorVersion int, accessFlags int, internalT
 type IClassFile interface {
 	MajorVersion() int
 	MinorVersion() int
+	IsEnum() bool
+	IsAnnotation() bool
+	IsInterface() bool
+	IsModule() bool
+	IsStatic() bool
 	AccessFlags() int
 	InternalTypeName() string
 	SuperTypeName() string
 	InterfaceTypeNames() []string
 	Field() []Field
 	Method() []Method
-	Attribute() map[string]attribute.Attribute
+	Attributes() map[string]attribute.Attribute
 }
 
 type ClassFile struct {
@@ -50,6 +55,26 @@ func (cf ClassFile) MajorVersion() int {
 
 func (cf ClassFile) MinorVersion() int {
 	return cf.minorVersion
+}
+
+func (cf ClassFile) IsEnum() bool {
+	return (cf.accessFlags & AccEnum) != 0
+}
+
+func (cf ClassFile) IsAnnotation() bool {
+	return (cf.accessFlags & AccAnnotation) != 0
+}
+
+func (cf ClassFile) IsInterface() bool {
+	return (cf.accessFlags & AccInterface) != 0
+}
+
+func (cf ClassFile) IsModule() bool {
+	return (cf.accessFlags & AccModule) != 0
+}
+
+func (cf ClassFile) IsStatic() bool {
+	return (cf.accessFlags & AccStatic) != 0
 }
 
 func (cf ClassFile) AccessFlags() int {
@@ -80,7 +105,7 @@ func (cf ClassFile) Method() []Method {
 	return cf.method
 }
 
-func (cf ClassFile) Attribute() map[string]attribute.Attribute {
+func (cf ClassFile) Attributes() map[string]attribute.Attribute {
 	return cf.attributes
 }
 

@@ -25,21 +25,21 @@ func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t *PrimitiveType) {
 
 func (v *AbstractTypeArgumentVisitor) VisitObjectType(t *ObjectType) {
 	if visitable, ok := t.TypeArguments().(TypeArgumentVisitable); ok {
-		v.safeAccept(visitable)
+		v.SafeAcceptTypeArgumentVisitable(visitable)
 	}
 }
 
 func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t *InnerObjectType) {
 	t.outerType.AcceptTypeArgumentVisitor(v)
 	if visitable, ok := t.TypeArguments().(TypeArgumentVisitable); ok {
-		v.safeAccept(visitable)
+		v.SafeAcceptTypeArgumentVisitable(visitable)
 	}
 }
 
 func (v *AbstractTypeArgumentVisitor) VisitGenericType(t *GenericType) {
 }
 
-func (v *AbstractTypeArgumentVisitor) safeAccept(visitable TypeArgumentVisitable) {
+func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable TypeArgumentVisitable) {
 	if visitable != nil {
 		visitable.AcceptTypeArgumentVisitor(v)
 	}

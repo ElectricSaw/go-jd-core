@@ -17,7 +17,7 @@ func NewConstructorDeclaration(flags int, formalParameter IFormalParameter, desc
 	}
 }
 
-func NewConstructorDeclarationWithAll(annotationReferences reference.AnnotationReference, flags int, typeParameters _type.ITypeParameter, formalParameter IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement) *ConstructorDeclaration {
+func NewConstructorDeclarationWithAll(annotationReferences reference.IReference, flags int, typeParameters _type.ITypeParameter, formalParameter IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement) *ConstructorDeclaration {
 	return &ConstructorDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -32,7 +32,7 @@ func NewConstructorDeclarationWithAll(annotationReferences reference.AnnotationR
 type ConstructorDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences reference.AnnotationReference
+	annotationReferences reference.IReference
 	flags                int
 	typeParameters       _type.ITypeParameter
 	formalParameter      IFormalParameter
@@ -41,7 +41,7 @@ type ConstructorDeclaration struct {
 	statements           statement.Statement
 }
 
-func (d *ConstructorDeclaration) GetFlags() int {
+func (d *ConstructorDeclaration) Flags() int {
 	return d.flags
 }
 
@@ -53,28 +53,36 @@ func (d *ConstructorDeclaration) IsStatic() bool {
 	return d.flags&classfile.AccStatic != 0
 }
 
-func (d *ConstructorDeclaration) GetAnnotationReferences() reference.AnnotationReference {
+func (d *ConstructorDeclaration) AnnotationReferences() reference.IReference {
 	return d.annotationReferences
 }
 
-func (d *ConstructorDeclaration) GetTypeParameters() _type.ITypeParameter {
+func (d *ConstructorDeclaration) TypeParameters() _type.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *ConstructorDeclaration) GetFormalParameters() IFormalParameter {
+func (d *ConstructorDeclaration) FormalParameters() IFormalParameter {
 	return d.formalParameter
 }
 
-func (d *ConstructorDeclaration) GetExceptionTypes() _type.IType {
+func (d *ConstructorDeclaration) SetFormalParameters(formalParameter IFormalParameter) {
+	d.formalParameter = formalParameter
+}
+
+func (d *ConstructorDeclaration) ExceptionTypes() _type.IType {
 	return d.exceptionTypes
 }
 
-func (d *ConstructorDeclaration) GetDescriptor() string {
+func (d *ConstructorDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *ConstructorDeclaration) GetStatements() statement.Statement {
+func (d *ConstructorDeclaration) Statements() statement.Statement {
 	return d.statements
+}
+
+func (d *ConstructorDeclaration) SetStatements(state statement.Statement) {
+	d.statements = state
 }
 
 func (d *ConstructorDeclaration) Accept(visitor DeclarationVisitor) {

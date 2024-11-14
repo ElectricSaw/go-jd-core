@@ -29,11 +29,11 @@ type LambdaIdentifiersExpression struct {
 	parameterNames []string
 }
 
-func (e *LambdaIdentifiersExpression) GetReturnedType() _type.IType {
+func (e *LambdaIdentifiersExpression) ReturnedType() _type.IType {
 	return e.returnedType
 }
 
-func (e *LambdaIdentifiersExpression) GetParameterNames() []string {
+func (e *LambdaIdentifiersExpression) ParameterNames() []string {
 	return e.parameterNames
 }
 

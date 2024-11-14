@@ -17,7 +17,7 @@ type ThrowStatement struct {
 	expression expression.Expression
 }
 
-func (s *ThrowStatement) GetExpression() expression.Expression {
+func (s *ThrowStatement) Expression() expression.Expression {
 	return s.expression
 }
 

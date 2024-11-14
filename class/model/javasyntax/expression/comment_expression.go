@@ -17,15 +17,15 @@ type CommentExpression struct {
 	text string
 }
 
-func (e *CommentExpression) GetLineNumber() int {
+func (e *CommentExpression) LineNumber() int {
 	return UnknownLineNumber
 }
 
-func (e *CommentExpression) GetType() _type.IType {
+func (e *CommentExpression) Type() _type.IType {
 	return _type.PtTypeVoid
 }
 
-func (e *CommentExpression) GetPriority() int {
+func (e *CommentExpression) Priority() int {
 	return 0
 }
 

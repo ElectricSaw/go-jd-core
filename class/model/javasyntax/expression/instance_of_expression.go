@@ -29,7 +29,7 @@ type InstanceOfExpression struct {
 	instanceOfType _type.IType
 }
 
-func (e *InstanceOfExpression) GetExpression() Expression {
+func (e *InstanceOfExpression) Expression() Expression {
 	return e.expression
 }
 
@@ -37,11 +37,11 @@ func (e *InstanceOfExpression) GetInstanceOfType() _type.IType {
 	return e.instanceOfType
 }
 
-func (e *InstanceOfExpression) GetType() _type.IType {
+func (e *InstanceOfExpression) Type() _type.IType {
 	return _type.PtTypeBoolean
 }
 
-func (e *InstanceOfExpression) GetPriority() int {
+func (e *InstanceOfExpression) Priority() int {
 	return 8
 }
 

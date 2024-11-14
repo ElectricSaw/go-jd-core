@@ -25,8 +25,8 @@ type ClassDeclaration struct {
 	superType _type.ObjectType
 }
 
-func (d *ClassDeclaration) GetSuperType() _type.ObjectType {
-	return d.superType
+func (d *ClassDeclaration) SuperType() *_type.ObjectType {
+	return &d.superType
 }
 
 func (d *ClassDeclaration) IsClassDeclaration() bool {

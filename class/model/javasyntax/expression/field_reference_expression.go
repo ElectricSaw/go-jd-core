@@ -34,19 +34,19 @@ type FieldReferenceExpression struct {
 	descriptor       string
 }
 
-func (e *FieldReferenceExpression) GetExpression() Expression {
+func (e *FieldReferenceExpression) Expression() Expression {
 	return e.expression
 }
 
-func (e *FieldReferenceExpression) GetInternalTypeName() string {
+func (e *FieldReferenceExpression) InternalTypeName() string {
 	return e.internalTypeName
 }
 
-func (e *FieldReferenceExpression) GetName() string {
+func (e *FieldReferenceExpression) Name() string {
 	return e.name
 }
 
-func (e *FieldReferenceExpression) GetDescriptor() string {
+func (e *FieldReferenceExpression) Descriptor() string {
 	return e.descriptor
 }
 

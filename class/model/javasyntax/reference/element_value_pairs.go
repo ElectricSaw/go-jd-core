@@ -8,6 +8,14 @@ type ElementValuePairs struct {
 	ElementValuePair []IElementValuePair
 }
 
+func (e *ElementValuePairs) List() []IReference {
+	ret := make([]IReference, 0, len(e.ElementValuePair))
+	for _, v := range e.ElementValuePair {
+		ret = append(ret, v)
+	}
+	return ret
+}
+
 func (e *ElementValuePairs) Accept(visitor ReferenceVisitor) {
 	visitor.VisitElementValuePairs(e)
 }

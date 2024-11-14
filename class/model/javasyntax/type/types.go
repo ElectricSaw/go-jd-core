@@ -11,6 +11,10 @@ type Types struct {
 }
 
 func (t *Types) Add(ty IType) {
+	if t.Types == nil {
+		t.Types = make([]IType, 0)
+	}
+	
 	t.Types = append(t.Types, ty)
 }
 

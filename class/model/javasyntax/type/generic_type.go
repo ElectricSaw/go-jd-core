@@ -19,6 +19,14 @@ type GenericType struct {
 
 /////////////////////////////////////////////////////////////////////
 
+func (t *GenericType) HashCode() int {
+	result := 991890290 + hashCodeWithString(t.name)
+	result = 31*result + t.Dimension()
+	return result
+}
+
+/////////////////////////////////////////////////////////////////////
+
 func (t *GenericType) Name() string {
 	return t.name
 }

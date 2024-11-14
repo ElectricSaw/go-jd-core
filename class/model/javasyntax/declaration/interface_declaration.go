@@ -40,11 +40,11 @@ type InterfaceDeclaration struct {
 	interfaces     _type.IType
 }
 
-func (d *InterfaceDeclaration) GetTypeParameters() _type.ITypeParameter {
+func (d *InterfaceDeclaration) TypeParameters() _type.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *InterfaceDeclaration) GetInterfaces() _type.IType {
+func (d *InterfaceDeclaration) Interfaces() _type.IType {
 	return d.interfaces
 }
 

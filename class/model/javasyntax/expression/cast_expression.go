@@ -36,7 +36,7 @@ type CastExpression struct {
 	explicit   bool
 }
 
-func (e *CastExpression) GetExpression() Expression {
+func (e *CastExpression) Expression() Expression {
 	return e.expression
 }
 
@@ -44,7 +44,7 @@ func (e *CastExpression) IsExplicit() bool {
 	return e.explicit
 }
 
-func (e *CastExpression) GetPriority() int {
+func (e *CastExpression) Priority() int {
 	return 3
 }
 

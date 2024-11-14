@@ -14,12 +14,12 @@ type ExpressionVariableInitializer struct {
 	expression expression.Expression
 }
 
-func (i *ExpressionVariableInitializer) GetExpression() expression.Expression {
+func (i *ExpressionVariableInitializer) Expression() expression.Expression {
 	return i.expression
 }
 
-func (i *ExpressionVariableInitializer) GetLineNumber() int {
-	return i.expression.GetLineNumber()
+func (i *ExpressionVariableInitializer) LineNumber() int {
+	return i.expression.LineNumber()
 }
 
 func (i *ExpressionVariableInitializer) SetExpression(expression expression.Expression) {

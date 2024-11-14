@@ -4,7 +4,7 @@ import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 
 func NewParenthesesExpression(expression Expression) *ParenthesesExpression {
 	return &ParenthesesExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(expression.GetLineNumber()),
+		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(expression.LineNumber()),
 		expression:                   expression,
 	}
 }
@@ -15,11 +15,11 @@ type ParenthesesExpression struct {
 	expression Expression
 }
 
-func (e *ParenthesesExpression) GetType() _type.IType {
-	return e.expression.GetType()
+func (e *ParenthesesExpression) Type() _type.IType {
+	return e.expression.Type()
 }
 
-func (e *ParenthesesExpression) GetExpression() Expression {
+func (e *ParenthesesExpression) Expression() Expression {
 	return e.expression
 }
 

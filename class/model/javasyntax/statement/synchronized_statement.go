@@ -16,7 +16,7 @@ type SynchronizedStatement struct {
 	statements Statement
 }
 
-func (s *SynchronizedStatement) GetMonitor() expression.Expression {
+func (s *SynchronizedStatement) Monitor() expression.Expression {
 	return s.monitor
 }
 
@@ -24,7 +24,7 @@ func (s *SynchronizedStatement) SetMonitor(monitor expression.Expression) {
 	s.monitor = monitor
 }
 
-func (s *SynchronizedStatement) GetStatements() Statement {
+func (s *SynchronizedStatement) Statements() Statement {
 	return s.statements
 }
 

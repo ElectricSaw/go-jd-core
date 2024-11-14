@@ -16,11 +16,11 @@ type ElementValuePair struct {
 	elementValue IElementValue
 }
 
-func (e *ElementValuePair) GetName() string {
+func (e *ElementValuePair) Name() string {
 	return e.name
 }
 
-func (e *ElementValuePair) GetElementValue() IElementValue {
+func (e *ElementValuePair) ElementValue() IElementValue {
 	return e.elementValue
 }
 

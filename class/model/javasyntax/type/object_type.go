@@ -1,6 +1,8 @@
 package _type
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var OtTypeBoolean = NewObjectType("class/lang/Boolean", "class.lang.Boolean", "Boolean")
 var OtTypeByte = NewObjectType("class/lang/Byte", "class.lang.Byte", "Byte")
@@ -35,7 +37,7 @@ var OtTypePrimitiveLong = NewObjectTypeWithDesc("J")
 var OtTypePrimitiveShort = NewObjectTypeWithDesc("S")
 var OtTypePrimitiveVoid = NewObjectTypeWithDesc("V")
 
-var TypeUndefinedObject = NewObjectType("class/lang/Object", "class.lang.Object", "Object")
+var OtTypeUndefinedObject = NewObjectType("class/lang/Object", "class.lang.Object", "Object")
 
 func createDescriptor(descriptor string, dimension int) string {
 	switch dimension {
@@ -107,6 +109,16 @@ type ObjectType struct {
 
 func (t *ObjectType) QualifiedName() string {
 	return t.qualifiedName
+}
+
+func (t *ObjectType) HashCode() int {
+	result := 735485092 + hashCodeWithString(t.internalName)
+	result *= 31
+	if t.typeArguments != nil {
+		result += t.typeArguments.HashCode()
+	}
+	result = 31*result + t.dimension
+	return result
 }
 
 /////////////////////////////////////////////////////////////////////

@@ -25,7 +25,7 @@ type LongConstantExpression struct {
 	value int64
 }
 
-func (e *LongConstantExpression) GetLongValue() int64 {
+func (e *LongConstantExpression) LongValue() int64 {
 	return e.value
 }
 

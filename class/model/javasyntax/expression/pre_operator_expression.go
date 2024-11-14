@@ -28,11 +28,11 @@ type PreOperatorExpression struct {
 	expression Expression
 }
 
-func (e *PreOperatorExpression) GetOperator() string {
+func (e *PreOperatorExpression) Operator() string {
 	return e.operator
 }
 
-func (e *PreOperatorExpression) GetExpression() Expression {
+func (e *PreOperatorExpression) Expression() Expression {
 	return e.expression
 }
 
@@ -40,11 +40,11 @@ func (e *PreOperatorExpression) SetExpression(expression Expression) {
 	e.expression = expression
 }
 
-func (e *PreOperatorExpression) GetType() _type.IType {
-	return e.expression.GetType()
+func (e *PreOperatorExpression) Type() _type.IType {
+	return e.expression.Type()
 }
 
-func (e *PreOperatorExpression) GetPriority() int {
+func (e *PreOperatorExpression) Priority() int {
 	return 2
 }
 

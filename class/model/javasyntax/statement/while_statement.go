@@ -16,7 +16,7 @@ type WhileStatement struct {
 	statements Statement
 }
 
-func (s *WhileStatement) GetCondition() expression.Expression {
+func (s *WhileStatement) Condition() expression.Expression {
 	return s.condition
 }
 
@@ -24,7 +24,7 @@ func (s *WhileStatement) SetCondition(condition expression.Expression) {
 	s.condition = condition
 }
 
-func (s *WhileStatement) GetStatements() Statement {
+func (s *WhileStatement) Statements() Statement {
 	return s.statements
 }
 

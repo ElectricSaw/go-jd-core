@@ -18,11 +18,11 @@ type InstanceInitializerDeclaration struct {
 	statements  statement.Statement
 }
 
-func (d *InstanceInitializerDeclaration) GetDescription() string {
+func (d *InstanceInitializerDeclaration) Description() string {
 	return d.description
 }
 
-func (d *InstanceInitializerDeclaration) GetStatements() statement.Statement {
+func (d *InstanceInitializerDeclaration) Statements() statement.Statement {
 	return d.statements
 }
 

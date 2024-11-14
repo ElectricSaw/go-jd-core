@@ -25,10 +25,10 @@ type AbstractLambdaExpression struct {
 	statements statement.Statement
 }
 
-func (e *AbstractLambdaExpression) GetPriority() int {
+func (e *AbstractLambdaExpression) Priority() int {
 	return 17
 }
 
-func (e *AbstractLambdaExpression) GetStatements() statement.Statement {
+func (e *AbstractLambdaExpression) Statements() statement.Statement {
 	return e.statements
 }

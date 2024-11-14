@@ -76,7 +76,7 @@ type IFormalParameter interface {
 type ILocalVariableDeclarator interface {
 	Declaration
 
-	GetLineNumber() int
+	LineNumber() int
 }
 
 type IMemberDeclaration interface {
@@ -107,15 +107,15 @@ type AbstractTypeDeclaration struct {
 type VariableInitializer interface {
 	Declaration
 
-	GetLineNumber() int
+	LineNumber() int
 	IsExpressionVariableInitializer() bool
-	GetExpression() expression.Expression
+	Expression() expression.Expression
 }
 
 type AbstractVariableInitializer struct {
 }
 
-func (d *AbstractVariableInitializer) GetLineNumber() int {
+func (d *AbstractVariableInitializer) LineNumber() int {
 	return -1
 }
 
@@ -123,7 +123,7 @@ func (d *AbstractVariableInitializer) IsExpressionVariableInitializer() bool {
 	return false
 }
 
-func (d *AbstractVariableInitializer) GetExpression() expression.Expression {
+func (d *AbstractVariableInitializer) Expression() expression.Expression {
 	return expression.NeNoExpression
 }
 

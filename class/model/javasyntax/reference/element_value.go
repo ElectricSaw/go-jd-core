@@ -21,7 +21,7 @@ func (e *AbstractElementValue) Accept(visitor ReferenceVisitor) {
 }
 
 type IElementValuePair interface {
-	IReference
+	IElementValue
 }
 
 type AbstractElementValuePair struct {

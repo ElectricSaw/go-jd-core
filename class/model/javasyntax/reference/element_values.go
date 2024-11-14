@@ -3,9 +3,17 @@ package reference
 import "fmt"
 
 type ElementValues struct {
-	IElementValue
+	IElementValuePair
 
 	ElementValuePair []IElementValue
+}
+
+func (e *ElementValues) List() []IReference {
+	ret := make([]IReference, 0, len(e.ElementValuePair))
+	for _, v := range e.ElementValuePair {
+		ret = append(ret, v)
+	}
+	return ret
 }
 
 func (e *ElementValues) Accept(visitor ReferenceVisitor) {

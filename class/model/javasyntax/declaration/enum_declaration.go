@@ -7,30 +7,18 @@ import (
 	"fmt"
 )
 
-func NewEnumDeclaration(flags int, internalTypeName string, name string, interfaces _type.IType) *InterfaceDeclaration {
-	return &InterfaceDeclaration{
-		TypeDeclaration: TypeDeclaration{
-			annotationReferences: nil,
-			flags:                flags,
-			internalTypeName:     internalTypeName,
-			name:                 name,
-			bodyDeclaration:      nil,
-		},
-		interfaces: interfaces,
+func NewEnumDeclaration(flags int, internalTypeName, name string, constants []Constant, bodyDeclaration Declaration) *EnumDeclaration {
+	return &EnumDeclaration{
+		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, bodyDeclaration),
+		constants:       constants,
 	}
 }
 
-func NewEnumDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType) *InterfaceDeclaration {
-	return &InterfaceDeclaration{
-		TypeDeclaration: TypeDeclaration{
-			annotationReferences: annotationReferences,
-			flags:                flags,
-			internalTypeName:     internalTypeName,
-			name:                 name,
-			bodyDeclaration:      bodyDeclaration,
-		},
-		typeParameters: typeParameters,
-		interfaces:     interfaces,
+func NewEnumDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName, name string, interfaces _type.IType, constants []Constant, bodyDeclaration Declaration) *EnumDeclaration {
+	return &EnumDeclaration{
+		TypeDeclaration: *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration),
+		interfaces:      interfaces,
+		constants:       constants,
 	}
 }
 
@@ -41,12 +29,16 @@ type EnumDeclaration struct {
 	constants  []Constant
 }
 
-func (d *EnumDeclaration) GetInterfaces() _type.IType {
+func (d *EnumDeclaration) Interfaces() _type.IType {
 	return d.interfaces
 }
 
-func (d *EnumDeclaration) GetConstants() []Constant {
+func (d *EnumDeclaration) Constants() []Constant {
 	return d.constants
+}
+
+func (d *EnumDeclaration) SetConstants(constants []Constant) {
+	d.constants = constants
 }
 
 func (d *EnumDeclaration) Accept(visitor DeclarationVisitor) {
@@ -112,19 +104,19 @@ type Constant struct {
 	bodyDeclaration      *BodyDeclaration
 }
 
-func (c *Constant) GetLineNumber() int {
+func (c *Constant) LineNumber() int {
 	return c.lineNumber
 }
 
-func (c *Constant) GetAnnotationReferences() reference.IAnnotationReference {
+func (c *Constant) AnnotationReferences() reference.IAnnotationReference {
 	return c.annotationReferences
 }
 
-func (c *Constant) GetName() string {
+func (c *Constant) Name() string {
 	return c.name
 }
 
-func (c *Constant) GetArguments() expression.Expression {
+func (c *Constant) Arguments() expression.Expression {
 	return c.arguments
 }
 
@@ -132,7 +124,7 @@ func (c *Constant) SetArguments(arguments expression.Expression) {
 	c.arguments = arguments
 }
 
-func (c *Constant) GetBodyDeclaration() *BodyDeclaration {
+func (c *Constant) BodyDeclaration() *BodyDeclaration {
 	return c.bodyDeclaration
 }
 

@@ -26,7 +26,7 @@ type BooleanExpression struct {
 	value bool
 }
 
-func (e *BooleanExpression) GetType() _type.IType {
+func (e *BooleanExpression) Type() _type.IType {
 	return _type.PtTypeBoolean
 }
 

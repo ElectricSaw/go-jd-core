@@ -6,6 +6,10 @@ type Statements struct {
 	Statements []Statement
 }
 
+func (s *Statements) List() []Statement {
+	return s.Statements
+}
+
 func (s *Statements) IsStatements() bool {
 	return true
 }

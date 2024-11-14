@@ -31,19 +31,19 @@ type MethodReferenceExpression struct {
 	descriptor       string
 }
 
-func (e *MethodReferenceExpression) GetExpression() Expression {
+func (e *MethodReferenceExpression) Expression() Expression {
 	return e.expression
 }
 
-func (e *MethodReferenceExpression) GetInternalTypeName() string {
+func (e *MethodReferenceExpression) InternalTypeName() string {
 	return e.internalTypeName
 }
 
-func (e *MethodReferenceExpression) GetName() string {
+func (e *MethodReferenceExpression) Name() string {
 	return e.name
 }
 
-func (e *MethodReferenceExpression) GetDescriptor() string {
+func (e *MethodReferenceExpression) Descriptor() string {
 	return e.descriptor
 }
 

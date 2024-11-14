@@ -14,8 +14,8 @@ type TypeDeclarationStatement struct {
 	typeDeclaration declaration.TypeDeclaration
 }
 
-func (s *TypeDeclarationStatement) GetTypeDeclaration() declaration.TypeDeclaration {
-	return s.typeDeclaration
+func (s *TypeDeclarationStatement) TypeDeclaration() *declaration.TypeDeclaration {
+	return &s.typeDeclaration
 }
 
 func (s *TypeDeclarationStatement) Accept(visitor StatementVisitor) {

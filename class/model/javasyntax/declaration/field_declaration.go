@@ -31,7 +31,7 @@ type FieldDeclaration struct {
 	fieldDeclaration     IFieldDeclarator
 }
 
-func (d *FieldDeclaration) GetFlags() int {
+func (d *FieldDeclaration) Flags() int {
 	return d.flags
 }
 
@@ -39,11 +39,11 @@ func (d *FieldDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *FieldDeclaration) GetAnnotationReferences() reference.IAnnotationReference {
+func (d *FieldDeclaration) AnnotationReferences() reference.IAnnotationReference {
 	return d.annotationReferences
 }
 
-func (d *FieldDeclaration) GetType() _type.IType {
+func (d *FieldDeclaration) Type() _type.IType {
 	return d.typ
 }
 
@@ -51,7 +51,7 @@ func (d *FieldDeclaration) SetType(t _type.IType) {
 	d.typ = t
 }
 
-func (d *FieldDeclaration) GetFieldDeclaration() IFieldDeclarator {
+func (d *FieldDeclaration) FieldDeclaration() IFieldDeclarator {
 	return d.fieldDeclaration
 }
 

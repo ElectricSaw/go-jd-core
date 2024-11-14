@@ -16,7 +16,7 @@ type DoWhileStatement struct {
 	statements Statement
 }
 
-func (s *DoWhileStatement) GetCondition() expression.Expression {
+func (s *DoWhileStatement) Condition() expression.Expression {
 	return s.condition
 }
 
@@ -24,7 +24,7 @@ func (s *DoWhileStatement) SetCondition(condition expression.Expression) {
 	s.condition = condition
 }
 
-func (s *DoWhileStatement) GetStatements() Statement {
+func (s *DoWhileStatement) Statements() Statement {
 	return s.statements
 }
 

@@ -18,10 +18,10 @@ type AbstractLineNumberExpression struct {
 	lineNumber int
 }
 
-func (e *AbstractLineNumberExpression) GetLineNumber() int {
+func (e *AbstractLineNumberExpression) LineNumber() int {
 	return e.lineNumber
 }
 
-func (e *AbstractLineNumberExpression) GetPriority() int {
+func (e *AbstractLineNumberExpression) Priority() int {
 	return 0
 }

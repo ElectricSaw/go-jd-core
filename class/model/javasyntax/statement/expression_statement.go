@@ -17,7 +17,7 @@ type ExpressionStatement struct {
 	expression expression.Expression
 }
 
-func (s *ExpressionStatement) GetExpression() expression.Expression {
+func (s *ExpressionStatement) Expression() expression.Expression {
 	return s.expression
 }
 

@@ -28,11 +28,11 @@ type PostOperatorExpression struct {
 	expression Expression
 }
 
-func (e *PostOperatorExpression) GetOperator() string {
+func (e *PostOperatorExpression) Operator() string {
 	return e.operator
 }
 
-func (e *PostOperatorExpression) GetExpression() Expression {
+func (e *PostOperatorExpression) Expression() Expression {
 	return e.expression
 }
 
@@ -40,11 +40,11 @@ func (e *PostOperatorExpression) SetExpression(expression Expression) {
 	e.expression = expression
 }
 
-func (e *PostOperatorExpression) GetType() _type.IType {
-	return e.expression.GetType()
+func (e *PostOperatorExpression) Type() _type.IType {
+	return e.expression.Type()
 }
 
-func (e *PostOperatorExpression) GetPriority() int {
+func (e *PostOperatorExpression) Priority() int {
 	return 1
 }
 

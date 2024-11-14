@@ -46,7 +46,7 @@ type FormalParameter struct {
 	name                 string
 }
 
-func (d *FormalParameter) GetAnnotationReferences() reference.IAnnotationReference {
+func (d *FormalParameter) AnnotationReferences() reference.IAnnotationReference {
 	return d.annotationReferences
 }
 
@@ -58,7 +58,7 @@ func (d *FormalParameter) SetFinal(final bool) {
 	d.final = final
 }
 
-func (d *FormalParameter) GetType() _type.IType {
+func (d *FormalParameter) Type() _type.IType {
 	return d.typ
 }
 
@@ -66,7 +66,7 @@ func (d *FormalParameter) IsVarargs() bool {
 	return d.varargs
 }
 
-func (d *FormalParameter) GetName() string {
+func (d *FormalParameter) Name() string {
 	return d.name
 }
 

@@ -25,7 +25,7 @@ type SuperExpression struct {
 	typ _type.IType
 }
 
-func (e *SuperExpression) GetType() _type.IType {
+func (e *SuperExpression) Type() _type.IType {
 	return e.typ
 }
 

@@ -31,7 +31,7 @@ type TernaryOperatorExpression struct {
 	falseExpression Expression
 }
 
-func (e *TernaryOperatorExpression) GetCondition() Expression {
+func (e *TernaryOperatorExpression) Condition() Expression {
 	return e.condition
 }
 
@@ -55,7 +55,7 @@ func (e *TernaryOperatorExpression) SetFalseCondition(expression Expression) {
 	e.falseExpression = expression
 }
 
-func (e *TernaryOperatorExpression) GetPriority() int {
+func (e *TernaryOperatorExpression) Priority() int {
 	return 15
 }
 
