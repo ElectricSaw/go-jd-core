@@ -17,8 +17,9 @@ func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit Compila
 }
 
 // --- DeclarationVisitor ---
+
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(decl *declaration.AnnotationDeclaration) {
-	v.safeAcceptDeclaration(decl.AnnotationDeclarator())
+	v.safeAcceptDeclaration(decl.AnnotationDeclarators())
 	v.safeAcceptDeclaration(decl.BodyDeclaration())
 	v.safeAcceptReference(decl.AnnotationReferences())
 }
@@ -69,7 +70,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitExpressionVariableInitializer(decl *dec
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(decl *declaration.FieldDeclaration) {
-	t := decl.GetType()
+	t := decl.Type()
 	t.AcceptTypeVisitor(v)
 	v.safeAcceptReference(decl.AnnotationReferences())
 	decl.FieldDeclaration().Accept(v)
