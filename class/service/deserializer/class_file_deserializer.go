@@ -51,7 +51,7 @@ func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTy
 	}
 
 	var aic *attribute.AttributeInnerClasses
-	if v, ok := classFile.Attribute()["InnerClasses"]; ok {
+	if v, ok := classFile.Attributes()["InnerClasses"]; ok {
 		aic = v.(*attribute.AttributeInnerClasses)
 	}
 
