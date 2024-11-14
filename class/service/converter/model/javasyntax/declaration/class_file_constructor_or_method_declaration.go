@@ -11,8 +11,6 @@ type ClassFileConstructorOrMethodDeclaration interface {
 	ClassFileMemberDeclaration
 
 	Flags() int
-	SetFlags(flags int)
-
 	ClassFile() *classfile.ClassFile
 	Method() *classfile.Method
 	TypeParameters() _type.ITypeParameter
@@ -21,7 +19,9 @@ type ClassFileConstructorOrMethodDeclaration interface {
 	BodyDeclaration() ClassFileBodyDeclaration
 	Bindings() map[string]_type.ITypeArgument
 	TypeBounds() map[string]_type.IType
-	SetFormalParameters(formalParameters declaration.IFormalParameter)
 	Statements() statement.Statement
+
+	SetFlags(flags int)
+	SetFormalParameters(formalParameters declaration.IFormalParameter)
 	SetStatements(statement statement.Statement)
 }

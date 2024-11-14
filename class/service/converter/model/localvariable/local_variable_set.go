@@ -6,19 +6,20 @@ import (
 
 func NewLocalVariableSet() *LocalVariableSet {
 	return &LocalVariableSet{
-		array: make([]ILocalVariableReference, 0, 10),
+		array: make([]*AbstractLocalVariable, 0, 10),
+		size:  0,
 	}
 }
 
 type LocalVariableSet struct {
-	array []ILocalVariableReference
+	array []*AbstractLocalVariable
 	size  int
 }
 
-func (s *LocalVariableSet) Add(index int, newLV ILocalVariableReference) {
+func (s *LocalVariableSet) Add(index int, newLV *AbstractLocalVariable) {
 	if index >= len(s.array) {
 		// Increases array
-		tmp := make([]ILocalVariableReference, index*2)
+		tmp := make([]*AbstractLocalVariable, index*2)
 		copy(tmp, s.array)
 		s.array = tmp
 		// Store
@@ -67,9 +68,9 @@ func (s *LocalVariableSet) Root(index int) ILocalVariableReference {
 	return nil
 }
 
-func (s *LocalVariableSet) Remove(index, offset int) ILocalVariableReference {
+func (s *LocalVariableSet) Remove(index, offset int) *AbstractLocalVariable {
 	if index < len(s.array) {
-		var previous ILocalVariableReference
+		var previous *AbstractLocalVariable
 		lv := s.array[index]
 
 		for lv != nil {
@@ -92,7 +93,7 @@ func (s *LocalVariableSet) Remove(index, offset int) ILocalVariableReference {
 	return nil
 }
 
-func (s *LocalVariableSet) Get(index, offset int) ILocalVariableReference {
+func (s *LocalVariableSet) Get(index, offset int) *AbstractLocalVariable {
 	if index < len(s.array) {
 		lv := s.array[index]
 
@@ -118,7 +119,7 @@ func (s *LocalVariableSet) Update(index, offset int, typ _type.IObjectType) {
 		for lv != nil {
 			if lv.FromOffset() == offset {
 				olv := lv.(*ObjectLocalVariable)
-				olv.typ = typ
+				olv.typ = typ.(_type.IType)
 				break
 			}
 
@@ -129,12 +130,12 @@ func (s *LocalVariableSet) Update(index, offset int, typ _type.IObjectType) {
 
 func (s *LocalVariableSet) update(index, offset int, typ *_type.GenericType) {
 	if index < len(s.array) {
-		var previous ILocalVariableReference
+		var previous *AbstractLocalVariable
 		lv := s.array[index]
 
 		for lv != nil {
 			if lv.FromOffset() == offset {
-				glv := NewGenericLocalVariable(index, lv.FromOffset(), typ, lv.Name())
+				glv := NewGenericLocalVariableWithAll(index, lv.FromOffset(), typ, lv.Name())
 				glv.SetNext(lv.Next())
 
 				if previous == nil {
@@ -154,14 +155,14 @@ func (s *LocalVariableSet) update(index, offset int, typ *_type.GenericType) {
 	}
 }
 
-func (s *LocalVariableSet) initialize(rootFrame *Frame) []ILocalVariableReference {
-	cache := make([]ILocalVariableReference, 0, s.size)
+func (s *LocalVariableSet) initialize(rootFrame *Frame) []*AbstractLocalVariable {
+	cache := make([]*AbstractLocalVariable, 0, s.size)
 
 	for index := len(s.array) - 1; index >= 0; index-- {
 		lv := s.array[index]
 
 		if lv != nil {
-			var previous ILocalVariableReference
+			var previous *AbstractLocalVariable
 
 			for lv.Next() != nil {
 				previous = lv

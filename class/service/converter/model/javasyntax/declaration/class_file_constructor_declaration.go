@@ -11,7 +11,7 @@ func NewClassFileConstructorDeclaration(
 	bodyDeclaration ClassFileBodyDeclaration,
 	classFile *classfile.ClassFile,
 	method *classfile.Method,
-	annotationReferences reference.AnnotationReference,
+	annotationReferences *reference.AnnotationReference,
 	typeParameters _type.ITypeParameter,
 	parameterTypes _type.IType,
 	exceptionTypes _type.IType,

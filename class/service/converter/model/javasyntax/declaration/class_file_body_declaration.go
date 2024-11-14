@@ -34,7 +34,7 @@ type ClassFileBodyDeclaration struct {
 }
 
 func (d *ClassFileBodyDeclaration) SetMemberDeclarations(memberDeclaration declaration.IMemberDeclaration) {
-	d.SetMemberDeclaration(memberDeclaration)
+	d.SetMemberDeclarations(memberDeclaration)
 }
 
 func (d *ClassFileBodyDeclaration) FieldDeclarations() []ClassFileFieldDeclaration {

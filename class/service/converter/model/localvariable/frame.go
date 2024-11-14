@@ -80,7 +80,7 @@ func (f *Frame) SetExceptionLocalVariable(e ILocalVariableReference) {
 	f.exceptionLocalVariable = e
 }
 
-func (f *Frame)  mergeLocalVariable(typeBounds map[string]_type.IType, localVariableMaker LocalVariableMaker, lv ILocalVariableReference) {
+func (f *Frame)  MergeLocalVariable(typeBounds map[string]_type.IType, localVariableMaker utils.LocalVariableMaker, lv ILocalVariableReference) {
 	int index = lv.getIndex();
 	AbstractLocalVariable alvToMerge;
 

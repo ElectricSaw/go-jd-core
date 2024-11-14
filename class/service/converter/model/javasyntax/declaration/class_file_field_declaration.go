@@ -48,5 +48,5 @@ func (d *ClassFileFieldDeclaration) SetFirstLineNumber(firstLineNumber int) {
 }
 
 func (d *ClassFileFieldDeclaration) String() string {
-	return fmt.Sprintf("ClassFileFieldDeclaration{%s %s, firstLineNumber=%d}", d.Type(), d.FieldDeclaration(), d.firstLineNumber)
+	return fmt.Sprintf("ClassFileFieldDeclaration{%s %s, firstLineNumber=%d}", d.Type(), d.FieldDeclarators(), d.firstLineNumber)
 }

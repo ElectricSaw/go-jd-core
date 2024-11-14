@@ -187,9 +187,9 @@ func (v *PrimitiveLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, t
 	}
 }
 
-func (v *PrimitiveLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariableReference) bool {
+func (v *PrimitiveLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariable) bool {
 	if variable.IsPrimitiveLocalVariable() {
-		variableFlags := variable.(*PrimitiveLocalVariable).flags
+		variableFlags := variable.(*PrimitiveLocalVariable)
 		typ := utils.GetPrimitiveTypeFromFlags(variableFlags)
 
 		if typ != nil {
@@ -201,7 +201,7 @@ func (v *PrimitiveLocalVariable) IsAssignableFromWithVariable(typeBounds map[str
 	return false
 }
 
-func (v *PrimitiveLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariableReference) {
+func (v *PrimitiveLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariable) {
 	if variable.Dimension() == 0 {
 		return
 	}
@@ -223,7 +223,7 @@ func (v *PrimitiveLocalVariable) VariableOnRight(typeBounds map[string]_type.ITy
 	}
 }
 
-func (v *PrimitiveLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariableReference) {
+func (v *PrimitiveLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable *AbstractLocalVariable) {
 	if variable.Dimension() == 0 {
 		return
 	}

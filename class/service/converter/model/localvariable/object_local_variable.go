@@ -87,26 +87,80 @@ func (v *ObjectLocalVariable) IsAssignableFrom(typeBounds map[string]_type.IType
 		}
 
 		if typ.IsObjectType() {
-			return v.typeMaker.IsAssignable(typeBounds, typ)
+			return v.typeMaker.IsAssignable(typeBounds, v.typ.(_type.IObjectType), typ.(_type.IObjectType))
 		}
 	}
 	return false
 }
 
 func (v *ObjectLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, typ _type.IType) {
+	if typ != _type.OtTypeUndefinedObject {
+		if v.typ == _type.OtTypeUndefinedObject {
+			v.typ = typ
+			v.FireChangeEvent(typeBounds)
+		} else if v.typ.Dimension() == 0 && typ.Dimension() == 0 {
+			if v.typ.IsObjectType() {
+				thisObjectType := v.typ.(_type.IObjectType)
+
+				if typ.IsObjectType() {
+					otherObjectType := typ.(_type.IObjectType)
+
+					if thisObjectType.InternalName() == otherObjectType.InternalName() {
+						if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
+							v.typ = otherObjectType.(_type.IType)
+							v.FireChangeEvent(typeBounds)
+						}
+					} else if v.typeMaker.IsAssignable(typeBounds, thisObjectType, otherObjectType) {
+						if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
+							v.typ = otherObjectType.CreateTypeWithArgs(otherObjectType.TypeArguments()).(_type.IType)
+							v.FireChangeEvent(typeBounds)
+						}
+					}
+				}
+			} else if v.typ.IsGenericType() {
+				if typ.IsGenericType() {
+					v.typ = typ
+					v.FireChangeEvent(typeBounds)
+				}
+			}
+		}
+	}
 }
 
 func (v *ObjectLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType) {
+	if typ != _type.OtTypeUndefinedObject && typ != _type.OtTypeObject {
+		if v.typ == _type.OtTypeUndefinedObject {
+			v.typ = typ
+			v.FireChangeEvent(typeBounds)
+		} else if v.typ.Dimension() == 0 && typ.Dimension() == 0 && v.typ.IsObjectType() && typ.IsObjectType() {
+			thisObjectType := v.typ.(_type.IObjectType)
+			otherObjectType := typ.(_type.IObjectType)
+
+			if thisObjectType.InternalName() == otherObjectType.InternalName() {
+				if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
+					v.typ = otherObjectType.(_type.IType)
+					v.FireChangeEvent(typeBounds)
+				}
+			} else if v.typeMaker.IsAssignable(typeBounds, thisObjectType, otherObjectType) {
+				if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
+					v.typ = thisObjectType.CreateTypeWithArgs(otherObjectType.TypeArguments()).(_type.IType)
+					v.FireChangeEvent(typeBounds)
+				}
+			}
+		}
+	}
 }
 
-func (v *ObjectLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariableReference) bool {
-	return false
+func (v *ObjectLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable *AbstractLocalVariable) bool {
+	return v.IsAssignableFrom(typeBounds, variable.Type())
 }
 
-func (v *ObjectLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariableReference) {
-
+func (v *ObjectLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable *AbstractLocalVariable) {
+	v.AddVariableOnRight(variable)
+	v.TypeOnRight(typeBounds, variable.Type())
 }
 
-func (v *ObjectLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariableReference) {
-
+func (v *ObjectLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable *AbstractLocalVariable) {
+	v.AddVariableOnLeft(variable)
+	v.TypeOnLeft(typeBounds, variable.Type())
 }
