@@ -1,4 +1,4 @@
-package processor
+package utils
 
 import (
 	"bitbucket.org/coontec/javaClass/class/model/classfile/attribute"
@@ -6,17 +6,16 @@ import (
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/utils"
 )
 
-func NewAnnotationConverter(typeMaker *utils.TypeMaker) *AnnotationConverter {
+func NewAnnotationConverter(typeMaker *TypeMaker) *AnnotationConverter {
 	return &AnnotationConverter{
 		TypeMaker: typeMaker,
 	}
 }
 
 type AnnotationConverter struct {
-	TypeMaker    *utils.TypeMaker
+	TypeMaker    *TypeMaker
 	ElementValue reference.IElementValue
 }
 

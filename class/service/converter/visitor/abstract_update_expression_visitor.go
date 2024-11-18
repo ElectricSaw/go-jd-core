@@ -13,11 +13,11 @@ type AbstractUpdateExpressionVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 }
 
-func (v *AbstractUpdateExpressionVisitor) UpdateExpression(expression expression.Expression) expression.Expression {
+func (v *AbstractUpdateExpressionVisitor) UpdateExpression(expression expression.IExpression) expression.IExpression {
 	return nil
 }
 
-func (v *AbstractUpdateExpressionVisitor) UpdateBaseExpression(baseExpression expression.Expression) expression.Expression {
+func (v *AbstractUpdateExpressionVisitor) UpdateBaseExpression(baseExpression expression.IExpression) expression.IExpression {
 	if baseExpression == nil {
 		return nil
 	}

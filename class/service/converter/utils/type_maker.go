@@ -1109,7 +1109,7 @@ func (m *TypeMaker) MatchCount(internalTypeName, name string, parameterCount int
 	return len(m.getSetOfParameterTypes(internalTypeName, suffixKey, constructor))
 }
 
-func (m *TypeMaker) MatchCount2(typeBounds map[string]_type.IType, internalTypeName, name string, parameters expression.Expression, constructor bool) int {
+func (m *TypeMaker) MatchCount2(typeBounds map[string]_type.IType, internalTypeName, name string, parameters expression.IExpression, constructor bool) int {
 	parameterCount := parameters.Size()
 	suffixKey := fmt.Sprintf(":%s:%d", name, parameterCount)
 	setOfParameterTypes := m.getSetOfParameterTypes(internalTypeName, suffixKey, constructor)
@@ -1163,7 +1163,7 @@ func (m *TypeMaker) getSetOfParameterTypes(internalTypeName, suffixKey string, c
 	return setOfParameterTypes
 }
 
-func (m *TypeMaker) match(typeBounds map[string]_type.IType, parameterTypes _type.IType, parameters expression.Expression) bool {
+func (m *TypeMaker) match(typeBounds map[string]_type.IType, parameterTypes _type.IType, parameters expression.IExpression) bool {
 	if parameterTypes.Size() != parameters.Size() {
 		return false
 	}

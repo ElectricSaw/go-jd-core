@@ -10,7 +10,7 @@ type Base[T any] interface {
 	IsList() bool
 	First() T
 	Last() T
-	List() ([]T, error)
+	List() []T
 	Size() int
 	Iterator() Iterator[T]
 }
@@ -25,19 +25,19 @@ func (b *DefaultBase[T]) IsList() bool {
 	return false
 }
 
-// GetFirst 메서드
+// First 메서드
 func (b *DefaultBase[T]) First() T {
 	return b.value
 }
 
-// GetLast 메서드
+// Last 메서드
 func (b *DefaultBase[T]) Last() T {
 	return b.value
 }
 
 // GetList 메서드 (기본적으로 지원하지 않음을 나타내는 에러 반환)
-func (b *DefaultBase[T]) List() ([]T, error) {
-	return nil, errors.New("unsupported operation")
+func (b *DefaultBase[T]) List() []T {
+	return nil
 }
 
 // Size 메서드
