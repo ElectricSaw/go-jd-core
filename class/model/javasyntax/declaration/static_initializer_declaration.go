@@ -1,8 +1,11 @@
 package declaration
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
+)
 
-func NewStaticInitializerDeclaration(descriptor string, statements statement.Statement) *StaticInitializerDeclaration {
+func NewStaticInitializerDeclaration(descriptor string, statements statement.Statement) intsyn.IStaticInitializerDeclaration {
 	return &StaticInitializerDeclaration{
 		descriptor: descriptor,
 		statements: statements,
@@ -28,7 +31,7 @@ func (d *StaticInitializerDeclaration) SetStatements(statements statement.Statem
 	d.statements = statements
 }
 
-func (d *StaticInitializerDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *StaticInitializerDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitStaticInitializerDeclaration(d)
 }
 

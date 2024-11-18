@@ -1,39 +1,42 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewClassDeclaration(flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration) *ClassDeclaration {
+func NewClassDeclaration(flags int, internalTypeName string, name string, bodyDeclaration *intsyn.IBodyDeclaration) intsyn.IClassDeclaration {
 	return &ClassDeclaration{
-		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(nil, flags, internalTypeName, name, bodyDeclaration, nil, nil),
+		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(nil, flags,
+			internalTypeName, name, bodyDeclaration, nil, nil).(*InterfaceDeclaration),
 	}
 }
 
-func NewClassDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType, superType _type.ObjectType) *ClassDeclaration {
+func NewClassDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *intsyn.IBodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType, superType _type.IObjectType) intsyn.IClassDeclaration {
 	return &ClassDeclaration{
-		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(annotationReferences, flags, internalTypeName, name, bodyDeclaration, typeParameters, interfaces),
-		superType:            superType,
+		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(annotationReferences, flags,
+			internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*InterfaceDeclaration),
+		superType: superType,
 	}
 }
 
 type ClassDeclaration struct {
 	InterfaceDeclaration
 
-	superType _type.ObjectType
+	superType _type.IObjectType
 }
 
-func (d *ClassDeclaration) SuperType() *_type.ObjectType {
-	return &d.superType
+func (d *ClassDeclaration) SuperType() _type.IObjectType {
+	return d.superType
 }
 
 func (d *ClassDeclaration) IsClassDeclaration() bool {
 	return true
 }
 
-func (d *ClassDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *ClassDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitClassDeclaration(d)
 }
 

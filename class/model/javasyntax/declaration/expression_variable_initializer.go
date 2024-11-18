@@ -1,8 +1,11 @@
 package declaration
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+)
 
-func NewExpressionVariableInitializer(expression expression.Expression) *ExpressionVariableInitializer {
+func NewExpressionVariableInitializer(expression expression.Expression) intsyn.IExpressionVariableInitializer {
 	return &ExpressionVariableInitializer{
 		expression: expression,
 	}
@@ -30,6 +33,6 @@ func (i *ExpressionVariableInitializer) IsExpressionVariableInitializer() bool {
 	return true
 }
 
-func (i *ExpressionVariableInitializer) Accept(visitor DeclarationVisitor) {
+func (i *ExpressionVariableInitializer) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitExpressionVariableInitializer(i)
 }

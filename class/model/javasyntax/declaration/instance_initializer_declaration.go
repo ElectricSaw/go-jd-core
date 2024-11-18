@@ -1,10 +1,11 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
 )
 
-func NewInstanceInitializerDeclaration(description string, statements statement.Statement) *InstanceInitializerDeclaration {
+func NewInstanceInitializerDeclaration(description string, statements statement.Statement) intsyn.IInstanceInitializerDeclaration {
 	return &InstanceInitializerDeclaration{
 		description: description,
 		statements:  statements,
@@ -26,7 +27,7 @@ func (d *InstanceInitializerDeclaration) Statements() statement.Statement {
 	return d.statements
 }
 
-func (d *InstanceInitializerDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *InstanceInitializerDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitInstanceInitializerDeclaration(d)
 }
 

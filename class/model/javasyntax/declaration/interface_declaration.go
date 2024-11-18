@@ -1,12 +1,13 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces _type.IType) *InterfaceDeclaration {
+func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces _type.IType) intsyn.IInterfaceDeclaration {
 	return &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: nil,
@@ -19,7 +20,7 @@ func NewInterfaceDeclaration(flags int, internalTypeName string, name string, in
 	}
 }
 
-func NewInterfaceDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *BodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType) *InterfaceDeclaration {
+func NewInterfaceDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration intsyn.IBodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType) intsyn.IInterfaceDeclaration {
 	return &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: annotationReferences,
@@ -48,7 +49,7 @@ func (d *InterfaceDeclaration) Interfaces() _type.IType {
 	return d.interfaces
 }
 
-func (d *InterfaceDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *InterfaceDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitInterfaceDeclaration(d)
 }
 

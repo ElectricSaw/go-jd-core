@@ -1,12 +1,13 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewModuleDeclaration(flags int, internalTypeName, name, version string, requires []ModuleInfo, exports []PackageInfo, opens []PackageInfo, uses []string, provides []ServiceInfo) *ModuleDeclaration {
+func NewModuleDeclaration(flags int, internalTypeName, name, version string, requires []intsyn.IModuleInfo, exports []intsyn.IPackageInfo, opens []intsyn.IPackageInfo, uses []string, provides []intsyn.IServiceInfo) intsyn.IModuleDeclaration {
 	return &ModuleDeclaration{
-		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil),
+		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil).(*TypeDeclaration),
 		version:         version,
 		requires:        requires,
 		exports:         exports,
@@ -20,38 +21,38 @@ type ModuleDeclaration struct {
 	TypeDeclaration
 
 	version  string
-	requires []ModuleInfo
-	exports  []PackageInfo
-	opens    []PackageInfo
+	requires []intsyn.IModuleInfo
+	exports  []intsyn.IPackageInfo
+	opens    []intsyn.IPackageInfo
 	uses     []string
-	provides []ServiceInfo
+	provides []intsyn.IServiceInfo
 }
 
-func (d *ModuleDeclaration) GetVersion() string {
+func (d *ModuleDeclaration) Version() string {
 	return d.version
 }
 
-func (d *ModuleDeclaration) GetRequires() []ModuleInfo {
+func (d *ModuleDeclaration) Requires() []intsyn.IModuleInfo {
 	return d.requires
 }
 
-func (d *ModuleDeclaration) GetExports() []PackageInfo {
+func (d *ModuleDeclaration) Exports() []intsyn.IPackageInfo {
 	return d.exports
 }
 
-func (d *ModuleDeclaration) GetOpens() []PackageInfo {
+func (d *ModuleDeclaration) Opens() []intsyn.IPackageInfo {
 	return d.opens
 }
 
-func (d *ModuleDeclaration) GetUses() []string {
+func (d *ModuleDeclaration) Uses() []string {
 	return d.uses
 }
 
-func (d *ModuleDeclaration) GetProvides() []ServiceInfo {
+func (d *ModuleDeclaration) Provides() []intsyn.IServiceInfo {
 	return d.provides
 }
 
-func (d *ModuleDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *ModuleDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitModuleDeclaration(d)
 }
 
@@ -59,7 +60,7 @@ func (d *ModuleDeclaration) String() string {
 	return fmt.Sprintf("ModuleDeclaration{%s}", d.internalTypeName)
 }
 
-func NewModuleInfo(name string, flags int, version string) *ModuleInfo {
+func NewModuleInfo(name string, flags int, version string) intsyn.IModuleInfo {
 	return &ModuleInfo{
 		name:    name,
 		flags:   flags,
@@ -73,15 +74,15 @@ type ModuleInfo struct {
 	version string
 }
 
-func (i *ModuleInfo) GetName() string {
+func (i *ModuleInfo) Name() string {
 	return i.name
 }
 
-func (i *ModuleInfo) GetFlags() int {
+func (i *ModuleInfo) Flags() int {
 	return i.flags
 }
 
-func (i *ModuleInfo) GetVersion() string {
+func (i *ModuleInfo) Version() string {
 	return i.version
 }
 
@@ -95,7 +96,7 @@ func (i *ModuleInfo) String() string {
 	return msg
 }
 
-func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) *PackageInfo {
+func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) intsyn.IPackageInfo {
 	return &PackageInfo{
 		internalName:    internalName,
 		flags:           flags,
@@ -109,15 +110,15 @@ type PackageInfo struct {
 	moduleInfoNames []string
 }
 
-func (i *PackageInfo) GetInternalName() string {
+func (i *PackageInfo) InternalName() string {
 	return i.internalName
 }
 
-func (i *PackageInfo) GetFlags() int {
+func (i *PackageInfo) Flags() int {
 	return i.flags
 }
 
-func (i *PackageInfo) GetModuleInfoNames() []string {
+func (i *PackageInfo) ModuleInfoNames() []string {
 	return i.moduleInfoNames
 }
 
@@ -131,7 +132,7 @@ func (i *PackageInfo) String() string {
 	return msg
 }
 
-func NewServiceInfo(internalTypeName string, implementationTypeNames []string) *ServiceInfo {
+func NewServiceInfo(internalTypeName string, implementationTypeNames []string) intsyn.IServiceInfo {
 	return &ServiceInfo{
 		internalTypeName:        internalTypeName,
 		implementationTypeNames: implementationTypeNames,
@@ -143,11 +144,11 @@ type ServiceInfo struct {
 	implementationTypeNames []string
 }
 
-func (i *ServiceInfo) GetInternalTypeName() string {
+func (i *ServiceInfo) InternalTypeName() string {
 	return i.internalTypeName
 }
 
-func (i *ServiceInfo) GetImplementationTypeNames() []string {
+func (i *ServiceInfo) ImplementationTypeNames() []string {
 	return i.implementationTypeNames
 }
 

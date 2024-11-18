@@ -1,21 +1,19 @@
 package declaration
 
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+func NewTypeDeclarations() intsyn.ITypeDeclarations {
+	return &TypeDeclarations{}
+}
+
 type TypeDeclarations struct {
 	AbstractTypeDeclaration
-
-	TypeDeclaration []TypeDeclaration
+	util.DefaultList[intsyn.ITypeDeclaration]
 }
 
-func (d *TypeDeclarations) List() []Declaration {
-	ret := make([]Declaration, 0, len(d.TypeDeclaration))
-
-	for _, m := range d.TypeDeclaration {
-		ret = append(ret, m)
-	}
-
-	return ret
-}
-
-func (d *TypeDeclarations) Accept(visitor DeclarationVisitor) {
+func (d *TypeDeclarations) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitTypeDeclarations(d)
 }

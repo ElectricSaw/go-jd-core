@@ -1,6 +1,8 @@
 package declaration
 
-func NewBodyDeclaration(internalTypeName string, memberDeclaration IMemberDeclaration) *BodyDeclaration {
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
+func NewBodyDeclaration(internalTypeName string, memberDeclaration intsyn.IMemberDeclaration) intsyn.IBodyDeclaration {
 	return &BodyDeclaration{
 		internalTypeName:   internalTypeName,
 		memberDeclarations: memberDeclaration,
@@ -9,21 +11,21 @@ func NewBodyDeclaration(internalTypeName string, memberDeclaration IMemberDeclar
 
 type BodyDeclaration struct {
 	internalTypeName   string
-	memberDeclarations IMemberDeclaration
+	memberDeclarations intsyn.IMemberDeclaration
 }
 
 func (d *BodyDeclaration) InternalTypeName() string {
 	return d.internalTypeName
 }
 
-func (d *BodyDeclaration) MemberDeclarations() IMemberDeclaration {
+func (d *BodyDeclaration) MemberDeclarations() intsyn.IMemberDeclaration {
 	return d.memberDeclarations
 }
 
-func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration IMemberDeclaration) {
+func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration intsyn.IMemberDeclaration) {
 	d.memberDeclarations = memberDeclaration
 }
 
-func (d *BodyDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *BodyDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitBodyDeclaration(d)
 }

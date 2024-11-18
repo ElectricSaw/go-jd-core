@@ -1,10 +1,12 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	"bitbucket.org/coontec/javaClass/class/util"
 )
 
-func NewArrayVariableInitializer(typ _type.IType) *ArrayVariableInitializer {
+func NewArrayVariableInitializer(typ _type.IType) intsyn.IArrayVariableInitializer {
 	return &ArrayVariableInitializer{
 		typ: typ,
 	}
@@ -12,30 +14,22 @@ func NewArrayVariableInitializer(typ _type.IType) *ArrayVariableInitializer {
 
 type ArrayVariableInitializer struct {
 	AbstractVariableInitializer
+	util.DefaultList[intsyn.IVariableInitializer]
 
-	typ                  _type.IType
-	VariableInitializers []VariableInitializer
+	typ _type.IType
 }
 
-func (i *ArrayVariableInitializer) List() []Declaration {
-	ret := make([]Declaration, 0, len(i.VariableInitializers))
-	for _, initializer := range i.VariableInitializers {
-		ret = append(ret, initializer)
-	}
-	return ret
-}
-
-func (i *ArrayVariableInitializer) GetType() _type.IType {
+func (i *ArrayVariableInitializer) Type() _type.IType {
 	return i.typ
 }
 
 func (i *ArrayVariableInitializer) LineNumber() int {
-	if len(i.VariableInitializers) == 0 {
+	if i.Size() == 0 {
 		return 0
 	}
-	return i.VariableInitializers[0].LineNumber()
+	return i.Get(0).LineNumber()
 }
 
-func (i *ArrayVariableInitializer) Accept(visitor DeclarationVisitor) {
+func (i *ArrayVariableInitializer) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitArrayVariableInitializer(i)
 }

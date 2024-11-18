@@ -1,17 +1,18 @@
 package declaration
 
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+func NewFormalParameters() intsyn.IFormalParameters {
+	return &FormalParameters{}
+}
+
 type FormalParameters struct {
-	FormalParameters []FormalParameter
+	util.DefaultList[intsyn.IFormalParameter]
 }
 
-func (d *FormalParameters) List() []Declaration {
-	ret := make([]Declaration, 0, len(d.FormalParameters))
-	for _, param := range d.FormalParameters {
-		ret = append(ret, &param)
-	}
-	return ret
-}
-
-func (d *FormalParameters) Accept(visitor DeclarationVisitor) {
+func (d *FormalParameters) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitFormalParameters(d)
 }

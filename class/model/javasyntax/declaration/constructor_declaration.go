@@ -1,6 +1,7 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/classfile"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
@@ -8,7 +9,7 @@ import (
 	"fmt"
 )
 
-func NewConstructorDeclaration(flags int, formalParameter IFormalParameter, descriptor string, statements statement.Statement) *ConstructorDeclaration {
+func NewConstructorDeclaration(flags int, formalParameter intsyn.IFormalParameter, descriptor string, statements statement.Statement) intsyn.IConstructorDeclaration {
 	return &ConstructorDeclaration{
 		flags:           flags,
 		formalParameter: formalParameter,
@@ -17,7 +18,7 @@ func NewConstructorDeclaration(flags int, formalParameter IFormalParameter, desc
 	}
 }
 
-func NewConstructorDeclarationWithAll(annotationReferences reference.IReference, flags int, typeParameters _type.ITypeParameter, formalParameter IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement) *ConstructorDeclaration {
+func NewConstructorDeclarationWithAll(annotationReferences reference.IReference, flags int, typeParameters _type.ITypeParameter, formalParameter intsyn.IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement) intsyn.IConstructorDeclaration {
 	return &ConstructorDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -35,7 +36,7 @@ type ConstructorDeclaration struct {
 	annotationReferences reference.IReference
 	flags                int
 	typeParameters       _type.ITypeParameter
-	formalParameter      IFormalParameter
+	formalParameter      intsyn.IFormalParameter
 	exceptionTypes       _type.IType
 	descriptor           string
 	statements           statement.Statement
@@ -61,11 +62,11 @@ func (d *ConstructorDeclaration) TypeParameters() _type.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *ConstructorDeclaration) FormalParameters() IFormalParameter {
+func (d *ConstructorDeclaration) FormalParameters() intsyn.IFormalParameter {
 	return d.formalParameter
 }
 
-func (d *ConstructorDeclaration) SetFormalParameters(formalParameter IFormalParameter) {
+func (d *ConstructorDeclaration) SetFormalParameters(formalParameter intsyn.IFormalParameter) {
 	d.formalParameter = formalParameter
 }
 
@@ -85,7 +86,7 @@ func (d *ConstructorDeclaration) SetStatements(state statement.Statement) {
 	d.statements = state
 }
 
-func (d *ConstructorDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *ConstructorDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitConstructorDeclaration(d)
 }
 

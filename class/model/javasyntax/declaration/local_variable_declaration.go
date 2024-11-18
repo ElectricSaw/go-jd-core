@@ -1,8 +1,11 @@
 package declaration
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+)
 
-func NewLocalVariableDeclaration(typ _type.IType, localVariableDeclarators ILocalVariableDeclarator) *LocalVariableDeclaration {
+func NewLocalVariableDeclaration(typ _type.IType, localVariableDeclarators intsyn.ILocalVariableDeclarator) intsyn.ILocalVariableDeclaration {
 	return &LocalVariableDeclaration{
 		typ:                      typ,
 		localVariableDeclarators: localVariableDeclarators,
@@ -12,7 +15,7 @@ func NewLocalVariableDeclaration(typ _type.IType, localVariableDeclarators ILoca
 type LocalVariableDeclaration struct {
 	final                    bool
 	typ                      _type.IType
-	localVariableDeclarators ILocalVariableDeclarator
+	localVariableDeclarators intsyn.ILocalVariableDeclarator
 }
 
 func (d *LocalVariableDeclaration) IsFinal() bool {
@@ -27,14 +30,14 @@ func (d *LocalVariableDeclaration) Type() _type.IType {
 	return d.typ
 }
 
-func (d *LocalVariableDeclaration) LocalVariableDeclarators() ILocalVariableDeclarator {
+func (d *LocalVariableDeclaration) LocalVariableDeclarators() intsyn.ILocalVariableDeclarator {
 	return d.localVariableDeclarators
 }
 
-func (d *LocalVariableDeclaration) SetLocalVariableDeclarators(localVariableDeclarators ILocalVariableDeclarator) {
+func (d *LocalVariableDeclaration) SetLocalVariableDeclarators(localVariableDeclarators intsyn.ILocalVariableDeclarator) {
 	d.localVariableDeclarators = localVariableDeclarators
 }
 
-func (d *LocalVariableDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *LocalVariableDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclaration(d)
 }

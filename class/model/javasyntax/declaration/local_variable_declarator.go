@@ -1,21 +1,25 @@
 package declaration
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+	"fmt"
+)
 
-func NewLocalVariableDeclarator(name string) *LocalVariableDeclarator {
+func NewLocalVariableDeclarator(name string) intsyn.ILocalVariableDeclarator {
 	return &LocalVariableDeclarator{
 		name: name,
 	}
 }
 
-func NewLocalVariableDeclarator2(name string, variableInitializer VariableInitializer) *LocalVariableDeclarator {
+func NewLocalVariableDeclarator2(name string, variableInitializer intsyn.IVariableInitializer) intsyn.ILocalVariableDeclarator {
 	return &LocalVariableDeclarator{
 		name:                name,
 		variableInitializer: variableInitializer,
 	}
 }
 
-func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer VariableInitializer) *LocalVariableDeclarator {
+func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer intsyn.IVariableInitializer) intsyn.ILocalVariableDeclarator {
 	return &LocalVariableDeclarator{
 		lineNumber:          lineNumber,
 		name:                name,
@@ -24,10 +28,12 @@ func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitialize
 }
 
 type LocalVariableDeclarator struct {
+	util.DefaultBase[intsyn.ILocalVariableDeclarator]
+
 	lineNumber          int
 	name                string
 	dimension           int
-	variableInitializer VariableInitializer
+	variableInitializer intsyn.IVariableInitializer
 }
 
 func (d *LocalVariableDeclarator) Name() string {
@@ -50,11 +56,11 @@ func (d *LocalVariableDeclarator) LineNumber() int {
 	return d.lineNumber
 }
 
-func (d *LocalVariableDeclarator) VariableInitializer() VariableInitializer {
+func (d *LocalVariableDeclarator) VariableInitializer() intsyn.IVariableInitializer {
 	return d.variableInitializer
 }
 
-func (d *LocalVariableDeclarator) Accept(visitor DeclarationVisitor) {
+func (d *LocalVariableDeclarator) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarator(d)
 }
 

@@ -1,11 +1,12 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 )
 
-func NewFieldDeclaration(flags int, typ _type.IType, fieldDeclaration IFieldDeclarator) *FieldDeclaration {
+func NewFieldDeclaration(flags int, typ _type.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
 	return &FieldDeclaration{
 		flags:            flags,
 		typ:              typ,
@@ -13,7 +14,7 @@ func NewFieldDeclaration(flags int, typ _type.IType, fieldDeclaration IFieldDecl
 	}
 }
 
-func NewFieldDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, typ _type.IType, fieldDeclaration IFieldDeclarator) *FieldDeclaration {
+func NewFieldDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, typ _type.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
 	return &FieldDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -28,7 +29,7 @@ type FieldDeclaration struct {
 	annotationReferences reference.IAnnotationReference
 	flags                int
 	typ                  _type.IType
-	fieldDeclarators     IFieldDeclarator
+	fieldDeclarators     intsyn.IFieldDeclarator
 }
 
 func (d *FieldDeclaration) Flags() int {
@@ -51,14 +52,14 @@ func (d *FieldDeclaration) SetType(t _type.IType) {
 	d.typ = t
 }
 
-func (d *FieldDeclaration) FieldDeclarators() IFieldDeclarator {
+func (d *FieldDeclaration) FieldDeclarators() intsyn.IFieldDeclarator {
 	return d.fieldDeclarators
 }
 
-func (d *FieldDeclaration) SetFieldDeclarators(fd IFieldDeclarator) {
+func (d *FieldDeclaration) SetFieldDeclarators(fd intsyn.IFieldDeclarator) {
 	d.fieldDeclarators = fd
 }
 
-func (d *FieldDeclaration) Accept(visitor DeclarationVisitor) {
+func (d *FieldDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitFieldDeclaration(d)
 }

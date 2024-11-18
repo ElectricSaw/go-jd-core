@@ -1,19 +1,20 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewFormalParameter(typ _type.IType, name string) *FormalParameter {
+func NewFormalParameter(typ _type.IType, name string) intsyn.IFormalParameter {
 	return &FormalParameter{
 		typ:  typ,
 		name: name,
 	}
 }
 
-func NewFormalParameter2(annotationReferences reference.IAnnotationReference, typ _type.IType, name string) *FormalParameter {
+func NewFormalParameter2(annotationReferences reference.IAnnotationReference, typ _type.IType, name string) intsyn.IFormalParameter {
 	return &FormalParameter{
 		annotationReferences: annotationReferences,
 		typ:                  typ,
@@ -21,7 +22,7 @@ func NewFormalParameter2(annotationReferences reference.IAnnotationReference, ty
 	}
 }
 
-func NewFormalParameter3(typ _type.IType, varargs bool, name string) *FormalParameter {
+func NewFormalParameter3(typ _type.IType, varargs bool, name string) intsyn.IFormalParameter {
 	return &FormalParameter{
 		typ:     typ,
 		varargs: varargs,
@@ -29,7 +30,7 @@ func NewFormalParameter3(typ _type.IType, varargs bool, name string) *FormalPara
 	}
 }
 
-func NewFormalParameter4(annotationReferences reference.IAnnotationReference, typ _type.IType, varargs bool, name string) *FormalParameter {
+func NewFormalParameter4(annotationReferences reference.IAnnotationReference, typ _type.IType, varargs bool, name string) intsyn.IFormalParameter {
 	return &FormalParameter{
 		annotationReferences: annotationReferences,
 		typ:                  typ,
@@ -74,7 +75,7 @@ func (d *FormalParameter) SetName(name string) {
 	d.name = name
 }
 
-func (d *FormalParameter) Accept(visitor DeclarationVisitor) {
+func (d *FormalParameter) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitFormalParameter(d)
 }
 

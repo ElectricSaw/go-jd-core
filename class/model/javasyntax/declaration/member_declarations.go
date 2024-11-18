@@ -1,21 +1,19 @@
 package declaration
 
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+func NewMemberDeclarations() intsyn.IMemberDeclarations {
+	return &MemberDeclarations{}
+}
+
 type MemberDeclarations struct {
 	AbstractMemberDeclaration
-
-	MemberDeclarations []IMemberDeclaration
+	util.DefaultList[intsyn.IMemberDeclaration]
 }
 
-func (d *MemberDeclarations) List() []Declaration {
-	ret := make([]Declaration, 0, len(d.MemberDeclarations))
-
-	for _, m := range d.MemberDeclarations {
-		ret = append(ret, m)
-	}
-
-	return ret
-}
-
-func (d *MemberDeclarations) Accept(visitor DeclarationVisitor) {
+func (d *MemberDeclarations) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitMemberDeclarations(d)
 }

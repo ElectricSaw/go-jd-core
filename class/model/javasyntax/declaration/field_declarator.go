@@ -1,21 +1,25 @@
 package declaration
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+	"fmt"
+)
 
-func NewFieldDeclarator(name string) *FieldDeclarator {
+func NewFieldDeclarator(name string) intsyn.IFieldDeclarator {
 	return &FieldDeclarator{
 		name: name,
 	}
 }
 
-func NewFieldDeclarator2(name string, variableInitializer VariableInitializer) *FieldDeclarator {
+func NewFieldDeclarator2(name string, variableInitializer intsyn.IVariableInitializer) intsyn.IFieldDeclarator {
 	return &FieldDeclarator{
 		name:                name,
 		variableInitializer: variableInitializer,
 	}
 }
 
-func NewFieldDeclarator3(name string, dimension int, variableInitializer VariableInitializer) *FieldDeclarator {
+func NewFieldDeclarator3(name string, dimension int, variableInitializer intsyn.IVariableInitializer) intsyn.IFieldDeclarator {
 	return &FieldDeclarator{
 		name:                name,
 		variableInitializer: variableInitializer,
@@ -24,17 +28,19 @@ func NewFieldDeclarator3(name string, dimension int, variableInitializer Variabl
 }
 
 type FieldDeclarator struct {
-	fieldDeclaration    *FieldDeclaration
+	util.DefaultBase[intsyn.IFieldDeclarator]
+
+	fieldDeclaration    intsyn.IFieldDeclaration
 	name                string
 	dimension           int
-	variableInitializer VariableInitializer
+	variableInitializer intsyn.IVariableInitializer
 }
 
-func (d *FieldDeclarator) SetFieldDeclaration(fieldDeclaration *FieldDeclaration) {
+func (d *FieldDeclarator) SetFieldDeclaration(fieldDeclaration intsyn.IFieldDeclaration) {
 	d.fieldDeclaration = fieldDeclaration
 }
 
-func (d *FieldDeclarator) FieldDeclaration() *FieldDeclaration {
+func (d *FieldDeclarator) FieldDeclaration() intsyn.IFieldDeclaration {
 	return d.fieldDeclaration
 }
 
@@ -46,15 +52,15 @@ func (d *FieldDeclarator) Dimension() int {
 	return d.dimension
 }
 
-func (d *FieldDeclarator) VariableInitializer() VariableInitializer {
+func (d *FieldDeclarator) VariableInitializer() intsyn.IVariableInitializer {
 	return d.variableInitializer
 }
 
-func (d *FieldDeclarator) SetVariableInitializer(variableInitializer VariableInitializer) {
+func (d *FieldDeclarator) SetVariableInitializer(variableInitializer intsyn.IVariableInitializer) {
 	d.variableInitializer = variableInitializer
 }
 
-func (d *FieldDeclarator) Accept(visitor DeclarationVisitor) {
+func (d *FieldDeclarator) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitFieldDeclarator(d)
 }
 

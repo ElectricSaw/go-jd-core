@@ -1,23 +1,24 @@
 package declaration
 
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+func NewFieldDeclarators(length int) intsyn.IFieldDeclarators {
+	return &FieldDeclarators{}
+}
+
 type FieldDeclarators struct {
-	FieldDeclarators []FieldDeclarator
+	util.DefaultList[intsyn.IFieldDeclarator]
 }
 
-func (d *FieldDeclarators) List() []Declaration {
-	ret := make([]Declaration, 0, len(d.FieldDeclarators))
-	for _, f := range d.FieldDeclarators {
-		ret = append(ret, &f)
-	}
-	return ret
-}
-
-func (d *FieldDeclarators) SetFieldDeclaration(fieldDeclaration *FieldDeclaration) {
-	for _, declarator := range d.FieldDeclarators {
-		declarator.SetFieldDeclaration(fieldDeclaration)
+func (d *FieldDeclarators) SetFieldDeclaration(fieldDeclaration intsyn.IFieldDeclaration) {
+	for _, fieldDeclarator := range d.Elements() {
+		fieldDeclarator.SetFieldDeclaration(fieldDeclaration)
 	}
 }
 
-func (d *FieldDeclarators) Accept(visitor DeclarationVisitor) {
+func (d *FieldDeclarators) Accept(visitor intsyn.IDeclarationVisitor) {
 	visitor.VisitFieldDeclarators(d)
 }
