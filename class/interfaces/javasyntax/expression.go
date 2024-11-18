@@ -1,8 +1,11 @@
 package javasyntax
 
 import (
+	"bitbucket.org/coontec/javaClass/class/api"
 	"bitbucket.org/coontec/javaClass/class/util"
 )
+
+var UnknownLineNumber = api.UnknownLineNumber
 
 type IExpression interface {
 	util.Base[IExpression]
@@ -100,6 +103,8 @@ type IExpressionVisitor interface {
 }
 
 type IArrayExpression interface {
+	Type() IType
+	SetType(typ IType)
 	Expression() IExpression
 	Index() IExpression
 	Priority() int
@@ -134,6 +139,8 @@ type IBooleanExpression interface {
 }
 
 type ICastExpression interface {
+	Type() IType
+	SetType(typ IType)
 	Expression() IExpression
 	IsExplicit() bool
 	Priority() int
@@ -148,14 +155,16 @@ type ICommentExpression interface {
 	LineNumber() int
 	Type() IType
 	Priority() int
-	GetText() string
+	Text() string
 	Accept(visitor IExpressionVisitor)
 	String() string
 }
 
 type IConstructorInvocationExpression interface {
-	GetParameters() IExpression
-	GetPriority() int
+	Type() IType
+	SetType(typ IType)
+	Parameters() IExpression
+	Priority() int
 	SetParameters(params IExpression)
 	IsConstructorInvocationExpression() bool
 	Accept(visitor IExpressionVisitor)
@@ -163,12 +172,16 @@ type IConstructorInvocationExpression interface {
 }
 
 type IConstructorReferenceExpression interface {
+	Type() IType
+	SetType(typ IType)
 	ObjectType() IObjectType
 	Descriptor() string
 	Accept(visitor IExpressionVisitor)
 }
 
 type IDoubleConstantExpression interface {
+	Type() IType
+	SetType(typ IType)
 	DoubleValue() float64
 	IsDoubleConstantExpression() bool
 	Accept(visitor IExpressionVisitor)
@@ -176,18 +189,22 @@ type IDoubleConstantExpression interface {
 }
 
 type IEnumConstantReferenceExpression interface {
-	GetType() IType
-	GetObjectType() IObjectType
-	GetName() string
+	Type() IType
+	SetType(typ IType)
+	ObjectType() IObjectType
+	Name() string
 	Accept(visitor IExpressionVisitor)
 	String() string
 }
 
 type IExpressions interface {
+	util.IList[IExpression]
 	Accept(visitor IExpressionVisitor)
 }
 
 type IFieldReferenceExpression interface {
+	Type() IType
+	SetType(typ IType)
 	Expression() IExpression
 	InternalTypeName() string
 	Name() string
@@ -200,6 +217,8 @@ type IFieldReferenceExpression interface {
 }
 
 type IFloatConstantExpression interface {
+	Type() IType
+	SetType(typ IType)
 	FloatValue() float32
 	IsFloatConstantExpression() bool
 	Accept(visitor IExpressionVisitor)
@@ -207,23 +226,26 @@ type IFloatConstantExpression interface {
 }
 
 type IInstanceOfExpression interface {
-	Expression() IExpression
-	GetInstanceOfType() IType
 	Type() IType
+	Expression() IExpression
+	InstanceOfType() IType
 	Priority() int
 	SetExpression(expression IExpression)
 	Accept(visitor IExpressionVisitor)
 }
 
 type IIntegerConstantExpression interface {
-	IntegerValue() int
+	Type() IType
 	SetType(typ IType)
+	IntegerValue() int
 	IsIntegerConstantExpression() bool
 	Accept(visitor IExpressionVisitor)
 	String() string
 }
 
 type ILambdaFormalParametersExpression interface {
+	Priority() int
+	Statements() IStatement
 	FormalParameters() IFormalParameter
 	SetFormalParameters(formalParameters IFormalParameter)
 	Accept(visitor IExpressionVisitor)
@@ -231,6 +253,8 @@ type ILambdaFormalParametersExpression interface {
 }
 
 type ILambdaIdentifiersExpression interface {
+	Priority() int
+	Statements() IStatement
 	ReturnedType() IType
 	ParameterNames() []string
 	Accept(visitor IExpressionVisitor)
@@ -247,6 +271,8 @@ type ILengthExpression interface {
 }
 
 type ILocalVariableReferenceExpression interface {
+	Type() IType
+	SetType(typ IType)
 	Name() string
 	IsLocalVariableReferenceExpression() bool
 	Accept(visitor IExpressionVisitor)
@@ -254,6 +280,8 @@ type ILocalVariableReferenceExpression interface {
 }
 
 type ILongConstantExpression interface {
+	Type() IType
+	SetType(typ IType)
 	LongValue() int64
 	IsLongConstantExpression() bool
 	Accept(visitor IExpressionVisitor)
@@ -261,6 +289,8 @@ type ILongConstantExpression interface {
 }
 
 type IMethodInvocationExpression interface {
+	Expression() IExpression
+	SetExpression(expression IExpression)
 	NonWildcardTypeArguments() ITypeArgument
 	SetNonWildcardTypeArguments(arguments ITypeArgument)
 	Parameters() IExpression
@@ -280,6 +310,8 @@ type IMethodReferenceExpression interface {
 }
 
 type INewArray interface {
+	Type() IType
+	SetType(typ IType)
 	DimensionExpressionList() IExpression
 	SetDimensionExpressionList(dimensionExpressionList IExpression)
 	Priority() int
@@ -305,6 +337,8 @@ type INewExpression interface {
 }
 
 type INewInitializedArray interface {
+	Type() IType
+	SetType(typ IType)
 	ArrayInitializer() IArrayVariableInitializer
 	Priority() int
 	IsNewInitializedArray() bool
@@ -318,6 +352,8 @@ type INoExpression interface {
 }
 
 type INullExpression interface {
+	Type() IType
+	SetType(typ IType)
 	IsNullExpression() bool
 	Accept(visitor IExpressionVisitor)
 	String() string
@@ -373,6 +409,8 @@ type IStringConstantExpression interface {
 }
 
 type ISuperConstructorInvocationExpression interface {
+	Type() IType
+	SetType(typ IType)
 	Parameters() IExpression
 	SetParameters(expression IExpression)
 	Priority() int
@@ -412,7 +450,7 @@ type IThisExpression interface {
 
 type ITypeReferenceDotClassExpression interface {
 	LineNumber() int
-	GetTypeDotClass() IType
+	TypeDotClass() IType
 	Type() IType
 	Priority() int
 	Accept(visitor IExpressionVisitor)

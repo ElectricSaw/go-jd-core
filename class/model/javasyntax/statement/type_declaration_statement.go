@@ -16,8 +16,8 @@ type TypeDeclarationStatement struct {
 	typeDeclaration intsyn.ITypeDeclaration
 }
 
-func (s *TypeDeclarationStatement) TypeDeclaration() *intsyn.ITypeDeclaration {
-	return &s.typeDeclaration
+func (s *TypeDeclarationStatement) TypeDeclaration() intsyn.ITypeDeclaration {
+	return s.typeDeclaration
 }
 
 func (s *TypeDeclarationStatement) Accept(visitor intsyn.IStatementVisitor) {

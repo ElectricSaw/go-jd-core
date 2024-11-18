@@ -1,17 +1,19 @@
 package javasyntax
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewCompilationUnit(typeDeclarations declaration.ITypeDeclaration) *CompilationUnit {
+func NewCompilationUnit(typeDeclarations intsyn.ITypeDeclaration) *CompilationUnit {
 	return &CompilationUnit{
 		typeDeclarations: typeDeclarations,
 	}
 }
 
 type CompilationUnit struct {
-	typeDeclarations declaration.ITypeDeclaration
+	typeDeclarations intsyn.ITypeDeclaration
 }
 
-func (u *CompilationUnit) TypeDeclarations() declaration.ITypeDeclaration {
+func (u *CompilationUnit) TypeDeclarations() intsyn.ITypeDeclaration {
 	return u.typeDeclarations
 }

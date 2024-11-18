@@ -33,7 +33,7 @@ func (e *TypeReferenceDotClassExpression) LineNumber() int {
 	return e.lineNumber
 }
 
-func (e *TypeReferenceDotClassExpression) GetTypeDotClass() intsyn.IType {
+func (e *TypeReferenceDotClassExpression) TypeDotClass() intsyn.IType {
 	return e.typeDotClass
 }
 

@@ -10,24 +10,24 @@ type IAssertStatement interface {
 }
 
 type IBreakStatement interface {
-	GetLabel() string
+	Label() string
 	IsBreakStatement() bool
 	Accept(visitor IStatementVisitor)
 }
 
 type IByteCodeStatement interface {
-	GetText() string
+	Text() string
 	Accept(visitor IStatementVisitor)
 }
 
 type ICommentStatement interface {
-	GetLabel() string
+	Label() string
 	IsContinueStatement() bool
 	Accept(visitor IStatementVisitor)
 }
 
 type IContinueStatement interface {
-	GetLabel() string
+	Label() string
 	IsContinueStatement() bool
 	Accept(visitor IStatementVisitor)
 }
@@ -53,6 +53,7 @@ type IForEachStatement interface {
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	Statement() IStatement
+	Statements() IStatement
 	Accept(visitor IStatementVisitor)
 }
 
@@ -71,6 +72,8 @@ type IForStatement interface {
 }
 
 type IIfElseStatement interface {
+	Condition() IExpression
+	Statements() IStatement
 	ElseStatements() IStatement
 	IsIfElseStatement() bool
 	Accept(visitor IStatementVisitor)
@@ -85,8 +88,9 @@ type IIfStatement interface {
 }
 
 type ILabelStatement interface {
-	GetLabel() string
-	GetStatement() IStatement
+	Label() string
+	Statement() IStatement
+	Statements() IStatement
 	IsLabelStatement() bool
 	Accept(visitor IStatementVisitor)
 	String() string
@@ -119,7 +123,7 @@ type IReturnExpressionStatement interface {
 	SetLineNumber(lineNumber int)
 	Expression() IExpression
 	SetExpression(expression IExpression)
-	GetGenericExpression() IExpression
+	GenericExpression() IExpression
 	IsReturnExpressionStatement() bool
 	Accept(visitor IStatementVisitor)
 	String() string
@@ -239,8 +243,8 @@ type ITryStatement interface {
 	SetResources(resources []IResource)
 	AddResources(resources []IResource)
 	AddResource(resource IResource)
-	TryStatement() IStatement
-	SetTryStatement(tryStatement IStatement)
+	TryStatements() IStatement
+	SetTryStatements(tryStatement IStatement)
 	CatchClauseList() []IStatement
 	CatchClauses() []ICatchClause
 	FinallyStatements() IStatement
@@ -250,7 +254,7 @@ type ITryStatement interface {
 }
 
 type ITypeDeclarationStatement interface {
-	TypeDeclaration() *ITypeDeclaration
+	TypeDeclaration() ITypeDeclaration
 	Accept(visitor IStatementVisitor)
 }
 
@@ -283,6 +287,7 @@ type IBlock interface {
 }
 
 type ILabelBlock interface {
+	Statements() IStatement
 	Label() ILabel
 	IsSwitchStatementLabelBlock() bool
 	Accept(visitor IStatementVisitor)
@@ -290,6 +295,7 @@ type ILabelBlock interface {
 }
 
 type IMultiLabelsBlock interface {
+	Statements() IStatement
 	List() []IStatement
 	Labels() []ILabel
 	IsSwitchStatementMultiLabelsBlock() bool

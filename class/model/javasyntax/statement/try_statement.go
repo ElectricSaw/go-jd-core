@@ -55,11 +55,11 @@ func (s *TryStatement) AddResource(resource intsyn.IResource) {
 	s.resources = append(s.resources, resource)
 }
 
-func (s *TryStatement) TryStatement() intsyn.IStatement {
+func (s *TryStatement) TryStatements() intsyn.IStatement {
 	return s.tryStatements
 }
 
-func (s *TryStatement) SetTryStatement(tryStatement intsyn.IStatement) {
+func (s *TryStatement) SetTryStatements(tryStatement intsyn.IStatement) {
 	s.tryStatements = tryStatement
 }
 

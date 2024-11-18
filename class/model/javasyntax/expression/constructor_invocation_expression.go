@@ -30,11 +30,11 @@ type ConstructorInvocationExpression struct {
 	parameters intsyn.IExpression
 }
 
-func (e *ConstructorInvocationExpression) GetParameters() intsyn.IExpression {
+func (e *ConstructorInvocationExpression) Parameters() intsyn.IExpression {
 	return e.parameters
 }
 
-func (e *ConstructorInvocationExpression) GetPriority() int {
+func (e *ConstructorInvocationExpression) Priority() int {
 	return 1
 }
 

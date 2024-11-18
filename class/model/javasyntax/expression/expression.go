@@ -6,13 +6,11 @@ import (
 	"bitbucket.org/coontec/javaClass/class/util"
 )
 
-var UnknownLineNumber = 0
-
 type AbstractExpression struct {
 	util.DefaultBase[intsyn.IExpression]
 }
 
-func (e *AbstractExpression) LineNumber() int    { return UnknownLineNumber }
+func (e *AbstractExpression) LineNumber() int    { return intsyn.UnknownLineNumber }
 func (e *AbstractExpression) Type() intsyn.IType { return nil }
 func (e *AbstractExpression) Priority() int      { return -1 }
 

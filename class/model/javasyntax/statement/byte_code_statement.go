@@ -14,7 +14,7 @@ type ByteCodeStatement struct {
 	text string
 }
 
-func (s *ByteCodeStatement) GetText() string {
+func (s *ByteCodeStatement) Text() string {
 	return s.text
 }
 

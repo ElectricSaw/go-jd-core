@@ -48,7 +48,7 @@ func (g *ControlFlowGraph) SetOffsetToLineNumbers(offsetToLineNumbers []int) {
 	g.OffsetToLineNumbers = offsetToLineNumbers
 }
 
-func (g *ControlFlowGraph) GetLineNumber(offset int) int {
+func (g *ControlFlowGraph) LineNumber(offset int) int {
 	if g.OffsetToLineNumbers == nil {
 		return 0
 	}

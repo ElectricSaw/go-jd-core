@@ -12,6 +12,9 @@ const (
 )
 
 type IAnnotationElementValue interface {
+	Type() IObjectType
+	ElementValue() IElementValue
+	ElementValuePairs() IElementValuePair
 	Accept(visitor IReferenceVisitor)
 	String() string
 }

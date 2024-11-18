@@ -42,7 +42,7 @@ func (s *ReturnExpressionStatement) SetExpression(expression intsyn.IExpression)
 	s.expression = expression
 }
 
-func (s *ReturnExpressionStatement) GetGenericExpression() intsyn.IExpression {
+func (s *ReturnExpressionStatement) GenericExpression() intsyn.IExpression {
 	return s.expression
 }
 

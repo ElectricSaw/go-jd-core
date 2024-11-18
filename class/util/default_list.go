@@ -14,6 +14,7 @@ type IList[T any] interface {
 	Add(element T)
 	AddAll(elements []T)
 	IsEmpty() bool
+	Size() int
 }
 
 // DefaultList 구조체 정의
@@ -93,6 +94,10 @@ func (d *DefaultList[T]) AddAll(elements []T) {
 // 리스트가 비어있는지 확인
 func (d *DefaultList[T]) IsEmpty() bool {
 	return len(d.elements) == 0
+}
+
+func (d *DefaultList[T]) Size() int {
+	return len(d.elements)
 }
 
 // 빈 리스트를 반환하는 함수

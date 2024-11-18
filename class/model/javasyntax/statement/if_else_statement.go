@@ -2,7 +2,7 @@ package statement
 
 import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 
-func NewIfElseStatement(condition intsyn.IExpression, statements intsyn.IStatement, elseStatements intsyn.IStatement) intsyn.IIIfElseStatement {
+func NewIfElseStatement(condition intsyn.IExpression, statements intsyn.IStatement, elseStatements intsyn.IStatement) intsyn.IIfElseStatement {
 	return &IfElseStatement{
 		IfStatement: IfStatement{
 			condition:  condition,

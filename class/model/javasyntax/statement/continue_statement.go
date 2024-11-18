@@ -16,7 +16,7 @@ type ContinueStatement struct {
 	label string
 }
 
-func (s *ContinueStatement) GetLabel() string {
+func (s *ContinueStatement) Label() string {
 	return s.label
 }
 

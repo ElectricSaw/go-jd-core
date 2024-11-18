@@ -38,11 +38,11 @@ func (t *TypeArguments) IsTypeArgumentList() bool {
 	return true
 }
 
-func (t *TypeArguments) GetTypeArgumentFirst() intsyn.ITypeArgument {
+func (t *TypeArguments) TypeArgumentFirst() intsyn.ITypeArgument {
 	return t.Get(0)
 }
 
-func (t *TypeArguments) GetTypeArgumentList() []intsyn.ITypeArgument {
+func (t *TypeArguments) TypeArgumentList() []intsyn.ITypeArgument {
 	return t.Elements()
 }
 

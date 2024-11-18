@@ -19,7 +19,7 @@ type CommentExpression struct {
 }
 
 func (e *CommentExpression) LineNumber() int {
-	return UnknownLineNumber
+	return intsyn.UnknownLineNumber
 }
 
 func (e *CommentExpression) Type() intsyn.IType {
@@ -30,7 +30,7 @@ func (e *CommentExpression) Priority() int {
 	return 0
 }
 
-func (e *CommentExpression) GetText() string {
+func (e *CommentExpression) Text() string {
 	return e.text
 }
 

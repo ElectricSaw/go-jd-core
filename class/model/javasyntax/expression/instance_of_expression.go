@@ -36,7 +36,7 @@ func (e *InstanceOfExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
-func (e *InstanceOfExpression) GetInstanceOfType() intsyn.IType {
+func (e *InstanceOfExpression) InstanceOfType() intsyn.IType {
 	return e.instanceOfType
 }
 

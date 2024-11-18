@@ -36,12 +36,15 @@ const (
 )
 
 type IAnnotationDeclaration interface {
+	AnnotationReferences() IAnnotationReference
+	BodyDeclaration() IBodyDeclaration
 	AnnotationDeclarators() IFieldDeclarator
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
 type IArrayVariableInitializer interface {
+	util.IList[IVariableInitializer]
 	Type() IType
 	LineNumber() int
 	Accept(visitor IDeclarationVisitor)
@@ -54,6 +57,10 @@ type IBodyDeclaration interface {
 }
 
 type IClassDeclaration interface {
+	AnnotationReferences() IAnnotationReference
+	TypeParameters() ITypeParameter
+	Interfaces() IType
+	BodyDeclaration() IBodyDeclaration
 	SuperType() IObjectType
 	IsClassDeclaration() bool
 	Accept(visitor IDeclarationVisitor)
@@ -176,6 +183,7 @@ type IEnumDeclaration interface {
 	Interfaces() IType
 	Constants() []IConstant
 	SetConstants(constants []IConstant)
+	BodyDeclaration() IBodyDeclaration
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
@@ -209,10 +217,12 @@ type IFieldDeclaration interface {
 	Accept(visitor IDeclarationVisitor)
 }
 type IFieldDeclarators interface {
+	util.IList[IFieldDeclarator]
 	SetFieldDeclaration(fieldDeclaration IFieldDeclaration)
 	Accept(visitor IDeclarationVisitor)
 }
 type IFormalParameters interface {
+	util.IList[IFormalParameter]
 	Accept(visitor IDeclarationVisitor)
 }
 
@@ -224,6 +234,8 @@ type IInstanceInitializerDeclaration interface {
 }
 
 type IInterfaceDeclaration interface {
+	AnnotationReferences() IAnnotationReference
+	BodyDeclaration() IBodyDeclaration
 	TypeParameters() ITypeParameter
 	Interfaces() IType
 	Accept(visitor IDeclarationVisitor)
@@ -239,12 +251,15 @@ type ILocalVariableDeclaration interface {
 	Accept(visitor IDeclarationVisitor)
 }
 type ILocalVariableDeclarators interface {
+	util.IList[ILocalVariableDeclarator]
 	LineNumber() int
 	VariableInitializer() IVariableInitializer
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
+
 type IMemberDeclarations interface {
+	util.IList[IMemberDeclaration]
 	Accept(visitor IDeclarationVisitor)
 }
 
@@ -306,5 +321,6 @@ type IStaticInitializerDeclaration interface {
 	String() string
 }
 type ITypeDeclarations interface {
+	util.IList[ITypeDeclaration]
 	Accept(visitor IDeclarationVisitor)
 }

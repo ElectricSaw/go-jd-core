@@ -2,13 +2,23 @@ package expression
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
+func CreateItemType(expression intsyn.IExpression) intsyn.IType {
+	typ := expression.Type()
+	dimension := typ.Dimension()
+
+	if dimension > 0 {
+		return typ.CreateType(dimension - 1)
+	}
+
+	return typ.CreateType(0)
+}
+
 func NewArrayExpression(expression intsyn.IExpression, index intsyn.IExpression) intsyn.IArrayExpression {
 	return &ArrayExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.CreateItemType(expression)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(CreateItemType(expression)),
 		expression:                       expression,
 		index:                            index,
 	}
@@ -16,7 +26,7 @@ func NewArrayExpression(expression intsyn.IExpression, index intsyn.IExpression)
 
 func NewArrayExpressionWithLineNumber(lineNumber int, expression intsyn.IExpression, index intsyn.IExpression) intsyn.IArrayExpression {
 	return &ArrayExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.CreateItemType(expression)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, CreateItemType(expression)),
 		expression:                       expression,
 		index:                            index,
 	}

@@ -19,11 +19,11 @@ type LabelStatement struct {
 	statement intsyn.IStatement
 }
 
-func (s *LabelStatement) GetLabel() string {
+func (s *LabelStatement) Label() string {
 	return s.label
 }
 
-func (s *LabelStatement) GetStatement() intsyn.IStatement {
+func (s *LabelStatement) Statement() intsyn.IStatement {
 	return s.statement
 }
 

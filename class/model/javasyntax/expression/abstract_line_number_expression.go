@@ -1,5 +1,7 @@
 package expression
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 func NewAbstractLineNumberExpression(lineNumber int) *AbstractLineNumberExpression {
 	return &AbstractLineNumberExpression{
 		lineNumber: lineNumber,
@@ -8,7 +10,7 @@ func NewAbstractLineNumberExpression(lineNumber int) *AbstractLineNumberExpressi
 
 func NewAbstractLineNumberExpressionEmpty() *AbstractLineNumberExpression {
 	return &AbstractLineNumberExpression{
-		lineNumber: UnknownLineNumber,
+		lineNumber: intsyn.UnknownLineNumber,
 	}
 }
 

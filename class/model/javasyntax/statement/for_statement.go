@@ -2,7 +2,6 @@ package statement
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
 	"fmt"
 )
 

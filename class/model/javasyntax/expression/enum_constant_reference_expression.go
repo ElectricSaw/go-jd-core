@@ -8,7 +8,7 @@ import (
 func NewEnumConstantReferenceExpression(typ intsyn.IObjectType, name string) intsyn.IEnumConstantReferenceExpression {
 	return &EnumConstantReferenceExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: UnknownLineNumber,
+			lineNumber: intsyn.UnknownLineNumber,
 		},
 		typ:  typ,
 		name: name,
@@ -32,15 +32,19 @@ type EnumConstantReferenceExpression struct {
 	name string
 }
 
-func (e *EnumConstantReferenceExpression) GetType() intsyn.IType {
+func (e *EnumConstantReferenceExpression) Type() intsyn.IType {
 	return e.typ.(intsyn.IType)
 }
 
-func (e *EnumConstantReferenceExpression) GetObjectType() intsyn.IObjectType {
+func (e *EnumConstantReferenceExpression) SetType(typ intsyn.IType) {
+	e.typ = typ.(intsyn.IObjectType)
+}
+
+func (e *EnumConstantReferenceExpression) ObjectType() intsyn.IObjectType {
 	return e.typ
 }
 
-func (e *EnumConstantReferenceExpression) GetName() string {
+func (e *EnumConstantReferenceExpression) Name() string {
 	return e.name
 }
 

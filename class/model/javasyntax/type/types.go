@@ -14,6 +14,10 @@ type Types struct {
 	util.DefaultList[intsyn.IType]
 }
 
+func (t *Types) Size() int {
+	return t.DefaultList.Size()
+}
+
 func (t *Types) IsTypes() bool {
 	return true
 }

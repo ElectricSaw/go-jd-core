@@ -179,8 +179,8 @@ type IPrimitiveType interface {
 type ITypeArguments interface {
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsTypeArgumentList() bool
-	GetTypeArgumentFirst() ITypeArgument
-	GetTypeArgumentList() []ITypeArgument
+	TypeArgumentFirst() ITypeArgument
+	TypeArgumentList() []ITypeArgument
 	TypeArgumentSize() int
 	AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor)
 }

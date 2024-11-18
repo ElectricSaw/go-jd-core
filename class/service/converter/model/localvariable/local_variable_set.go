@@ -1,6 +1,7 @@
 package localvariable
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 )
 
@@ -112,14 +113,14 @@ func (s *LocalVariableSet) IsEmpty() bool {
 	return s.size == 0
 }
 
-func (s *LocalVariableSet) Update(index, offset int, typ _type.IObjectType) {
+func (s *LocalVariableSet) Update(index, offset int, typ intsyn.IObjectType) {
 	if index < len(s.array) {
 		lv := s.array[index]
 
 		for lv != nil {
 			if lv.FromOffset() == offset {
 				olv := lv.(*ObjectLocalVariable)
-				olv.typ = typ.(_type.IType)
+				olv.typ = typ.(intsyn.IType)
 				break
 			}
 
