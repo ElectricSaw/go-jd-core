@@ -24,7 +24,7 @@ type ConvertClassFileProcessor struct {
 //
 //	message.Headers["majorVersion"] = classFile.MajorVersion()
 //	message.Headers["minorVersion"] = classFile.MinorVersion()
-//	message.Body = javasyntax.NewCompilationUnit(typeDeclaration)
+//	message.Body = model.NewCompilationUnit(typeDeclaration)
 //
 //	return nil
 //}

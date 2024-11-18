@@ -1,7 +1,7 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 	"bytes"
 	"encoding/gob"
 	"hash/fnv"

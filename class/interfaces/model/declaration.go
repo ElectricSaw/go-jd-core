@@ -1,4 +1,4 @@
-package javasyntax
+package model
 
 import (
 	"bitbucket.org/coontec/javaClass/class/util"

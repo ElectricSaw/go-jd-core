@@ -1,6 +1,6 @@
 package _type
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 
 func NewTypeParameter(identifier string) intsyn.ITypeParameter {
 	return &TypeParameter{identifier: identifier}

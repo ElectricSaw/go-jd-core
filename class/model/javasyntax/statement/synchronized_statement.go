@@ -1,6 +1,6 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 
 func NewSynchronizedStatement(monitor intsyn.IExpression, statements intsyn.IStatement) intsyn.ISynchronizedStatement {
 	return &SynchronizedStatement{

@@ -1,13 +1,13 @@
 package localvariable
 
 //import (
-//	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-//	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-//	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-//	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+//	"bitbucket.org/coontec/javaClass/class/model/model/declaration"
+//	"bitbucket.org/coontec/javaClass/class/model/model/expression"
+//	"bitbucket.org/coontec/javaClass/class/model/model/statement"
+//	_type "bitbucket.org/coontec/javaClass/class/model/model/type"
 //	"bitbucket.org/coontec/javaClass/class/service/converter/utils"
 //	"bitbucket.org/coontec/javaClass/class/service/converter/visitor"
-//	srvstat "bitbucket.org/coontec/javaClass/class/service/converter/model/javasyntax/statement"
+//	srvstat "bitbucket.org/coontec/javaClass/class/service/converter/model/model/statement"
 //	"fmt"
 //	"strings"
 //	"unicode"

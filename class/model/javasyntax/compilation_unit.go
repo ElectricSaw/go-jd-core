@@ -1,7 +1,7 @@
 package javasyntax
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 )
 
 func NewCompilationUnit(typeDeclarations intsyn.ITypeDeclaration) *CompilationUnit {

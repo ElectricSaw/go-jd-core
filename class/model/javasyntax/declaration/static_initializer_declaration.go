@@ -1,7 +1,7 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 )
 
 func NewStaticInitializerDeclaration(descriptor string, statements intsyn.IStatement) intsyn.IStaticInitializerDeclaration {

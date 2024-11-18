@@ -1,7 +1,7 @@
 package javasyntax
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 )

@@ -1,7 +1,7 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 )
 
 func NewParenthesesExpression(expression intsyn.IExpression) intsyn.IParenthesesExpression {

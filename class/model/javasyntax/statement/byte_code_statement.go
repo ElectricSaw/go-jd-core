@@ -1,6 +1,6 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 
 func NewByteCodeStatement(text string) intsyn.IByteCodeStatement {
 	return &ByteCodeStatement{

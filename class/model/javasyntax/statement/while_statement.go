@@ -1,6 +1,6 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 
 func NewWhileStatement(condition intsyn.IExpression, statements intsyn.IStatement) intsyn.IWhileStatement {
 	return &WhileStatement{

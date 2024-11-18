@@ -1,14 +1,15 @@
 package declaration
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	"fmt"
 )
 
-func NewClassFileAnnotationDeclaration(annotationDeclarators declaration.IFieldDeclarator, annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *ClassFileBodyDeclaration) *ClassFileAnnotationDeclaration {
+func NewClassFileAnnotationDeclaration(annotationDeclarators intsyn.IFieldDeclarator, annotationReferences intsyn.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *ClassFileBodyDeclaration) intsyn.IAnnotationDeclaration {
 	d := &ClassFileAnnotationDeclaration{
-		AnnotationDeclaration: *declaration.NewAnnotationDeclaration(annotationDeclarators, annotationReferences, flags, internalTypeName, name, bodyDeclaration),
+		AnnotationDeclaration: *declaration.NewAnnotationDeclaration(annotationDeclarators,
+			annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*declaration.AnnotationDeclaration),
 	}
 	if bodyDeclaration == nil {
 		d.firstLineNumber = 0

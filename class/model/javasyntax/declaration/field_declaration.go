@@ -1,7 +1,7 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 )
 
 func NewFieldDeclaration(flags int, typ intsyn.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {

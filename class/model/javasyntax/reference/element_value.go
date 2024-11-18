@@ -1,6 +1,6 @@
 package reference
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
 
 type AbstractElementValue struct {
 }
