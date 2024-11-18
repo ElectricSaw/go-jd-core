@@ -1,5 +1,7 @@
 package _type
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 const (
 	FlagBoolean = 1 << iota
 	FlagChar
@@ -30,7 +32,7 @@ var PtMaybeNegativeShortType = NewPrimitiveType("maybe_negative_short", FlagShor
 var PtMaybeIntType = NewPrimitiveType("maybe_int", FlagInt, FlagInt, FlagInt)                                                                                                                                 // Otherwise
 var PtMaybeNegativeBooleanType = NewPrimitiveType("maybe_negative_boolean", FlagBoolean|FlagByte|FlagShort|FlagInt, FlagBoolean|FlagByte|FlagShort|FlagInt, FlagBoolean|FlagByte|FlagShort|FlagInt)           // Boolean or negative
 
-var descriptorToType = []*PrimitiveType{
+var descriptorToType = []intsyn.IPrimitiveType{
 	PtTypeByte,
 	PtTypeChar,
 	PtTypeDouble,
@@ -42,11 +44,11 @@ var descriptorToType = []*PrimitiveType{
 	PtTypeBoolean,
 }
 
-func GetPrimitiveType(primitiveDescriptor int) *PrimitiveType {
+func GetPrimitiveType(primitiveDescriptor int) intsyn.IPrimitiveType {
 	return descriptorToType[primitiveDescriptor-66] // int('B')
 }
 
-func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) *PrimitiveType {
+func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intsyn.IPrimitiveType {
 	t := &PrimitiveType{
 		name:       name,
 		flags:      flags,
@@ -110,11 +112,11 @@ func (t *PrimitiveType) Dimension() int {
 	return 0
 }
 
-func (t *PrimitiveType) CreateType(dimension int) IType {
+func (t *PrimitiveType) CreateType(dimension int) intsyn.IType {
 	if dimension == 0 {
 		return t
 	} else {
-		return NewObjectTypeWithDescAndDim(t.descriptor, dimension)
+		return NewObjectTypeWithDescAndDim(t.descriptor, dimension).(intsyn.IType)
 	}
 }
 
@@ -122,13 +124,13 @@ func (t *PrimitiveType) IsPrimitiveType() bool {
 	return true
 }
 
-func (t *PrimitiveType) AcceptTypeVisitor(visitor TypeVisitor) {
+func (t *PrimitiveType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
 	visitor.VisitPrimitiveType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *PrimitiveType) IsTypeArgumentAssignableFrom(_ map[string]IType, typeArgument ITypeArgument) bool {
+func (t *PrimitiveType) IsTypeArgumentAssignableFrom(_ map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
 	return t.Equals(typeArgument)
 }
 
@@ -136,13 +138,13 @@ func (t *PrimitiveType) IsPrimitiveTypeArgument() bool {
 	return true
 }
 
-func (t *PrimitiveType) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
+func (t *PrimitiveType) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
 	visitor.VisitPrimitiveType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *PrimitiveType) Equals(o ITypeArgument) bool {
+func (t *PrimitiveType) Equals(o intsyn.ITypeArgument) bool {
 	if t == o {
 		return true
 	}

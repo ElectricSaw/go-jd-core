@@ -1,8 +1,10 @@
 package statement
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewAssertStatement(condition expression.Expression, message expression.Expression) *AssertStatement {
+func NewAssertStatement(condition intsyn.IExpression, message intsyn.IExpression) intsyn.IAssertStatement {
 	return &AssertStatement{
 		condition: condition,
 		message:   message,
@@ -12,22 +14,22 @@ func NewAssertStatement(condition expression.Expression, message expression.Expr
 type AssertStatement struct {
 	AbstractStatement
 
-	condition expression.Expression
-	message   expression.Expression
+	condition intsyn.IExpression
+	message   intsyn.IExpression
 }
 
-func (s *AssertStatement) Condition() expression.Expression {
+func (s *AssertStatement) Condition() intsyn.IExpression {
 	return s.condition
 }
 
-func (s *AssertStatement) SetCondition(condition expression.Expression) {
+func (s *AssertStatement) SetCondition(condition intsyn.IExpression) {
 	s.condition = condition
 }
 
-func (s *AssertStatement) Message() expression.Expression {
+func (s *AssertStatement) Message() intsyn.IExpression {
 	return s.message
 }
 
-func (s *AssertStatement) Accept(visitor StatementVisitor) {
+func (s *AssertStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitAssertStatement(s)
 }

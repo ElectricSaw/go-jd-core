@@ -1,17 +1,17 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewNullExpression(typ _type.IType) *NullExpression {
+func NewNullExpression(typ intsyn.IType) intsyn.INullExpression {
 	return &NullExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 	}
 }
 
-func NewNullExpressionWithAll(lineNumber int, typ _type.IType) *NullExpression {
+func NewNullExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.INullExpression {
 	return &NullExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 	}
@@ -25,7 +25,7 @@ func (e *NullExpression) IsNullExpression() bool {
 	return true
 }
 
-func (e *NullExpression) Accept(visitor ExpressionVisitor) {
+func (e *NullExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitNullExpression(e)
 }
 

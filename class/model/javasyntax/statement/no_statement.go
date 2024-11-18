@@ -1,8 +1,10 @@
 package statement
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 var NoStmt = NewNoStatement()
 
-func NewNoStatement() *NoStatement {
+func NewNoStatement() intsyn.INoStatement {
 	return new(NoStatement)
 }
 
@@ -10,7 +12,7 @@ type NoStatement struct {
 	AbstractStatement
 }
 
-func (s *NoStatement) Accept(visitor StatementVisitor) {
+func (s *NoStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitNoStatement(s)
 }
 

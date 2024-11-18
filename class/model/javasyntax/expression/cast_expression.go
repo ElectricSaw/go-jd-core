@@ -1,11 +1,11 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewCastExpression(typ _type.IType, expression Expression) *CastExpression {
+func NewCastExpression(typ intsyn.IType, expression intsyn.IExpression) intsyn.ICastExpression {
 	return &CastExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		expression:                       expression,
@@ -13,7 +13,7 @@ func NewCastExpression(typ _type.IType, expression Expression) *CastExpression {
 	}
 }
 
-func NewCastExpressionWithLineNumber(lineNumber int, typ _type.IType, expression Expression) *CastExpression {
+func NewCastExpressionWithLineNumber(lineNumber int, typ intsyn.IType, expression intsyn.IExpression) intsyn.ICastExpression {
 	return &CastExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		expression:                       expression,
@@ -21,7 +21,7 @@ func NewCastExpressionWithLineNumber(lineNumber int, typ _type.IType, expression
 	}
 }
 
-func NewCastExpressionWithAll(lineNumber int, typ _type.IType, expression Expression, explicit bool) *CastExpression {
+func NewCastExpressionWithAll(lineNumber int, typ intsyn.IType, expression intsyn.IExpression, explicit bool) intsyn.ICastExpression {
 	return &CastExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		expression:                       expression,
@@ -32,11 +32,11 @@ func NewCastExpressionWithAll(lineNumber int, typ _type.IType, expression Expres
 type CastExpression struct {
 	AbstractLineNumberTypeExpression
 
-	expression Expression
+	expression intsyn.IExpression
 	explicit   bool
 }
 
-func (e *CastExpression) Expression() Expression {
+func (e *CastExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
@@ -48,7 +48,7 @@ func (e *CastExpression) Priority() int {
 	return 3
 }
 
-func (e *CastExpression) SetExpression(expression Expression) {
+func (e *CastExpression) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
@@ -60,7 +60,7 @@ func (e *CastExpression) IsCastExpression() bool {
 	return true
 }
 
-func (e *CastExpression) Accept(visitor ExpressionVisitor) {
+func (e *CastExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitCastExpression(e)
 }
 

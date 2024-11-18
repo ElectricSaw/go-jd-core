@@ -1,11 +1,11 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewLambdaExpressionStatement(expression expression.Expression) *LambdaExpressionStatement {
+func NewLambdaExpressionStatement(expression intsyn.IExpression) intsyn.ILambdaExpressionStatement {
 	return &LambdaExpressionStatement{
 		expression: expression,
 	}
@@ -14,14 +14,14 @@ func NewLambdaExpressionStatement(expression expression.Expression) *LambdaExpre
 type LambdaExpressionStatement struct {
 	AbstractStatement
 
-	expression expression.Expression
+	expression intsyn.IExpression
 }
 
-func (s *LambdaExpressionStatement) Expression() expression.Expression {
+func (s *LambdaExpressionStatement) Expression() intsyn.IExpression {
 	return s.expression
 }
 
-func (s *LambdaExpressionStatement) SetExpression(expression expression.Expression) {
+func (s *LambdaExpressionStatement) SetExpression(expression intsyn.IExpression) {
 	s.expression = expression
 }
 
@@ -29,7 +29,7 @@ func (s *LambdaExpressionStatement) IsLambdaExpressionStatement() bool {
 	return true
 }
 
-func (s *LambdaExpressionStatement) Accept(visitor StatementVisitor) {
+func (s *LambdaExpressionStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitLambdaExpressionStatement(s)
 }
 

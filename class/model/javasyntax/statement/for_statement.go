@@ -1,12 +1,14 @@
 package statement
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
 	"fmt"
 )
 
-func NewForStatementWithDeclaration(declaration declaration.LocalVariableDeclaration, condition expression.Expression, update expression.Expression, statements Statement) *ForStatement {
+func NewForStatementWithDeclaration(declaration intsyn.ILocalVariableDeclaration,
+	condition intsyn.IExpression, update intsyn.IExpression,
+	statements intsyn.IStatement) intsyn.IForStatement {
 	return &ForStatement{
 		declaration: declaration,
 		condition:   condition,
@@ -15,7 +17,8 @@ func NewForStatementWithDeclaration(declaration declaration.LocalVariableDeclara
 	}
 }
 
-func NewForStatementWithInit(init expression.Expression, condition expression.Expression, update expression.Expression, statements Statement) *ForStatement {
+func NewForStatementWithInit(init intsyn.IExpression, condition intsyn.IExpression,
+	update intsyn.IExpression, statements intsyn.IStatement) intsyn.IForStatement {
 	return &ForStatement{
 		init:       init,
 		condition:  condition,
@@ -27,50 +30,50 @@ func NewForStatementWithInit(init expression.Expression, condition expression.Ex
 type ForStatement struct {
 	AbstractStatement
 
-	declaration declaration.LocalVariableDeclaration
-	init        expression.Expression
-	condition   expression.Expression
-	update      expression.Expression
-	statements  Statement
+	declaration intsyn.ILocalVariableDeclaration
+	init        intsyn.IExpression
+	condition   intsyn.IExpression
+	update      intsyn.IExpression
+	statements  intsyn.IStatement
 }
 
-func (s *ForStatement) Declaration() *declaration.LocalVariableDeclaration {
-	return &s.declaration
+func (s *ForStatement) Declaration() intsyn.ILocalVariableDeclaration {
+	return s.declaration
 }
 
-func (s *ForStatement) SetDeclaration(declaration declaration.LocalVariableDeclaration) {
+func (s *ForStatement) SetDeclaration(declaration intsyn.ILocalVariableDeclaration) {
 	s.declaration = declaration
 }
 
-func (s *ForStatement) Init() expression.Expression {
+func (s *ForStatement) Init() intsyn.IExpression {
 	return s.init
 }
 
-func (s *ForStatement) SetInit(init expression.Expression) {
+func (s *ForStatement) SetInit(init intsyn.IExpression) {
 	s.init = init
 }
 
-func (s *ForStatement) Condition() expression.Expression {
+func (s *ForStatement) Condition() intsyn.IExpression {
 	return s.condition
 }
 
-func (s *ForStatement) SetCondition(condition expression.Expression) {
+func (s *ForStatement) SetCondition(condition intsyn.IExpression) {
 	s.condition = condition
 }
 
-func (s *ForStatement) Update() expression.Expression {
+func (s *ForStatement) Update() intsyn.IExpression {
 	return s.update
 }
 
-func (s *ForStatement) SetUpdate(update expression.Expression) {
+func (s *ForStatement) SetUpdate(update intsyn.IExpression) {
 	s.update = update
 }
 
-func (s *ForStatement) Statements() Statement {
+func (s *ForStatement) Statements() intsyn.IStatement {
 	return s.statements
 }
 
-func (s *ForStatement) Accept(visitor StatementVisitor) {
+func (s *ForStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitForStatement(s)
 }
 

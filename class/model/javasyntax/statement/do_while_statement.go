@@ -1,8 +1,10 @@
 package statement
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewDoWhileStatement(condition expression.Expression, statements Statement) *DoWhileStatement {
+func NewDoWhileStatement(condition intsyn.IExpression, statements intsyn.IStatement) intsyn.IDoWhileStatement {
 	return &DoWhileStatement{
 		condition:  condition,
 		statements: statements,
@@ -12,22 +14,22 @@ func NewDoWhileStatement(condition expression.Expression, statements Statement) 
 type DoWhileStatement struct {
 	AbstractStatement
 
-	condition  expression.Expression
-	statements Statement
+	condition  intsyn.IExpression
+	statements intsyn.IStatement
 }
 
-func (s *DoWhileStatement) Condition() expression.Expression {
+func (s *DoWhileStatement) Condition() intsyn.IExpression {
 	return s.condition
 }
 
-func (s *DoWhileStatement) SetCondition(condition expression.Expression) {
+func (s *DoWhileStatement) SetCondition(condition intsyn.IExpression) {
 	s.condition = condition
 }
 
-func (s *DoWhileStatement) Statements() Statement {
+func (s *DoWhileStatement) Statements() intsyn.IStatement {
 	return s.statements
 }
 
-func (s *DoWhileStatement) Accept(visitor StatementVisitor) {
+func (s *DoWhileStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitDoWhileStatement(s)
 }

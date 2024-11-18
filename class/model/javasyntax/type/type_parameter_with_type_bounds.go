@@ -1,8 +1,11 @@
 package _type
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"fmt"
+)
 
-func NewTypeParameterWithTypeBounds(identifier string, typeBounds IType) *TypeParameterWithTypeBounds {
+func NewTypeParameterWithTypeBounds(identifier string, typeBounds intsyn.IType) intsyn.ITypeParameterWithTypeBounds {
 	return &TypeParameterWithTypeBounds{
 		TypeParameter: TypeParameter{
 			identifier: identifier,
@@ -14,14 +17,14 @@ func NewTypeParameterWithTypeBounds(identifier string, typeBounds IType) *TypePa
 type TypeParameterWithTypeBounds struct {
 	TypeParameter
 
-	typeBounds IType
+	typeBounds intsyn.IType
 }
 
-func (t *TypeParameterWithTypeBounds) TypeBounds() IType {
+func (t *TypeParameterWithTypeBounds) TypeBounds() intsyn.IType {
 	return t.typeBounds
 }
 
-func (t *TypeParameterWithTypeBounds) AcceptTypeParameterVisitor(visitor TypeParameterVisitor) {
+func (t *TypeParameterWithTypeBounds) AcceptTypeParameterVisitor(visitor intsyn.ITypeParameterVisitor) {
 	visitor.VisitTypeParameterWithTypeBounds(t)
 }
 

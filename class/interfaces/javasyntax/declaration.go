@@ -1,10 +1,6 @@
 package javasyntax
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"bitbucket.org/coontec/javaClass/class/util"
 )
 
@@ -46,7 +42,7 @@ type IAnnotationDeclaration interface {
 }
 
 type IArrayVariableInitializer interface {
-	Type() _type.IType
+	Type() IType
 	LineNumber() int
 	Accept(visitor IDeclarationVisitor)
 }
@@ -58,7 +54,7 @@ type IBodyDeclaration interface {
 }
 
 type IClassDeclaration interface {
-	SuperType() _type.IObjectType
+	SuperType() IObjectType
 	IsClassDeclaration() bool
 	Accept(visitor IDeclarationVisitor)
 	String() string
@@ -68,14 +64,14 @@ type IConstructorDeclaration interface {
 	Flags() int
 	SetFlags(flags int)
 	IsStatic() bool
-	AnnotationReferences() reference.IReference
-	TypeParameters() _type.ITypeParameter
+	AnnotationReferences() IReference
+	TypeParameters() ITypeParameter
 	FormalParameters() IFormalParameter
 	SetFormalParameters(formalParameter IFormalParameter)
-	ExceptionTypes() _type.IType
+	ExceptionTypes() IType
 	Descriptor() string
-	Statements() statement.Statement
-	SetStatements(state statement.Statement)
+	Statements() IStatement
+	SetStatements(state IStatement)
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
@@ -127,10 +123,10 @@ type IFieldDeclarator interface {
 type IFormalParameter interface {
 	IDeclaration
 
-	AnnotationReferences() reference.IAnnotationReference
+	AnnotationReferences() IAnnotationReference
 	IsFinal() bool
 	SetFinal(final bool)
-	Type() _type.IType
+	Type() IType
 	IsVarargs() bool
 	Name() string
 	SetName(name string)
@@ -160,7 +156,7 @@ type IMemberDeclaration interface {
 type ITypeDeclaration interface {
 	IMemberDeclaration
 
-	AnnotationReferences() reference.IAnnotationReference
+	AnnotationReferences() IAnnotationReference
 	Flags() int
 	SetFlags(flags int)
 	InternalTypeName() string
@@ -173,11 +169,11 @@ type IVariableInitializer interface {
 
 	LineNumber() int
 	IsExpressionVariableInitializer() bool
-	Expression() expression.Expression
+	Expression() IExpression
 }
 
 type IEnumDeclaration interface {
-	Interfaces() _type.IType
+	Interfaces() IType
 	Constants() []IConstant
 	SetConstants(constants []IConstant)
 	Accept(visitor IDeclarationVisitor)
@@ -186,18 +182,18 @@ type IEnumDeclaration interface {
 
 type IConstant interface {
 	LineNumber() int
-	AnnotationReferences() reference.IAnnotationReference
+	AnnotationReferences() IAnnotationReference
 	Name() string
-	Arguments() expression.Expression
-	SetArguments(arguments expression.Expression)
+	Arguments() IExpression
+	SetArguments(arguments IExpression)
 	BodyDeclaration() IBodyDeclaration
 	Accept(visitor IDeclarationVisitor)
 }
 
 type IExpressionVariableInitializer interface {
-	Expression() expression.Expression
+	Expression() IExpression
 	LineNumber() int
-	SetExpression(expression expression.Expression)
+	SetExpression(expression IExpression)
 	IsExpressionVariableInitializer() bool
 	Accept(visitor IDeclarationVisitor)
 }
@@ -205,9 +201,9 @@ type IExpressionVariableInitializer interface {
 type IFieldDeclaration interface {
 	Flags() int
 	SetFlags(flags int)
-	AnnotationReferences() reference.IAnnotationReference
-	Type() _type.IType
-	SetType(t _type.IType)
+	AnnotationReferences() IAnnotationReference
+	Type() IType
+	SetType(t IType)
 	FieldDeclarators() IFieldDeclarator
 	SetFieldDeclarators(fd IFieldDeclarator)
 	Accept(visitor IDeclarationVisitor)
@@ -222,14 +218,14 @@ type IFormalParameters interface {
 
 type IInstanceInitializerDeclaration interface {
 	Description() string
-	Statements() statement.Statement
+	Statements() IStatement
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
 type IInterfaceDeclaration interface {
-	TypeParameters() _type.ITypeParameter
-	Interfaces() _type.IType
+	TypeParameters() ITypeParameter
+	Interfaces() IType
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
@@ -237,7 +233,7 @@ type IInterfaceDeclaration interface {
 type ILocalVariableDeclaration interface {
 	IsFinal() bool
 	SetFinal(final bool)
-	Type() _type.IType
+	Type() IType
 	LocalVariableDeclarators() ILocalVariableDeclarator
 	SetLocalVariableDeclarators(localVariableDeclarators ILocalVariableDeclarator)
 	Accept(visitor IDeclarationVisitor)
@@ -255,18 +251,18 @@ type IMemberDeclarations interface {
 type IMethodDeclaration interface {
 	Flags() int
 	SetFlags(flags int)
-	AnnotationReferences() reference.IAnnotationReference
+	AnnotationReferences() IAnnotationReference
 	IsStatic() bool
 	Name() string
-	TypeParameters() _type.ITypeParameter
-	ReturnedType() _type.IType
+	TypeParameters() ITypeParameter
+	ReturnedType() IType
 	FormalParameter() IFormalParameter
 	SetFormalParameters(formalParameter IFormalParameter)
-	ExceptionTypes() _type.IType
+	ExceptionTypes() IType
 	Descriptor() string
-	Statements() statement.Statement
-	SetStatements(statements statement.Statement)
-	DefaultAnnotationValue() reference.IElementValue
+	Statements() IStatement
+	SetStatements(statements IStatement)
+	DefaultAnnotationValue() IElementValue
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }
@@ -304,8 +300,8 @@ type IServiceInfo interface {
 
 type IStaticInitializerDeclaration interface {
 	Description() string
-	Statements() statement.Statement
-	SetStatements(statements statement.Statement)
+	Statements() IStatement
+	SetStatements(statements IStatement)
 	Accept(visitor IDeclarationVisitor)
 	String() string
 }

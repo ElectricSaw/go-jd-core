@@ -1,45 +1,47 @@
 package _type
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 type AbstractTypeArgumentVisitor struct {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitTypeArguments(arguments *TypeArguments) {
+func (v *AbstractTypeArgumentVisitor) VisitTypeArguments(arguments intsyn.ITypeArguments) {
 	arguments.AcceptTypeArgumentVisitor(v)
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitDiamondTypeArgument(argument *DiamondTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitDiamondTypeArgument(argument intsyn.IDiamondTypeArgument) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument *WildcardExtendsTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument intsyn.IWildcardExtendsTypeArgument) {
 	argument.AcceptTypeArgumentVisitor(v)
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument *WildcardSuperTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument intsyn.IWildcardSuperTypeArgument) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitWildcardTypeArgument(argument *WildcardTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitWildcardTypeArgument(argument intsyn.IWildcardTypeArgument) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t *PrimitiveType) {
+func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t intsyn.IPrimitiveType) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitObjectType(t *ObjectType) {
-	if visitable, ok := t.TypeArguments().(TypeArgumentVisitable); ok {
+func (v *AbstractTypeArgumentVisitor) VisitObjectType(t intsyn.IObjectType) {
+	if visitable, ok := t.TypeArguments().(intsyn.ITypeArgumentVisitable); ok {
 		v.SafeAcceptTypeArgumentVisitable(visitable)
 	}
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t *InnerObjectType) {
-	t.outerType.AcceptTypeArgumentVisitor(v)
-	if visitable, ok := t.TypeArguments().(TypeArgumentVisitable); ok {
+func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t intsyn.IInnerObjectType) {
+	t.OuterType().AcceptTypeArgumentVisitor(v)
+	if visitable, ok := t.TypeArguments().(intsyn.ITypeArgumentVisitable); ok {
 		v.SafeAcceptTypeArgumentVisitable(visitable)
 	}
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitGenericType(t *GenericType) {
+func (v *AbstractTypeArgumentVisitor) VisitGenericType(t intsyn.IGenericType) {
 }
 
-func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable TypeArgumentVisitable) {
+func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable intsyn.ITypeArgumentVisitable) {
 	if visitable != nil {
 		visitable.AcceptTypeArgumentVisitor(v)
 	}
@@ -48,14 +50,16 @@ func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable 
 type AbstractNopTypeArgumentVisitor struct {
 }
 
-func (v *AbstractNopTypeArgumentVisitor) VisitTypeArguments(arguments *TypeArguments)            {}
-func (v *AbstractNopTypeArgumentVisitor) VisitDiamondTypeArgument(argument *DiamondTypeArgument) {}
-func (v *AbstractNopTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument *WildcardExtendsTypeArgument) {
+func (v *AbstractNopTypeArgumentVisitor) VisitTypeArguments(arguments intsyn.ITypeArguments) {}
+func (v *AbstractNopTypeArgumentVisitor) VisitDiamondTypeArgument(argument intsyn.IDiamondTypeArgument) {
 }
-func (v *AbstractNopTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument *WildcardSuperTypeArgument) {
+func (v *AbstractNopTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument intsyn.IWildcardExtendsTypeArgument) {
 }
-func (v *AbstractNopTypeArgumentVisitor) VisitWildcardTypeArgument(argument *WildcardTypeArgument) {}
-func (v *AbstractNopTypeArgumentVisitor) VisitPrimitiveType(t *PrimitiveType)                      {}
-func (v *AbstractNopTypeArgumentVisitor) VisitObjectType(t *ObjectType)                            {}
-func (v *AbstractNopTypeArgumentVisitor) VisitInnerObjectType(t *InnerObjectType)                  {}
-func (v *AbstractNopTypeArgumentVisitor) VisitGenericType(t *GenericType)                          {}
+func (v *AbstractNopTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument intsyn.IWildcardSuperTypeArgument) {
+}
+func (v *AbstractNopTypeArgumentVisitor) VisitWildcardTypeArgument(argument intsyn.IWildcardTypeArgument) {
+}
+func (v *AbstractNopTypeArgumentVisitor) VisitPrimitiveType(t intsyn.IPrimitiveType)     {}
+func (v *AbstractNopTypeArgumentVisitor) VisitObjectType(t intsyn.IObjectType)           {}
+func (v *AbstractNopTypeArgumentVisitor) VisitInnerObjectType(t intsyn.IInnerObjectType) {}
+func (v *AbstractNopTypeArgumentVisitor) VisitGenericType(t intsyn.IGenericType)         {}

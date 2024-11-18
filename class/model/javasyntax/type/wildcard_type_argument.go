@@ -1,8 +1,10 @@
 package _type
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 var WildcardTypeArgumentEmpty = NewWildcardTypeArgument()
 
-func NewWildcardTypeArgument() *WildcardTypeArgument {
+func NewWildcardTypeArgument() intsyn.IWildcardTypeArgument {
 	return &WildcardTypeArgument{}
 }
 
@@ -10,7 +12,7 @@ type WildcardTypeArgument struct {
 	AbstractTypeArgument
 }
 
-func (t *WildcardTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
+func (t *WildcardTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
 	return true
 }
 
@@ -18,11 +20,11 @@ func (t *WildcardTypeArgument) IsWildcardTypeArgument() bool {
 	return true
 }
 
-func (t *WildcardTypeArgument) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
+func (t *WildcardTypeArgument) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
 	visitor.VisitWildcardTypeArgument(t)
 }
 
-func (t *WildcardTypeArgument) equals(o ITypeArgument) bool {
+func (t *WildcardTypeArgument) Equals(o intsyn.ITypeArgument) bool {
 	if t == o {
 		return true
 	}

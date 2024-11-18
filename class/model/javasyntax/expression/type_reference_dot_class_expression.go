@@ -1,22 +1,23 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewTypeReferenceDotClassExpression(typeDotClass _type.IType) *TypeReferenceDotClassExpression {
+func NewTypeReferenceDotClassExpression(typeDotClass intsyn.IType) intsyn.ITypeReferenceDotClassExpression {
 	return &TypeReferenceDotClassExpression{
 		typeDotClass: typeDotClass,
-		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass),
+		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass).(intsyn.IType),
 	}
 }
 
-func NewTypeReferenceDotClassExpressionWithAll(lineNumber int, typeDotClass _type.IType) *TypeReferenceDotClassExpression {
+func NewTypeReferenceDotClassExpressionWithAll(lineNumber int, typeDotClass intsyn.IType) intsyn.ITypeReferenceDotClassExpression {
 	return &TypeReferenceDotClassExpression{
 		lineNumber:   lineNumber,
 		typeDotClass: typeDotClass,
-		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass),
+		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass).(intsyn.IType),
 	}
 }
 
@@ -24,19 +25,19 @@ type TypeReferenceDotClassExpression struct {
 	AbstractExpression
 
 	lineNumber   int
-	typeDotClass _type.IType
-	typ          _type.IType
+	typeDotClass intsyn.IType
+	typ          intsyn.IType
 }
 
 func (e *TypeReferenceDotClassExpression) LineNumber() int {
 	return e.lineNumber
 }
 
-func (e *TypeReferenceDotClassExpression) GetTypeDotClass() _type.IType {
+func (e *TypeReferenceDotClassExpression) GetTypeDotClass() intsyn.IType {
 	return e.typeDotClass
 }
 
-func (e *TypeReferenceDotClassExpression) Type() _type.IType {
+func (e *TypeReferenceDotClassExpression) Type() intsyn.IType {
 	return e.typ
 }
 
@@ -44,7 +45,7 @@ func (e *TypeReferenceDotClassExpression) Priority() int {
 	return 0
 }
 
-func (e *TypeReferenceDotClassExpression) Accept(visitor ExpressionVisitor) {
+func (e *TypeReferenceDotClassExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitTypeReferenceDotClassExpression(e)
 }
 

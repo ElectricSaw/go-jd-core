@@ -1,8 +1,8 @@
 package statement
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 
-func NewWhileStatement(condition expression.Expression, statements Statement) *WhileStatement {
+func NewWhileStatement(condition intsyn.IExpression, statements intsyn.IStatement) intsyn.IWhileStatement {
 	return &WhileStatement{
 		condition:  condition,
 		statements: statements,
@@ -12,19 +12,19 @@ func NewWhileStatement(condition expression.Expression, statements Statement) *W
 type WhileStatement struct {
 	AbstractStatement
 
-	condition  expression.Expression
-	statements Statement
+	condition  intsyn.IExpression
+	statements intsyn.IStatement
 }
 
-func (s *WhileStatement) Condition() expression.Expression {
+func (s *WhileStatement) Condition() intsyn.IExpression {
 	return s.condition
 }
 
-func (s *WhileStatement) SetCondition(condition expression.Expression) {
+func (s *WhileStatement) SetCondition(condition intsyn.IExpression) {
 	s.condition = condition
 }
 
-func (s *WhileStatement) Statements() Statement {
+func (s *WhileStatement) Statements() intsyn.IStatement {
 	return s.statements
 }
 
@@ -32,6 +32,6 @@ func (s *WhileStatement) IsWhileStatement() bool {
 	return true
 }
 
-func (s *WhileStatement) Accept(visitor StatementVisitor) {
+func (s *WhileStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitWhileStatement(s)
 }

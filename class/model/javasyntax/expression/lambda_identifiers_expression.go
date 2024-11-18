@@ -1,12 +1,12 @@
 package expression
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewLambdaIdentifiersExpression(typ _type.IType, returnedType _type.IType, paramNames []string, statements statement.Statement) *LambdaIdentifiersExpression {
+func NewLambdaIdentifiersExpression(typ intsyn.IType, returnedType intsyn.IType,
+	paramNames []string, statements intsyn.IStatement) intsyn.ILambdaIdentifiersExpression {
 	return &LambdaIdentifiersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpression(typ, statements),
 		returnedType:             returnedType,
@@ -14,7 +14,8 @@ func NewLambdaIdentifiersExpression(typ _type.IType, returnedType _type.IType, p
 	}
 }
 
-func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ _type.IType, returnedType _type.IType, paramNames []string, statements statement.Statement) *LambdaIdentifiersExpression {
+func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intsyn.IType,
+	returnedType intsyn.IType, paramNames []string, statements intsyn.IStatement) intsyn.ILambdaIdentifiersExpression {
 	return &LambdaIdentifiersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpressionWithAll(lineNumber, typ, statements),
 		returnedType:             returnedType,
@@ -25,11 +26,11 @@ func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ _type.IType, retu
 type LambdaIdentifiersExpression struct {
 	AbstractLambdaExpression
 
-	returnedType   _type.IType
+	returnedType   intsyn.IType
 	parameterNames []string
 }
 
-func (e *LambdaIdentifiersExpression) ReturnedType() _type.IType {
+func (e *LambdaIdentifiersExpression) ReturnedType() intsyn.IType {
 	return e.returnedType
 }
 
@@ -37,7 +38,7 @@ func (e *LambdaIdentifiersExpression) ParameterNames() []string {
 	return e.parameterNames
 }
 
-func (e *LambdaIdentifiersExpression) Accept(visitor ExpressionVisitor) {
+func (e *LambdaIdentifiersExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitLambdaIdentifiersExpression(e)
 }
 

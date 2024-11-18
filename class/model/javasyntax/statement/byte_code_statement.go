@@ -1,6 +1,8 @@
 package statement
 
-func NewByteCodeStatement(text string) *ByteCodeStatement {
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
+func NewByteCodeStatement(text string) intsyn.IByteCodeStatement {
 	return &ByteCodeStatement{
 		text: text,
 	}
@@ -16,6 +18,6 @@ func (s *ByteCodeStatement) GetText() string {
 	return s.text
 }
 
-func (s *ByteCodeStatement) Accept(visitor StatementVisitor) {
+func (s *ByteCodeStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitByteCodeStatement(s)
 }

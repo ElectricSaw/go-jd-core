@@ -1,34 +1,35 @@
 package reference
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"fmt"
+)
 
-func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer IElementValue) *ElementValueArrayInitializerElementValue {
+func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer intsyn.IElementValue) intsyn.IElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{
 		elementValueArrayInitializer: elementValueArrayInitializer,
 	}
 }
 
-func NewElementValueArrayInitializerElementValueList(elementValueArrayInitializer IElementValuePair) *ElementValueArrayInitializerElementValue {
+func NewElementValueArrayInitializerElementValueList(elementValueArrayInitializer intsyn.IElementValuePair) intsyn.IElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{
 		elementValueArrayInitializer: elementValueArrayInitializer,
 	}
 }
 
-func NewElementValueArrayInitializerElementValueEmpty() *ElementValueArrayInitializerElementValue {
+func NewElementValueArrayInitializerElementValueEmpty() intsyn.IElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{elementValueArrayInitializer: nil}
 }
 
 type ElementValueArrayInitializerElementValue struct {
-	IElementValue
-
-	elementValueArrayInitializer IElementValue
+	elementValueArrayInitializer intsyn.IElementValue
 }
 
-func (e *ElementValueArrayInitializerElementValue) ElementValueArrayInitializer() IElementValue {
+func (e *ElementValueArrayInitializerElementValue) ElementValueArrayInitializer() intsyn.IElementValue {
 	return e.elementValueArrayInitializer
 }
 
-func (e *ElementValueArrayInitializerElementValue) Accept(visitor ReferenceVisitor) {
+func (e *ElementValueArrayInitializerElementValue) Accept(visitor intsyn.IReferenceVisitor) {
 	visitor.VisitElementValueArrayInitializerElementValue(e)
 }
 

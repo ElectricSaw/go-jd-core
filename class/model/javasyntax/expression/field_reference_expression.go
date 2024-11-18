@@ -1,11 +1,12 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewFieldReferenceExpression(typ _type.IType, expression Expression, internalTypeName string, name string, descriptor string) *FieldReferenceExpression {
+func NewFieldReferenceExpression(typ intsyn.IType, expression intsyn.IExpression,
+	internalTypeName string, name string, descriptor string) intsyn.IFieldReferenceExpression {
 	return &FieldReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		expression:                       expression,
@@ -15,7 +16,8 @@ func NewFieldReferenceExpression(typ _type.IType, expression Expression, interna
 	}
 }
 
-func NewFieldReferenceExpressionWithAll(lineNumber int, typ _type.IType, expression Expression, internalTypeName string, name string, descriptor string) *FieldReferenceExpression {
+func NewFieldReferenceExpressionWithAll(lineNumber int, typ intsyn.IType, expression intsyn.IExpression,
+	internalTypeName string, name string, descriptor string) intsyn.IFieldReferenceExpression {
 	return &FieldReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		expression:                       expression,
@@ -28,13 +30,13 @@ func NewFieldReferenceExpressionWithAll(lineNumber int, typ _type.IType, express
 type FieldReferenceExpression struct {
 	AbstractLineNumberTypeExpression
 
-	expression       Expression
+	expression       intsyn.IExpression
 	internalTypeName string
 	name             string
 	descriptor       string
 }
 
-func (e *FieldReferenceExpression) Expression() Expression {
+func (e *FieldReferenceExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
@@ -50,7 +52,7 @@ func (e *FieldReferenceExpression) Descriptor() string {
 	return e.descriptor
 }
 
-func (e *FieldReferenceExpression) SetExpression(expression Expression) {
+func (e *FieldReferenceExpression) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
@@ -62,7 +64,7 @@ func (e *FieldReferenceExpression) IsFieldReferenceExpression() bool {
 	return true
 }
 
-func (e *FieldReferenceExpression) Accept(visitor ExpressionVisitor) {
+func (e *FieldReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitFieldReferenceExpression(e)
 }
 

@@ -1,18 +1,19 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewLengthExpression(expression Expression) *LengthExpression {
+func NewLengthExpression(expression intsyn.IExpression) intsyn.ILengthExpression {
 	return &LengthExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		expression:                   expression,
 	}
 }
 
-func NewLengthExpressionWithAll(lineNumber int, expression Expression) *LengthExpression {
+func NewLengthExpressionWithAll(lineNumber int, expression intsyn.IExpression) intsyn.ILengthExpression {
 	return &LengthExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		expression:                   expression,
@@ -22,18 +23,18 @@ func NewLengthExpressionWithAll(lineNumber int, expression Expression) *LengthEx
 type LengthExpression struct {
 	AbstractLineNumberExpression
 
-	expression Expression
+	expression intsyn.IExpression
 }
 
-func (e *LengthExpression) Type() _type.IType {
-	return _type.PtTypeInt
+func (e *LengthExpression) Type() intsyn.IType {
+	return _type.PtTypeInt.(intsyn.IType)
 }
 
-func (e *LengthExpression) Expression() Expression {
+func (e *LengthExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
-func (e *LengthExpression) SetExpression(expression Expression) {
+func (e *LengthExpression) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
@@ -41,7 +42,7 @@ func (e *LengthExpression) IsLengthExpression() bool {
 	return true
 }
 
-func (e *LengthExpression) Accept(visitor ExpressionVisitor) {
+func (e *LengthExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitLengthExpression(e)
 }
 

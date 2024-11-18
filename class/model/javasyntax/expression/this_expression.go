@@ -1,11 +1,11 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewThisExpression(typ _type.IType) *ThisExpression {
+func NewThisExpression(typ intsyn.IType) intsyn.IThisExpression {
 	return &ThisExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		typ:                          typ,
@@ -13,7 +13,7 @@ func NewThisExpression(typ _type.IType) *ThisExpression {
 	}
 }
 
-func NewThisExpressionWithAll(lineNumber int, typ _type.IType) *ThisExpression {
+func NewThisExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.IThisExpression {
 	return &ThisExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -24,11 +24,11 @@ func NewThisExpressionWithAll(lineNumber int, typ _type.IType) *ThisExpression {
 type ThisExpression struct {
 	AbstractLineNumberExpression
 
-	typ      _type.IType
+	typ      intsyn.IType
 	explicit bool
 }
 
-func (e *ThisExpression) Type() _type.IType {
+func (e *ThisExpression) Type() intsyn.IType {
 	return e.typ
 }
 
@@ -44,7 +44,7 @@ func (e *ThisExpression) IsThisExpression() bool {
 	return true
 }
 
-func (e *ThisExpression) Accept(visitor ExpressionVisitor) {
+func (e *ThisExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitThisExpression(e)
 }
 

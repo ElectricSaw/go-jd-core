@@ -1,19 +1,23 @@
 package statement
 
-type Statements struct {
-	AbstractStatement
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
 
-	Statements []Statement
+func NewStatements() intsyn.IStatements {
+	return &Statements{}
 }
 
-func (s *Statements) List() []Statement {
-	return s.Statements
+type Statements struct {
+	AbstractStatement
+	util.DefaultList[intsyn.IStatement]
 }
 
 func (s *Statements) IsStatements() bool {
 	return true
 }
 
-func (s *Statements) Accept(visitor StatementVisitor) {
+func (s *Statements) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitStatements(s)
 }

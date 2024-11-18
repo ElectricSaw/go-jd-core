@@ -1,10 +1,14 @@
 package reference
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"fmt"
+)
 
-func NewAnnotationElementValue(reference *AnnotationReference) *AnnotationElementValue {
+func NewAnnotationElementValue(reference *AnnotationReference) intsyn.IAnnotationElementValue {
 	return &AnnotationElementValue{
-		AnnotationReference: *NewAnnotationReferenceWithAll(reference.Type(), reference.ElementValue(), reference.ElementValuePairs()),
+		AnnotationReference: *NewAnnotationReferenceWithAll(reference.Type(),
+			reference.ElementValue(), reference.ElementValuePairs()).(*AnnotationReference),
 	}
 }
 
@@ -12,7 +16,7 @@ type AnnotationElementValue struct {
 	AnnotationReference
 }
 
-func (r *AnnotationElementValue) Accept(visitor ReferenceVisitor) {
+func (r *AnnotationElementValue) Accept(visitor intsyn.IReferenceVisitor) {
 	visitor.VisitAnnotationElementValue(r)
 }
 

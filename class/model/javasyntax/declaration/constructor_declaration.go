@@ -3,13 +3,11 @@ package declaration
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewConstructorDeclaration(flags int, formalParameter intsyn.IFormalParameter, descriptor string, statements statement.Statement) intsyn.IConstructorDeclaration {
+func NewConstructorDeclaration(flags int, formalParameter intsyn.IFormalParameter, descriptor string,
+	statements intsyn.IStatement) intsyn.IConstructorDeclaration {
 	return &ConstructorDeclaration{
 		flags:           flags,
 		formalParameter: formalParameter,
@@ -18,7 +16,9 @@ func NewConstructorDeclaration(flags int, formalParameter intsyn.IFormalParamete
 	}
 }
 
-func NewConstructorDeclarationWithAll(annotationReferences reference.IReference, flags int, typeParameters _type.ITypeParameter, formalParameter intsyn.IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement) intsyn.IConstructorDeclaration {
+func NewConstructorDeclarationWithAll(annotationReferences intsyn.IReference, flags int,
+	typeParameters intsyn.ITypeParameter, formalParameter intsyn.IFormalParameter,
+	exceptionTypes intsyn.IType, descriptor string, statements intsyn.IStatement) intsyn.IConstructorDeclaration {
 	return &ConstructorDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -33,13 +33,13 @@ func NewConstructorDeclarationWithAll(annotationReferences reference.IReference,
 type ConstructorDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences reference.IReference
+	annotationReferences intsyn.IReference
 	flags                int
-	typeParameters       _type.ITypeParameter
+	typeParameters       intsyn.ITypeParameter
 	formalParameter      intsyn.IFormalParameter
-	exceptionTypes       _type.IType
+	exceptionTypes       intsyn.IType
 	descriptor           string
-	statements           statement.Statement
+	statements           intsyn.IStatement
 }
 
 func (d *ConstructorDeclaration) Flags() int {
@@ -54,11 +54,11 @@ func (d *ConstructorDeclaration) IsStatic() bool {
 	return d.flags&classfile.AccStatic != 0
 }
 
-func (d *ConstructorDeclaration) AnnotationReferences() reference.IReference {
+func (d *ConstructorDeclaration) AnnotationReferences() intsyn.IReference {
 	return d.annotationReferences
 }
 
-func (d *ConstructorDeclaration) TypeParameters() _type.ITypeParameter {
+func (d *ConstructorDeclaration) TypeParameters() intsyn.ITypeParameter {
 	return d.typeParameters
 }
 
@@ -70,7 +70,7 @@ func (d *ConstructorDeclaration) SetFormalParameters(formalParameter intsyn.IFor
 	d.formalParameter = formalParameter
 }
 
-func (d *ConstructorDeclaration) ExceptionTypes() _type.IType {
+func (d *ConstructorDeclaration) ExceptionTypes() intsyn.IType {
 	return d.exceptionTypes
 }
 
@@ -78,11 +78,11 @@ func (d *ConstructorDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *ConstructorDeclaration) Statements() statement.Statement {
+func (d *ConstructorDeclaration) Statements() intsyn.IStatement {
 	return d.statements
 }
 
-func (d *ConstructorDeclaration) SetStatements(state statement.Statement) {
+func (d *ConstructorDeclaration) SetStatements(state intsyn.IStatement) {
 	d.statements = state
 }
 

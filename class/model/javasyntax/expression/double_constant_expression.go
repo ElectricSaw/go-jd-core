@@ -1,20 +1,21 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewDoubleConstantExpression(value float64) *DoubleConstantExpression {
+func NewDoubleConstantExpression(value float64) intsyn.IDoubleConstantExpression {
 	return &DoubleConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeDouble),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeDouble.(intsyn.IType)),
 		value:                            value,
 	}
 }
 
-func NewDoubleConstantExpressionWithAll(lineNumber int, value float64) *DoubleConstantExpression {
+func NewDoubleConstantExpressionWithAll(lineNumber int, value float64) intsyn.IDoubleConstantExpression {
 	return &DoubleConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeDouble),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeDouble.(intsyn.IType)),
 		value:                            value,
 	}
 }
@@ -33,7 +34,7 @@ func (e *DoubleConstantExpression) IsDoubleConstantExpression() bool {
 	return true
 }
 
-func (e *DoubleConstantExpression) Accept(visitor ExpressionVisitor) {
+func (e *DoubleConstantExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitDoubleConstantExpression(e)
 }
 

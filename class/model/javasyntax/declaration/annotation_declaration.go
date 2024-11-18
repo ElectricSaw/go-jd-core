@@ -2,12 +2,13 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 	"bitbucket.org/coontec/javaClass/class/util"
 	"fmt"
 )
 
-func NewAnnotationDeclaration(annotationDeclarators intsyn.IFieldDeclarator, annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration intsyn.IDeclaration) intsyn.IAnnotationDeclaration {
+func NewAnnotationDeclaration(annotationDeclarators intsyn.IFieldDeclarator,
+	annotationReferences intsyn.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intsyn.IDeclaration) intsyn.IAnnotationDeclaration {
 	return &AnnotationDeclaration{
 		TypeDeclaration:        *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		annotationDeclaratiors: annotationDeclarators,

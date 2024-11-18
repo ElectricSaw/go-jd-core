@@ -1,15 +1,13 @@
 package _type
 
-type ITypeParameter interface {
-	TypeParameterVisitable
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+type AbstractTypeParameter struct {
+	util.DefaultBase[intsyn.ITypeParameter]
 }
 
-type TypeParameterVisitable interface {
-	AcceptTypeParameterVisitor(visitor TypeParameterVisitor)
-}
-
-type TypeParameterVisitor interface {
-	VisitTypeParameter(parameter *TypeParameter)
-	VisitTypeParameterWithTypeBounds(parameter *TypeParameterWithTypeBounds)
-	VisitTypeParameters(parameters *TypeParameters)
+func (p *AbstractTypeParameter) AcceptTypeParameterVisitor(visitor intsyn.ITypeParameterVisitor) {
 }

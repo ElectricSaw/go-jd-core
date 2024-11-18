@@ -71,12 +71,12 @@ func (v *GenericLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, ty
 func (v *GenericLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType) {
 }
 
-func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable *AbstractLocalVariable) bool {
+func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariable) bool {
 	return v.IsAssignableFrom(typeBounds, variable.Type())
 }
 
-func (v *GenericLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariableReference) {
+func (v *GenericLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariable) {
 }
 
-func (v *GenericLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariableReference) {
+func (v *GenericLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariable) {
 }

@@ -1,54 +1,57 @@
 package expression
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+)
 
-func NewInstanceOfExpression(expression Expression, instanceOfType *_type.ObjectType) *InstanceOfExpression {
+func NewInstanceOfExpression(expression intsyn.IExpression, instanceOfType intsyn.IObjectType) intsyn.IInstanceOfExpression {
 	return &InstanceOfExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: UnknownLineNumber,
 		},
 		expression:     expression,
-		instanceOfType: instanceOfType,
+		instanceOfType: instanceOfType.(intsyn.IType),
 	}
 }
 
-func NewInstanceOfExpressionWithAll(lineNumber int, expression Expression, instanceOfType *_type.ObjectType) *InstanceOfExpression {
+func NewInstanceOfExpressionWithAll(lineNumber int, expression intsyn.IExpression, instanceOfType intsyn.IObjectType) intsyn.IInstanceOfExpression {
 	return &InstanceOfExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
 		},
 		expression:     expression,
-		instanceOfType: instanceOfType,
+		instanceOfType: instanceOfType.(intsyn.IType),
 	}
 }
 
 type InstanceOfExpression struct {
 	AbstractLineNumberExpression
 
-	expression     Expression
-	instanceOfType _type.IType
+	expression     intsyn.IExpression
+	instanceOfType intsyn.IType
 }
 
-func (e *InstanceOfExpression) Expression() Expression {
+func (e *InstanceOfExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
-func (e *InstanceOfExpression) GetInstanceOfType() _type.IType {
+func (e *InstanceOfExpression) GetInstanceOfType() intsyn.IType {
 	return e.instanceOfType
 }
 
-func (e *InstanceOfExpression) Type() _type.IType {
-	return _type.PtTypeBoolean
+func (e *InstanceOfExpression) Type() intsyn.IType {
+	return _type.PtTypeBoolean.(intsyn.IType)
 }
 
 func (e *InstanceOfExpression) Priority() int {
 	return 8
 }
 
-func (e *InstanceOfExpression) SetExpression(expression Expression) {
+func (e *InstanceOfExpression) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
-func (e *InstanceOfExpression) Accept(visitor ExpressionVisitor) {
+func (e *InstanceOfExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitInstanceOfExpression(e)
 }

@@ -2,10 +2,9 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 )
 
-func NewLocalVariableDeclaration(typ _type.IType, localVariableDeclarators intsyn.ILocalVariableDeclarator) intsyn.ILocalVariableDeclaration {
+func NewLocalVariableDeclaration(typ intsyn.IType, localVariableDeclarators intsyn.ILocalVariableDeclarator) intsyn.ILocalVariableDeclaration {
 	return &LocalVariableDeclaration{
 		typ:                      typ,
 		localVariableDeclarators: localVariableDeclarators,
@@ -14,7 +13,7 @@ func NewLocalVariableDeclaration(typ _type.IType, localVariableDeclarators intsy
 
 type LocalVariableDeclaration struct {
 	final                    bool
-	typ                      _type.IType
+	typ                      intsyn.IType
 	localVariableDeclarators intsyn.ILocalVariableDeclarator
 }
 
@@ -26,7 +25,7 @@ func (d *LocalVariableDeclaration) SetFinal(final bool) {
 	d.final = final
 }
 
-func (d *LocalVariableDeclaration) Type() _type.IType {
+func (d *LocalVariableDeclaration) Type() intsyn.IType {
 	return d.typ
 }
 

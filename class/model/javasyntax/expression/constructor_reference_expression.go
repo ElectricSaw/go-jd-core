@@ -1,8 +1,11 @@
 package expression
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewConstructorReferenceExpression(typ _type.IType, objectType _type.IObjectType, descriptor string) *ConstructorReferenceExpression {
+func NewConstructorReferenceExpression(typ intsyn.IType, objectType intsyn.IObjectType,
+	descriptor string) intsyn.IConstructorReferenceExpression {
 	return &ConstructorReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		objectType:                       objectType,
@@ -10,7 +13,8 @@ func NewConstructorReferenceExpression(typ _type.IType, objectType _type.IObject
 	}
 }
 
-func NewConstructorReferenceExpressionWithAll(lineNumber int, typ _type.IType, objectType _type.IObjectType, descriptor string) *ConstructorReferenceExpression {
+func NewConstructorReferenceExpressionWithAll(lineNumber int, typ intsyn.IType,
+	objectType intsyn.IObjectType, descriptor string) intsyn.IConstructorReferenceExpression {
 	return &ConstructorReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		objectType:                       objectType,
@@ -21,11 +25,11 @@ func NewConstructorReferenceExpressionWithAll(lineNumber int, typ _type.IType, o
 type ConstructorReferenceExpression struct {
 	AbstractLineNumberTypeExpression
 
-	objectType _type.IObjectType
+	objectType intsyn.IObjectType
 	descriptor string
 }
 
-func (e *ConstructorReferenceExpression) ObjectType() _type.IObjectType {
+func (e *ConstructorReferenceExpression) ObjectType() intsyn.IObjectType {
 	return e.objectType
 }
 
@@ -33,6 +37,6 @@ func (e *ConstructorReferenceExpression) Descriptor() string {
 	return e.descriptor
 }
 
-func (e *ConstructorReferenceExpression) Accept(visitor ExpressionVisitor) {
+func (e *ConstructorReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitConstructorReferenceExpression(e)
 }

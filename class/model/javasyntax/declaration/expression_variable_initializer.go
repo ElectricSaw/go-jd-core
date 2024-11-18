@@ -2,10 +2,9 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
 )
 
-func NewExpressionVariableInitializer(expression expression.Expression) intsyn.IExpressionVariableInitializer {
+func NewExpressionVariableInitializer(expression intsyn.IExpression) intsyn.IExpressionVariableInitializer {
 	return &ExpressionVariableInitializer{
 		expression: expression,
 	}
@@ -14,10 +13,10 @@ func NewExpressionVariableInitializer(expression expression.Expression) intsyn.I
 type ExpressionVariableInitializer struct {
 	AbstractVariableInitializer
 
-	expression expression.Expression
+	expression intsyn.IExpression
 }
 
-func (i *ExpressionVariableInitializer) Expression() expression.Expression {
+func (i *ExpressionVariableInitializer) Expression() intsyn.IExpression {
 	return i.expression
 }
 
@@ -25,7 +24,7 @@ func (i *ExpressionVariableInitializer) LineNumber() int {
 	return i.expression.LineNumber()
 }
 
-func (i *ExpressionVariableInitializer) SetExpression(expression expression.Expression) {
+func (i *ExpressionVariableInitializer) SetExpression(expression intsyn.IExpression) {
 	i.expression = expression
 }
 

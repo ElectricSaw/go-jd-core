@@ -1,6 +1,7 @@
 package javasyntax
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
@@ -18,21 +19,21 @@ func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit Compila
 
 // --- DeclarationVisitor ---
 
-func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(decl *declaration.AnnotationDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(decl intsyn.IAnnotationDeclaration) {
 	v.SafeAcceptDeclaration(decl.AnnotationDeclarators())
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 	v.SafeAcceptReference(decl.AnnotationReferences())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitArrayVariableInitializer(decl *declaration.ArrayVariableInitializer) {
+func (v *AbstractJavaSyntaxVisitor) VisitArrayVariableInitializer(decl intsyn.IArrayVariableInitializer) {
 	v.AcceptListDeclaration(decl.List())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitBodyDeclaration(decl *declaration.BodyDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitBodyDeclaration(decl declaration.IBodyDeclaration) {
 	v.SafeAcceptDeclaration(decl.MemberDeclarations())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(decl *declaration.ClassDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(decl intsyn.IClassDeclaration) {
 	superType := decl.SuperType()
 
 	if superType != nil {
@@ -45,78 +46,83 @@ func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(decl *declaration.Clas
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitConstructorDeclaration(decl *declaration.ConstructorDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitConstructorDeclaration(decl intsyn.IConstructorDeclaration) {
 	v.SafeAcceptReference(decl.AnnotationReferences())
 	v.SafeAcceptDeclaration(decl.FormalParameters())
 	v.SafeAcceptType(decl.ExceptionTypes())
 	v.SafeAcceptStatement(decl.Statements())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclaration(decl *declaration.EnumDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclaration(decl intsyn.IEnumDeclaration) {
 	v.VisitTypeDeclaration(&decl.TypeDeclaration)
 	v.SafeAcceptType(decl.Interfaces())
 	v.SafeAcceptListConstant(decl.Constants())
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclarationConstant(decl *declaration.Constant) {
+func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclarationConstant(decl intsyn.IConstant) {
 	v.SafeAcceptReference(decl.AnnotationReferences())
 	v.SafeAcceptExpression(decl.Arguments())
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitExpressionVariableInitializer(decl *declaration.ExpressionVariableInitializer) {
+func (v *AbstractJavaSyntaxVisitor) VisitExpressionVariableInitializer(decl intsyn.IExpressionVariableInitializer) {
 	decl.Expression().Accept(v)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(decl *declaration.FieldDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(decl intsyn.IFieldDeclaration) {
 	t := decl.Type()
 	t.AcceptTypeVisitor(v)
 	v.SafeAcceptReference(decl.AnnotationReferences())
 	decl.FieldDeclarators().Accept(v)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarator(decl *declaration.FieldDeclarator) {
+func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarator(decl intsyn.IFieldDeclarator) {
 	v.SafeAcceptDeclaration(decl.VariableInitializer())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarators(decl *declaration.FieldDeclarators) {
-	v.AcceptListDeclaration(decl.List())
+func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarators(decl intsyn.IFieldDeclarators) {
+	list := decl.List()
+	decls := make([]declaration.Declaration, 0, len(list))
+	for _, item := range list {
+		decls = append(decls, item)
+	}
+	v.AcceptListDeclaration(decls)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFormalParameter(decl *declaration.FormalParameter) {
+func (v *AbstractJavaSyntaxVisitor) VisitFormalParameter(decl intsyn.IFormalParameter) {
 	t := decl.Type()
 	t.AcceptTypeVisitor(v)
 	v.SafeAcceptReference(decl.AnnotationReferences())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFormalParameters(decl *declaration.FormalParameters) {
+func (v *AbstractJavaSyntaxVisitor) VisitFormalParameters(decl intsyn.IFormalParameters) {
 	v.AcceptListDeclaration(decl.List())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitInstanceInitializerDeclaration(decl *declaration.InstanceInitializerDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitInstanceInitializerDeclaration(decl intsyn.IInstanceInitializerDeclaration) {
 	v.SafeAcceptStatement(decl.Statements())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitInterfaceDeclaration(decl *declaration.InterfaceDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitInterfaceDeclaration(decl intsyn.IInterfaceDeclaration) {
 	v.SafeAcceptType(decl.Interfaces())
 	v.SafeAcceptReference(decl.AnnotationReferences())
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclaration(decl *declaration.LocalVariableDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclaration(decl intsyn.ILocalVariableDeclaration) {
 	v.SafeAcceptDeclaration(decl.LocalVariableDeclarators())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarator(decl *declaration.LocalVariableDeclarator) {
+func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarator(decl intsyn.ILocalVariableDeclarator) {
 	v.SafeAcceptDeclaration(decl.VariableInitializer())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarators(decl *declaration.LocalVariableDeclarators) {
+func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarators(decl intsyn.ILocalVariableDeclarators) {
 	v.AcceptListDeclaration(decl.List())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(decl *declaration.MethodDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(decl intsyn.IMethodDeclaration) {
 	t := decl.ReturnedType()
 	t.AcceptTypeVisitor(v)
 
@@ -126,23 +132,23 @@ func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(decl *declaration.Met
 	v.SafeAcceptStatement(decl.Statements())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitMemberDeclarations(decl *declaration.MemberDeclarations) {
+func (v *AbstractJavaSyntaxVisitor) VisitMemberDeclarations(decl intsyn.IMemberDeclarations) {
 	v.AcceptListDeclaration(decl.List())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitModuleDeclaration(decl *declaration.ModuleDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitModuleDeclaration(decl intsyn.IModuleDeclaration) {
 	// TODO: Empty
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitStaticInitializerDeclaration(decl *declaration.StaticInitializerDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitStaticInitializerDeclaration(decl intsyn.IStaticInitializerDeclaration) {
 	// TODO: Empty
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarations(decl *declaration.TypeDeclarations) {
+func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarations(decl intsyn.ITypeDeclarations) {
 	v.AcceptListDeclaration(decl.List())
 }
 
-// --- ExpressionVisitor ---
+// --- IExpressionVisitor ---
 func (v *AbstractJavaSyntaxVisitor) VisitArrayExpression(expr *expression.ArrayExpression) {
 	t := expr.Type()
 	t.AcceptTypeVisitor(v)
@@ -326,7 +332,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeReferenceDotClassExpression(expr *e
 	t.AcceptTypeVisitor(v)
 }
 
-// --- ReferenceVisitor ---
+// --- IReferenceVisitor ---
 
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationElementValue(ref *reference.AnnotationElementValue) {
 	v.SafeAcceptReference(ref.ElementValue())
@@ -370,7 +376,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitObjectReference(ref *reference.ObjectRe
 	v.VisitObjectType(&ref.ObjectType)
 }
 
-// --- StatementVisitor ---
+// --- IStatementVisitor ---
 
 func (v *AbstractJavaSyntaxVisitor) VisitAssertStatement(stat *statement.AssertStatement) {
 	stat.Condition().Accept(v)
@@ -516,7 +522,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitWhileStatement(stat *statement.WhileSta
 	v.SafeAcceptStatement(stat.Statements())
 }
 
-// --- TypeVisitor ---
+// --- ITypeVisitor ---
 // func (v *AbstractJavaSyntaxVisitor) VisitPrimitiveType(y *PrimitiveType)     {}
 // func (v *AbstractJavaSyntaxVisitor) VisitObjectType(y *ObjectType)           {}
 // func (v *AbstractJavaSyntaxVisitor) VisitInnerObjectType(y *InnerObjectType) {}
@@ -529,7 +535,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypes(types *_type.Types) {
 
 //func (v *AbstractJavaSyntaxVisitor) VisitGenericType(y *GenericType)         {}
 
-// --- TypeParameterVisitor --- //
+// --- ITypeParameterVisitor --- //
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeParameter(parameter *_type.TypeParameter) {
 	// TODO: Empty
@@ -545,7 +551,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeParameters(parameters *_type.TypePa
 	}
 }
 
-// --- TypeArgumentVisitor ---
+// --- ITypeArgumentVisitor ---
 
 //func (v *AbstractJavaSyntaxVisitor) VisitTypeArguments(arguments *_type.TypeArguments) {}
 //
@@ -567,7 +573,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeParameters(parameters *_type.TypePa
 //
 //func (v *AbstractJavaSyntaxVisitor) VisitGenericType(t *_type.GenericType) {}
 
-func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclaration(decl *declaration.TypeDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclaration(decl intsyn.ITypeDeclaration) {
 	v.SafeAcceptReference(decl.AnnotationReferences())
 }
 
@@ -577,7 +583,7 @@ func (v *AbstractJavaSyntaxVisitor) AcceptListDeclaration(list []declaration.Dec
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) AcceptListExpression(list []expression.Expression) {
+func (v *AbstractJavaSyntaxVisitor) AcceptListExpression(list []expression.IExpression) {
 	for _, value := range list {
 		value.Accept(v)
 	}
@@ -589,7 +595,7 @@ func (v *AbstractJavaSyntaxVisitor) AcceptListReference(list []reference.IRefere
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) AcceptListStatement(list []statement.Statement) {
+func (v *AbstractJavaSyntaxVisitor) AcceptListStatement(list []statement.IStatement) {
 	for _, value := range list {
 		value.Accept(v)
 	}
@@ -601,7 +607,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptDeclaration(decl declaration.Decla
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) SafeAcceptExpression(expr expression.Expression) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptExpression(expr expression.IExpression) {
 	if expr != nil {
 		expr.Accept(v)
 	}
@@ -613,7 +619,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptReference(ref reference.IReference
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) SafeAcceptStatement(list statement.Statement) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptStatement(list statement.IStatement) {
 	if list != nil {
 		list.Accept(v)
 	}
@@ -647,7 +653,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptListConstant(list []declaration.Co
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) SafeAcceptListStatement(list []statement.Statement) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptListStatement(list []statement.IStatement) {
 	if list != nil {
 		for _, value := range list {
 			value.Accept(v)

@@ -1,11 +1,12 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewCommentExpression(text string) *CommentExpression {
+func NewCommentExpression(text string) intsyn.ICommentExpression {
 	return &CommentExpression{
 		text: text,
 	}
@@ -21,8 +22,8 @@ func (e *CommentExpression) LineNumber() int {
 	return UnknownLineNumber
 }
 
-func (e *CommentExpression) Type() _type.IType {
-	return _type.PtTypeVoid
+func (e *CommentExpression) Type() intsyn.IType {
+	return _type.PtTypeVoid.(intsyn.IType)
 }
 
 func (e *CommentExpression) Priority() int {
@@ -33,7 +34,7 @@ func (e *CommentExpression) GetText() string {
 	return e.text
 }
 
-func (e *CommentExpression) Accept(visitor ExpressionVisitor) {
+func (e *CommentExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitCommentExpression(e)
 }
 

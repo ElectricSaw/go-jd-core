@@ -1,8 +1,10 @@
 package statement
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 var Return = NewReturnStatement()
 
-func NewReturnStatement() *ReturnStatement {
+func NewReturnStatement() intsyn.IReturnStatement {
 	return &ReturnStatement{}
 }
 
@@ -14,7 +16,7 @@ func (s *ReturnStatement) IsReturnStatement() bool {
 	return true
 }
 
-func (s *ReturnStatement) Accept(visitor StatementVisitor) {
+func (s *ReturnStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitReturnStatement(s)
 }
 

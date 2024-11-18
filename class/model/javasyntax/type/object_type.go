@@ -1,6 +1,7 @@
 package _type
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
@@ -8,7 +9,7 @@ var OtTypeBoolean = NewObjectType("class/lang/Boolean", "class.lang.Boolean", "B
 var OtTypeByte = NewObjectType("class/lang/Byte", "class.lang.Byte", "Byte")
 var OtTypeCharacter = NewObjectType("class/lang/Character", "class.lang.Character", "Character")
 var OtTypeClass = NewObjectType("class/lang/Class", "class.lang.Class", "Class")
-var OtTypeClassWildcard = OtTypeClass.CreateTypeWithArgs(WildcardTypeArgumentEmpty)
+var OtTypeClassWildcard = OtTypeClass.CreateTypeWithArgs(WildcardTypeArgumentEmpty.(intsyn.ITypeArgument))
 
 var OtTypeDouble = NewObjectType("class/lang/Double", "class.lang.Double", "Double")
 var OtTypeException = NewObjectType("class/lang/Exception", "class.lang.Exception", "Exception")
@@ -56,19 +57,19 @@ func createDescriptor(descriptor string, dimension int) string {
 	}
 }
 
-func NewObjectType(internalName, qualifiedName, name string) *ObjectType {
+func NewObjectType(internalName, qualifiedName, name string) intsyn.IObjectType {
 	return NewObjectTypeWithAll(internalName, qualifiedName, name, nil, 0)
 }
 
-func NewObjectTypeWithDim(internalName, qualifiedName, name string, dimension int) *ObjectType {
+func NewObjectTypeWithDim(internalName, qualifiedName, name string, dimension int) intsyn.IObjectType {
 	return NewObjectTypeWithAll(internalName, qualifiedName, name, nil, dimension)
 }
 
-func NewObjectTypeWithArgs(internalName, qualifiedName, name string, typeArguments ITypeArgument) *ObjectType {
+func NewObjectTypeWithArgs(internalName, qualifiedName, name string, typeArguments intsyn.ITypeArgument) intsyn.IObjectType {
 	return NewObjectTypeWithAll(internalName, qualifiedName, name, typeArguments, 0)
 }
 
-func NewObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments ITypeArgument, dimension int) *ObjectType {
+func NewObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments intsyn.ITypeArgument, dimension int) intsyn.IObjectType {
 	return &ObjectType{
 		internalName:  internalName,
 		qualifiedName: qualifiedName,
@@ -79,17 +80,16 @@ func NewObjectTypeWithAll(internalName, qualifiedName, name string, typeArgument
 	}
 }
 
-func NewObjectTypeWithDesc(primitiveDescriptor string) *ObjectType {
+func NewObjectTypeWithDesc(primitiveDescriptor string) intsyn.IObjectType {
 	return NewObjectTypeWithDescAndDim(primitiveDescriptor, 0)
 }
 
-func NewObjectTypeWithDescAndDim(primitiveDescriptor string, dimension int) *ObjectType {
+func NewObjectTypeWithDescAndDim(primitiveDescriptor string, dimension int) intsyn.IObjectType {
 	return &ObjectType{
-		internalName: primitiveDescriptor,
-		//qualifiedName: qualifiedName,  // PrimitiveType.getPrimitiveType(primitiveDescriptor.charAt(0)).getName();
-		//name: name,  //PrimitiveType.getPrimitiveType(primitiveDescriptor.charAt(0)).getName();
-		dimension:  dimension,
-		descriptor: createDescriptor(fmt.Sprintf("L%s;", primitiveDescriptor), dimension),
+		internalName:  primitiveDescriptor,
+		qualifiedName: GetPrimitiveType(int(primitiveDescriptor[0])).Name(),
+		dimension:     dimension,
+		descriptor:    createDescriptor(fmt.Sprintf("L%s;", primitiveDescriptor), dimension),
 	}
 }
 
@@ -100,7 +100,7 @@ type ObjectType struct {
 	internalName  string
 	qualifiedName string
 	name          string
-	typeArguments ITypeArgument
+	typeArguments intsyn.ITypeArgument
 	dimension     int
 	descriptor    string
 }
@@ -135,17 +135,17 @@ func (t *ObjectType) Dimension() int {
 	return t.dimension
 }
 
-func (t *ObjectType) CreateType(dimension int) IType {
+func (t *ObjectType) CreateType(dimension int) intsyn.IType {
 	if t.dimension == dimension {
 		return t
 	} else if t.descriptor[len(t.descriptor)-1] != ';' {
 		if dimension == 0 {
-			return GetPrimitiveType(int(t.descriptor[t.dimension]))
+			return GetPrimitiveType(int(t.descriptor[t.dimension])).(intsyn.IType)
 		} else {
-			return NewObjectTypeWithDescAndDim(t.internalName, t.dimension)
+			return NewObjectTypeWithDescAndDim(t.internalName, t.dimension).(intsyn.IType)
 		}
 	} else {
-		return NewObjectTypeWithAll(t.internalName, t.qualifiedName, t.name, t.typeArguments, dimension)
+		return NewObjectTypeWithAll(t.internalName, t.qualifiedName, t.name, t.typeArguments, dimension).(intsyn.IType)
 	}
 }
 
@@ -157,15 +157,15 @@ func (t *ObjectType) InternalName() string {
 	return t.internalName
 }
 
-func (t *ObjectType) AcceptTypeVisitor(visitor TypeVisitor) {
+func (t *ObjectType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
 	visitor.VisitObjectType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
+func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
 	switch meta := typeArgument.(type) {
-	case IObjectType:
+	case intsyn.IObjectType:
 		if t.dimension != meta.Dimension() || t.internalName != meta.InternalName() {
 			return false
 		}
@@ -179,7 +179,7 @@ func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, t
 		}
 	case *GenericType:
 		bt := typeBounds[meta.Name()]
-		ot, ok := bt.(IObjectType)
+		ot, ok := bt.(intsyn.IObjectType)
 
 		if ok {
 			if t.internalName == ot.InternalName() {
@@ -191,8 +191,8 @@ func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, t
 	return false
 }
 
-func (t *ObjectType) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]IType, objectType ObjectType) bool {
-	if t.dimension != objectType.dimension || t.internalName != objectType.internalName {
+func (t *ObjectType) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]intsyn.IType, objectType intsyn.IObjectType) bool {
+	if t.dimension != objectType.Dimension() || t.internalName != objectType.InternalName() {
 		return false
 	}
 
@@ -201,7 +201,7 @@ func (t *ObjectType) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]I
 	} else if t.typeArguments == nil {
 		return false
 	} else {
-		return t.typeArguments.IsTypeArgumentAssignableFrom(typeBounds, objectType.typeArguments)
+		return t.typeArguments.IsTypeArgumentAssignableFrom(typeBounds, objectType.TypeArguments())
 	}
 }
 
@@ -209,17 +209,17 @@ func (t *ObjectType) IsObjectTypeArgument() bool {
 	return true
 }
 
-func (t *ObjectType) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
+func (t *ObjectType) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
 	visitor.VisitObjectType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *ObjectType) TypeArguments() ITypeArgument {
+func (t *ObjectType) TypeArguments() intsyn.ITypeArgument {
 	return t.typeArguments
 }
 
-func (t *ObjectType) CreateTypeWithArgs(typeArguments ITypeArgument) IObjectType {
+func (t *ObjectType) CreateTypeWithArgs(typeArguments intsyn.ITypeArgument) intsyn.IObjectType {
 	if t.typeArguments == typeArguments {
 		return t
 	} else {

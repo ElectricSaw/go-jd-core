@@ -1,13 +1,13 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-var DefaultLabel = NewDefaultLabel()
+var DefaultLabe1 = NewDefaultLabel()
 
-func NewSwitchStatement(condition expression.Expression, blocks []Block) *SwitchStatement {
+func NewSwitchStatement(condition intsyn.IExpression, blocks []intsyn.IBlock) intsyn.ISwitchStatement {
 	return &SwitchStatement{
 		condition: condition,
 		blocks:    blocks,
@@ -17,27 +17,27 @@ func NewSwitchStatement(condition expression.Expression, blocks []Block) *Switch
 type SwitchStatement struct {
 	AbstractStatement
 
-	condition expression.Expression
-	blocks    []Block
+	condition intsyn.IExpression
+	blocks    []intsyn.IBlock
 }
 
-func (s *SwitchStatement) Condition() expression.Expression {
+func (s *SwitchStatement) Condition() intsyn.IExpression {
 	return s.condition
 }
 
-func (s *SwitchStatement) SetCondition(condition expression.Expression) {
+func (s *SwitchStatement) SetCondition(condition intsyn.IExpression) {
 	s.condition = condition
 }
 
-func (s *SwitchStatement) List() []Statement {
-	ret := make([]Statement, 0, len(s.blocks))
+func (s *SwitchStatement) List() []intsyn.IStatement {
+	ret := make([]intsyn.IStatement, 0, len(s.blocks))
 	for _, block := range s.blocks {
-		ret = append(ret, &block)
+		ret = append(ret, block.(intsyn.IStatement))
 	}
 	return ret
 }
 
-func (s *SwitchStatement) Blocks() []Block {
+func (s *SwitchStatement) Blocks() []intsyn.IBlock {
 	return s.blocks
 }
 
@@ -45,35 +45,29 @@ func (s *SwitchStatement) IsSwitchStatement() bool {
 	return true
 }
 
-func (s *SwitchStatement) Accept(visitor StatementVisitor) {
+func (s *SwitchStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitSwitchStatement(s)
 }
 
 // --- Label --- //
 
-type ILabel interface {
-	Statement
+func NewDefaultLabel() intsyn.IDefaultLabel {
+	return &DefaultLabel{}
 }
 
-func NewDefaultLabel() *DefaultLabe1 {
-	return &DefaultLabe1{}
-}
-
-type DefaultLabe1 struct {
+type DefaultLabel struct {
 	AbstractStatement
 }
 
-func (l *DefaultLabe1) Accept(visitor StatementVisitor) {
+func (l *DefaultLabel) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitSwitchStatementDefaultLabel(l)
 }
 
-func (l *DefaultLabe1) String() string {
+func (l *DefaultLabel) String() string {
 	return "DefaultLabel"
 }
 
-func (l *DefaultLabe1) ignoreLabel() {}
-
-func NewExpressionLabel(expression expression.Expression) *ExpressionLabel {
+func NewExpressionLabel(expression intsyn.IExpression) intsyn.IExpressionLabel {
 	return &ExpressionLabel{
 		expression: expression,
 	}
@@ -82,18 +76,18 @@ func NewExpressionLabel(expression expression.Expression) *ExpressionLabel {
 type ExpressionLabel struct {
 	AbstractStatement
 
-	expression expression.Expression
+	expression intsyn.IExpression
 }
 
-func (l *ExpressionLabel) Expression() expression.Expression {
+func (l *ExpressionLabel) Expression() intsyn.IExpression {
 	return l.expression
 }
 
-func (l *ExpressionLabel) SetExpression(expression expression.Expression) {
+func (l *ExpressionLabel) SetExpression(expression intsyn.IExpression) {
 	l.expression = expression
 }
 
-func (l *ExpressionLabel) Accept(visitor StatementVisitor) {
+func (l *ExpressionLabel) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitSwitchStatementExpressionLabel(l)
 }
 
@@ -101,11 +95,9 @@ func (l *ExpressionLabel) String() string {
 	return fmt.Sprintf("ExpressionLabel{%s}", l.expression)
 }
 
-func (l *ExpressionLabel) ignoreLabel() {}
-
 // --- Block --- //
 
-func NewBlock(statements Statement) *Block {
+func NewBlock(statements intsyn.IStatement) intsyn.IBlock {
 	return &Block{
 		statements: statements,
 	}
@@ -114,14 +106,14 @@ func NewBlock(statements Statement) *Block {
 type Block struct {
 	AbstractStatement
 
-	statements Statement
+	statements intsyn.IStatement
 }
 
-func (b *Block) Statements() Statement {
+func (b *Block) Statements() intsyn.IStatement {
 	return b.statements
 }
 
-func NewLabelBlock(label ILabel, statements Statement) *LabelBlock {
+func NewLabelBlock(label intsyn.ILabel, statements intsyn.IStatement) intsyn.ILabelBlock {
 	return &LabelBlock{
 		Block: Block{
 			statements: statements,
@@ -133,10 +125,10 @@ func NewLabelBlock(label ILabel, statements Statement) *LabelBlock {
 type LabelBlock struct {
 	Block
 
-	label ILabel
+	label intsyn.ILabel
 }
 
-func (b *LabelBlock) Label() ILabel {
+func (b *LabelBlock) Label() intsyn.ILabel {
 	return b.label
 }
 
@@ -144,7 +136,7 @@ func (b *LabelBlock) IsSwitchStatementLabelBlock() bool {
 	return true
 }
 
-func (b *LabelBlock) Accept(visitor StatementVisitor) {
+func (b *LabelBlock) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitSwitchStatementLabelBlock(b)
 }
 
@@ -152,7 +144,7 @@ func (b *LabelBlock) String() string {
 	return fmt.Sprintf("LabelBlock{label=%s}", b.label)
 }
 
-func NewMultiLabelsBlock(labels []ILabel, statements Statement) *MultiLabelsBlock {
+func NewMultiLabelsBlock(labels []intsyn.ILabel, statements intsyn.IStatement) intsyn.IMultiLabelsBlock {
 	return &MultiLabelsBlock{
 		Block: Block{
 			statements: statements,
@@ -164,18 +156,18 @@ func NewMultiLabelsBlock(labels []ILabel, statements Statement) *MultiLabelsBloc
 type MultiLabelsBlock struct {
 	Block
 
-	labels []ILabel
+	labels []intsyn.ILabel
 }
 
-func (b *MultiLabelsBlock) List() []Statement {
-	ret := make([]Statement, 0, len(b.labels))
+func (b *MultiLabelsBlock) List() []intsyn.IStatement {
+	ret := make([]intsyn.IStatement, 0, len(b.labels))
 	for _, label := range b.labels {
 		ret = append(ret, label)
 	}
 	return ret
 }
 
-func (b *MultiLabelsBlock) Labels() []ILabel {
+func (b *MultiLabelsBlock) Labels() []intsyn.ILabel {
 	return b.labels
 }
 
@@ -183,7 +175,7 @@ func (b *MultiLabelsBlock) IsSwitchStatementMultiLabelsBlock() bool {
 	return true
 }
 
-func (b *MultiLabelsBlock) Accept(visitor StatementVisitor) {
+func (b *MultiLabelsBlock) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitSwitchStatementMultiLabelsBlock(b)
 }
 

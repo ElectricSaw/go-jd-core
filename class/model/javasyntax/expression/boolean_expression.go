@@ -1,17 +1,18 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewBooleanExpression(value bool) *BooleanExpression {
+func NewBooleanExpression(value bool) intsyn.IBooleanExpression {
 	return &BooleanExpression{
 		value: value,
 	}
 }
 
-func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) *BooleanExpression {
+func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intsyn.IBooleanExpression {
 	return &BooleanExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
@@ -26,8 +27,8 @@ type BooleanExpression struct {
 	value bool
 }
 
-func (e *BooleanExpression) Type() _type.IType {
-	return _type.PtTypeBoolean
+func (e *BooleanExpression) Type() intsyn.IType {
+	return _type.PtTypeBoolean.(intsyn.IType)
 }
 
 func (e *BooleanExpression) IsTrue() bool {
@@ -42,7 +43,7 @@ func (e *BooleanExpression) IsBooleanExpression() bool {
 	return true
 }
 
-func (e *BooleanExpression) Accept(visitor ExpressionVisitor) {
+func (e *BooleanExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitBooleanExpression(e)
 }
 

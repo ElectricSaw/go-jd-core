@@ -19,9 +19,9 @@ type ClassFileConstructorOrMethodDeclaration interface {
 	BodyDeclaration() ClassFileBodyDeclaration
 	Bindings() map[string]_type.ITypeArgument
 	TypeBounds() map[string]_type.IType
-	Statements() statement.Statement
+	Statements() statement.IStatement
 
 	SetFlags(flags int)
 	SetFormalParameters(formalParameters declaration.IFormalParameter)
-	SetStatements(statement statement.Statement)
+	SetStatements(statement statement.IStatement)
 }

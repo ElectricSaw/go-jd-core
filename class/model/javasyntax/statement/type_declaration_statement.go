@@ -1,8 +1,10 @@
 package statement
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewTypeDeclarationStatement(typeDeclaration declaration.TypeDeclaration) *TypeDeclarationStatement {
+func NewTypeDeclarationStatement(typeDeclaration intsyn.ITypeDeclaration) intsyn.ITypeDeclarationStatement {
 	return &TypeDeclarationStatement{
 		typeDeclaration: typeDeclaration,
 	}
@@ -11,13 +13,13 @@ func NewTypeDeclarationStatement(typeDeclaration declaration.TypeDeclaration) *T
 type TypeDeclarationStatement struct {
 	AbstractStatement
 
-	typeDeclaration declaration.TypeDeclaration
+	typeDeclaration intsyn.ITypeDeclaration
 }
 
-func (s *TypeDeclarationStatement) TypeDeclaration() *declaration.TypeDeclaration {
+func (s *TypeDeclarationStatement) TypeDeclaration() *intsyn.ITypeDeclaration {
 	return &s.typeDeclaration
 }
 
-func (s *TypeDeclarationStatement) Accept(visitor StatementVisitor) {
+func (s *TypeDeclarationStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitTypeDeclarationStatement(s)
 }

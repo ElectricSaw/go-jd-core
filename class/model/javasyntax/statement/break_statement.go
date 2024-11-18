@@ -1,8 +1,10 @@
 package statement
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 var Break = NewBreakStatement("")
 
-func NewBreakStatement(label string) *BreakStatement {
+func NewBreakStatement(label string) intsyn.IBreakStatement {
 	return &BreakStatement{
 		label: label,
 	}
@@ -22,6 +24,6 @@ func (s *BreakStatement) IsBreakStatement() bool {
 	return true
 }
 
-func (s *BreakStatement) Accept(visitor StatementVisitor) {
+func (s *BreakStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitBreakStatement(s)
 }

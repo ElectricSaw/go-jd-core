@@ -23,7 +23,7 @@ func NewClassFileStaticInitializerDeclaration(bodyDeclaration ClassFileBodyDecla
 
 func NewClassFileStaticInitializerDeclaration2(bodyDeclaration ClassFileBodyDeclaration, classFile *classfile.ClassFile,
 	method *classfile.Method, bindings map[string]_type.ITypeArgument, typeBounds map[string]_type.IType,
-	firstLineNumber int, statements statement.Statement) *ClassFileStaticInitializerDeclaration {
+	firstLineNumber int, statements statement.IStatement) *ClassFileStaticInitializerDeclaration {
 	return &ClassFileStaticInitializerDeclaration{
 		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), statements),
 		bodyDeclaration:              bodyDeclaration,

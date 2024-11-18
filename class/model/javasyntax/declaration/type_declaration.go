@@ -2,10 +2,10 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 )
 
-func NewTypeDeclaration(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration intsyn.IDeclaration) intsyn.ITypeDeclaration {
+func NewTypeDeclaration(annotationReferences intsyn.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intsyn.IDeclaration) intsyn.ITypeDeclaration {
 	return &TypeDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -18,14 +18,14 @@ func NewTypeDeclaration(annotationReferences reference.IAnnotationReference, fla
 type TypeDeclaration struct {
 	AbstractTypeDeclaration
 
-	annotationReferences reference.IAnnotationReference
+	annotationReferences intsyn.IAnnotationReference
 	flags                int
 	internalTypeName     string
 	name                 string
 	bodyDeclaration      intsyn.IDeclaration
 }
 
-func (d *TypeDeclaration) AnnotationReferences() reference.IAnnotationReference {
+func (d *TypeDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
 	return d.annotationReferences
 }
 

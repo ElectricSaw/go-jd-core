@@ -1,15 +1,16 @@
 package _type
 
-func NewUnmodifiableTypes(types ...IType) *UnmodifiableTypes {
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
+
+func NewUnmodifiableTypes(types ...intsyn.IType) intsyn.IUnmodifiableTypes {
 	return NewUnmodifiableTypesWithSlice(types)
 }
 
-func NewUnmodifiableTypesWithSlice(types []IType) *UnmodifiableTypes {
+func NewUnmodifiableTypesWithSlice(types []intsyn.IType) intsyn.IUnmodifiableTypes {
 	t := &UnmodifiableTypes{}
-
-	for _, i := range types {
-		t.Types.Types = append(t.Types.Types, i)
-	}
+	t.AddAll(types)
 
 	return t
 }
@@ -18,6 +19,6 @@ type UnmodifiableTypes struct {
 	Types
 }
 
-func (t *UnmodifiableTypes) ListIterator(i int) []IType {
-	return t.Types.Types
+func (t *UnmodifiableTypes) ListIterator(i int) []intsyn.IType {
+	return t.Elements()
 }

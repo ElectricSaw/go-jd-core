@@ -1,27 +1,23 @@
 package _type
 
-func NewTypes() *Types {
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+func NewTypes() intsyn.ITypes {
 	return &Types{}
 }
 
 type Types struct {
 	AbstractType
-
-	Types []IType
-}
-
-func (t *Types) Add(ty IType) {
-	if t.Types == nil {
-		t.Types = make([]IType, 0)
-	}
-	
-	t.Types = append(t.Types, ty)
+	util.DefaultList[intsyn.IType]
 }
 
 func (t *Types) IsTypes() bool {
 	return true
 }
 
-func (t *Types) AcceptTypeVisitor(visitor TypeVisitor) {
+func (t *Types) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
 	visitor.VisitTypes(t)
 }

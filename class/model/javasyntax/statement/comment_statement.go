@@ -1,6 +1,8 @@
 package statement
 
-func NewCommentStatement(text string) *CommentStatement {
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
+func NewCommentStatement(text string) intsyn.ICommentStatement {
 	return &CommentStatement{
 		text: text,
 	}
@@ -20,6 +22,6 @@ func (s *CommentStatement) IsContinueStatement() bool {
 	return true
 }
 
-func (s *CommentStatement) Accept(visitor StatementVisitor) {
+func (s *CommentStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitCommentStatement(s)
 }

@@ -1,14 +1,16 @@
 package expression
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewAbstractLineNumberTypeExpression(typ _type.IType) *AbstractLineNumberTypeExpression {
+func NewAbstractLineNumberTypeExpression(typ intsyn.IType) *AbstractLineNumberTypeExpression {
 	return &AbstractLineNumberTypeExpression{
 		typ: typ,
 	}
 }
 
-func NewAbstractLineNumberTypeExpressionWithAll(lineNumber int, typ _type.IType) *AbstractLineNumberTypeExpression {
+func NewAbstractLineNumberTypeExpressionWithAll(lineNumber int, typ intsyn.IType) *AbstractLineNumberTypeExpression {
 	return &AbstractLineNumberTypeExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -18,13 +20,13 @@ func NewAbstractLineNumberTypeExpressionWithAll(lineNumber int, typ _type.IType)
 type AbstractLineNumberTypeExpression struct {
 	AbstractLineNumberExpression
 
-	typ _type.IType
+	typ intsyn.IType
 }
 
-func (e *AbstractLineNumberTypeExpression) Type() _type.IType {
+func (e *AbstractLineNumberTypeExpression) Type() intsyn.IType {
 	return e.typ
 }
 
-func (e *AbstractLineNumberTypeExpression) SetType(typ _type.IType) {
+func (e *AbstractLineNumberTypeExpression) SetType(typ intsyn.IType) {
 	e.typ = typ
 }

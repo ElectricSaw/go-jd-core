@@ -1,20 +1,20 @@
 package expression
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewLambdaFormalParametersExpression(typ _type.IType, formalParameters declaration.IFormalParameter, statements statement.Statement) *LambdaFormalParametersExpression {
+func NewLambdaFormalParametersExpression(typ intsyn.IType, formalParameters intsyn.IFormalParameter,
+	statements intsyn.IStatement) intsyn.ILambdaFormalParametersExpression {
 	return &LambdaFormalParametersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpression(typ, statements),
 		formalParameters:         formalParameters,
 	}
 }
 
-func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ _type.IType, formalParameters declaration.IFormalParameter, statements statement.Statement) *LambdaFormalParametersExpression {
+func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ intsyn.IType,
+	formalParameters intsyn.IFormalParameter, statements intsyn.IStatement) intsyn.ILambdaFormalParametersExpression {
 	return &LambdaFormalParametersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpressionWithAll(lineNumber, typ, statements),
 		formalParameters:         formalParameters,
@@ -24,18 +24,18 @@ func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ _type.IType,
 type LambdaFormalParametersExpression struct {
 	AbstractLambdaExpression
 
-	formalParameters declaration.IFormalParameter
+	formalParameters intsyn.IFormalParameter
 }
 
-func (e *LambdaFormalParametersExpression) FormalParameters() declaration.IFormalParameter {
+func (e *LambdaFormalParametersExpression) FormalParameters() intsyn.IFormalParameter {
 	return e.formalParameters
 }
 
-func (e *LambdaFormalParametersExpression) SetFormalParameters(formalParameters declaration.IFormalParameter) {
+func (e *LambdaFormalParametersExpression) SetFormalParameters(formalParameters intsyn.IFormalParameter) {
 	e.formalParameters = formalParameters
 }
 
-func (e *LambdaFormalParametersExpression) Accept(visitor ExpressionVisitor) {
+func (e *LambdaFormalParametersExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitLambdaFormalParametersExpression(e)
 }
 

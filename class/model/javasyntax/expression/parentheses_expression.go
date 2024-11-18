@@ -1,8 +1,10 @@
 package expression
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+)
 
-func NewParenthesesExpression(expression Expression) *ParenthesesExpression {
+func NewParenthesesExpression(expression intsyn.IExpression) intsyn.IParenthesesExpression {
 	return &ParenthesesExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(expression.LineNumber()),
 		expression:                   expression,
@@ -12,21 +14,21 @@ func NewParenthesesExpression(expression Expression) *ParenthesesExpression {
 type ParenthesesExpression struct {
 	AbstractLineNumberExpression
 
-	expression Expression
+	expression intsyn.IExpression
 }
 
-func (e *ParenthesesExpression) Type() _type.IType {
+func (e *ParenthesesExpression) Type() intsyn.IType {
 	return e.expression.Type()
 }
 
-func (e *ParenthesesExpression) Expression() Expression {
+func (e *ParenthesesExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
-func (e *ParenthesesExpression) SetExpression(expression Expression) {
+func (e *ParenthesesExpression) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
-func (e *ParenthesesExpression) Accept(visitor ExpressionVisitor) {
+func (e *ParenthesesExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitParenthesesExpression(e)
 }

@@ -8,6 +8,8 @@ type ILocalVariableReference interface {
 }
 
 type ILocalVariable interface {
+	ILocalVariableReference
+
 	Frame() *Frame
 	Next() ILocalVariable
 	IsDeclared() bool
@@ -28,7 +30,7 @@ type ILocalVariable interface {
 
 	Accept(visitor LocalVariableVisitor)
 	References() []ILocalVariable
-	AddReference(reference ILocalVariable)
+	AddReference(reference ILocalVariableReference)
 	IsAssignableFrom(typeBounds map[string]_type.IType, otherType _type.IType) bool
 	TypeOnRight(typeBounds map[string]_type.IType, typ _type.IType)
 	TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType)
@@ -142,15 +144,14 @@ func (v *AbstractLocalVariable) SetName(name string) {
 }
 
 func (v *AbstractLocalVariable) Accept(visitor LocalVariableVisitor) {
-
 }
 
 func (v *AbstractLocalVariable) References() []ILocalVariable {
 	return v.references
 }
 
-func (v *AbstractLocalVariable) AddReference(reference ILocalVariable) {
-	v.references = append(v.references, reference)
+func (v *AbstractLocalVariable) AddReference(reference ILocalVariableReference) {
+	v.references = append(v.references, reference.(ILocalVariable))
 }
 
 func (v *AbstractLocalVariable) IsAssignableFrom(typeBounds map[string]_type.IType, otherType _type.IType) bool {
@@ -163,16 +164,14 @@ func (v *AbstractLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, t
 func (v *AbstractLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType) {
 }
 
-func (v *AbstractLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariableReference) bool {
+func (v *AbstractLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariable) bool {
 	return false
 }
 
 func (v *AbstractLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariable) {
-
 }
 
 func (v *AbstractLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariable) {
-
 }
 
 func (v *AbstractLocalVariable) FireChangeEvent(typeBounds map[string]_type.IType) {

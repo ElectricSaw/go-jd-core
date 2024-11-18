@@ -1,18 +1,18 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewSuperExpression(typ _type.IType) *SuperExpression {
+func NewSuperExpression(typ intsyn.IType) intsyn.ISuperExpression {
 	return &SuperExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		typ:                          typ,
 	}
 }
 
-func NewSuperExpressionWithAll(lineNumber int, typ _type.IType) *SuperExpression {
+func NewSuperExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.ISuperExpression {
 	return &SuperExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -22,10 +22,10 @@ func NewSuperExpressionWithAll(lineNumber int, typ _type.IType) *SuperExpression
 type SuperExpression struct {
 	AbstractLineNumberExpression
 
-	typ _type.IType
+	typ intsyn.IType
 }
 
-func (e *SuperExpression) Type() _type.IType {
+func (e *SuperExpression) Type() intsyn.IType {
 	return e.typ
 }
 
@@ -33,7 +33,7 @@ func (e *SuperExpression) IsSuperExpression() bool {
 	return true
 }
 
-func (e *SuperExpression) Accept(visitor ExpressionVisitor) {
+func (e *SuperExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitSuperExpression(e)
 }
 

@@ -1,19 +1,20 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 	"math"
 )
 
-func NewIntegerConstantExpression(typ _type.IType, value int) *IntegerConstantExpression {
+func NewIntegerConstantExpression(typ intsyn.IType, value int) intsyn.IIntegerConstantExpression {
 	return &IntegerConstantExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		value:                            value,
 	}
 }
 
-func NewIntegerConstantExpressionWithAll(lineNumber int, typ _type.IType, value int) *IntegerConstantExpression {
+func NewIntegerConstantExpressionWithAll(lineNumber int, typ intsyn.IType, value int) intsyn.IIntegerConstantExpression {
 	return &IntegerConstantExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		value:                            value,
@@ -30,12 +31,24 @@ func (e *IntegerConstantExpression) IntegerValue() int {
 	return e.value
 }
 
-func (e *IntegerConstantExpression) SetType(typ _type.IType) {
+func (e *IntegerConstantExpression) SetType(typ intsyn.IType) {
 	e.checkType(typ)
 	e.AbstractLineNumberTypeExpression.SetType(typ)
 }
 
-func (e *IntegerConstantExpression) checkType(typ _type.IType) bool {
+func (e *IntegerConstantExpression) IsIntegerConstantExpression() bool {
+	return true
+}
+
+func (e *IntegerConstantExpression) Accept(visitor intsyn.IExpressionVisitor) {
+	visitor.VisitIntegerConstantExpression(e)
+}
+
+func (e *IntegerConstantExpression) String() string {
+	return fmt.Sprintf("IntegerConstantExpression{type=%s, value=%d}", e.typ, e.value)
+}
+
+func (e *IntegerConstantExpression) checkType(typ intsyn.IType) bool {
 	if typ.IsPrimitiveType() {
 		valueType := GetPrimitiveTypeFromValue(e.value)
 		pt, ok := e.typ.(*_type.PrimitiveType)
@@ -46,19 +59,7 @@ func (e *IntegerConstantExpression) checkType(typ _type.IType) bool {
 	return false
 }
 
-func (e *IntegerConstantExpression) IsIntegerConstantExpression() bool {
-	return true
-}
-
-func (e *IntegerConstantExpression) Accept(visitor ExpressionVisitor) {
-	visitor.VisitIntegerConstantExpression(e)
-}
-
-func (e *IntegerConstantExpression) String() string {
-	return fmt.Sprintf("IntegerConstantExpression{type=%s, value=%d}", e.typ, e.value)
-}
-
-func GetPrimitiveTypeFromValue(value int) *_type.PrimitiveType {
+func GetPrimitiveTypeFromValue(value int) intsyn.IPrimitiveType {
 	if value >= 0 {
 		if value <= 1 {
 			return _type.PtMaybeBooleanType

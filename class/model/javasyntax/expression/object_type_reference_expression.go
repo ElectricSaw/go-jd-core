@@ -1,18 +1,18 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewObjectTypeReferenceExpression(typ _type.IObjectType) *ObjectTypeReferenceExpression {
+func NewObjectTypeReferenceExpression(typ intsyn.IObjectType) intsyn.IObjectTypeReferenceExpression {
 	return &ObjectTypeReferenceExpression{
 		typ:      typ,
 		explicit: true,
 	}
 }
 
-func NewObjectTypeReferenceExpressionWithLineNumber(lineNumber int, typ _type.IObjectType) *ObjectTypeReferenceExpression {
+func NewObjectTypeReferenceExpressionWithLineNumber(lineNumber int, typ intsyn.IObjectType) intsyn.IObjectTypeReferenceExpression {
 	return &ObjectTypeReferenceExpression{
 		lineNumber: lineNumber,
 		typ:        typ,
@@ -20,14 +20,14 @@ func NewObjectTypeReferenceExpressionWithLineNumber(lineNumber int, typ _type.IO
 	}
 }
 
-func NewObjectTypeReferenceExpressionWithExplicit(typ _type.IObjectType, explicit bool) *ObjectTypeReferenceExpression {
+func NewObjectTypeReferenceExpressionWithExplicit(typ intsyn.IObjectType, explicit bool) intsyn.IObjectTypeReferenceExpression {
 	return &ObjectTypeReferenceExpression{
 		typ:      typ,
 		explicit: explicit,
 	}
 }
 
-func NewObjectTypeReferenceExpressionWithAll(lineNumber int, typ _type.IObjectType, explicit bool) *ObjectTypeReferenceExpression {
+func NewObjectTypeReferenceExpressionWithAll(lineNumber int, typ intsyn.IObjectType, explicit bool) intsyn.IObjectTypeReferenceExpression {
 	return &ObjectTypeReferenceExpression{
 		lineNumber: lineNumber,
 		typ:        typ,
@@ -39,7 +39,7 @@ type ObjectTypeReferenceExpression struct {
 	AbstractExpression
 
 	lineNumber int
-	typ        _type.IObjectType
+	typ        intsyn.IObjectType
 	explicit   bool
 }
 
@@ -47,12 +47,12 @@ func (e *ObjectTypeReferenceExpression) LineNumber() int {
 	return e.lineNumber
 }
 
-func (e *ObjectTypeReferenceExpression) ObjectType() _type.IObjectType {
+func (e *ObjectTypeReferenceExpression) ObjectType() intsyn.IObjectType {
 	return e.typ
 }
 
-func (e *ObjectTypeReferenceExpression) Type() _type.IType {
-	return e.typ.(_type.IType)
+func (e *ObjectTypeReferenceExpression) Type() intsyn.IType {
+	return e.typ.(intsyn.IType)
 }
 
 func (e *ObjectTypeReferenceExpression) IsExplicit() bool {
@@ -71,7 +71,7 @@ func (e *ObjectTypeReferenceExpression) IsObjectTypeReferenceExpression() bool {
 	return true
 }
 
-func (e *ObjectTypeReferenceExpression) Accept(visitor ExpressionVisitor) {
+func (e *ObjectTypeReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitObjectTypeReferenceExpression(e)
 }
 

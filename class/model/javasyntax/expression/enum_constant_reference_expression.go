@@ -1,11 +1,11 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewEnumConstantReferenceExpression(typ _type.ObjectType, name string) *EnumConstantReferenceExpression {
+func NewEnumConstantReferenceExpression(typ intsyn.IObjectType, name string) intsyn.IEnumConstantReferenceExpression {
 	return &EnumConstantReferenceExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: UnknownLineNumber,
@@ -15,7 +15,7 @@ func NewEnumConstantReferenceExpression(typ _type.ObjectType, name string) *Enum
 	}
 }
 
-func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ _type.ObjectType, name string) *EnumConstantReferenceExpression {
+func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intsyn.IObjectType, name string) intsyn.IEnumConstantReferenceExpression {
 	return &EnumConstantReferenceExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
@@ -28,23 +28,23 @@ func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ _type.ObjectT
 type EnumConstantReferenceExpression struct {
 	AbstractLineNumberExpression
 
-	typ  _type.ObjectType
+	typ  intsyn.IObjectType
 	name string
 }
 
-func (e *EnumConstantReferenceExpression) GetType() _type.IType {
-	return &e.typ
+func (e *EnumConstantReferenceExpression) GetType() intsyn.IType {
+	return e.typ.(intsyn.IType)
 }
 
-func (e *EnumConstantReferenceExpression) GetObjectType() *_type.ObjectType {
-	return &e.typ
+func (e *EnumConstantReferenceExpression) GetObjectType() intsyn.IObjectType {
+	return e.typ
 }
 
 func (e *EnumConstantReferenceExpression) GetName() string {
 	return e.name
 }
 
-func (e *EnumConstantReferenceExpression) Accept(visitor ExpressionVisitor) {
+func (e *EnumConstantReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitEnumConstantReferenceExpression(e)
 }
 

@@ -32,7 +32,7 @@ func (d *ClassFileEnumDeclaration) String() string {
 	return fmt.Sprintf("ClassFileEnumDeclaration{%s, firstLineNumber:%d}", d.InternalTypeName(), d.firstLineNumber)
 }
 
-func NewClassFileConstant(lineNumber int, name string, index int, arguments expression.Expression, bodyDeclaration *declaration.BodyDeclaration) *ClassFileConstant {
+func NewClassFileConstant(lineNumber int, name string, index int, arguments expression.IExpression, bodyDeclaration *declaration.BodyDeclaration) *ClassFileConstant {
 	return &ClassFileConstant{
 		Constant: *declaration.NewConstant5(lineNumber, name, arguments, bodyDeclaration),
 		index:    index,

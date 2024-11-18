@@ -1,11 +1,11 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewNewArray(lineNumber int, typ _type.IType, dimensionExpressionList Expression) *NewArray {
+func NewNewArray(lineNumber int, typ intsyn.IType, dimensionExpressionList intsyn.IExpression) intsyn.INewArray {
 	return &NewArray{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		dimensionExpressionList:          dimensionExpressionList,
@@ -15,14 +15,14 @@ func NewNewArray(lineNumber int, typ _type.IType, dimensionExpressionList Expres
 type NewArray struct {
 	AbstractLineNumberTypeExpression
 
-	dimensionExpressionList Expression
+	dimensionExpressionList intsyn.IExpression
 }
 
-func (e *NewArray) DimensionExpressionList() Expression {
+func (e *NewArray) DimensionExpressionList() intsyn.IExpression {
 	return e.dimensionExpressionList
 }
 
-func (e *NewArray) SetDimensionExpressionList(dimensionExpressionList Expression) {
+func (e *NewArray) SetDimensionExpressionList(dimensionExpressionList intsyn.IExpression) {
 	e.dimensionExpressionList = dimensionExpressionList
 }
 
@@ -34,7 +34,7 @@ func (e *NewArray) IsNewArray() bool {
 	return true
 }
 
-func (e *NewArray) Accept(visitor ExpressionVisitor) {
+func (e *NewArray) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitNewArray(e)
 }
 

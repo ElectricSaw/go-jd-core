@@ -1,31 +1,29 @@
 package reference
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewExpressionElementValue(expression expression.Expression) *ExpressionElementValue {
+func NewExpressionElementValue(expression intsyn.IExpression) intsyn.IExpressionElementValue {
 	return &ExpressionElementValue{
 		expression: expression,
 	}
 }
 
 type ExpressionElementValue struct {
-	IElementValue
-
-	expression expression.Expression
+	expression intsyn.IExpression
 }
 
-func (e *ExpressionElementValue) Expression() expression.Expression {
+func (e *ExpressionElementValue) Expression() intsyn.IExpression {
 	return e.expression
 }
 
-func (e *ExpressionElementValue) SetExpression(expression expression.Expression) {
+func (e *ExpressionElementValue) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
-func (e *ExpressionElementValue) Accept(visitor ReferenceVisitor) {
+func (e *ExpressionElementValue) Accept(visitor intsyn.IReferenceVisitor) {
 	visitor.VisitExpressionElementValue(e)
 }
 

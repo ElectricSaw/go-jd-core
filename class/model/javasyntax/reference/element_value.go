@@ -1,32 +1,17 @@
 package reference
 
-const (
-	EvUnknown = iota
-	EvPrimitiveType
-	EvEnumConstValue
-	EvClassInfo
-	EvAnnotationValue
-	EvArrayValue
-)
-
-type IElementValue interface {
-	IReference
-}
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 
 type AbstractElementValue struct {
 }
 
-func (e *AbstractElementValue) Accept(visitor ReferenceVisitor) {
+func (e *AbstractElementValue) Accept(visitor intsyn.IReferenceVisitor) {
 
-}
-
-type IElementValuePair interface {
-	IElementValue
 }
 
 type AbstractElementValuePair struct {
 }
 
-func (e *AbstractElementValuePair) Accept(visitor ReferenceVisitor) {
+func (e *AbstractElementValuePair) Accept(visitor intsyn.IReferenceVisitor) {
 
 }

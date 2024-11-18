@@ -5,7 +5,9 @@ import (
 	"fmt"
 )
 
-func NewModuleDeclaration(flags int, internalTypeName, name, version string, requires []intsyn.IModuleInfo, exports []intsyn.IPackageInfo, opens []intsyn.IPackageInfo, uses []string, provides []intsyn.IServiceInfo) intsyn.IModuleDeclaration {
+func NewModuleDeclaration(flags int, internalTypeName, name, version string,
+	requires []intsyn.IModuleInfo, exports []intsyn.IPackageInfo, opens []intsyn.IPackageInfo,
+	uses []string, provides []intsyn.IServiceInfo) intsyn.IModuleDeclaration {
 	return &ModuleDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil).(*TypeDeclaration),
 		version:         version,

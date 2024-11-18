@@ -1,8 +1,12 @@
 package reference
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+	"fmt"
+)
 
-func NewElementValuePair(name string, elementValue IElementValue) *ElementValuePair {
+func NewElementValuePair(name string, elementValue intsyn.IElementValue) intsyn.IElementValuePair {
 	return &ElementValuePair{
 		name:         name,
 		elementValue: elementValue,
@@ -10,21 +14,21 @@ func NewElementValuePair(name string, elementValue IElementValue) *ElementValueP
 }
 
 type ElementValuePair struct {
-	IElementValuePair
+	util.DefaultBase[intsyn.IElementValuePair]
 
 	name         string
-	elementValue IElementValue
+	elementValue intsyn.IElementValue
 }
 
 func (e *ElementValuePair) Name() string {
 	return e.name
 }
 
-func (e *ElementValuePair) ElementValue() IElementValue {
+func (e *ElementValuePair) ElementValue() intsyn.IElementValue {
 	return e.elementValue
 }
 
-func (e *ElementValuePair) Accept(visitor ReferenceVisitor) {
+func (e *ElementValuePair) Accept(visitor intsyn.IReferenceVisitor) {
 	visitor.VisitElementValuePair(e)
 }
 

@@ -1,8 +1,11 @@
 package _type
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"fmt"
+)
 
-func NewWildcardSuperTypeArgument(typ IType) *WildcardSuperTypeArgument {
+func NewWildcardSuperTypeArgument(typ intsyn.IType) intsyn.IWildcardSuperTypeArgument {
 	return &WildcardSuperTypeArgument{
 		typ: typ,
 	}
@@ -11,17 +14,17 @@ func NewWildcardSuperTypeArgument(typ IType) *WildcardSuperTypeArgument {
 type WildcardSuperTypeArgument struct {
 	AbstractTypeArgument
 
-	typ IType
+	typ intsyn.IType
 }
 
-func (t *WildcardSuperTypeArgument) Type() IType {
+func (t *WildcardSuperTypeArgument) Type() intsyn.IType {
 	return t.typ
 }
 
-func (t *WildcardSuperTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
+func (t *WildcardSuperTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
 	if typeArgument.IsWildcardSuperTypeArgument() {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument.Type())
-	} else if _, ok := typeArgument.(ITypeArgument); ok {
+	} else if _, ok := typeArgument.(intsyn.ITypeArgument); ok {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
 	}
 	return false
@@ -31,7 +34,7 @@ func (t *WildcardSuperTypeArgument) IsWildcardSuperTypeArgument() bool {
 	return true
 }
 
-func (t *WildcardSuperTypeArgument) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
+func (t *WildcardSuperTypeArgument) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
 	visitor.VisitWildcardSuperTypeArgument(t)
 }
 
@@ -43,7 +46,7 @@ func (t *WildcardSuperTypeArgument) HashCode() int {
 	return 979510081 + t.typ.HashCode()
 }
 
-func (t *WildcardSuperTypeArgument) Equals(o ITypeArgument) bool {
+func (t *WildcardSuperTypeArgument) Equals(o intsyn.ITypeArgument) bool {
 	if t == o {
 		return true
 	}

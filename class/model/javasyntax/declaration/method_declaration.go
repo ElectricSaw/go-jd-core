@@ -3,13 +3,11 @@ package declaration
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewMethodDeclaration(flags int, name string, returnedType _type.IType, descriptor string) intsyn.IMethodDeclaration {
+func NewMethodDeclaration(flags int, name string, returnedType intsyn.IType,
+	descriptor string) intsyn.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:        flags,
 		name:         name,
@@ -18,7 +16,8 @@ func NewMethodDeclaration(flags int, name string, returnedType _type.IType, desc
 	}
 }
 
-func NewMethodDeclaration2(flags int, name string, returnedType _type.IType, descriptor string, statements statement.Statement) intsyn.IMethodDeclaration {
+func NewMethodDeclaration2(flags int, name string, returnedType intsyn.IType,
+	descriptor string, statements intsyn.IStatement) intsyn.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:        flags,
 		name:         name,
@@ -28,7 +27,8 @@ func NewMethodDeclaration2(flags int, name string, returnedType _type.IType, des
 	}
 }
 
-func NewMethodDeclaration3(flags int, name string, returnedType _type.IType, descriptor string, defaultAnnotationValue reference.IElementValue) intsyn.IMethodDeclaration {
+func NewMethodDeclaration3(flags int, name string, returnedType intsyn.IType,
+	descriptor string, defaultAnnotationValue intsyn.IElementValue) intsyn.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:                  flags,
 		name:                   name,
@@ -38,7 +38,9 @@ func NewMethodDeclaration3(flags int, name string, returnedType _type.IType, des
 	}
 }
 
-func NewMethodDeclaration4(flags int, name string, returnedType _type.IType, formalParameter intsyn.IFormalParameter, descriptor string, statements statement.Statement) intsyn.IMethodDeclaration {
+func NewMethodDeclaration4(flags int, name string, returnedType intsyn.IType,
+	formalParameter intsyn.IFormalParameter, descriptor string,
+	statements intsyn.IStatement) intsyn.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:           flags,
 		name:            name,
@@ -49,7 +51,9 @@ func NewMethodDeclaration4(flags int, name string, returnedType _type.IType, for
 	}
 }
 
-func NewMethodDeclaration5(flags int, name string, returnedType _type.IType, formalParameter intsyn.IFormalParameter, descriptor string, defaultAnnotationValue reference.IElementValue) intsyn.IMethodDeclaration {
+func NewMethodDeclaration5(flags int, name string, returnedType intsyn.IType,
+	formalParameter intsyn.IFormalParameter, descriptor string,
+	defaultAnnotationValue intsyn.IElementValue) intsyn.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:                  flags,
 		name:                   name,
@@ -60,7 +64,10 @@ func NewMethodDeclaration5(flags int, name string, returnedType _type.IType, for
 	}
 }
 
-func NewMethodDeclaration6(annotationReferences reference.IAnnotationReference, flags int, name string, typeParameters *_type.TypeParameter, returnedType _type.IType, formalParameter intsyn.IFormalParameter, exceptionTypes _type.IType, descriptor string, statements statement.Statement, defaultAnnotationValue reference.IElementValue) intsyn.IMethodDeclaration {
+func NewMethodDeclaration6(annotationReferences intsyn.IAnnotationReference,
+	flags int, name string, typeParameters intsyn.ITypeParameter, returnedType intsyn.IType,
+	formalParameter intsyn.IFormalParameter, exceptionTypes intsyn.IType, descriptor string,
+	statements intsyn.IStatement, defaultAnnotationValue intsyn.IElementValue) intsyn.IMethodDeclaration {
 	return &MethodDeclaration{
 		annotationReferences:   annotationReferences,
 		flags:                  flags,
@@ -78,16 +85,16 @@ func NewMethodDeclaration6(annotationReferences reference.IAnnotationReference, 
 type MethodDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences   reference.IAnnotationReference
+	annotationReferences   intsyn.IAnnotationReference
 	flags                  int
 	name                   string
-	typeParameters         *_type.TypeParameter
-	returnedType           _type.IType
+	typeParameters         intsyn.ITypeParameter
+	returnedType           intsyn.IType
 	formalParameter        intsyn.IFormalParameter
-	exceptionTypes         _type.IType
+	exceptionTypes         intsyn.IType
 	descriptor             string
-	statements             statement.Statement
-	defaultAnnotationValue reference.IElementValue
+	statements             intsyn.IStatement
+	defaultAnnotationValue intsyn.IElementValue
 }
 
 func (d *MethodDeclaration) Flags() int {
@@ -98,7 +105,7 @@ func (d *MethodDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *MethodDeclaration) AnnotationReferences() reference.IAnnotationReference {
+func (d *MethodDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
 	return d.annotationReferences
 }
 
@@ -110,11 +117,11 @@ func (d *MethodDeclaration) Name() string {
 	return d.name
 }
 
-func (d *MethodDeclaration) TypeParameters() _type.ITypeParameter {
+func (d *MethodDeclaration) TypeParameters() intsyn.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *MethodDeclaration) ReturnedType() _type.IType {
+func (d *MethodDeclaration) ReturnedType() intsyn.IType {
 	return d.returnedType
 }
 
@@ -126,7 +133,7 @@ func (d *MethodDeclaration) SetFormalParameters(formalParameter intsyn.IFormalPa
 	d.formalParameter = formalParameter
 }
 
-func (d *MethodDeclaration) ExceptionTypes() _type.IType {
+func (d *MethodDeclaration) ExceptionTypes() intsyn.IType {
 	return d.exceptionTypes
 }
 
@@ -134,15 +141,15 @@ func (d *MethodDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *MethodDeclaration) Statements() statement.Statement {
+func (d *MethodDeclaration) Statements() intsyn.IStatement {
 	return d.statements
 }
 
-func (d *MethodDeclaration) SetStatements(statements statement.Statement) {
+func (d *MethodDeclaration) SetStatements(statements intsyn.IStatement) {
 	d.statements = statements
 }
 
-func (d *MethodDeclaration) DefaultAnnotationValue() reference.IElementValue {
+func (d *MethodDeclaration) DefaultAnnotationValue() intsyn.IElementValue {
 	return d.defaultAnnotationValue
 }
 

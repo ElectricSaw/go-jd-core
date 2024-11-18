@@ -1,28 +1,20 @@
 package _type
 
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
 func NewTypeArguments() *TypeArguments {
 	return &TypeArguments{}
 }
 
 type TypeArguments struct {
 	AbstractTypeArgument
-
-	TypeArguments []ITypeArgument
+	util.DefaultList[intsyn.ITypeArgument]
 }
 
-func (t *TypeArguments) IsList() bool {
-	return true
-}
-
-func (t *TypeArguments) Size() int {
-	return len(t.TypeArguments)
-}
-
-func (t *TypeArguments) Add(arg ITypeArgument) {
-	t.TypeArguments = append(t.TypeArguments, arg)
-}
-
-func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
+func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
 	ata, ok := typeArgument.(*TypeArguments)
 	if !ok {
 		return false
@@ -33,7 +25,8 @@ func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]IType
 	}
 
 	for i := 0; i < t.Size(); i++ {
-		if !t.TypeArguments[i].IsTypeArgumentAssignableFrom(typeBounds, ata.TypeArguments[i]) {
+
+		if !t.Get(i).IsTypeArgumentAssignableFrom(typeBounds, ata.Get(i)) {
 			return false
 		}
 	}
@@ -45,18 +38,18 @@ func (t *TypeArguments) IsTypeArgumentList() bool {
 	return true
 }
 
-func (t *TypeArguments) GetTypeArgumentFirst() ITypeArgument {
-	return t.TypeArguments[0]
+func (t *TypeArguments) GetTypeArgumentFirst() intsyn.ITypeArgument {
+	return t.Get(0)
 }
 
-func (t *TypeArguments) GetTypeArgumentLIst() []ITypeArgument {
-	return t.TypeArguments
+func (t *TypeArguments) GetTypeArgumentList() []intsyn.ITypeArgument {
+	return t.Elements()
 }
 
 func (t *TypeArguments) TypeArgumentSize() int {
-	return len(t.TypeArguments)
+	return t.Size()
 }
 
-func (t *TypeArguments) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
+func (t *TypeArguments) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
 	visitor.VisitTypeArguments(t)
 }

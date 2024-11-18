@@ -3,7 +3,6 @@ package declaration
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
 )
 
 type AbstractMemberDeclaration struct {
@@ -29,7 +28,7 @@ func (d *AbstractTypeDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
 
 }
 
-func (d *AbstractTypeDeclaration) AnnotationReferences() reference.IAnnotationReference {
+func (d *AbstractTypeDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
 	return nil
 }
 
@@ -64,7 +63,7 @@ func (d *AbstractVariableInitializer) IsExpressionVariableInitializer() bool {
 	return false
 }
 
-func (d *AbstractVariableInitializer) Expression() expression.Expression {
+func (d *AbstractVariableInitializer) Expression() intsyn.IExpression {
 	return expression.NeNoExpression
 }
 

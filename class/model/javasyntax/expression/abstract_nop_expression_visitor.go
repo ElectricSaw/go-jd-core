@@ -1,63 +1,67 @@
 package expression
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 type AbstractNopExpressionVisitor struct {
 }
 
-func (v *AbstractNopExpressionVisitor) VisitArrayExpression(expression *ArrayExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitBinaryOperatorExpression(expression *BinaryOperatorExpression) {
+func (v *AbstractNopExpressionVisitor) VisitArrayExpression(expression intsyn.IArrayExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitBinaryOperatorExpression(expression intsyn.IBinaryOperatorExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitBooleanExpression(expression *BooleanExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitCastExpression(expression *CastExpression)       {}
-func (v *AbstractNopExpressionVisitor) VisitCommentExpression(expression *CommentExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitConstructorInvocationExpression(expression *ConstructorInvocationExpression) {
+func (v *AbstractNopExpressionVisitor) VisitBooleanExpression(expression intsyn.IBooleanExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitCastExpression(expression intsyn.ICastExpression)       {}
+func (v *AbstractNopExpressionVisitor) VisitCommentExpression(expression intsyn.ICommentExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitConstructorInvocationExpression(expression intsyn.IConstructorInvocationExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitConstructorReferenceExpression(expression *ConstructorReferenceExpression) {
+func (v *AbstractNopExpressionVisitor) VisitConstructorReferenceExpression(expression intsyn.IConstructorReferenceExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitDoubleConstantExpression(expression *DoubleConstantExpression) {
+func (v *AbstractNopExpressionVisitor) VisitDoubleConstantExpression(expression intsyn.IDoubleConstantExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitEnumConstantReferenceExpression(expression *EnumConstantReferenceExpression) {
+func (v *AbstractNopExpressionVisitor) VisitEnumConstantReferenceExpression(expression intsyn.IEnumConstantReferenceExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitExpressions(expression *Expressions) {}
-func (v *AbstractNopExpressionVisitor) VisitFieldReferenceExpression(expression *FieldReferenceExpression) {
+func (v *AbstractNopExpressionVisitor) VisitExpressions(expression intsyn.IExpressions) {}
+func (v *AbstractNopExpressionVisitor) VisitFieldReferenceExpression(expression intsyn.IFieldReferenceExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitFloatConstantExpression(expression *FloatConstantExpression) {
+func (v *AbstractNopExpressionVisitor) VisitFloatConstantExpression(expression intsyn.IFloatConstantExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitIntegerConstantExpression(expression *IntegerConstantExpression) {
+func (v *AbstractNopExpressionVisitor) VisitIntegerConstantExpression(expression intsyn.IIntegerConstantExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitInstanceOfExpression(expression *InstanceOfExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitLambdaFormalParametersExpression(expression *LambdaFormalParametersExpression) {
+func (v *AbstractNopExpressionVisitor) VisitInstanceOfExpression(expression intsyn.IInstanceOfExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitLambdaIdentifiersExpression(expression *LambdaIdentifiersExpression) {
+func (v *AbstractNopExpressionVisitor) VisitLambdaFormalParametersExpression(expression intsyn.ILambdaFormalParametersExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitLengthExpression(expression *LengthExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitLocalVariableReferenceExpression(expression *LocalVariableReferenceExpression) {
+func (v *AbstractNopExpressionVisitor) VisitLambdaIdentifiersExpression(expression intsyn.ILambdaIdentifiersExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitLongConstantExpression(expression *LongConstantExpression) {
+func (v *AbstractNopExpressionVisitor) VisitLengthExpression(expression intsyn.ILengthExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitLocalVariableReferenceExpression(expression intsyn.ILocalVariableReferenceExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitMethodInvocationExpression(expression *MethodInvocationExpression) {
+func (v *AbstractNopExpressionVisitor) VisitLongConstantExpression(expression intsyn.ILongConstantExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitMethodReferenceExpression(expression *MethodReferenceExpression) {
+func (v *AbstractNopExpressionVisitor) VisitMethodInvocationExpression(expression intsyn.IMethodInvocationExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitNewArray(expression *NewArray)                       {}
-func (v *AbstractNopExpressionVisitor) VisitNewExpression(expression *NewExpression)             {}
-func (v *AbstractNopExpressionVisitor) VisitNewInitializedArray(expression *NewInitializedArray) {}
-func (v *AbstractNopExpressionVisitor) VisitNoExpression(expression *NoExpression)               {}
-func (v *AbstractNopExpressionVisitor) VisitNullExpression(expression *NullExpression)           {}
-func (v *AbstractNopExpressionVisitor) VisitObjectTypeReferenceExpression(expression *ObjectTypeReferenceExpression) {
+func (v *AbstractNopExpressionVisitor) VisitMethodReferenceExpression(expression intsyn.IMethodReferenceExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitParenthesesExpression(expression *ParenthesesExpression) {
+func (v *AbstractNopExpressionVisitor) VisitNewArray(expression intsyn.INewArray)           {}
+func (v *AbstractNopExpressionVisitor) VisitNewExpression(expression intsyn.INewExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitNewInitializedArray(expression intsyn.INewInitializedArray) {
 }
-func (v *AbstractNopExpressionVisitor) VisitPostOperatorExpression(expression *PostOperatorExpression) {
+func (v *AbstractNopExpressionVisitor) VisitNoExpression(expression intsyn.INoExpression)     {}
+func (v *AbstractNopExpressionVisitor) VisitNullExpression(expression intsyn.INullExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitObjectTypeReferenceExpression(expression intsyn.IObjectTypeReferenceExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitPreOperatorExpression(expression *PreOperatorExpression) {
+func (v *AbstractNopExpressionVisitor) VisitParenthesesExpression(expression intsyn.IParenthesesExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitStringConstantExpression(expression *StringConstantExpression) {
+func (v *AbstractNopExpressionVisitor) VisitPostOperatorExpression(expression intsyn.IPostOperatorExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitSuperConstructorInvocationExpression(expression *SuperConstructorInvocationExpression) {
+func (v *AbstractNopExpressionVisitor) VisitPreOperatorExpression(expression intsyn.IPreOperatorExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitSuperExpression(expression *SuperExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitTernaryOperatorExpression(expression *TernaryOperatorExpression) {
+func (v *AbstractNopExpressionVisitor) VisitStringConstantExpression(expression intsyn.IStringConstantExpression) {
 }
-func (v *AbstractNopExpressionVisitor) VisitThisExpression(expression *ThisExpression) {}
-func (v *AbstractNopExpressionVisitor) VisitTypeReferenceDotClassExpression(expression *TypeReferenceDotClassExpression) {
+func (v *AbstractNopExpressionVisitor) VisitSuperConstructorInvocationExpression(expression intsyn.ISuperConstructorInvocationExpression) {
+}
+func (v *AbstractNopExpressionVisitor) VisitSuperExpression(expression intsyn.ISuperExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitTernaryOperatorExpression(expression intsyn.ITernaryOperatorExpression) {
+}
+func (v *AbstractNopExpressionVisitor) VisitThisExpression(expression intsyn.IThisExpression) {}
+func (v *AbstractNopExpressionVisitor) VisitTypeReferenceDotClassExpression(expression intsyn.ITypeReferenceDotClassExpression) {
 }

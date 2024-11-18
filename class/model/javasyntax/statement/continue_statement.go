@@ -1,8 +1,10 @@
 package statement
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 var Continue = NewContinueStatement("")
 
-func NewContinueStatement(label string) *ContinueStatement {
+func NewContinueStatement(label string) intsyn.IContinueStatement {
 	return &ContinueStatement{
 		label: label,
 	}
@@ -22,6 +24,6 @@ func (s *ContinueStatement) IsContinueStatement() bool {
 	return true
 }
 
-func (s *ContinueStatement) Accept(visitor StatementVisitor) {
+func (s *ContinueStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitContinueStatement(s)
 }

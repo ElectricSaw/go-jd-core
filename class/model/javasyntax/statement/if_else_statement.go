@@ -1,8 +1,8 @@
 package statement
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 
-func NewIfElseStatement(condition expression.Expression, statements Statement, elseStatements Statement) *IfElseStatement {
+func NewIfElseStatement(condition intsyn.IExpression, statements intsyn.IStatement, elseStatements intsyn.IStatement) intsyn.IIIfElseStatement {
 	return &IfElseStatement{
 		IfStatement: IfStatement{
 			condition:  condition,
@@ -15,10 +15,10 @@ func NewIfElseStatement(condition expression.Expression, statements Statement, e
 type IfElseStatement struct {
 	IfStatement
 
-	elseStatements Statement
+	elseStatements intsyn.IStatement
 }
 
-func (s *IfElseStatement) ElseStatements() Statement {
+func (s *IfElseStatement) ElseStatements() intsyn.IStatement {
 	return s.elseStatements
 }
 
@@ -26,6 +26,6 @@ func (s *IfElseStatement) IsIfElseStatement() bool {
 	return true
 }
 
-func (s *IfElseStatement) Accept(visitor StatementVisitor) {
+func (s *IfElseStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitIfElseStatement(s)
 }

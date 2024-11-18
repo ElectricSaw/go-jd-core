@@ -34,5 +34,5 @@ func (d *ClassFileInterfaceDeclaration) FirstLineNumber() int {
 }
 
 func (d *ClassFileInterfaceDeclaration) String() string {
-	return fmt.Sprintf("ClassFileInterfaceDeclaration{%s,  firstLineNumber=%d}", d.InternalTypeName(), d.firstLineNumber)
+	return fmt.Sprintf("ClassFileInterfaceDeclaration{%s, firstLineNumber=%d}", d.InternalTypeName(), d.firstLineNumber)
 }

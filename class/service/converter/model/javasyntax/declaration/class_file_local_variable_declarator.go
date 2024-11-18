@@ -5,14 +5,14 @@ import (
 	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
 )
 
-func NewClassFileLocalVariableDeclarator(localVariable localvariable.ILocalVariableReference) *ClassFileLocalVariableDeclarator {
+func NewClassFileLocalVariableDeclarator(localVariable localvariable.ILocalVariable) *ClassFileLocalVariableDeclarator {
 	return &ClassFileLocalVariableDeclarator{
 		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator(""),
 		localVariable:           localVariable,
 	}
 }
 
-func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable localvariable.ILocalVariableReference, initializer declaration.VariableInitializer) *ClassFileLocalVariableDeclarator {
+func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable localvariable.ILocalVariable, initializer declaration.VariableInitializer) *ClassFileLocalVariableDeclarator {
 	return &ClassFileLocalVariableDeclarator{
 		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator3(lineNumber, "", initializer),
 		localVariable:           localVariable,
@@ -22,7 +22,7 @@ func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable localvar
 type ClassFileLocalVariableDeclarator struct {
 	declaration.LocalVariableDeclarator
 
-	localVariable localvariable.ILocalVariableReference
+	localVariable localvariable.ILocalVariable
 }
 
 func (d *ClassFileLocalVariableDeclarator) Name() string {
@@ -38,5 +38,5 @@ func (d *ClassFileLocalVariableDeclarator) LocalVariable() localvariable.ILocalV
 }
 
 func (d *ClassFileLocalVariableDeclarator) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
-	d.localVariable = localVariable
+	d.localVariable = localVariable.(localvariable.ILocalVariable)
 }

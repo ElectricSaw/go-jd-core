@@ -6,7 +6,7 @@ import (
 )
 
 func NewClassFileLocalVariableReferenceExpression(lineNumber, offset int,
-	localVariable localvariable.ILocalVariableReference) *ClassFileLocalVariableReferenceExpression {
+	localVariable localvariable.ILocalVariable) *ClassFileLocalVariableReferenceExpression {
 	e := &ClassFileLocalVariableReferenceExpression{
 		LocalVariableReferenceExpression: *expression.NewLocalVariableReferenceExpressionWithAll(lineNumber, nil, ""),
 		offset:                           offset,
@@ -21,7 +21,7 @@ type ClassFileLocalVariableReferenceExpression struct {
 	expression.LocalVariableReferenceExpression
 
 	offset        int
-	localVariable localvariable.ILocalVariableReference
+	localVariable localvariable.ILocalVariable
 }
 
 func (e *ClassFileLocalVariableReferenceExpression) Offset() int {
@@ -33,5 +33,5 @@ func (e *ClassFileLocalVariableReferenceExpression) LocalVariable() localvariabl
 }
 
 func (e *ClassFileLocalVariableReferenceExpression) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
-	e.localVariable = localVariable
+	e.localVariable = localVariable.(localvariable.ILocalVariable)
 }

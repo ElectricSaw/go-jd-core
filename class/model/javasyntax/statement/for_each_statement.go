@@ -1,11 +1,10 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 )
 
-func NewForEachStatement(typ _type.IType, name string, expression expression.Expression, statement Statement) *ForEachStatement {
+func NewForEachStatement(typ intsyn.IType, name string, expression intsyn.IExpression, statement intsyn.IStatement) intsyn.IForEachStatement {
 	return &ForEachStatement{
 		typ:        typ,
 		name:       name,
@@ -17,13 +16,13 @@ func NewForEachStatement(typ _type.IType, name string, expression expression.Exp
 type ForEachStatement struct {
 	AbstractStatement
 
-	typ        _type.IType
+	typ        intsyn.IType
 	name       string
-	expression expression.Expression
-	statement  Statement
+	expression intsyn.IExpression
+	statement  intsyn.IStatement
 }
 
-func (s *ForEachStatement) Type() _type.IType {
+func (s *ForEachStatement) Type() intsyn.IType {
 	return s.typ
 }
 
@@ -31,18 +30,18 @@ func (s *ForEachStatement) Name() string {
 	return s.name
 }
 
-func (s *ForEachStatement) Expression() expression.Expression {
+func (s *ForEachStatement) Expression() intsyn.IExpression {
 	return s.expression
 }
 
-func (s *ForEachStatement) SetExpression(expression expression.Expression) {
+func (s *ForEachStatement) SetExpression(expression intsyn.IExpression) {
 	s.expression = expression
 }
 
-func (s *ForEachStatement) Statement() Statement {
+func (s *ForEachStatement) Statement() intsyn.IStatement {
 	return s.statement
 }
 
-func (s *ForEachStatement) Accept(visitor StatementVisitor) {
+func (s *ForEachStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitForEachStatement(s)
 }

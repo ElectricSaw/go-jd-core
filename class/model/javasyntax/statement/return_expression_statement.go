@@ -1,18 +1,18 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewReturnExpressionStatement(expression expression.Expression) *ReturnExpressionStatement {
+func NewReturnExpressionStatement(expression intsyn.IExpression) intsyn.IReturnExpressionStatement {
 	return &ReturnExpressionStatement{
 		lineNumber: expression.LineNumber(),
 		expression: expression,
 	}
 }
 
-func NewReturnExpressionStatementWithAll(lineNumber int, expression expression.Expression) *ReturnExpressionStatement {
+func NewReturnExpressionStatementWithAll(lineNumber int, expression intsyn.IExpression) intsyn.IReturnExpressionStatement {
 	return &ReturnExpressionStatement{
 		lineNumber: lineNumber,
 		expression: expression,
@@ -23,7 +23,7 @@ type ReturnExpressionStatement struct {
 	AbstractStatement
 
 	lineNumber int
-	expression expression.Expression
+	expression intsyn.IExpression
 }
 
 func (s *ReturnExpressionStatement) LineNumber() int {
@@ -34,15 +34,15 @@ func (s *ReturnExpressionStatement) SetLineNumber(lineNumber int) {
 	s.lineNumber = lineNumber
 }
 
-func (s *ReturnExpressionStatement) Expression() expression.Expression {
+func (s *ReturnExpressionStatement) Expression() intsyn.IExpression {
 	return s.expression
 }
 
-func (s *ReturnExpressionStatement) SetExpression(expression expression.Expression) {
+func (s *ReturnExpressionStatement) SetExpression(expression intsyn.IExpression) {
 	s.expression = expression
 }
 
-func (s *ReturnExpressionStatement) GetGenericExpression() expression.Expression {
+func (s *ReturnExpressionStatement) GetGenericExpression() intsyn.IExpression {
 	return s.expression
 }
 
@@ -50,7 +50,7 @@ func (s *ReturnExpressionStatement) IsReturnExpressionStatement() bool {
 	return true
 }
 
-func (s *ReturnExpressionStatement) Accept(visitor StatementVisitor) {
+func (s *ReturnExpressionStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitReturnExpressionStatement(s)
 }
 

@@ -1,11 +1,12 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewTernaryOperatorExpression(typ _type.IType, condition Expression, trueExpression Expression, falseExpression Expression) *TernaryOperatorExpression {
+func NewTernaryOperatorExpression(typ intsyn.IType, condition intsyn.IExpression,
+	trueExpression intsyn.IExpression, falseExpression intsyn.IExpression) intsyn.ITernaryOperatorExpression {
 	return &TernaryOperatorExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		condition:                        condition,
@@ -14,7 +15,8 @@ func NewTernaryOperatorExpression(typ _type.IType, condition Expression, trueExp
 	}
 }
 
-func NewTernaryOperatorExpressionWithAll(lineNumber int, typ _type.IType, condition Expression, trueExpression Expression, falseExpression Expression) *TernaryOperatorExpression {
+func NewTernaryOperatorExpressionWithAll(lineNumber int, typ intsyn.IType, condition intsyn.IExpression,
+	trueExpression intsyn.IExpression, falseExpression intsyn.IExpression) intsyn.ITernaryOperatorExpression {
 	return &TernaryOperatorExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		condition:                        condition,
@@ -26,32 +28,32 @@ func NewTernaryOperatorExpressionWithAll(lineNumber int, typ _type.IType, condit
 type TernaryOperatorExpression struct {
 	AbstractLineNumberTypeExpression
 
-	condition       Expression
-	trueExpression  Expression
-	falseExpression Expression
+	condition       intsyn.IExpression
+	trueExpression  intsyn.IExpression
+	falseExpression intsyn.IExpression
 }
 
-func (e *TernaryOperatorExpression) Condition() Expression {
+func (e *TernaryOperatorExpression) Condition() intsyn.IExpression {
 	return e.condition
 }
 
-func (e *TernaryOperatorExpression) SetCondition(expression Expression) {
+func (e *TernaryOperatorExpression) SetCondition(expression intsyn.IExpression) {
 	e.condition = expression
 }
 
-func (e *TernaryOperatorExpression) TrueExpression() Expression {
+func (e *TernaryOperatorExpression) TrueExpression() intsyn.IExpression {
 	return e.trueExpression
 }
 
-func (e *TernaryOperatorExpression) SetTrueExpression(expression Expression) {
+func (e *TernaryOperatorExpression) SetTrueExpression(expression intsyn.IExpression) {
 	e.trueExpression = expression
 }
 
-func (e *TernaryOperatorExpression) FalseExpression() Expression {
+func (e *TernaryOperatorExpression) FalseExpression() intsyn.IExpression {
 	return e.falseExpression
 }
 
-func (e *TernaryOperatorExpression) SetFalseExpression(expression Expression) {
+func (e *TernaryOperatorExpression) SetFalseExpression(expression intsyn.IExpression) {
 	e.falseExpression = expression
 }
 
@@ -63,7 +65,7 @@ func (e *TernaryOperatorExpression) IsTernaryOperatorExpression() bool {
 	return true
 }
 
-func (e *TernaryOperatorExpression) Accept(visitor ExpressionVisitor) {
+func (e *TernaryOperatorExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitTernaryOperatorExpression(e)
 }
 

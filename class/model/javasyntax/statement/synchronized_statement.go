@@ -1,8 +1,8 @@
 package statement
 
-import "bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 
-func NewSynchronizedStatement(monitor expression.Expression, statements Statement) *SynchronizedStatement {
+func NewSynchronizedStatement(monitor intsyn.IExpression, statements intsyn.IStatement) intsyn.ISynchronizedStatement {
 	return &SynchronizedStatement{
 		monitor:    monitor,
 		statements: statements,
@@ -12,23 +12,23 @@ func NewSynchronizedStatement(monitor expression.Expression, statements Statemen
 type SynchronizedStatement struct {
 	AbstractStatement
 
-	monitor    expression.Expression
-	statements Statement
+	monitor    intsyn.IExpression
+	statements intsyn.IStatement
 }
 
-func (s *SynchronizedStatement) Monitor() expression.Expression {
+func (s *SynchronizedStatement) Monitor() intsyn.IExpression {
 	return s.monitor
 }
 
-func (s *SynchronizedStatement) SetMonitor(monitor expression.Expression) {
+func (s *SynchronizedStatement) SetMonitor(monitor intsyn.IExpression) {
 	s.monitor = monitor
 }
 
-func (s *SynchronizedStatement) Statements() Statement {
+func (s *SynchronizedStatement) Statements() intsyn.IStatement {
 	return s.statements
 }
 
-func (s *SynchronizedStatement) Accept(visitor StatementVisitor) {
+func (s *SynchronizedStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitSynchronizedStatement(s)
 
 }

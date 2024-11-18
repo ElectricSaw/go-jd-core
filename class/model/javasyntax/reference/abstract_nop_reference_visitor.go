@@ -1,18 +1,23 @@
 package reference
 
+import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+
 type AbstractNopReferenceVisitor struct {
 }
 
-func (e *AbstractNopReferenceVisitor) VisitAnnotationElementValue(reference *AnnotationElementValue) {
+func (e *AbstractNopReferenceVisitor) VisitAnnotationElementValue(reference intsyn.IAnnotationElementValue) {
 }
-func (e *AbstractNopReferenceVisitor) VisitAnnotationReference(reference *AnnotationReference)    {}
-func (e *AbstractNopReferenceVisitor) VisitAnnotationReferences(references *AnnotationReferences) {}
-func (e *AbstractNopReferenceVisitor) VisitElementValueArrayInitializerElementValue(reference *ElementValueArrayInitializerElementValue) {
+func (e *AbstractNopReferenceVisitor) VisitAnnotationReference(reference intsyn.IAnnotationReference) {
 }
-func (e *AbstractNopReferenceVisitor) VisitElementValues(references *ElementValues)         {}
-func (e *AbstractNopReferenceVisitor) VisitElementValuePair(reference *ElementValuePair)    {}
-func (e *AbstractNopReferenceVisitor) VisitElementValuePairs(references *ElementValuePairs) {}
-func (e *AbstractNopReferenceVisitor) VisitExpressionElementValue(reference *ExpressionElementValue) {
+func (e *AbstractNopReferenceVisitor) VisitAnnotationReferences(references intsyn.IAnnotationReferences) {
 }
-func (e *AbstractNopReferenceVisitor) VisitInnerObjectReference(reference *InnerObjectReference) {}
-func (e *AbstractNopReferenceVisitor) VisitObjectReference(reference *ObjectReference)           {}
+func (e *AbstractNopReferenceVisitor) VisitElementValueArrayInitializerElementValue(reference intsyn.IElementValueArrayInitializerElementValue) {
+}
+func (e *AbstractNopReferenceVisitor) VisitElementValues(references intsyn.IElementValues)         {}
+func (e *AbstractNopReferenceVisitor) VisitElementValuePair(reference intsyn.IElementValuePair)    {}
+func (e *AbstractNopReferenceVisitor) VisitElementValuePairs(references intsyn.IElementValuePairs) {}
+func (e *AbstractNopReferenceVisitor) VisitExpressionElementValue(reference intsyn.IExpressionElementValue) {
+}
+func (e *AbstractNopReferenceVisitor) VisitInnerObjectReference(reference intsyn.IInnerObjectReference) {
+}
+func (e *AbstractNopReferenceVisitor) VisitObjectReference(reference intsyn.IObjectReference) {}

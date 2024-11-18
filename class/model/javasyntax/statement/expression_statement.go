@@ -1,11 +1,11 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewExpressionStatement(expression expression.Expression) *ExpressionStatement {
+func NewExpressionStatement(expression intsyn.IExpression) intsyn.IExpressionStatement {
 	return &ExpressionStatement{
 		expression: expression,
 	}
@@ -14,14 +14,14 @@ func NewExpressionStatement(expression expression.Expression) *ExpressionStateme
 type ExpressionStatement struct {
 	AbstractStatement
 
-	expression expression.Expression
+	expression intsyn.IExpression
 }
 
-func (s *ExpressionStatement) Expression() expression.Expression {
+func (s *ExpressionStatement) Expression() intsyn.IExpression {
 	return s.expression
 }
 
-func (s *ExpressionStatement) SetExpression(expression expression.Expression) {
+func (s *ExpressionStatement) SetExpression(expression intsyn.IExpression) {
 	s.expression = expression
 }
 
@@ -29,7 +29,7 @@ func (s *ExpressionStatement) IsExpressionStatement() bool {
 	return true
 }
 
-func (s *ExpressionStatement) Accept(visitor StatementVisitor) {
+func (s *ExpressionStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitExpressionStatement(s)
 }
 

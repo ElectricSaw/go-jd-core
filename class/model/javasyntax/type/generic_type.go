@@ -1,8 +1,11 @@
 package _type
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"fmt"
+)
 
-func NewGenericType(name string, dimension int) *GenericType {
+func NewGenericType(name string, dimension int) intsyn.IGenericType {
 	return &GenericType{
 		name:      name,
 		dimension: dimension,
@@ -39,11 +42,11 @@ func (t *GenericType) Dimension() int {
 	return t.dimension
 }
 
-func (t *GenericType) CreateType(dimension int) IType {
+func (t *GenericType) CreateType(dimension int) intsyn.IType {
 	if t.dimension == dimension {
 		return t
 	} else {
-		return NewGenericType(t.name, dimension)
+		return NewGenericType(t.name, dimension).(intsyn.IType)
 	}
 }
 
@@ -51,13 +54,13 @@ func (t *GenericType) IsGenericType() bool {
 	return true
 }
 
-func (t *GenericType) AcceptTypeVisitor(visitor TypeVisitor) {
+func (t *GenericType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
 	visitor.VisitGenericType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *GenericType) IsTypeArgumentAssignableFrom(_ map[string]IType, typeArgument ITypeArgument) bool {
+func (t *GenericType) IsTypeArgumentAssignableFrom(_ map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
 	if o, ok := typeArgument.(*GenericType); ok {
 		return t.Equals(o)
 	}
@@ -69,13 +72,13 @@ func (t *GenericType) IsGenericTypeArgument() bool {
 	return true
 }
 
-func (t *GenericType) AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor) {
+func (t *GenericType) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
 	visitor.VisitGenericType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *GenericType) Equals(o *GenericType) bool {
+func (t *GenericType) Equals(o intsyn.IGenericType) bool {
 	if o == nil {
 		return false
 	}
@@ -84,10 +87,10 @@ func (t *GenericType) Equals(o *GenericType) bool {
 		return true
 	}
 
-	if t.dimension != o.dimension {
+	if t.dimension != o.Dimension() {
 		return false
 	}
-	if t.name != o.name {
+	if t.name != o.Name() {
 		return false
 	}
 	return true

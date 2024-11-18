@@ -1,8 +1,11 @@
 package statement
 
-import "fmt"
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"fmt"
+)
 
-func NewLabelStatement(label string, statement Statement) *LabelStatement {
+func NewLabelStatement(label string, statement intsyn.IStatement) intsyn.ILabelStatement {
 	return &LabelStatement{
 		label:     label,
 		statement: statement,
@@ -13,14 +16,14 @@ type LabelStatement struct {
 	AbstractStatement
 
 	label     string
-	statement Statement
+	statement intsyn.IStatement
 }
 
 func (s *LabelStatement) GetLabel() string {
 	return s.label
 }
 
-func (s *LabelStatement) GetStatement() Statement {
+func (s *LabelStatement) GetStatement() intsyn.IStatement {
 	return s.statement
 }
 
@@ -28,7 +31,7 @@ func (s *LabelStatement) IsLabelStatement() bool {
 	return true
 }
 
-func (s *LabelStatement) Accept(visitor StatementVisitor) {
+func (s *LabelStatement) Accept(visitor intsyn.IStatementVisitor) {
 	visitor.VisitLabelStatement(s)
 }
 

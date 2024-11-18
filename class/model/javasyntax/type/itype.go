@@ -1,74 +1,11 @@
 package _type
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"bytes"
 	"encoding/gob"
 	"hash/fnv"
 )
-
-type IType interface {
-	TypeVisitable
-	
-	Name() string
-	Descriptor() string
-	Dimension() int
-	CreateType(dimension int) IType
-	Size() int
-
-	IsGenericType() bool
-	IsInnerObjectType() bool
-	IsObjectType() bool
-	IsPrimitiveType() bool
-	IsTypes() bool
-
-	OuterType() IObjectType
-	InternalName() string
-
-	///////////////////////////////////////////////////////////////
-
-	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
-	IsTypeArgumentList() bool
-	TypeArgumentFirst() ITypeArgument  // ITypeArgument
-	TypeArgumentList() []ITypeArgument // ITypeArgument
-	TypeArgumentSize() int
-	IsGenericTypeArgument() bool
-	IsInnerObjectTypeArgument() bool
-	IsObjectTypeArgument() bool
-	IsPrimitiveTypeArgument() bool
-	IsWildcardExtendsTypeArgument() bool
-	IsWildcardSuperTypeArgument() bool
-	IsWildcardTypeArgument() bool
-	Type() IType
-
-	///////////////////////////////////////////////////////////////
-
-	HashCode() int
-}
-
-type TypeVisitor interface {
-	VisitPrimitiveType(y *PrimitiveType)
-	VisitObjectType(y *ObjectType)
-	VisitInnerObjectType(y *InnerObjectType)
-	VisitTypes(types *Types)
-	VisitGenericType(y *GenericType)
-}
-
-type TypeVisitable interface {
-	AcceptTypeVisitor(visitor TypeVisitor)
-}
-
-type IObjectType interface {
-	Dimension() int
-	CreateType(dimension int) IType
-	QualifiedName() string
-	OuterType() IObjectType
-	InternalName() string
-	TypeArguments() ITypeArgument
-	CreateTypeWithArgs(typeArguments ITypeArgument) IObjectType
-	AcceptTypeVisitor(visitor TypeVisitor)
-	AcceptTypeArgumentVisitor(visitor TypeArgumentVisitor)
-	HashCode() int
-}
 
 type AbstractType struct {
 	AbstractTypeArgument
@@ -86,7 +23,7 @@ func (t *AbstractType) Dimension() int {
 	return -1
 }
 
-func (t *AbstractType) CreateType(dimension int) IType {
+func (t *AbstractType) CreateType(dimension int) intsyn.IType {
 	return nil
 }
 
@@ -114,7 +51,7 @@ func (t *AbstractType) IsTypes() bool {
 	return false
 }
 
-func (t *AbstractType) OuterType() IObjectType {
+func (t *AbstractType) OuterType() intsyn.IObjectType {
 	return OtTypeUndefinedObject
 }
 
@@ -122,7 +59,7 @@ func (t *AbstractType) InternalName() string {
 	return ""
 }
 
-func (t *AbstractType) AcceptTypeVisitor(visitor TypeVisitor) {
+func (t *AbstractType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
 }
 
 func hashCodeWithString(str string) int {
@@ -135,13 +72,13 @@ func hashCodeWithString(str string) int {
 }
 
 func hashCodeWithStruct(data any) int {
-	bytes := toBytes(data)
-	if bytes == nil {
+	byteArray := toBytes(data)
+	if byteArray == nil {
 		return -1
 	}
 
 	h := fnv.New32a()
-	_, err := h.Write(bytes)
+	_, err := h.Write(byteArray)
 	if err != nil {
 		return -1
 	}

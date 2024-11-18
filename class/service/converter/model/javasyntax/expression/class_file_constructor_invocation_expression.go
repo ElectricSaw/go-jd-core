@@ -6,7 +6,7 @@ import (
 )
 
 func NewClassFileConstructorInvocationExpression(lineNumber int, typ _type.IObjectType, descriptor string,
-	parameterTypes _type.IType, parameters expression.Expression) *ClassFileConstructorInvocationExpression {
+	parameterTypes _type.IType, parameters expression.IExpression) *ClassFileConstructorInvocationExpression {
 	return &ClassFileConstructorInvocationExpression{
 		ConstructorInvocationExpression: *expression.NewConstructorInvocationExpressionWithAll(
 			lineNumber, typ, descriptor, parameters),

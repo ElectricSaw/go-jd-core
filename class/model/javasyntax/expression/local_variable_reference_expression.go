@@ -1,18 +1,18 @@
 package expression
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	"fmt"
 )
 
-func NewLocalVariableReferenceExpression(typ _type.IType, name string) *LocalVariableReferenceExpression {
+func NewLocalVariableReferenceExpression(typ intsyn.IType, name string) intsyn.ILocalVariableReferenceExpression {
 	return &LocalVariableReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		name:                             name,
 	}
 }
 
-func NewLocalVariableReferenceExpressionWithAll(lineNumber int, typ _type.IType, name string) *LocalVariableReferenceExpression {
+func NewLocalVariableReferenceExpressionWithAll(lineNumber int, typ intsyn.IType, name string) intsyn.ILocalVariableReferenceExpression {
 	return &LocalVariableReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		name:                             name,
@@ -33,7 +33,7 @@ func (e *LocalVariableReferenceExpression) IsLocalVariableReferenceExpression() 
 	return true
 }
 
-func (e *LocalVariableReferenceExpression) Accept(visitor ExpressionVisitor) {
+func (e *LocalVariableReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitLocalVariableReferenceExpression(e)
 }
 

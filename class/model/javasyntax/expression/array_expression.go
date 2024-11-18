@@ -1,49 +1,39 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewArrayExpression(expression Expression, index Expression) *ArrayExpression {
+func NewArrayExpression(expression intsyn.IExpression, index intsyn.IExpression) intsyn.IArrayExpression {
 	return &ArrayExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(CreateItemType(expression)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.CreateItemType(expression)),
 		expression:                       expression,
 		index:                            index,
 	}
 }
 
-func NewArrayExpressionWithLineNumber(lineNumber int, expression Expression, index Expression) *ArrayExpression {
+func NewArrayExpressionWithLineNumber(lineNumber int, expression intsyn.IExpression, index intsyn.IExpression) intsyn.IArrayExpression {
 	return &ArrayExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, CreateItemType(expression)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.CreateItemType(expression)),
 		expression:                       expression,
 		index:                            index,
 	}
-}
-
-func CreateItemType(expression Expression) _type.IType {
-	typ := expression.Type()
-	dimension := typ.Dimension()
-
-	if dimension > 0 {
-		return typ.CreateType(dimension - 1)
-	}
-
-	return typ.CreateType(0)
 }
 
 type ArrayExpression struct {
 	AbstractLineNumberTypeExpression
 
-	expression Expression
-	index      Expression
+	expression intsyn.IExpression
+	index      intsyn.IExpression
 }
 
-func (e *ArrayExpression) Expression() Expression {
+func (e *ArrayExpression) Expression() intsyn.IExpression {
 	return e.expression
 }
 
-func (e *ArrayExpression) Index() Expression {
+func (e *ArrayExpression) Index() intsyn.IExpression {
 	return e.index
 }
 
@@ -51,11 +41,11 @@ func (e *ArrayExpression) Priority() int {
 	return 1
 }
 
-func (e *ArrayExpression) SetExpression(expression Expression) {
+func (e *ArrayExpression) SetExpression(expression intsyn.IExpression) {
 	e.expression = expression
 }
 
-func (e *ArrayExpression) SetIndex(index Expression) {
+func (e *ArrayExpression) SetIndex(index intsyn.IExpression) {
 	e.index = index
 }
 
@@ -63,7 +53,7 @@ func (e *ArrayExpression) IsArrayExpression() bool {
 	return true
 }
 
-func (e *ArrayExpression) Accept(visitor ExpressionVisitor) {
+func (e *ArrayExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitArrayExpression(e)
 }
 

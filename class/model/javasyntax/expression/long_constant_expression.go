@@ -1,20 +1,21 @@
 package expression
 
 import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
 	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewLongConstantExpression(value int64) *LongConstantExpression {
+func NewLongConstantExpression(value int64) intsyn.ILongConstantExpression {
 	return &LongConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeLong),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeLong.(intsyn.IType)),
 		value:                            value,
 	}
 }
 
-func NewLongConstantExpressionWithAll(lineNumber int, value int64) *LongConstantExpression {
+func NewLongConstantExpressionWithAll(lineNumber int, value int64) intsyn.ILongConstantExpression {
 	return &LongConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeLong),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeLong.(intsyn.IType)),
 		value:                            value,
 	}
 }
@@ -33,7 +34,7 @@ func (e *LongConstantExpression) IsLongConstantExpression() bool {
 	return true
 }
 
-func (e *LongConstantExpression) Accept(visitor ExpressionVisitor) {
+func (e *LongConstantExpression) Accept(visitor intsyn.IExpressionVisitor) {
 	visitor.VisitLongConstantExpression(e)
 }
 

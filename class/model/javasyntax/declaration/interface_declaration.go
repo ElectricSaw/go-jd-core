@@ -2,12 +2,10 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces _type.IType) intsyn.IInterfaceDeclaration {
+func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces intsyn.IType) intsyn.IInterfaceDeclaration {
 	return &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: nil,
@@ -20,7 +18,9 @@ func NewInterfaceDeclaration(flags int, internalTypeName string, name string, in
 	}
 }
 
-func NewInterfaceDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration intsyn.IBodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType) intsyn.IInterfaceDeclaration {
+func NewInterfaceDeclarationWithAll(annotationReferences intsyn.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intsyn.IBodyDeclaration,
+	typeParameters intsyn.ITypeParameter, interfaces intsyn.IType) intsyn.IInterfaceDeclaration {
 	return &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: annotationReferences,
@@ -37,15 +37,15 @@ func NewInterfaceDeclarationWithAll(annotationReferences reference.IAnnotationRe
 type InterfaceDeclaration struct {
 	TypeDeclaration
 
-	typeParameters _type.ITypeParameter
-	interfaces     _type.IType
+	typeParameters intsyn.ITypeParameter
+	interfaces     intsyn.IType
 }
 
-func (d *InterfaceDeclaration) TypeParameters() _type.ITypeParameter {
+func (d *InterfaceDeclaration) TypeParameters() intsyn.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *InterfaceDeclaration) Interfaces() _type.IType {
+func (d *InterfaceDeclaration) Interfaces() intsyn.IType {
 	return d.interfaces
 }
 

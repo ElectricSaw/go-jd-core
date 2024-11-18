@@ -1,19 +1,18 @@
 package _type
 
-func NewTypeParameters() *TypeParameters {
+import (
+	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
+	"bitbucket.org/coontec/javaClass/class/util"
+)
+
+func NewTypeParameters() intsyn.ITypeParameters {
 	return &TypeParameters{}
 }
 
 type TypeParameters struct {
-	ITypeParameter
-
-	TypeParameters []ITypeParameter
+	util.DefaultList[intsyn.ITypeParameter]
 }
 
-func (t *TypeParameters) Add(typeParameter ITypeParameter) {
-	t.TypeParameters = append(t.TypeParameters, typeParameter)
-}
-
-func (t *TypeParameters) AcceptTypeParameterVisitor(visitor TypeParameterVisitor) {
+func (t *TypeParameters) AcceptTypeParameterVisitor(visitor intsyn.ITypeParameterVisitor) {
 	visitor.VisitTypeParameters(t)
 }

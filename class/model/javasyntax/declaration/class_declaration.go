@@ -2,19 +2,20 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewClassDeclaration(flags int, internalTypeName string, name string, bodyDeclaration *intsyn.IBodyDeclaration) intsyn.IClassDeclaration {
+func NewClassDeclaration(flags int, internalTypeName string, name string,
+	bodyDeclaration intsyn.IBodyDeclaration) intsyn.IClassDeclaration {
 	return &ClassDeclaration{
 		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(nil, flags,
 			internalTypeName, name, bodyDeclaration, nil, nil).(*InterfaceDeclaration),
 	}
 }
 
-func NewClassDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *intsyn.IBodyDeclaration, typeParameters _type.ITypeParameter, interfaces _type.IType, superType _type.IObjectType) intsyn.IClassDeclaration {
+func NewClassDeclarationWithAll(annotationReferences intsyn.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intsyn.IBodyDeclaration,
+	typeParameters intsyn.ITypeParameter, interfaces intsyn.IType, superType intsyn.IObjectType) intsyn.IClassDeclaration {
 	return &ClassDeclaration{
 		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(annotationReferences, flags,
 			internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*InterfaceDeclaration),
@@ -25,10 +26,10 @@ func NewClassDeclarationWithAll(annotationReferences reference.IAnnotationRefere
 type ClassDeclaration struct {
 	InterfaceDeclaration
 
-	superType _type.IObjectType
+	superType intsyn.IObjectType
 }
 
-func (d *ClassDeclaration) SuperType() _type.IObjectType {
+func (d *ClassDeclaration) SuperType() intsyn.IObjectType {
 	return d.superType
 }
 

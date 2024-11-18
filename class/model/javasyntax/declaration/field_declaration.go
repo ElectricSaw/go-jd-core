@@ -2,11 +2,9 @@ package declaration
 
 import (
 	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
 )
 
-func NewFieldDeclaration(flags int, typ _type.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
+func NewFieldDeclaration(flags int, typ intsyn.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
 	return &FieldDeclaration{
 		flags:            flags,
 		typ:              typ,
@@ -14,7 +12,8 @@ func NewFieldDeclaration(flags int, typ _type.IType, fieldDeclaration intsyn.IFi
 	}
 }
 
-func NewFieldDeclarationWithAll(annotationReferences reference.IAnnotationReference, flags int, typ _type.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
+func NewFieldDeclarationWithAll(annotationReferences intsyn.IAnnotationReference, flags int,
+	typ intsyn.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
 	return &FieldDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -26,9 +25,9 @@ func NewFieldDeclarationWithAll(annotationReferences reference.IAnnotationRefere
 type FieldDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences reference.IAnnotationReference
+	annotationReferences intsyn.IAnnotationReference
 	flags                int
-	typ                  _type.IType
+	typ                  intsyn.IType
 	fieldDeclarators     intsyn.IFieldDeclarator
 }
 
@@ -40,15 +39,15 @@ func (d *FieldDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *FieldDeclaration) AnnotationReferences() reference.IAnnotationReference {
+func (d *FieldDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
 	return d.annotationReferences
 }
 
-func (d *FieldDeclaration) Type() _type.IType {
+func (d *FieldDeclaration) Type() intsyn.IType {
 	return d.typ
 }
 
-func (d *FieldDeclaration) SetType(t _type.IType) {
+func (d *FieldDeclaration) SetType(t intsyn.IType) {
 	d.typ = t
 }
 
