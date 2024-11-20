@@ -1,29 +1,29 @@
 package expression
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 	"fmt"
 )
 
-func NewClassFileNewExpression(lineNumber int, typ _type.IObjectType) *ClassFileNewExpression {
+func NewClassFileNewExpression(lineNumber int, typ intmod.IObjectType) intsrv.IClassFileNewExpression {
 	return &ClassFileNewExpression{
-		NewExpression: *expression.NewNewExpression(lineNumber, typ, ""),
+		NewExpression: *expression.NewNewExpression(lineNumber, typ, "").(*expression.NewExpression),
 		bound:         false,
 	}
 }
 
-func NewClassFileNewExpression2(lineNumber int, typ _type.IObjectType, bodyDeclaration declaration.BodyDeclaration) *ClassFileNewExpression {
+func NewClassFileNewExpression2(lineNumber int, typ intmod.IObjectType, bodyDeclaration intmod.IBodyDeclaration) intsrv.IClassFileNewExpression {
 	return &ClassFileNewExpression{
-		NewExpression: *expression.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration),
+		NewExpression: *expression.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration).(*expression.NewExpression),
 		bound:         false,
 	}
 }
 
-func NewClassFileNewExpression3(lineNumber int, typ _type.IObjectType, bodyDeclaration declaration.BodyDeclaration, bound bool) *ClassFileNewExpression {
+func NewClassFileNewExpression3(lineNumber int, typ intmod.IObjectType, bodyDeclaration intmod.IBodyDeclaration, bound bool) intsrv.IClassFileNewExpression {
 	return &ClassFileNewExpression{
-		NewExpression: *expression.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration),
+		NewExpression: *expression.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration).(*expression.NewExpression),
 		bound:         bound,
 	}
 }
@@ -31,15 +31,15 @@ func NewClassFileNewExpression3(lineNumber int, typ _type.IObjectType, bodyDecla
 type ClassFileNewExpression struct {
 	expression.NewExpression
 
-	parameterTypes _type.IType
+	parameterTypes intmod.IType
 	bound          bool
 }
 
-func (e *ClassFileNewExpression) ParameterTypes() _type.IType {
+func (e *ClassFileNewExpression) ParameterTypes() intmod.IType {
 	return e.parameterTypes
 }
 
-func (e *ClassFileNewExpression) SetParameterTypes(parameterTypes _type.IType) {
+func (e *ClassFileNewExpression) SetParameterTypes(parameterTypes intmod.IType) {
 	e.parameterTypes = parameterTypes
 }
 
@@ -51,7 +51,7 @@ func (e *ClassFileNewExpression) SetBound(bound bool) {
 	e.bound = bound
 }
 
-func (e *ClassFileNewExpression) Set(descriptor string, parameterTypes _type.IType, parameters expression.IExpression) {
+func (e *ClassFileNewExpression) Set(descriptor string, parameterTypes intmod.IType, parameters intmod.IExpression) {
 	e.SetDescriptor(descriptor)
 	e.SetParameterTypes(parameterTypes)
 	e.SetParameters(parameters)

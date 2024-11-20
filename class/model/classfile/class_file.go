@@ -1,7 +1,7 @@
 package classfile
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile/attribute"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 )
 
 func NewClassFile(majorVersion int, minorVersion int, accessFlags int, internalTypeName string, superTypeName string, interfaceTypeNames []string, field []Field, method []Method, attributes map[string]attribute.Attribute) *ClassFile {

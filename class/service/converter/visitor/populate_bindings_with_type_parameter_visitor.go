@@ -1,6 +1,6 @@
 package visitor
 
-import _type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+import _type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 
 type PopulateBindingsWithTypeParameterVisitor struct {
 	Bindings   map[string]_type.ITypeArgument

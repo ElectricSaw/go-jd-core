@@ -1,10 +1,10 @@
 package deserializer
 
 import (
-	"bitbucket.org/coontec/javaClass/class/api"
-	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/classfile/attribute"
-	"bitbucket.org/coontec/javaClass/class/model/classfile/constant"
+	"bitbucket.org/coontec/go-jd-core/class/api"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 	"errors"
 	"fmt"
 	"log"

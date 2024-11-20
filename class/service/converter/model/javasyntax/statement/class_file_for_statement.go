@@ -1,15 +1,16 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 	"fmt"
 )
 
-func NewClassFileForStatement(fromOffset, toOffset int, init expression.IExpression,
-	condition expression.IExpression, update expression.IExpression, state statement.IStatement) *ClassFileForStatement {
+func NewClassFileForStatement(fromOffset, toOffset int, init intmod.IExpression,
+	condition intmod.IExpression, update intmod.IExpression, state intmod.IStatement) intsrv.IClassFileForStatement {
 	return &ClassFileForStatement{
-		ForStatement: *statement.NewForStatementWithInit(init, condition, update, state),
+		ForStatement: *statement.NewForStatementWithInit(init, condition, update, state).(*statement.ForStatement),
 		fromOffset:   fromOffset,
 		toOffset:     toOffset,
 	}

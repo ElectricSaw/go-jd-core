@@ -1,7 +1,7 @@
 package javafragment
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/fragment"
+	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
 	"sort"
 )
 

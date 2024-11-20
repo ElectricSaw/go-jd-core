@@ -1,7 +1,7 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
 func NewAnnotationReference(typ intsyn.IObjectType) intsyn.IAnnotationReference {

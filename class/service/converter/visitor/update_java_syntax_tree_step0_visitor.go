@@ -1,6 +1,6 @@
 package visitor
 
-import "bitbucket.org/coontec/javaClass/class/model/message"
+import "bitbucket.org/coontec/go-jd-core/class/model/message"
 
 type UpdateJavaSyntaxTreeStep0Visitor struct {
 }

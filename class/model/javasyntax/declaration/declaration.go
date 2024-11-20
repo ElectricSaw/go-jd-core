@@ -1,8 +1,8 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 )
 
 type AbstractMemberDeclaration struct {

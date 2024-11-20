@@ -1,20 +1,22 @@
 package localvariable
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewGenericLocalVariable(index, offset int, typ *_type.GenericType) *GenericLocalVariable {
+func NewGenericLocalVariable(index, offset int, typ intmod.IGenericType) intsrv.IGenericLocalVariable {
 	return &GenericLocalVariable{
-		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, ""),
+		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, "").(*AbstractLocalVariable),
 		typ:                   typ,
 	}
 }
 
-func NewGenericLocalVariableWithAll(index, offset int, typ *_type.GenericType, name string) *GenericLocalVariable {
+func NewGenericLocalVariableWithAll(index, offset int, typ intmod.IGenericType, name string) intsrv.IGenericLocalVariable {
 	return &GenericLocalVariable{
-		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name),
+		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name).(*AbstractLocalVariable),
 		typ:                   typ,
 	}
 }
@@ -22,14 +24,14 @@ func NewGenericLocalVariableWithAll(index, offset int, typ *_type.GenericType, n
 type GenericLocalVariable struct {
 	AbstractLocalVariable
 
-	typ *_type.GenericType
+	typ intmod.IGenericType
 }
 
-func (v *GenericLocalVariable) Type() _type.IType {
-	return v.typ
+func (v *GenericLocalVariable) Type() intmod.IType {
+	return v.typ.(intmod.IType)
 }
 
-func (v *GenericLocalVariable) SetType(typ *_type.GenericType) {
+func (v *GenericLocalVariable) SetType(typ intmod.IGenericType) {
 	v.typ = typ
 }
 
@@ -37,7 +39,7 @@ func (v *GenericLocalVariable) Dimension() int {
 	return v.typ.Dimension()
 }
 
-func (v *GenericLocalVariable) Accept(visitor LocalVariableVisitor) {
+func (v *GenericLocalVariable) Accept(visitor intsrv.ILocalVariableVisitor) {
 	visitor.VisitGenericLocalVariable(v)
 }
 
@@ -61,22 +63,22 @@ func (v *GenericLocalVariable) String() string {
 	return sb
 }
 
-func (v *GenericLocalVariable) IsAssignableFrom(typeBounds map[string]_type.IType, otherType _type.IType) bool {
+func (v *GenericLocalVariable) IsAssignableFrom(typeBounds map[string]intmod.IType, otherType intmod.IType) bool {
 	return v.typ.Equals(otherType.(*_type.GenericType))
 }
 
-func (v *GenericLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, typ _type.IType) {
+func (v *GenericLocalVariable) TypeOnRight(typeBounds map[string]intmod.IType, typ intmod.IType) {
 }
 
-func (v *GenericLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType) {
+func (v *GenericLocalVariable) TypeOnLeft(typeBounds map[string]intmod.IType, typ intmod.IType) {
 }
 
-func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariable) bool {
+func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) bool {
 	return v.IsAssignableFrom(typeBounds, variable.Type())
 }
 
-func (v *GenericLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariable) {
+func (v *GenericLocalVariable) VariableOnRight(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
 }
 
-func (v *GenericLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariable) {
+func (v *GenericLocalVariable) VariableOnLeft(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
 }

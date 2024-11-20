@@ -1,7 +1,7 @@
 package testutils
 
 import (
-	"bitbucket.org/coontec/javaClass/class/api"
+	"bitbucket.org/coontec/go-jd-core/class/api"
 	"strings"
 )
 

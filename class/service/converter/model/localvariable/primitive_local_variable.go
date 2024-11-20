@@ -1,33 +1,35 @@
 package localvariable
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/utils"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"fmt"
 )
 
-func NewPrimitiveLocalVariable(index, offset int, typ *_type.PrimitiveType, name string) *PrimitiveLocalVariable {
+func NewPrimitiveLocalVariable(index, offset int, typ intmod.IPrimitiveType, name string) intsrv.IPrimitiveLocalVariable {
 	return &PrimitiveLocalVariable{
-		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name),
+		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name).(*AbstractLocalVariable),
 		flags:                 typ.Flags(),
 	}
 }
 
-func NewPrimitiveLocalVariableWithVar(index, offset int, primitiveLocalVariable *PrimitiveLocalVariable) *PrimitiveLocalVariable {
+func NewPrimitiveLocalVariableWithVar(index, offset int, primitiveLocalVariable intsrv.IPrimitiveLocalVariable) intsrv.IPrimitiveLocalVariable {
 	v := &PrimitiveLocalVariable{
-		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, ""),
+		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, "").(*AbstractLocalVariable),
 	}
 
-	valueFlags := primitiveLocalVariable.flags
+	valueFlags := primitiveLocalVariable.Flags()
 
-	if valueFlags&_type.FlagInt != 0 {
+	if valueFlags&intmod.FlagInt != 0 {
 		v.flags = valueFlags
-	} else if valueFlags&_type.FlagShort != 0 {
-		v.flags = valueFlags | _type.FlagInt
-	} else if valueFlags&_type.FlagChar != 0 {
-		v.flags = valueFlags | _type.FlagInt | _type.FlagShort
-	} else if valueFlags&_type.FlagByte != 0 {
-		v.flags = valueFlags | _type.FlagInt | _type.FlagShort
+	} else if valueFlags&intmod.FlagShort != 0 {
+		v.flags = valueFlags | intmod.FlagInt
+	} else if valueFlags&intmod.FlagChar != 0 {
+		v.flags = valueFlags | intmod.FlagInt | intmod.FlagShort
+	} else if valueFlags&intmod.FlagByte != 0 {
+		v.flags = valueFlags | intmod.FlagInt | intmod.FlagShort
 	} else {
 		v.flags = valueFlags
 	}
@@ -41,93 +43,101 @@ type PrimitiveLocalVariable struct {
 	flags int
 }
 
-func (v *PrimitiveLocalVariable) Type() _type.IType {
+func (v *PrimitiveLocalVariable) Flags() int {
+	return v.flags
+}
+
+func (v *PrimitiveLocalVariable) SetFlags(flags int) {
+	v.flags = flags
+}
+
+func (v *PrimitiveLocalVariable) Type() intmod.IType {
 	switch v.flags {
-	case _type.FlagBoolean:
-		return _type.PtTypeBoolean
-	case _type.FlagChar:
-		return _type.PtTypeChar
-	case _type.FlagFloat:
-		return _type.PtTypeFloat
-	case _type.FlagDouble:
-		return _type.PtTypeDouble
-	case _type.FlagByte:
-		return _type.PtTypeByte
-	case _type.FlagShort:
-		return _type.PtTypeShort
-	case _type.FlagInt:
-		return _type.PtTypeInt
-	case _type.FlagLong:
-		return _type.PtTypeLong
-	case _type.FlagVoid:
-		return _type.PtTypeVoid
+	case intmod.FlagBoolean:
+		return _type.PtTypeBoolean.(intmod.IType)
+	case intmod.FlagChar:
+		return _type.PtTypeChar.(intmod.IType)
+	case intmod.FlagFloat:
+		return _type.PtTypeFloat.(intmod.IType)
+	case intmod.FlagDouble:
+		return _type.PtTypeDouble.(intmod.IType)
+	case intmod.FlagByte:
+		return _type.PtTypeByte.(intmod.IType)
+	case intmod.FlagShort:
+		return _type.PtTypeShort.(intmod.IType)
+	case intmod.FlagInt:
+		return _type.PtTypeInt.(intmod.IType)
+	case intmod.FlagLong:
+		return _type.PtTypeLong.(intmod.IType)
+	case intmod.FlagVoid:
+		return _type.PtTypeVoid.(intmod.IType)
 	}
 
-	if v.flags == (_type.FlagChar | _type.FlagInt) {
-		return _type.PtMaybeCharType
+	if v.flags == (intmod.FlagChar | intmod.FlagInt) {
+		return _type.PtMaybeCharType.(intmod.IType)
 	}
-	if v.flags == (_type.FlagChar | _type.FlagShort | _type.FlagInt) {
-		return _type.PtMaybeShortType
+	if v.flags == (intmod.FlagChar | intmod.FlagShort | intmod.FlagInt) {
+		return _type.PtMaybeShortType.(intmod.IType)
 	}
-	if v.flags == (_type.FlagChar | _type.FlagChar | _type.FlagShort | _type.FlagInt) {
-		return _type.PtMaybeByteType
+	if v.flags == (intmod.FlagChar | intmod.FlagChar | intmod.FlagShort | intmod.FlagInt) {
+		return _type.PtMaybeByteType.(intmod.IType)
 	}
-	if v.flags == (_type.FlagChar | _type.FlagByte | _type.FlagChar | _type.FlagShort | _type.FlagInt) {
-		return _type.PtMaybeBooleanType
+	if v.flags == (intmod.FlagChar | intmod.FlagByte | intmod.FlagChar | intmod.FlagShort | intmod.FlagInt) {
+		return _type.PtMaybeBooleanType.(intmod.IType)
 	}
-	if v.flags == (_type.FlagChar | _type.FlagShort | _type.FlagInt) {
-		return _type.PtMaybeNegativeByteType
+	if v.flags == (intmod.FlagChar | intmod.FlagShort | intmod.FlagInt) {
+		return _type.PtMaybeNegativeByteType.(intmod.IType)
 	}
-	if v.flags == (_type.FlagChar | _type.FlagInt) {
-		return _type.PtMaybeNegativeShortType
+	if v.flags == (intmod.FlagChar | intmod.FlagInt) {
+		return _type.PtMaybeNegativeShortType.(intmod.IType)
 	}
-	if v.flags == (_type.FlagChar | _type.FlagByte | _type.FlagShort | _type.FlagInt) {
-		return _type.PtMaybeNegativeBooleanType
+	if v.flags == (intmod.FlagChar | intmod.FlagByte | intmod.FlagShort | intmod.FlagInt) {
+		return _type.PtMaybeNegativeBooleanType.(intmod.IType)
 	}
 
-	return _type.PtTypeInt
+	return _type.PtTypeInt.(intmod.IType)
 }
 
 func (v *PrimitiveLocalVariable) Dimension() int {
 	return 0
 }
 
-func (v *PrimitiveLocalVariable) SetType(typ *_type.PrimitiveType) {
+func (v *PrimitiveLocalVariable) SetType(typ intmod.IPrimitiveType) {
 	v.flags = typ.Flags()
 }
 
-func (v *PrimitiveLocalVariable) Accept(visitor LocalVariableVisitor) {
+func (v *PrimitiveLocalVariable) Accept(visitor intsrv.ILocalVariableVisitor) {
 	visitor.VisitPrimitiveLocalVariable(v)
 }
 
 func (v *PrimitiveLocalVariable) String() string {
 	sb := "PrimitiveLocalVariable{"
 
-	if v.flags&_type.FlagBoolean != 0 {
+	if v.flags&intmod.FlagBoolean != 0 {
 		sb += "boolean "
 	}
-	if v.flags&_type.FlagChar != 0 {
+	if v.flags&intmod.FlagChar != 0 {
 		sb += "char "
 	}
-	if v.flags&_type.FlagFloat != 0 {
+	if v.flags&intmod.FlagFloat != 0 {
 		sb += "float "
 	}
-	if v.flags&_type.FlagDouble != 0 {
+	if v.flags&intmod.FlagDouble != 0 {
 		sb += "double "
 	}
-	if v.flags&_type.FlagByte != 0 {
+	if v.flags&intmod.FlagByte != 0 {
 		sb += "byte "
 	}
-	if v.flags&_type.FlagShort != 0 {
+	if v.flags&intmod.FlagShort != 0 {
 		sb += "short "
 	}
-	if v.flags&_type.FlagInt != 0 {
+	if v.flags&intmod.FlagInt != 0 {
 		sb += "int "
 	}
-	if v.flags&_type.FlagLong != 0 {
+	if v.flags&intmod.FlagLong != 0 {
 		sb += "long "
 	}
-	if v.flags&_type.FlagVoid != 0 {
+	if v.flags&intmod.FlagVoid != 0 {
 		sb += "void "
 	}
 
@@ -142,20 +152,20 @@ func (v *PrimitiveLocalVariable) String() string {
 	return sb
 }
 
-func (v *PrimitiveLocalVariable) IsAssignableFrom(typeBounds map[string]_type.IType, typ _type.IType) bool {
+func (v *PrimitiveLocalVariable) IsAssignableFrom(typeBounds map[string]intmod.IType, typ intmod.IType) bool {
 	if typ.Dimension() == 0 && typ.IsPrimitiveType() {
-		return (v.flags & (typ.(*_type.PrimitiveType).RightFlags())) != 0
+		return (v.flags & (typ.(intmod.IPrimitiveType).RightFlags())) != 0
 	}
 	return false
 }
 
-func (v *PrimitiveLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, typ _type.IType) {
+func (v *PrimitiveLocalVariable) TypeOnRight(typeBounds map[string]intmod.IType, typ intmod.IType) {
 	if typ.IsPrimitiveType() {
 		if typ.Dimension() == 0 {
 			return
 		}
 
-		f := typ.(*_type.PrimitiveType).RightFlags()
+		f := typ.(intmod.IPrimitiveType).RightFlags()
 
 		if v.flags&f != 0 {
 			old := v.flags
@@ -168,13 +178,13 @@ func (v *PrimitiveLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, 
 	}
 }
 
-func (v *PrimitiveLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType) {
+func (v *PrimitiveLocalVariable) TypeOnLeft(typeBounds map[string]intmod.IType, typ intmod.IType) {
 	if typ.IsPrimitiveType() {
 		if typ.Dimension() == 0 {
 			return
 		}
 
-		f := typ.(*_type.PrimitiveType).LeftFlags()
+		f := typ.(intmod.IPrimitiveType).LeftFlags()
 
 		if v.flags&f != 0 {
 			old := v.flags
@@ -187,7 +197,7 @@ func (v *PrimitiveLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, t
 	}
 }
 
-func (v *PrimitiveLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariable) bool {
+func (v *PrimitiveLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) bool {
 	if variable.IsPrimitiveLocalVariable() {
 		variableFlags := variable.(*PrimitiveLocalVariable).flags
 		typ := utils.GetPrimitiveTypeFromFlags(variableFlags)
@@ -201,7 +211,7 @@ func (v *PrimitiveLocalVariable) IsAssignableFromWithVariable(typeBounds map[str
 	return false
 }
 
-func (v *PrimitiveLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariable) {
+func (v *PrimitiveLocalVariable) VariableOnRight(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
 	if variable.Dimension() == 0 {
 		return
 	}
@@ -223,7 +233,7 @@ func (v *PrimitiveLocalVariable) VariableOnRight(typeBounds map[string]_type.ITy
 	}
 }
 
-func (v *PrimitiveLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariable) {
+func (v *PrimitiveLocalVariable) VariableOnLeft(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
 	if variable.Dimension() == 0 {
 		return
 	}

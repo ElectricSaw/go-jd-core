@@ -1,11 +1,12 @@
 package utils
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile/attribute"
-	"bitbucket.org/coontec/javaClass/class/model/classfile/constant"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/reference"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
 func NewAnnotationConverter(typeMaker *TypeMaker) *AnnotationConverter {
@@ -16,10 +17,10 @@ func NewAnnotationConverter(typeMaker *TypeMaker) *AnnotationConverter {
 
 type AnnotationConverter struct {
 	TypeMaker    *TypeMaker
-	ElementValue reference.IElementValue
+	ElementValue intmod.IElementValue
 }
 
-func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attribute.Annotations) reference.IAnnotationReference {
+func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attribute.Annotations) intmod.IAnnotationReference {
 	if visibles == nil {
 		if invisibles == nil {
 			return nil
@@ -30,10 +31,7 @@ func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attr
 		if invisibles == nil {
 			return c.ConvertWithAnnotations(visibles)
 		} else {
-			aral := &reference.AnnotationReferences{
-				AnnotationReferences: make([]reference.IAnnotationReference, 0),
-			}
-
+			aral := reference.NewAnnotationReferences()
 			for _, a := range visibles.Annotations() {
 				aral.AnnotationReferences = append(aral.AnnotationReferences, c.ConvertWithAnnotation(a))
 			}
@@ -47,18 +45,15 @@ func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attr
 	}
 }
 
-func (c *AnnotationConverter) ConvertWithAnnotations(annotations *attribute.Annotations) reference.IAnnotationReference {
+func (c *AnnotationConverter) ConvertWithAnnotations(annotations *attribute.Annotations) intmod.IAnnotationReference {
 	as := annotations.Annotations()
 
 	if len(as) == 1 {
 		return c.ConvertWithAnnotation(as[0])
 	} else {
-		aral := &reference.AnnotationReferences{
-			AnnotationReferences: make([]reference.IAnnotationReference, 0, len(as)),
-		}
-
+		aral := reference.NewAnnotationReferences()
 		for _, a := range as {
-			aral.AnnotationReferences = append(aral.AnnotationReferences, c.ConvertWithAnnotation(a))
+			aral.Add(c.ConvertWithAnnotation(a))
 		}
 
 		return aral

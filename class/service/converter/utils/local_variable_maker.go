@@ -1,10 +1,10 @@
 package utils
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
-	"bitbucket.org/coontec/javaClass/class/service/converter/visitor"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/localvariable"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 )
 
 type LocalVariableMaker struct {
@@ -14,7 +14,7 @@ type LocalVariableMaker struct {
 	currentFrame                  *localvariable.RootFrame
 	localVariableCache            []localvariable.AbstractLocalVariable
 	typeMaker                     TypeMaker
-	typeBounds                    map[string]_type.IType
+	typeBounds                    map[string]intmod.IType
 	formalParameters              declaration.FormalParameter
 	populateBlackListNamesVisitor *visitor.PopulateBlackListNamesVisitor
 	searchInTypeArgumentVisitor   *visitor.SearchInTypeArgumentVisitor

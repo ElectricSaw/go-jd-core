@@ -1,9 +1,9 @@
 package visitor
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	srvdecl "bitbucket.org/coontec/javaClass/class/service/converter/model/javasyntax/declaration"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
+	srvdecl "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
 )
 
 type AggregateFieldsVisitor struct {

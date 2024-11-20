@@ -1,9 +1,9 @@
 package visitor
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 )
 
 func NewSearchFirstLineNumberVisitor() *SearchFirstLineNumberVisitor {

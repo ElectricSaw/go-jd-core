@@ -1,28 +1,30 @@
 package localvariable
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/utils"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"fmt"
 )
 
-func NewObjectLocalVariable(typeMaker *utils.TypeMaker, index, offset int, typ _type.IType, name string) *ObjectLocalVariable {
+func NewObjectLocalVariable(typeMaker *utils.TypeMaker, index, offset int, typ intmod.IType, name string) intsrv.IObjectLocalVariable {
 	return &ObjectLocalVariable{
-		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name),
+		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name).(*AbstractLocalVariable),
 		typeMaker:             typeMaker,
 		typ:                   typ,
 	}
 }
 
-func NewObjectLocalVariable2(typeMaker *utils.TypeMaker, index, offset int, typ _type.IType, name string, declared bool) *ObjectLocalVariable {
+func NewObjectLocalVariable2(typeMaker *utils.TypeMaker, index, offset int, typ intmod.IType, name string, declared bool) intsrv.IObjectLocalVariable {
 	v := NewObjectLocalVariable(typeMaker, index, offset, typ, name)
-	v.declared = declared
+	v.SetDeclared(declared)
 	return v
 }
 
-func NewObjectLocalVariable3(typeMaker *utils.TypeMaker, index, offset int, objectLocalVariable *ObjectLocalVariable) *ObjectLocalVariable {
+func NewObjectLocalVariable3(typeMaker *utils.TypeMaker, index, offset int, objectLocalVariable *ObjectLocalVariable) intsrv.IObjectLocalVariable {
 	return &ObjectLocalVariable{
-		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, ""),
+		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, "").(*AbstractLocalVariable),
 		typeMaker:             typeMaker,
 		typ:                   objectLocalVariable.typ,
 	}
@@ -32,14 +34,14 @@ type ObjectLocalVariable struct {
 	AbstractLocalVariable
 
 	typeMaker *utils.TypeMaker
-	typ       _type.IType
+	typ       intmod.IType
 }
 
-func (v *ObjectLocalVariable) Type() _type.IType {
+func (v *ObjectLocalVariable) Type() intmod.IType {
 	return v.typ
 }
 
-func (v *ObjectLocalVariable) SetType(typeBounds map[string]_type.IType, t _type.IType) {
+func (v *ObjectLocalVariable) SetType(typeBounds map[string]intmod.IType, t intmod.IType) {
 	if !(v.typ == t) {
 		v.typ = t
 		v.FireChangeEvent(typeBounds)
@@ -50,7 +52,7 @@ func (v *ObjectLocalVariable) Dimension() int {
 	return v.typ.Dimension()
 }
 
-func (v *ObjectLocalVariable) Accept(visitor LocalVariableVisitor) {
+func (v *ObjectLocalVariable) Accept(visitor intsrv.ILocalVariableVisitor) {
 	visitor.VisitObjectLocalVariable(v)
 }
 
@@ -78,41 +80,41 @@ func (v *ObjectLocalVariable) String() string {
 	return sb + "}"
 }
 
-func (v *ObjectLocalVariable) IsAssignableFrom(typeBounds map[string]_type.IType, typ _type.IType) bool {
+func (v *ObjectLocalVariable) IsAssignableFrom(typeBounds map[string]intmod.IType, typ intmod.IType) bool {
 	if v.typ.IsObjectType() {
-		if v.typ == _type.OtTypeObject {
+		if v.typ == _type.OtTypeObject.(intmod.IType) {
 			if typ.Dimension() > 0 || !typ.IsPrimitiveType() {
 				return true
 			}
 		}
 
 		if typ.IsObjectType() {
-			return v.typeMaker.IsAssignable(typeBounds, v.typ.(_type.IObjectType), typ.(_type.IObjectType))
+			return v.typeMaker.IsAssignable(typeBounds, v.typ.(intmod.IObjectType), typ.(intmod.IObjectType))
 		}
 	}
 	return false
 }
 
-func (v *ObjectLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, typ _type.IType) {
-	if typ != _type.OtTypeUndefinedObject {
-		if v.typ == _type.OtTypeUndefinedObject {
+func (v *ObjectLocalVariable) TypeOnRight(typeBounds map[string]intmod.IType, typ intmod.IType) {
+	if typ != _type.OtTypeUndefinedObject.(intmod.IType) {
+		if v.typ == _type.OtTypeUndefinedObject.(intmod.IType) {
 			v.typ = typ
 			v.FireChangeEvent(typeBounds)
 		} else if v.typ.Dimension() == 0 && typ.Dimension() == 0 {
 			if v.typ.IsObjectType() {
-				thisObjectType := v.typ.(_type.IObjectType)
+				thisObjectType := v.typ.(intmod.IObjectType)
 
 				if typ.IsObjectType() {
-					otherObjectType := typ.(_type.IObjectType)
+					otherObjectType := typ.(intmod.IObjectType)
 
 					if thisObjectType.InternalName() == otherObjectType.InternalName() {
 						if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
-							v.typ = otherObjectType.(_type.IType)
+							v.typ = otherObjectType.(intmod.IType)
 							v.FireChangeEvent(typeBounds)
 						}
 					} else if v.typeMaker.IsAssignable(typeBounds, thisObjectType, otherObjectType) {
 						if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
-							v.typ = otherObjectType.CreateTypeWithArgs(otherObjectType.TypeArguments()).(_type.IType)
+							v.typ = otherObjectType.CreateTypeWithArgs(otherObjectType.TypeArguments()).(intmod.IType)
 							v.FireChangeEvent(typeBounds)
 						}
 					}
@@ -127,23 +129,23 @@ func (v *ObjectLocalVariable) TypeOnRight(typeBounds map[string]_type.IType, typ
 	}
 }
 
-func (v *ObjectLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ _type.IType) {
-	if typ != _type.OtTypeUndefinedObject && typ != _type.OtTypeObject {
-		if v.typ == _type.OtTypeUndefinedObject {
+func (v *ObjectLocalVariable) TypeOnLeft(typeBounds map[string]intmod.IType, typ intmod.IType) {
+	if typ != _type.OtTypeUndefinedObject.(intmod.IType) && typ != _type.OtTypeObject.(intmod.IType) {
+		if v.typ == _type.OtTypeUndefinedObject.(intmod.IType) {
 			v.typ = typ
 			v.FireChangeEvent(typeBounds)
 		} else if v.typ.Dimension() == 0 && typ.Dimension() == 0 && v.typ.IsObjectType() && typ.IsObjectType() {
-			thisObjectType := v.typ.(_type.IObjectType)
-			otherObjectType := typ.(_type.IObjectType)
+			thisObjectType := v.typ.(intmod.IObjectType)
+			otherObjectType := typ.(intmod.IObjectType)
 
 			if thisObjectType.InternalName() == otherObjectType.InternalName() {
 				if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
-					v.typ = otherObjectType.(_type.IType)
+					v.typ = otherObjectType.(intmod.IType)
 					v.FireChangeEvent(typeBounds)
 				}
 			} else if v.typeMaker.IsAssignable(typeBounds, thisObjectType, otherObjectType) {
 				if thisObjectType.TypeArguments() == nil && otherObjectType.TypeArguments() != nil {
-					v.typ = thisObjectType.CreateTypeWithArgs(otherObjectType.TypeArguments()).(_type.IType)
+					v.typ = thisObjectType.CreateTypeWithArgs(otherObjectType.TypeArguments()).(intmod.IType)
 					v.FireChangeEvent(typeBounds)
 				}
 			}
@@ -151,16 +153,16 @@ func (v *ObjectLocalVariable) TypeOnLeft(typeBounds map[string]_type.IType, typ 
 	}
 }
 
-func (v *ObjectLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]_type.IType, variable ILocalVariable) bool {
+func (v *ObjectLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) bool {
 	return v.IsAssignableFrom(typeBounds, variable.Type())
 }
 
-func (v *ObjectLocalVariable) VariableOnRight(typeBounds map[string]_type.IType, variable ILocalVariable) {
+func (v *ObjectLocalVariable) VariableOnRight(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
 	v.AddVariableOnRight(variable)
 	v.TypeOnRight(typeBounds, variable.Type())
 }
 
-func (v *ObjectLocalVariable) VariableOnLeft(typeBounds map[string]_type.IType, variable ILocalVariable) {
+func (v *ObjectLocalVariable) VariableOnLeft(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
 	v.AddVariableOnLeft(variable)
 	v.TypeOnLeft(typeBounds, variable.Type())
 }

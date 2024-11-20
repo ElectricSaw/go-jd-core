@@ -1,6 +1,18 @@
 package model
 
-import "bitbucket.org/coontec/javaClass/class/util"
+import "bitbucket.org/coontec/go-jd-core/class/util"
+
+const (
+	FlagBoolean = 1 << iota
+	FlagChar
+	FlagFloat
+	FlagDouble
+	FlagByte
+	FlagShort
+	FlagInt
+	FlagLong
+	FlagVoid
+)
 
 type IDiamondTypeArgument interface {
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool

@@ -1,8 +1,8 @@
 package processor
 
 import (
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/visitor"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 )
 
 var populateBindingsWithTypeParameterVisitor = &CustomPopulateBindingsWithTypeParameterVisitor{}

@@ -1,8 +1,8 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
-	"bitbucket.org/coontec/javaClass/class/model/classfile"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"fmt"
 )
 

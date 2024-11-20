@@ -1,12 +1,12 @@
 package utils
 
 import (
-	"bitbucket.org/coontec/javaClass/class/api"
-	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/classfile/attribute"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/deserializer"
+	"bitbucket.org/coontec/go-jd-core/class/api"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
 	"errors"
 	"fmt"
 	"os"
@@ -14,7 +14,7 @@ import (
 	"unicode"
 )
 
-var InternalNameToObjectPrimitiveType = map[string]_type.IObjectType{
+var InternalNameToObjectPrimitiveType = map[string]intmod.IObjectType{
 	_type.OtTypePrimitiveBoolean.InternalName(): _type.OtTypePrimitiveBoolean,
 	_type.OtTypePrimitiveByte.InternalName():    _type.OtTypePrimitiveByte,
 	_type.OtTypePrimitiveChar.InternalName():    _type.OtTypePrimitiveChar,
@@ -29,22 +29,22 @@ var InternalNameToObjectPrimitiveType = map[string]_type.IObjectType{
 func NewTypeMake() *TypeMaker {
 	t := &TypeMaker{}
 
-	t.signatureToType["B"] = _type.PtTypeByte
-	t.signatureToType["C"] = _type.PtTypeChar
-	t.signatureToType["D"] = _type.PtTypeDouble
-	t.signatureToType["F"] = _type.PtTypeFloat
-	t.signatureToType["I"] = _type.PtTypeInt
-	t.signatureToType["J"] = _type.PtTypeLong
-	t.signatureToType["S"] = _type.PtTypeShort
-	t.signatureToType["V"] = _type.PtTypeVoid
-	t.signatureToType["Z"] = _type.PtTypeBoolean
+	t.signatureToType["B"] = _type.PtTypeByte.(intmod.IType)
+	t.signatureToType["C"] = _type.PtTypeChar.(intmod.IType)
+	t.signatureToType["D"] = _type.PtTypeDouble.(intmod.IType)
+	t.signatureToType["F"] = _type.PtTypeFloat.(intmod.IType)
+	t.signatureToType["I"] = _type.PtTypeInt.(intmod.IType)
+	t.signatureToType["J"] = _type.PtTypeLong.(intmod.IType)
+	t.signatureToType["S"] = _type.PtTypeShort.(intmod.IType)
+	t.signatureToType["V"] = _type.PtTypeVoid.(intmod.IType)
+	t.signatureToType["Z"] = _type.PtTypeBoolean.(intmod.IType)
 
-	t.signatureToType["Ljava/lang/Class;"] = _type.OtTypeClass
-	t.signatureToType["Ljava/lang/Exception;"] = _type.OtTypeException
-	t.signatureToType["Ljava/lang/Object;"] = _type.OtTypeObject
-	t.signatureToType["Ljava/lang/Throwable;"] = _type.OtTypeThrowable
-	t.signatureToType["Ljava/lang/String;"] = _type.OtTypeString
-	t.signatureToType["Ljava/lang/System;"] = _type.OtTypeSystem
+	t.signatureToType["Ljava/lang/Class;"] = _type.OtTypeClass.(intmod.IType)
+	t.signatureToType["Ljava/lang/Exception;"] = _type.OtTypeException.(intmod.IType)
+	t.signatureToType["Ljava/lang/Object;"] = _type.OtTypeObject.(intmod.IType)
+	t.signatureToType["Ljava/lang/Throwable;"] = _type.OtTypeThrowable.(intmod.IType)
+	t.signatureToType["Ljava/lang/String;"] = _type.OtTypeString.(intmod.IType)
+	t.signatureToType["Ljava/lang/System;"] = _type.OtTypeSystem.(intmod.IType)
 
 	t.descriptorToObjectType["Ljava/lang/Class;"] = _type.OtTypeClass
 	t.descriptorToObjectType["Ljava/lang/Exception;"] = _type.OtTypeException
@@ -64,17 +64,17 @@ func NewTypeMake() *TypeMaker {
 }
 
 type TypeMaker struct {
-	signatureToType                                                  map[string]_type.IType
-	internalTypeNameFieldNameToType                                  map[string]_type.IType
-	descriptorToObjectType                                           map[string]_type.IObjectType
-	internalTypeNameToObjectType                                     map[string]_type.IObjectType
+	signatureToType                                                  map[string]intmod.IType
+	internalTypeNameFieldNameToType                                  map[string]intmod.IType
+	descriptorToObjectType                                           map[string]intmod.IObjectType
+	internalTypeNameToObjectType                                     map[string]intmod.IObjectType
 	internalTypeNameToTypeTypes                                      map[string]*TypeTypes
-	internalTypeNameMethodNameParameterCountToDeclaredParameterTypes map[string][]_type.IType
-	internalTypeNameMethodNameParameterCountToParameterTypes         map[string][]_type.IType
+	internalTypeNameMethodNameParameterCountToDeclaredParameterTypes map[string][]intmod.IType
+	internalTypeNameMethodNameParameterCountToParameterTypes         map[string][]intmod.IType
 	internalTypeNameMethodNameDescriptorToMethodTypes                map[string]*MethodTypes
 	signatureToMethodTypes                                           map[string]*MethodTypes
 	assignableRawTypes                                               map[int64]bool
-	superParameterizedObjectTypes                                    map[int64]_type.IObjectType
+	superParameterizedObjectTypes                                    map[int64]intmod.IObjectType
 	hierarchy                                                        map[string][]string
 	classPathLoader                                                  ClassPathLoader
 	loader                                                           api.Loader
@@ -99,13 +99,13 @@ func (m *TypeMaker) ParseClassFileSignature(classFile classfile.ClassFile) TypeT
 			length := len(interfaceTypeNames)
 
 			if length == 1 {
-				typeTypes.Interfaces = m.MakeFromInternalTypeName(interfaceTypeNames[0]).(_type.IType)
+				typeTypes.Interfaces = m.MakeFromInternalTypeName(interfaceTypeNames[0]).(intmod.IType)
 			} else {
 				list := _type.NewUnmodifiableTypes()
 				for _, interfaceTypeName := range interfaceTypeNames {
-					list.Add(m.MakeFromInternalTypeName(interfaceTypeName).(_type.IType))
+					list.Add(m.MakeFromInternalTypeName(interfaceTypeName).(intmod.IType))
 				}
-				typeTypes.Interfaces = list
+				typeTypes.Interfaces = list.(intmod.IType)
 			}
 		}
 	} else {
@@ -140,7 +140,7 @@ func (m *TypeMaker) parseMethodSignature(method *classfile.Method, key string) *
 	return methodTypes
 }
 
-func (m *TypeMaker) ParseFieldSignature(classFile *classfile.ClassFile, field *classfile.Field) _type.IType {
+func (m *TypeMaker) ParseFieldSignature(classFile *classfile.ClassFile, field *classfile.Field) intmod.IType {
 	key := classFile.InternalTypeName() + ":" + field.Name()
 	attributeSignature := field.Attributes()["Signature"].(*attribute.AttributeSignature)
 	signature := ""
@@ -158,7 +158,7 @@ func (m *TypeMaker) ParseFieldSignature(classFile *classfile.ClassFile, field *c
 	return typ
 }
 
-func (m *TypeMaker) MakeFromSignature(signature string) _type.IType {
+func (m *TypeMaker) MakeFromSignature(signature string) intmod.IType {
 	typ := m.signatureToType[signature]
 	if typ == nil {
 		reader := NewSignatureReader(signature)
@@ -222,12 +222,12 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 		if firstException == nil {
 			if exceptionTypeNames != nil {
 				if len(exceptionTypeNames) == 1 {
-					methodTypes.ExceptionTypes = m.MakeFromInternalTypeName(exceptionTypeNames[0]).(_type.IType)
+					methodTypes.ExceptionTypes = m.MakeFromInternalTypeName(exceptionTypeNames[0]).(intmod.IType)
 				} else {
 					list := &_type.UnmodifiableTypes{}
 
 					for _, exceptionTypeName := range exceptionTypeNames {
-						list.Add(m.MakeFromInternalTypeName(exceptionTypeName).(_type.IType))
+						list.Add(m.MakeFromInternalTypeName(exceptionTypeName).(intmod.IType))
 					}
 
 					methodTypes.ExceptionTypes = list
@@ -291,7 +291,7 @@ func (m *TypeMaker) parseMethodSignature3(descriptor, signature string, exceptio
 	}
 }
 
-func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) _type.ITypeParameter {
+func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) intmod.ITypeParameter {
 	if reader.NextEqualsTo('<') {
 		reader.index++
 
@@ -302,7 +302,7 @@ func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) _type.ITypePara
 		}
 
 		nextTypeParameter := m.parseTypeParameter(reader)
-		var typeParameters _type.ITypeParameter
+		var typeParameters intmod.ITypeParameter
 
 		if nextTypeParameter == nil {
 			typeParameters = firstTypeParameter
@@ -315,7 +315,8 @@ func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) _type.ITypePara
 				nextTypeParameter = m.parseTypeParameter(reader)
 			}
 
-			typeParameters = list
+			// TODO
+			typeParameters = list.(intmod.ITypeParameter)
 		}
 
 		if reader.Read() != '>' {
@@ -328,13 +329,13 @@ func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) _type.ITypePara
 	return nil
 }
 
-func (m *TypeMaker) parseTypeParameter(reader *SignatureReader) _type.ITypeParameter {
+func (m *TypeMaker) parseTypeParameter(reader *SignatureReader) intmod.ITypeParameter {
 	firstIndex := reader.index
 
 	if reader.Search(':') {
 		identifier := reader.Substring(firstIndex)
-		var firstBound _type.IType
-		var types *_type.UnmodifiableTypes
+		var firstBound intmod.IType
+		var types intmod.IUnmodifiableTypes
 
 		for reader.NextEqualsTo(':') {
 			reader.index++
@@ -357,16 +358,16 @@ func (m *TypeMaker) parseTypeParameter(reader *SignatureReader) _type.ITypeParam
 		if firstBound == nil {
 			return _type.NewTypeParameter(identifier)
 		} else if types == nil {
-			return _type.NewTypeParameterWithTypeBounds(identifier, firstBound)
+			return _type.NewTypeParameterWithTypeBounds(identifier, firstBound).(intmod.ITypeParameter)
 		} else {
-			return _type.NewTypeParameterWithTypeBounds(identifier, types)
+			return _type.NewTypeParameterWithTypeBounds(identifier, types.(intmod.IType)).(intmod.ITypeParameter)
 		}
 	}
 
 	return nil
 }
 
-func (m *TypeMaker) parseExceptionSignature(reader *SignatureReader) _type.IType {
+func (m *TypeMaker) parseExceptionSignature(reader *SignatureReader) intmod.IType {
 	if reader.NextEqualsTo('^') {
 		reader.index++
 		return m.parseReferenceTypeSignature(reader)
@@ -374,7 +375,7 @@ func (m *TypeMaker) parseExceptionSignature(reader *SignatureReader) _type.IType
 	return nil
 }
 
-func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension int) _type.IObjectType {
+func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension int) intmod.IObjectType {
 	if reader.NextEqualsTo('L') {
 		reader.index++
 		index := reader.index
@@ -423,9 +424,9 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 					return nil
 				}
 
-				ot = _type.NewInnerObjectTypeWithArgs(internalTypeName, qualitifedName, name, typeArguments, ot)
+				ot = _type.NewInnerObjectTypeWithArgs(internalTypeName, qualitifedName, name, typeArguments, ot).(intmod.IObjectType)
 			} else {
-				ot = _type.NewInnerObjectType(internalTypeName, qualitifedName, name, ot)
+				ot = _type.NewInnerObjectType(internalTypeName, qualitifedName, name, ot).(intmod.IObjectType)
 			}
 		}
 
@@ -435,13 +436,13 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 			return ot
 		}
 
-		return ot.CreateType(dimension).(_type.IObjectType)
+		return ot.CreateType(dimension).(intmod.IObjectType)
 	}
 
 	return nil
 }
 
-func (m *TypeMaker) parseTypeArguments(reader *SignatureReader) _type.ITypeArgument {
+func (m *TypeMaker) parseTypeArguments(reader *SignatureReader) intmod.ITypeArgument {
 	firstTypeArgument := m.parseTypeArgument(reader)
 	if firstTypeArgument == nil {
 		return nil
@@ -464,7 +465,7 @@ func (m *TypeMaker) parseTypeArguments(reader *SignatureReader) _type.ITypeArgum
 	}
 }
 
-func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) _type.IType {
+func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) intmod.IType {
 	if reader.Available() {
 		dimension := 0
 		c := reader.Read()
@@ -477,40 +478,40 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) _type.I
 		switch c {
 		case 'B':
 			if dimension == 0 {
-				return _type.PtTypeByte
+				return _type.PtTypeByte.(intmod.IType)
 			}
 			return _type.PtTypeByte.CreateType(dimension)
 		case 'C':
 			if dimension == 0 {
-				return _type.PtTypeChar
+				return _type.PtTypeChar.(intmod.IType)
 			}
 			return _type.PtTypeChar.CreateType(dimension)
 		case 'D':
 			if dimension == 0 {
-				return _type.PtTypeDouble
+				return _type.PtTypeDouble.(intmod.IType)
 			}
 			return _type.PtTypeDouble.CreateType(dimension)
 		case 'F':
 			if dimension == 0 {
-				return _type.PtTypeFloat
+				return _type.PtTypeFloat.(intmod.IType)
 			}
 			return _type.PtTypeFloat.CreateType(dimension)
 		case 'I':
 			if dimension == 0 {
-				return _type.PtTypeInt
+				return _type.PtTypeInt.(intmod.IType)
 			}
 			return _type.PtTypeInt.CreateType(dimension)
 		case 'J':
 			if dimension == 0 {
-				return _type.PtTypeLong
+				return _type.PtTypeLong.(intmod.IType)
 			}
 			return _type.PtTypeLong.CreateType(dimension)
 		case 'L':
 			reader.index--
-			return m.parseClassTypeSignature(reader, dimension).(_type.IType)
+			return m.parseClassTypeSignature(reader, dimension).(intmod.IType)
 		case 'S':
 			if dimension == 0 {
-				return _type.PtTypeShort
+				return _type.PtTypeShort.(intmod.IType)
 			}
 			return _type.PtTypeShort.CreateType(dimension)
 		case 'T':
@@ -523,15 +524,15 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) _type.I
 			identifier := reader.Substring(index)
 			reader.index++
 
-			return _type.NewGenericType(identifier, dimension)
+			return _type.NewGenericType(identifier, dimension).(intmod.IType)
 		case 'V':
 			if dimension == 0 {
-				return _type.PtTypeVoid
+				return _type.PtTypeVoid.(intmod.IType)
 			}
 			return _type.PtTypeVoid.CreateType(dimension)
 		case 'Z':
 			if dimension == 0 {
-				return _type.PtTypeBoolean
+				return _type.PtTypeBoolean.(intmod.IType)
 			}
 			return _type.PtTypeBoolean.CreateType(dimension)
 		default:
@@ -542,21 +543,21 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) _type.I
 	return nil
 }
 
-func (m *TypeMaker) parseTypeArgument(reader *SignatureReader) _type.ITypeArgument {
+func (m *TypeMaker) parseTypeArgument(reader *SignatureReader) intmod.ITypeArgument {
 	switch reader.Read() {
 	case '+':
-		return _type.NewWildcardExtendsTypeArgument(m.parseReferenceTypeSignature(reader))
+		return _type.NewWildcardExtendsTypeArgument(m.parseReferenceTypeSignature(reader)).(intmod.ITypeArgument)
 	case '-':
-		return _type.NewWildcardSuperTypeArgument(m.parseReferenceTypeSignature(reader))
+		return _type.NewWildcardSuperTypeArgument(m.parseReferenceTypeSignature(reader)).(intmod.ITypeArgument)
 	case '*':
-		return _type.WildcardTypeArgumentEmpty
+		return _type.WildcardTypeArgumentEmpty.(intmod.ITypeArgument)
 	default:
 		reader.index--
 		return m.parseReferenceTypeSignature(reader)
 	}
 }
 
-func (m *TypeMaker) MakeFromDescriptorOrInternalTypeName(descriptorOrInternalTypeName string) _type.IObjectType {
+func (m *TypeMaker) MakeFromDescriptorOrInternalTypeName(descriptorOrInternalTypeName string) intmod.IObjectType {
 	if descriptorOrInternalTypeName[0] == '[' {
 		return m.MakeFromDescriptor(descriptorOrInternalTypeName)
 	}
@@ -564,7 +565,7 @@ func (m *TypeMaker) MakeFromDescriptorOrInternalTypeName(descriptorOrInternalTyp
 	return m.MakeFromInternalTypeName(descriptorOrInternalTypeName)
 }
 
-func (m *TypeMaker) MakeFromDescriptor(descriptor string) _type.IObjectType {
+func (m *TypeMaker) MakeFromDescriptor(descriptor string) intmod.IObjectType {
 	ot := m.descriptorToObjectType[descriptor]
 
 	if ot == nil {
@@ -573,7 +574,7 @@ func (m *TypeMaker) MakeFromDescriptor(descriptor string) _type.IObjectType {
 			for descriptor[dimension] == '[' {
 				dimension++
 			}
-			ot = m.makeFromDescriptorWithoutBracket(descriptor[dimension:]).CreateType(dimension).(_type.IObjectType)
+			ot = m.makeFromDescriptorWithoutBracket(descriptor[dimension:]).CreateType(dimension).(intmod.IObjectType)
 		} else {
 			ot = m.makeFromDescriptorWithoutBracket(descriptor)
 		}
@@ -584,7 +585,7 @@ func (m *TypeMaker) MakeFromDescriptor(descriptor string) _type.IObjectType {
 	return ot
 }
 
-func (m *TypeMaker) makeFromDescriptorWithoutBracket(descriptor string) _type.IObjectType {
+func (m *TypeMaker) makeFromDescriptorWithoutBracket(descriptor string) intmod.IObjectType {
 	ot := InternalNameToObjectPrimitiveType[descriptor]
 
 	if ot == nil {
@@ -594,7 +595,7 @@ func (m *TypeMaker) makeFromDescriptorWithoutBracket(descriptor string) _type.IO
 	return ot
 }
 
-func (m *TypeMaker) MakeFromInternalTypeName(internalTypeName string) _type.IObjectType {
+func (m *TypeMaker) MakeFromInternalTypeName(internalTypeName string) intmod.IObjectType {
 	ot := m.loadType(internalTypeName)
 
 	if ot == nil {
@@ -604,11 +605,11 @@ func (m *TypeMaker) MakeFromInternalTypeName(internalTypeName string) _type.IObj
 	return ot
 }
 
-func (m *TypeMaker) create(internalTypeName string) _type.IObjectType {
+func (m *TypeMaker) create(internalTypeName string) intmod.IObjectType {
 	lastSlash := strings.LastIndex(internalTypeName, "/")
 	lastDollar := strings.LastIndex(internalTypeName, "$")
 
-	var ot _type.IObjectType
+	var ot intmod.IObjectType
 
 	if lastSlash < lastDollar {
 		outerTypeName := internalTypeName[:lastDollar]
@@ -620,10 +621,12 @@ func (m *TypeMaker) create(internalTypeName string) _type.IObjectType {
 			name := qualifiedName[lastSlash+1:]
 			ot = _type.NewObjectType(internalTypeName, qualifiedName, name)
 		} else if unicode.IsDigit(rune(innerName[0])) {
-			ot = _type.NewInnerObjectType(internalTypeName, "", extractLocalClassName(innerName), outerSot)
+			ot = _type.NewInnerObjectType(internalTypeName, "",
+				extractLocalClassName(innerName), outerSot).(intmod.IObjectType)
 		} else {
 			qualifiedName := outerSot.QualifiedName() + "." + innerName
-			ot = _type.NewInnerObjectType(internalTypeName, qualifiedName, innerName, outerSot)
+			ot = _type.NewInnerObjectType(internalTypeName, qualifiedName,
+				innerName, outerSot).(intmod.IObjectType)
 		}
 	} else {
 		qualifiedName := strings.ReplaceAll(internalTypeName, "/", ".")
@@ -636,7 +639,7 @@ func (m *TypeMaker) create(internalTypeName string) _type.IObjectType {
 	return ot
 }
 
-func (m *TypeMaker) SearchSuperParameterizedType(superObjectType, objectType _type.IObjectType) _type.IObjectType {
+func (m *TypeMaker) SearchSuperParameterizedType(superObjectType, objectType intmod.IObjectType) intmod.IObjectType {
 	if superObjectType == _type.OtTypeUndefinedObject || superObjectType == _type.OtTypeObject || superObjectType == objectType {
 		return objectType
 	} else if superObjectType.Dimension() > 0 || objectType.Dimension() > 0 {
@@ -648,7 +651,7 @@ func (m *TypeMaker) SearchSuperParameterizedType(superObjectType, objectType _ty
 	}
 }
 
-func (m *TypeMaker) IsAssignable(typeBounds map[string]_type.IType, left, right _type.IObjectType) bool {
+func (m *TypeMaker) IsAssignable(typeBounds map[string]intmod.IType, left, right intmod.IObjectType) bool {
 	if left == _type.OtTypeUndefinedObject || right == _type.OtTypeUndefinedObject || left == _type.OtTypeObject || left == right {
 		return true
 	} else if left.Dimension() > 0 || right.Dimension() > 0 {
@@ -670,7 +673,7 @@ func (m *TypeMaker) IsAssignable(typeBounds map[string]_type.IType, left, right 
 	return false
 }
 
-func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalTypeName string, right _type.IObjectType) _type.IObjectType {
+func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalTypeName string, right intmod.IObjectType) intmod.IObjectType {
 	if right == _type.OtTypeObject {
 		return nil
 	}
@@ -697,7 +700,7 @@ func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalT
 	return nil
 }
 
-func (m *TypeMaker) IsRawTypeAssignable(left, right _type.IObjectType) bool {
+func (m *TypeMaker) IsRawTypeAssignable(left, right intmod.IObjectType) bool {
 	// TODO
 	return false
 }
@@ -717,26 +720,26 @@ func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) *TypeTyp
 	return nil
 }
 
-func (m *TypeMaker) SetFieldType(internalTypeName, fieldName string, typ _type.IType) {
+func (m *TypeMaker) SetFieldType(internalTypeName, fieldName string, typ intmod.IType) {
 	// TODO
 }
 
-func (m *TypeMaker) MakeFieldType(internalTypeName, fieldName, descriptor string) _type.IType {
-	// TODO
-	return nil
-}
-
-func (m *TypeMaker) loadFieldType(internalTypeName, fieldName, descriptor string) _type.IType {
+func (m *TypeMaker) MakeFieldType(internalTypeName, fieldName, descriptor string) intmod.IType {
 	// TODO
 	return nil
 }
 
-func (m *TypeMaker) loadFieldType2(objectType _type.IObjectType, fieldName, descriptor string) _type.IType {
+func (m *TypeMaker) loadFieldType(internalTypeName, fieldName, descriptor string) intmod.IType {
 	// TODO
 	return nil
 }
 
-func (m *TypeMaker) SetMethodReturnedType(internalTypeName, methodName, descriptor string, typ _type.IType) {
+func (m *TypeMaker) loadFieldType2(objectType intmod.IObjectType, fieldName, descriptor string) intmod.IType {
+	// TODO
+	return nil
+}
+
+func (m *TypeMaker) SetMethodReturnedType(internalTypeName, methodName, descriptor string, typ intmod.IType) {
 	// TODO
 }
 
@@ -755,12 +758,12 @@ func (m *TypeMaker) loadMethodTypes(internalTypeName, methodName, descriptor str
 	return nil
 }
 
-func (m *TypeMaker) loadMethodTypes2(objectType _type.IObjectType, methodName, descriptor string) *MethodTypes {
+func (m *TypeMaker) loadMethodTypes2(objectType intmod.IObjectType, methodName, descriptor string) *MethodTypes {
 	// TODO
 	return nil
 }
 
-func (m *TypeMaker) loadType(internalTypeName string) _type.IObjectType {
+func (m *TypeMaker) loadType(internalTypeName string) intmod.IObjectType {
 	ot := m.internalTypeNameToObjectType[internalTypeName]
 	if ot == nil {
 		if m.loader.CanLoad(internalTypeName) {
@@ -774,7 +777,7 @@ func (m *TypeMaker) loadType(internalTypeName string) _type.IObjectType {
 	return ot
 }
 
-func (m *TypeMaker) loadType2(internalTypeName string, data []byte) _type.IObjectType {
+func (m *TypeMaker) loadType2(internalTypeName string, data []byte) intmod.IObjectType {
 	if data == nil {
 		return nil
 	}
@@ -792,7 +795,7 @@ func (m *TypeMaker) loadType2(internalTypeName string, data []byte) _type.IObjec
 	skipMembers(reader)
 
 	outerTypeName := ""
-	var outerObjectType _type.IObjectType
+	var outerObjectType intmod.IObjectType
 
 	// Load attributes
 	count := reader.ReadUnsignedShort()
@@ -851,10 +854,12 @@ func (m *TypeMaker) loadType2(internalTypeName string, data []byte) _type.IObjec
 		innerName := internalTypeName[index:]
 
 		if unicode.IsDigit(rune(innerName[0])) {
-			return _type.NewInnerObjectType(internalTypeName, "", extractLocalClassName(innerName), outerObjectType)
+			return _type.NewInnerObjectType(internalTypeName, "",
+				extractLocalClassName(innerName), outerObjectType).(intmod.IObjectType)
 		} else {
 			qualifiedName := outerObjectType.QualifiedName() + "." + innerName
-			return _type.NewInnerObjectType(internalTypeName, qualifiedName, innerName, outerObjectType)
+			return _type.NewInnerObjectType(internalTypeName, qualifiedName,
+				innerName, outerObjectType).(intmod.IObjectType)
 		}
 	}
 }
@@ -1019,7 +1024,7 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 	// TODO
 	if data != nil {
 		reader := deserializer.NewClassFileReader(data)
-		constants, err := m.loadClassFile(internalTypeName, reader)
+		_, _ = m.loadClassFile(internalTypeName, reader)
 	}
 
 	return false
@@ -1109,7 +1114,7 @@ func (m *TypeMaker) MatchCount(internalTypeName, name string, parameterCount int
 	return len(m.getSetOfParameterTypes(internalTypeName, suffixKey, constructor))
 }
 
-func (m *TypeMaker) MatchCount2(typeBounds map[string]_type.IType, internalTypeName, name string, parameters expression.IExpression, constructor bool) int {
+func (m *TypeMaker) MatchCount2(typeBounds map[string]intmod.IType, internalTypeName, name string, parameters intmod.IExpression, constructor bool) int {
 	parameterCount := parameters.Size()
 	suffixKey := fmt.Sprintf(":%s:%d", name, parameterCount)
 	setOfParameterTypes := m.getSetOfParameterTypes(internalTypeName, suffixKey, constructor)
@@ -1133,15 +1138,15 @@ func (m *TypeMaker) MatchCount2(typeBounds map[string]_type.IType, internalTypeN
 	}
 }
 
-func (m *TypeMaker) getSetOfParameterTypes(internalTypeName, suffixKey string, constructor bool) []_type.IType {
+func (m *TypeMaker) getSetOfParameterTypes(internalTypeName, suffixKey string, constructor bool) []intmod.IType {
 	key := internalTypeName + suffixKey
 	setOfParameterTypes := m.internalTypeNameMethodNameParameterCountToParameterTypes[key]
 
 	if setOfParameterTypes == nil {
-		setOfParameterTypes = make([]_type.IType, 0)
+		setOfParameterTypes = make([]intmod.IType, 0)
 
 		if !constructor {
-			typeTypes := m.makeTypeTypes(internalTypeName)
+			typeTypes := m.MakeTypeTypes(internalTypeName)
 
 			if typeTypes != nil && typeTypes.SuperType != nil {
 				setOfParameterTypes = append(setOfParameterTypes,
@@ -1163,7 +1168,7 @@ func (m *TypeMaker) getSetOfParameterTypes(internalTypeName, suffixKey string, c
 	return setOfParameterTypes
 }
 
-func (m *TypeMaker) match(typeBounds map[string]_type.IType, parameterTypes _type.IType, parameters expression.IExpression) bool {
+func (m *TypeMaker) match(typeBounds map[string]intmod.IType, parameterTypes intmod.IType, parameters intmod.IExpression) bool {
 	if parameterTypes.Size() != parameters.Size() {
 		return false
 	}
@@ -1183,7 +1188,7 @@ func (m *TypeMaker) match(typeBounds map[string]_type.IType, parameterTypes _typ
 	}
 }
 
-func (m *TypeMaker) match2(typeBounds map[string]_type.IType, leftType _type.IType, rightType _type.IType) bool {
+func (m *TypeMaker) match2(typeBounds map[string]intmod.IType, leftType intmod.IType, rightType intmod.IType) bool {
 	if leftType == rightType {
 		return true
 	}
@@ -1308,15 +1313,15 @@ func (r *SignatureReader) String() string {
 }
 
 type TypeTypes struct {
-	ThisType       _type.IObjectType
-	TypeParameters _type.ITypeParameter
-	SuperType      _type.IObjectType
-	Interfaces     _type.IType
+	ThisType       intmod.IObjectType
+	TypeParameters intmod.ITypeParameter
+	SuperType      intmod.IObjectType
+	Interfaces     intmod.IType
 }
 
 type MethodTypes struct {
-	TypeParameters _type.ITypeParameter
-	ParameterTypes _type.IType
-	ReturnedType   _type.IType
-	ExceptionTypes _type.IType
+	TypeParameters intmod.ITypeParameter
+	ParameterTypes intmod.IType
+	ReturnedType   intmod.IType
+	ExceptionTypes intmod.IType
 }

@@ -1,6 +1,6 @@
 package javafragment
 
-import "bitbucket.org/coontec/javaClass/class/model/fragment"
+import "bitbucket.org/coontec/go-jd-core/class/model/fragment"
 
 func NewStartBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartBlockFragment {
 	return &StartBlockFragment{

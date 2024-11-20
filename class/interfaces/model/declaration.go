@@ -1,7 +1,7 @@
 package model
 
 import (
-	"bitbucket.org/coontec/javaClass/class/util"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 const (

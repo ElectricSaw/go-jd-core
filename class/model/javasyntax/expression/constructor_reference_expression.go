@@ -1,7 +1,7 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
 func NewConstructorReferenceExpression(typ intsyn.IType, objectType intsyn.IObjectType,

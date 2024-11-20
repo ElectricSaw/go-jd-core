@@ -1,31 +1,30 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileFormalParameter(localVariable localvariable.ILocalVariable) *ClassFileFormalParameter {
+func NewClassFileFormalParameter(localVariable intsrv.ILocalVariable) intsrv.IClassFileFormalParameter {
 	return &ClassFileFormalParameter{
-		FormalParameter: *declaration.NewFormalParameter(nil, ""),
+		FormalParameter: *declaration.NewFormalParameter(nil, "").(*declaration.FormalParameter),
 		localVariable:   localVariable,
 	}
 }
 
-func NewClassFileFormalParameter2(localVariable localvariable.ILocalVariable, varargs bool) *ClassFileFormalParameter {
+func NewClassFileFormalParameter2(localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
 	return &ClassFileFormalParameter{
-		FormalParameter: *declaration.NewFormalParameter3(nil, varargs, ""),
+		FormalParameter: *declaration.NewFormalParameter3(nil, varargs, "").(*declaration.FormalParameter),
 		localVariable:   localVariable,
 	}
 }
 
-func NewClassFileFormalParameter3(annotationReferences reference.IAnnotationReference,
-	localVariable localvariable.ILocalVariable, varargs bool) *ClassFileFormalParameter {
+func NewClassFileFormalParameter3(annotationReferences intmod.IAnnotationReference,
+	localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
 	return &ClassFileFormalParameter{
-		FormalParameter: *declaration.NewFormalParameter4(annotationReferences, nil, varargs, ""),
+		FormalParameter: *declaration.NewFormalParameter4(annotationReferences, nil, varargs, "").(*declaration.FormalParameter),
 		localVariable:   localVariable,
 	}
 }
@@ -33,10 +32,10 @@ func NewClassFileFormalParameter3(annotationReferences reference.IAnnotationRefe
 type ClassFileFormalParameter struct {
 	declaration.FormalParameter
 
-	localVariable localvariable.ILocalVariable
+	localVariable intsrv.ILocalVariable
 }
 
-func (p *ClassFileFormalParameter) Type() _type.IType {
+func (p *ClassFileFormalParameter) Type() intmod.IType {
 	return p.localVariable.Type()
 }
 
@@ -44,12 +43,12 @@ func (p *ClassFileFormalParameter) Name() string {
 	return p.localVariable.Name()
 }
 
-func (p *ClassFileFormalParameter) LocalVariable() localvariable.ILocalVariableReference {
+func (p *ClassFileFormalParameter) LocalVariable() intsrv.ILocalVariableReference {
 	return p.localVariable
 }
 
-func (p *ClassFileFormalParameter) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
-	p.localVariable = localVariable.(localvariable.ILocalVariable)
+func (p *ClassFileFormalParameter) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
+	p.localVariable = localVariable.(intsrv.ILocalVariable)
 }
 
 func (p *ClassFileFormalParameter) String() string {

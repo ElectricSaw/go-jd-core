@@ -1,28 +1,29 @@
 package expression
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 )
 
-func NewClassFileConstructorInvocationExpression(lineNumber int, typ _type.IObjectType, descriptor string,
-	parameterTypes _type.IType, parameters expression.IExpression) *ClassFileConstructorInvocationExpression {
+func NewClassFileConstructorInvocationExpression(lineNumber int, typ intmod.IObjectType, descriptor string,
+	parameterTypes intmod.IType, parameters intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression {
 	return &ClassFileConstructorInvocationExpression{
 		ConstructorInvocationExpression: *expression.NewConstructorInvocationExpressionWithAll(
-			lineNumber, typ, descriptor, parameters),
+			lineNumber, typ, descriptor, parameters).(*expression.ConstructorInvocationExpression),
 		parameterTypes: parameterTypes,
 	}
 }
 
 type ClassFileConstructorInvocationExpression struct {
 	expression.ConstructorInvocationExpression
-	parameterTypes _type.IType
+	parameterTypes intmod.IType
 }
 
-func (e *ClassFileConstructorInvocationExpression) ParameterTypes() _type.IType {
+func (e *ClassFileConstructorInvocationExpression) ParameterTypes() intmod.IType {
 	return e.parameterTypes
 }
 
-func (e *ClassFileConstructorInvocationExpression) SetParameterTypes(parameterTypes _type.IType) {
+func (e *ClassFileConstructorInvocationExpression) SetParameterTypes(parameterTypes intmod.IType) {
 	e.parameterTypes = parameterTypes
 }

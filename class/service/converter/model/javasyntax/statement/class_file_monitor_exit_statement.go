@@ -1,18 +1,23 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 	"fmt"
 )
+
+func NewClassFileMonitorExitStatement() intsrv.IClassFileMonitorExitStatement {
+	return &ClassFileMonitorExitStatement{}
+}
 
 type ClassFileMonitorExitStatement struct {
 	statement.CommentStatement
 
-	monitor expression.IExpression
+	monitor intmod.IExpression
 }
 
-func (s *ClassFileMonitorExitStatement) Monitor() expression.IExpression {
+func (s *ClassFileMonitorExitStatement) Monitor() intmod.IExpression {
 	return s.monitor
 }
 

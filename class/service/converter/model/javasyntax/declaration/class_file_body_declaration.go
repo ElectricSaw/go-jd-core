@@ -1,15 +1,17 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileBodyDeclaration(classFile *classfile.ClassFile, bindings map[string]_type.ITypeArgument, typeBounds map[string]_type.IType, outerBodyDeclaration *ClassFileBodyDeclaration) *ClassFileBodyDeclaration {
+func NewClassFileBodyDeclaration(classFile *classfile.ClassFile, bindings map[string]intmod.ITypeArgument,
+	typeBounds map[string]intmod.IType, outerBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
 	return &ClassFileBodyDeclaration{
-		BodyDeclaration:      *declaration.NewBodyDeclaration(classFile.InternalTypeName(), nil),
+		BodyDeclaration:      *declaration.NewBodyDeclaration(classFile.InternalTypeName(), nil).(*declaration.BodyDeclaration),
 		classFile:            classFile,
 		bindings:             bindings,
 		typeBounds:           typeBounds,
@@ -21,45 +23,45 @@ type ClassFileBodyDeclaration struct {
 	declaration.BodyDeclaration
 
 	classFile                *classfile.ClassFile
-	fieldDeclarations        []ClassFileFieldDeclaration
-	methodDeclarations       []ClassFileConstructorOrMethodDeclaration
-	innerTypeDeclarations    []ClassFileTypeDeclaration
-	innerTypeMap             map[string]ClassFileTypeDeclaration
+	fieldDeclarations        []intsrv.IClassFileFieldDeclaration
+	methodDeclarations       []intsrv.IClassFileConstructorOrMethodDeclaration
+	innerTypeDeclarations    []intsrv.IClassFileTypeDeclaration
+	innerTypeMap             map[string]intsrv.IClassFileTypeDeclaration
 	firstLineNumber          int
 	outerTypeFieldName       string
 	syntheticInnerFieldNames []string
-	outerBodyDeclaration     *ClassFileBodyDeclaration
-	bindings                 map[string]_type.ITypeArgument
-	typeBounds               map[string]_type.IType
+	outerBodyDeclaration     intsrv.IClassFileBodyDeclaration
+	bindings                 map[string]intmod.ITypeArgument
+	typeBounds               map[string]intmod.IType
 }
 
-func (d *ClassFileBodyDeclaration) SetMemberDeclarations(memberDeclaration declaration.IMemberDeclaration) {
+func (d *ClassFileBodyDeclaration) SetMemberDeclarations(memberDeclaration intmod.IMemberDeclaration) {
 	d.SetMemberDeclarations(memberDeclaration)
 }
 
-func (d *ClassFileBodyDeclaration) FieldDeclarations() []ClassFileFieldDeclaration {
+func (d *ClassFileBodyDeclaration) FieldDeclarations() []intsrv.IClassFileFieldDeclaration {
 	return d.fieldDeclarations
 }
 
-func (d *ClassFileBodyDeclaration) SetFieldDeclarations(fieldDeclarations []ClassFileFieldDeclaration) {
+func (d *ClassFileBodyDeclaration) SetFieldDeclarations(fieldDeclarations []intsrv.IClassFileFieldDeclaration) {
 	if fieldDeclarations != nil {
 		d.fieldDeclarations = fieldDeclarations
-		tmp := make([]ClassFileMemberDeclaration, 0, len(fieldDeclarations))
+		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(fieldDeclarations))
 		for _, v := range d.fieldDeclarations {
-			tmp = append(tmp, &v)
+			tmp = append(tmp, v.(intsrv.IClassFileMemberDeclaration))
 		}
 		d.UpdateFirstLineNumber(tmp)
 	}
 }
 
-func (d *ClassFileBodyDeclaration) MethodDeclaration() []ClassFileConstructorOrMethodDeclaration {
+func (d *ClassFileBodyDeclaration) MethodDeclaration() []intsrv.IClassFileConstructorOrMethodDeclaration {
 	return d.methodDeclarations
 }
 
-func (d *ClassFileBodyDeclaration) SetMethodDeclaration(methodDeclarations []ClassFileConstructorOrMethodDeclaration) {
+func (d *ClassFileBodyDeclaration) SetMethodDeclaration(methodDeclarations []intsrv.IClassFileConstructorOrMethodDeclaration) {
 	if methodDeclarations != nil {
 		d.methodDeclarations = methodDeclarations
-		tmp := make([]ClassFileMemberDeclaration, 0, len(methodDeclarations))
+		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(methodDeclarations))
 		for _, v := range d.methodDeclarations {
 			tmp = append(tmp, v)
 		}
@@ -67,26 +69,26 @@ func (d *ClassFileBodyDeclaration) SetMethodDeclaration(methodDeclarations []Cla
 	}
 }
 
-func (d *ClassFileBodyDeclaration) InnerTypeDeclarations() []ClassFileTypeDeclaration {
+func (d *ClassFileBodyDeclaration) InnerTypeDeclarations() []intsrv.IClassFileTypeDeclaration {
 	return d.innerTypeDeclarations
 }
 
-func (d *ClassFileBodyDeclaration) SetInnerTypeDeclarations(innerTypeDeclarations []ClassFileTypeDeclaration) {
+func (d *ClassFileBodyDeclaration) SetInnerTypeDeclarations(innerTypeDeclarations []intsrv.IClassFileTypeDeclaration) {
 	if innerTypeDeclarations != nil {
 		d.innerTypeDeclarations = innerTypeDeclarations
-		tmp := make([]ClassFileMemberDeclaration, 0, len(innerTypeDeclarations))
+		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(innerTypeDeclarations))
 		for _, v := range d.innerTypeDeclarations {
 			tmp = append(tmp, v)
 		}
 		d.UpdateFirstLineNumber(tmp)
-		d.innerTypeMap = make(map[string]ClassFileTypeDeclaration)
+		d.innerTypeMap = make(map[string]intsrv.IClassFileTypeDeclaration)
 		for _, innerType := range innerTypeDeclarations {
 			d.innerTypeMap[innerType.InternalTypeName()] = innerType
 		}
 	}
 }
 
-func (d *ClassFileBodyDeclaration) InnerTypeDeclaration(internalName string) ClassFileTypeDeclaration {
+func (d *ClassFileBodyDeclaration) InnerTypeDeclaration(internalName string) intsrv.IClassFileTypeDeclaration {
 	decla := d.innerTypeMap[internalName]
 
 	if decla == nil && d.outerBodyDeclaration != nil {
@@ -96,7 +98,7 @@ func (d *ClassFileBodyDeclaration) InnerTypeDeclaration(internalName string) Cla
 	return decla
 }
 
-func (d *ClassFileBodyDeclaration) RemoveInnerTypeDeclaration(internalName string) ClassFileTypeDeclaration {
+func (d *ClassFileBodyDeclaration) RemoveInnerTypeDeclaration(internalName string) intsrv.IClassFileTypeDeclaration {
 	removed := d.innerTypeMap[internalName]
 
 	delete(d.innerTypeMap, internalName)
@@ -105,7 +107,7 @@ func (d *ClassFileBodyDeclaration) RemoveInnerTypeDeclaration(internalName strin
 	return removed
 }
 
-func (d *ClassFileBodyDeclaration) removeInnerTypeDeclaration(removed ClassFileTypeDeclaration) {
+func (d *ClassFileBodyDeclaration) removeInnerTypeDeclaration(removed intsrv.IClassFileTypeDeclaration) {
 	var index int
 	for i, found := range d.innerTypeDeclarations {
 		if removed == found {
@@ -117,7 +119,7 @@ func (d *ClassFileBodyDeclaration) removeInnerTypeDeclaration(removed ClassFileT
 	d.innerTypeDeclarations = append(d.innerTypeDeclarations[:index], d.innerTypeDeclarations[index+1:]...)
 }
 
-func (d *ClassFileBodyDeclaration) UpdateFirstLineNumber(members []ClassFileMemberDeclaration) {
+func (d *ClassFileBodyDeclaration) UpdateFirstLineNumber(members []intsrv.IClassFileMemberDeclaration) {
 	for _, member := range members {
 		lineNumber := member.FirstLineNumber()
 
@@ -152,15 +154,15 @@ func (d *ClassFileBodyDeclaration) SyntheticInnerFieldNames() []string {
 	return d.syntheticInnerFieldNames
 }
 
-func (d *ClassFileBodyDeclaration) OuterBodyDeclaration() *ClassFileBodyDeclaration {
+func (d *ClassFileBodyDeclaration) OuterBodyDeclaration() intsrv.IClassFileBodyDeclaration {
 	return d.outerBodyDeclaration
 }
 
-func (d *ClassFileBodyDeclaration) Bindings() map[string]_type.ITypeArgument {
+func (d *ClassFileBodyDeclaration) Bindings() map[string]intmod.ITypeArgument {
 	return d.bindings
 }
 
-func (d *ClassFileBodyDeclaration) TypeBounds() map[string]_type.IType {
+func (d *ClassFileBodyDeclaration) TypeBounds() map[string]intmod.IType {
 	return d.typeBounds
 }
 

@@ -1,7 +1,7 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
 func NewTryStatement(tryStatements intsyn.IStatement, catchClauses []intsyn.ICatchClause, finallyStatement intsyn.IStatement) intsyn.ITryStatement {

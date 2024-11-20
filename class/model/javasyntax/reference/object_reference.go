@@ -1,8 +1,8 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
 func NewObjectReference(internalName, qualifiedName, name string) intsyn.IObjectReference {

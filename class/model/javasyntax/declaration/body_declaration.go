@@ -1,6 +1,6 @@
 package declaration
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 func NewBodyDeclaration(internalTypeName string, memberDeclaration intsyn.IMemberDeclaration) intsyn.IBodyDeclaration {
 	return &BodyDeclaration{

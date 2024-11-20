@@ -1,38 +1,40 @@
 package expression
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 )
 
-func NewClassFileMethodInvocationExpression(lineNumber int, typeParameters _type.ITypeParameter, typ _type.IType,
-	expr expression.IExpression, internalTypeName, name, descriptor string, parameterTypes _type.IType,
-	parameters expression.IExpression) *ClassFileMethodInvocationExpression {
+func NewClassFileMethodInvocationExpression(lineNumber int, typeParameters intmod.ITypeParameter, typ intmod.IType,
+	expr intmod.IExpression, internalTypeName, name, descriptor string, parameterTypes intmod.IType,
+	parameters intmod.IExpression) intsrv.IClassFileMethodInvocationExpression {
 	return &ClassFileMethodInvocationExpression{
-		MethodInvocationExpression: *expression.NewMethodInvocationExpressionWithAll(lineNumber, typ, expr, internalTypeName, name, descriptor, parameters),
-		typeParameters:             typeParameters,
-		parameterTypes:             parameterTypes,
-		bound:                      false,
+		MethodInvocationExpression: *expression.NewMethodInvocationExpressionWithAll(lineNumber,
+			typ, expr, internalTypeName, name, descriptor, parameters).(*expression.MethodInvocationExpression),
+		typeParameters: typeParameters,
+		parameterTypes: parameterTypes,
+		bound:          false,
 	}
 }
 
 type ClassFileMethodInvocationExpression struct {
 	expression.MethodInvocationExpression
 
-	typeParameters _type.ITypeParameter
-	parameterTypes _type.IType
+	typeParameters intmod.ITypeParameter
+	parameterTypes intmod.IType
 	bound          bool
 }
 
-func (e *ClassFileMethodInvocationExpression) TypeParameters() _type.ITypeParameter {
+func (e *ClassFileMethodInvocationExpression) TypeParameters() intmod.ITypeParameter {
 	return e.typeParameters
 }
 
-func (e *ClassFileMethodInvocationExpression) ParameterTypes() _type.IType {
+func (e *ClassFileMethodInvocationExpression) ParameterTypes() intmod.IType {
 	return e.parameterTypes
 }
 
-func (e *ClassFileMethodInvocationExpression) SetParameterTypes(parameterTypes _type.IType) {
+func (e *ClassFileMethodInvocationExpression) SetParameterTypes(parameterTypes intmod.IType) {
 	e.parameterTypes = parameterTypes
 }
 

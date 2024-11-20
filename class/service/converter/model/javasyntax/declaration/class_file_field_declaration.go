@@ -1,34 +1,34 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileFieldDeclaration(flags int, typ _type.IType, fieldDeclaration declaration.IFieldDeclarator) *ClassFileFieldDeclaration {
+func NewClassFileFieldDeclaration(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intsrv.IClassFileFieldDeclaration {
 	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration),
+		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
 	}
 }
 
-func NewClassFileFieldDeclaration2(flags int, typ _type.IType, fieldDeclaration declaration.IFieldDeclarator, firstLineNumber int) *ClassFileFieldDeclaration {
+func NewClassFileFieldDeclaration2(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
 	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration),
+		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
 		firstLineNumber:  firstLineNumber,
 	}
 }
 
-func NewClassFileFieldDeclaration3(annotationReferences reference.IAnnotationReference, flags int, typ _type.IType, fieldDeclaration declaration.IFieldDeclarator) *ClassFileFieldDeclaration {
+func NewClassFileFieldDeclaration3(annotationReferences intmod.IAnnotationReference, flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intsrv.IClassFileFieldDeclaration {
 	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration),
+		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
 	}
 }
 
-func NewClassFileFieldDeclaration4(annotationReferences reference.IAnnotationReference, flags int, typ _type.IType, fieldDeclaration declaration.IFieldDeclarator, firstLineNumber int) *ClassFileFieldDeclaration {
+func NewClassFileFieldDeclaration4(annotationReferences intmod.IAnnotationReference, flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
 	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration),
+		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
 		firstLineNumber:  firstLineNumber,
 	}
 }

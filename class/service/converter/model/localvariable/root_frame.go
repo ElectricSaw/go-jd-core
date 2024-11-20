@@ -1,6 +1,6 @@
 package localvariable
 
-import "bitbucket.org/coontec/javaClass/class/service/converter/utils"
+import "bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 
 func NewRootFrame() *RootFrame {
 	return &RootFrame{

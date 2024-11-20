@@ -1,6 +1,6 @@
 package model
 
-import "bitbucket.org/coontec/javaClass/class/util"
+import "bitbucket.org/coontec/go-jd-core/class/util"
 
 type IAssertStatement interface {
 	Condition() IExpression
@@ -73,6 +73,7 @@ type IForStatement interface {
 
 type IIfElseStatement interface {
 	Condition() IExpression
+	SetCondition(condition IExpression)
 	Statements() IStatement
 	ElseStatements() IStatement
 	IsIfElseStatement() bool

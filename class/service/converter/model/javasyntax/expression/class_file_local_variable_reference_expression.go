@@ -1,16 +1,17 @@
 package expression
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 )
 
 func NewClassFileLocalVariableReferenceExpression(lineNumber, offset int,
-	localVariable localvariable.ILocalVariable) *ClassFileLocalVariableReferenceExpression {
+	localVariable intsrv.ILocalVariable) intsrv.IClassFileLocalVariableReferenceExpression {
 	e := &ClassFileLocalVariableReferenceExpression{
-		LocalVariableReferenceExpression: *expression.NewLocalVariableReferenceExpressionWithAll(lineNumber, nil, ""),
-		offset:                           offset,
-		localVariable:                    localVariable,
+		LocalVariableReferenceExpression: *expression.NewLocalVariableReferenceExpressionWithAll(
+			lineNumber, nil, "").(*expression.LocalVariableReferenceExpression),
+		offset:        offset,
+		localVariable: localVariable,
 	}
 	e.localVariable.AddReference(e)
 
@@ -21,17 +22,17 @@ type ClassFileLocalVariableReferenceExpression struct {
 	expression.LocalVariableReferenceExpression
 
 	offset        int
-	localVariable localvariable.ILocalVariable
+	localVariable intsrv.ILocalVariable
 }
 
 func (e *ClassFileLocalVariableReferenceExpression) Offset() int {
 	return e.offset
 }
 
-func (e *ClassFileLocalVariableReferenceExpression) LocalVariable() localvariable.ILocalVariableReference {
+func (e *ClassFileLocalVariableReferenceExpression) LocalVariable() intsrv.ILocalVariableReference {
 	return e.localVariable
 }
 
-func (e *ClassFileLocalVariableReferenceExpression) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
-	e.localVariable = localVariable.(localvariable.ILocalVariable)
+func (e *ClassFileLocalVariableReferenceExpression) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
+	e.localVariable = localVariable.(intsrv.ILocalVariable)
 }

@@ -1,9 +1,9 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/util"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 type AbstractStatement struct {

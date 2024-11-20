@@ -1,6 +1,6 @@
 package javafragment
 
-import "bitbucket.org/coontec/javaClass/class/model/fragment"
+import "bitbucket.org/coontec/go-jd-core/class/model/fragment"
 
 func NewSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) *SpacerFragment {
 	return &SpacerFragment{

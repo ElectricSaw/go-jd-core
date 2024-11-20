@@ -1,9 +1,9 @@
 package tests
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/message"
-	"bitbucket.org/coontec/javaClass/class/service/deserializer"
-	"bitbucket.org/coontec/javaClass/class/tests/testutils"
+	"bitbucket.org/coontec/go-jd-core/class/model/message"
+	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
+	"bitbucket.org/coontec/go-jd-core/class/tests/testutils"
 	"strings"
 	"testing"
 )

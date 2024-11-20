@@ -1,8 +1,8 @@
 package javafragment
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/fragment"
-	"bitbucket.org/coontec/javaClass/class/model/token"
+	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
+	"bitbucket.org/coontec/go-jd-core/class/model/token"
 )
 
 func NewLineNumberTokensFragment(tokens []token.Token) *LineNumberTokensFragment {

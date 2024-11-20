@@ -1,23 +1,20 @@
 package visitor
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
 type AbstractUpdateExpressionVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 }
 
-func (v *AbstractUpdateExpressionVisitor) UpdateExpression(expression expression.IExpression) expression.IExpression {
+func (v *AbstractUpdateExpressionVisitor) UpdateExpression(expression intmod.IExpression) intmod.IExpression {
 	return nil
 }
 
-func (v *AbstractUpdateExpressionVisitor) UpdateBaseExpression(baseExpression expression.IExpression) expression.IExpression {
+func (v *AbstractUpdateExpressionVisitor) UpdateBaseExpression(baseExpression intmod.IExpression) intmod.IExpression {
 	if baseExpression == nil {
 		return nil
 	}
@@ -36,31 +33,31 @@ func (v *AbstractUpdateExpressionVisitor) UpdateBaseExpression(baseExpression ex
 	return v.UpdateExpression(baseExpression.First())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitAnnotationDeclaration(decl *declaration.AnnotationDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitAnnotationDeclaration(decl intmod.IAnnotationDeclaration) {
 	v.SafeAcceptDeclaration(decl.AnnotationDeclarators())
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitClassDeclaration(declaration *declaration.ClassDeclaration) {
-	v.VisitInterfaceDeclaration(&declaration.InterfaceDeclaration)
+func (v *AbstractUpdateExpressionVisitor) VisitClassDeclaration(declaration intmod.IClassDeclaration) {
+	v.VisitInterfaceDeclaration(declaration)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitConstructorInvocationExpression(expression *expression.ConstructorInvocationExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitConstructorInvocationExpression(expression intmod.IConstructorInvocationExpression) {
 	if expression.Parameters() != nil {
 		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
 		expression.Parameters().Accept(v)
 	}
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitConstructorDeclaration(declaration *declaration.ConstructorDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitConstructorDeclaration(declaration intmod.IConstructorDeclaration) {
 	v.SafeAcceptStatement(declaration.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitEnumDeclaration(declaration *declaration.EnumDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitEnumDeclaration(declaration intmod.IEnumDeclaration) {
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitEnumDeclarationConstant(declaration *declaration.Constant) {
+func (v *AbstractUpdateExpressionVisitor) VisitEnumDeclarationConstant(declaration intmod.IConstant) {
 	if declaration.Arguments() != nil {
 		declaration.SetArguments(v.UpdateBaseExpression(declaration.Arguments()))
 		declaration.Arguments().Accept(v)
@@ -68,84 +65,84 @@ func (v *AbstractUpdateExpressionVisitor) VisitEnumDeclarationConstant(declarati
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitExpressionVariableInitializer(declaration *declaration.ExpressionVariableInitializer) {
+func (v *AbstractUpdateExpressionVisitor) VisitExpressionVariableInitializer(declaration intmod.IExpressionVariableInitializer) {
 	if declaration.Expression() != nil {
 		declaration.SetExpression(v.UpdateExpression(declaration.Expression()))
 		declaration.Expression().Accept(v)
 	}
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclaration(declaration *declaration.FieldDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclaration(declaration intmod.IFieldDeclaration) {
 	declaration.FieldDeclarators().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclarator(declaration *declaration.FieldDeclarator) {
+func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclarator(declaration intmod.IFieldDeclarator) {
 	v.SafeAcceptDeclaration(declaration.VariableInitializer())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitFormalParameter(declaration *declaration.FormalParameter) {
+func (v *AbstractUpdateExpressionVisitor) VisitFormalParameter(declaration intmod.IFormalParameter) {
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitInterfaceDeclaration(declaration *declaration.InterfaceDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitInterfaceDeclaration(declaration intmod.IInterfaceDeclaration) {
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableDeclaration(declaration *declaration.LocalVariableDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableDeclaration(declaration intmod.ILocalVariableDeclaration) {
 	declaration.LocalVariableDeclarators().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableDeclarator(declarator *declaration.LocalVariableDeclarator) {
+func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableDeclarator(declarator intmod.ILocalVariableDeclarator) {
 	v.SafeAcceptDeclaration(declarator.VariableInitializer())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitMethodDeclaration(declaration *declaration.MethodDeclaration) {
+func (v *AbstractUpdateExpressionVisitor) VisitMethodDeclaration(declaration intmod.IMethodDeclaration) {
 	v.SafeAcceptReference(declaration.AnnotationReferences())
 	v.SafeAcceptStatement(declaration.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitArrayExpression(expression *expression.ArrayExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitArrayExpression(expression intmod.IArrayExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.SetIndex(v.UpdateExpression(expression.Index()))
 	expression.Expression().Accept(v)
 	expression.Index().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitBinaryOperatorExpression(expression *expression.BinaryOperatorExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitBinaryOperatorExpression(expression intmod.IBinaryOperatorExpression) {
 	expression.SetLeftExpression(v.UpdateExpression(expression.LeftExpression()))
 	expression.SetRightExpression(v.UpdateExpression(expression.RightExpression()))
 	expression.LeftExpression().Accept(v)
 	expression.RightExpression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitCastExpression(expression *expression.CastExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitCastExpression(expression intmod.ICastExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitFieldReferenceExpression(expression *expression.FieldReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitFieldReferenceExpression(expression intmod.IFieldReferenceExpression) {
 	if expression.Expression() != nil {
 		expression.SetExpression(v.UpdateExpression(expression.Expression()))
 		expression.Expression().Accept(v)
 	}
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitInstanceOfExpression(expression *expression.InstanceOfExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitInstanceOfExpression(expression intmod.IInstanceOfExpression) {
 	if expression.Expression() != nil {
 		expression.SetExpression(v.UpdateExpression(expression.Expression()))
 		expression.Expression().Accept(v)
 	}
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitLambdaFormalParametersExpression(expression *expression.LambdaFormalParametersExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitLambdaFormalParametersExpression(expression intmod.ILambdaFormalParametersExpression) {
 	expression.Statements().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitLengthExpression(expression *expression.LengthExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitLengthExpression(expression intmod.ILengthExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitMethodInvocationExpression(expression *expression.MethodInvocationExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitMethodInvocationExpression(expression intmod.IMethodInvocationExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	if expression.Parameters() != nil {
 		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
@@ -154,19 +151,19 @@ func (v *AbstractUpdateExpressionVisitor) VisitMethodInvocationExpression(expres
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitMethodReferenceExpression(expression *expression.MethodReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitMethodReferenceExpression(expression intmod.IMethodReferenceExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitNewArray(expression *expression.NewArray) {
+func (v *AbstractUpdateExpressionVisitor) VisitNewArray(expression intmod.INewArray) {
 	if expression.DimensionExpressionList() != nil {
 		expression.SetDimensionExpressionList(v.UpdateBaseExpression(expression.DimensionExpressionList()))
 		expression.DimensionExpressionList().Accept(v)
 	}
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitNewExpression(expression *expression.NewExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitNewExpression(expression intmod.INewExpression) {
 	if expression.Parameters() != nil {
 		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
 		expression.Parameters().Accept(v)
@@ -174,33 +171,33 @@ func (v *AbstractUpdateExpressionVisitor) VisitNewExpression(expression *express
 	// v.SafeAccept(expression.BodyDeclaration());
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitNewInitializedArray(expression *expression.NewInitializedArray) {
+func (v *AbstractUpdateExpressionVisitor) VisitNewInitializedArray(expression intmod.INewInitializedArray) {
 	v.SafeAcceptDeclaration(expression.ArrayInitializer())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitParenthesesExpression(expression *expression.ParenthesesExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitParenthesesExpression(expression intmod.IParenthesesExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitPostOperatorExpression(expression *expression.PostOperatorExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitPostOperatorExpression(expression intmod.IPostOperatorExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitPreOperatorExpression(expression *expression.PreOperatorExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitPreOperatorExpression(expression intmod.IPreOperatorExpression) {
 	expression.SetExpression(v.UpdateExpression(expression.Expression()))
 	expression.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitSuperConstructorInvocationExpression(expression *expression.SuperConstructorInvocationExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitSuperConstructorInvocationExpression(expression intmod.ISuperConstructorInvocationExpression) {
 	if expression.Parameters() != nil {
 		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
 		expression.Parameters().Accept(v)
 	}
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitTernaryOperatorExpression(expression *expression.TernaryOperatorExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitTernaryOperatorExpression(expression intmod.ITernaryOperatorExpression) {
 	expression.SetCondition(v.UpdateExpression(expression.Condition()))
 	expression.SetTrueExpression(v.UpdateExpression(expression.TrueExpression()))
 	expression.SetFalseExpression(v.UpdateExpression(expression.FalseExpression()))
@@ -209,35 +206,35 @@ func (v *AbstractUpdateExpressionVisitor) VisitTernaryOperatorExpression(express
 	expression.FalseExpression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitExpressionElementValue(reference *reference.ExpressionElementValue) {
+func (v *AbstractUpdateExpressionVisitor) VisitExpressionElementValue(reference intmod.IExpressionElementValue) {
 	reference.SetExpression(v.UpdateExpression(reference.Expression()))
 	reference.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitAssertStatement(statement *statement.AssertStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitAssertStatement(statement intmod.IAssertStatement) {
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	statement.Condition().Accept(v)
 	v.SafeAcceptExpression(statement.Message())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitDoWhileStatement(statement *statement.DoWhileStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitDoWhileStatement(statement intmod.IDoWhileStatement) {
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	v.SafeAcceptExpression(statement.Condition())
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitExpressionStatement(statement *statement.ExpressionStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitExpressionStatement(statement intmod.IExpressionStatement) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitForEachStatement(statement *statement.ForEachStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitForEachStatement(statement intmod.IForEachStatement) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitForStatement(statement *statement.ForStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitForStatement(statement intmod.IForStatement) {
 	v.SafeAcceptDeclaration(statement.Declaration())
 	if statement.Init() != nil {
 		statement.SetInit(v.UpdateBaseExpression(statement.Init()))
@@ -254,111 +251,111 @@ func (v *AbstractUpdateExpressionVisitor) VisitForStatement(statement *statement
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitIfStatement(statement *statement.IfStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitIfStatement(statement intmod.IIfStatement) {
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	statement.Condition().Accept(v)
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitIfElseStatement(statement *statement.IfElseStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitIfElseStatement(statement intmod.IIfElseStatement) {
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	statement.Condition().Accept(v)
 	v.SafeAcceptStatement(statement.Statements())
 	statement.ElseStatements().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitLambdaExpressionStatement(statement *statement.LambdaExpressionStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitLambdaExpressionStatement(statement intmod.ILambdaExpressionStatement) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitReturnExpressionStatement(statement *statement.ReturnExpressionStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitReturnExpressionStatement(statement intmod.IReturnExpressionStatement) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatement(statement *statement.SwitchStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatement(statement intmod.ISwitchStatement) {
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	statement.Condition().Accept(v)
 	v.AcceptListStatement(statement.List())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatementExpressionLabel(statement *statement.ExpressionLabel) {
+func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatementExpressionLabel(statement intmod.IExpressionLabel) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitSynchronizedStatement(statement *statement.SynchronizedStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitSynchronizedStatement(statement intmod.ISynchronizedStatement) {
 	statement.SetMonitor(v.UpdateExpression(statement.Monitor()))
 	statement.Monitor().Accept(v)
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitThrowStatement(statement *statement.ThrowStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitThrowStatement(statement intmod.IThrowStatement) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitTryStatementCatchClause(statement *statement.CatchClause) {
+func (v *AbstractUpdateExpressionVisitor) VisitTryStatementCatchClause(statement intmod.ICatchClause) {
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitTryStatementResource(statement *statement.Resource) {
+func (v *AbstractUpdateExpressionVisitor) VisitTryStatementResource(statement intmod.IResource) {
 	statement.SetExpression(v.UpdateExpression(statement.Expression()))
 	statement.Expression().Accept(v)
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitWhileStatement(statement *statement.WhileStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitWhileStatement(statement intmod.IWhileStatement) {
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	statement.Condition().Accept(v)
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitConstructorReferenceExpression(expression *expression.ConstructorReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitConstructorReferenceExpression(expression intmod.IConstructorReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitDoubleConstantExpression(expression *expression.DoubleConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitDoubleConstantExpression(expression intmod.IDoubleConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitEnumConstantReferenceExpression(expression *expression.EnumConstantReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitEnumConstantReferenceExpression(expression intmod.IEnumConstantReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitFloatConstantExpression(expression *expression.FloatConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitFloatConstantExpression(expression intmod.IFloatConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitIntegerConstantExpression(expression *expression.IntegerConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableReferenceExpression(expression *expression.LocalVariableReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableReferenceExpression(expression intmod.ILocalVariableReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitLongConstantExpression(expression *expression.LongConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitLongConstantExpression(expression intmod.ILongConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitNullExpression(expression *expression.NullExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitNullExpression(expression intmod.INullExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitTypeReferenceDotClassExpression(expression *expression.TypeReferenceDotClassExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitTypeReferenceDotClassExpression(expression intmod.ITypeReferenceDotClassExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitObjectTypeReferenceExpression(expression *expression.ObjectTypeReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitObjectTypeReferenceExpression(expression intmod.IObjectTypeReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitStringConstantExpression(expression *expression.StringConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitStringConstantExpression(expression intmod.IStringConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitSuperExpression(expression *expression.SuperExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitSuperExpression(expression intmod.ISuperExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitThisExpression(expression *expression.ThisExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitThisExpression(expression intmod.IThisExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitAnnotationReference(reference *reference.AnnotationReference) {
+func (v *AbstractUpdateExpressionVisitor) VisitAnnotationReference(reference intmod.IAnnotationReference) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitElementValueArrayInitializerElementValue(reference *reference.ElementValueArrayInitializerElementValue) {
+func (v *AbstractUpdateExpressionVisitor) VisitElementValueArrayInitializerElementValue(reference intmod.IElementValueArrayInitializerElementValue) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitAnnotationElementValue(reference *reference.AnnotationElementValue) {
+func (v *AbstractUpdateExpressionVisitor) VisitAnnotationElementValue(reference intmod.IAnnotationElementValue) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitObjectReference(reference *reference.ObjectReference) {
+func (v *AbstractUpdateExpressionVisitor) VisitObjectReference(reference intmod.IObjectReference) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitBreakStatement(statement *statement.BreakStatement) {}
-func (v *AbstractUpdateExpressionVisitor) VisitByteCodeStatement(statement *statement.ByteCodeStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitBreakStatement(statement intmod.IBreakStatement) {}
+func (v *AbstractUpdateExpressionVisitor) VisitByteCodeStatement(statement intmod.IByteCodeStatement) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitContinueStatement(statement *statement.ContinueStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitContinueStatement(statement intmod.IContinueStatement) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitReturnStatement(statement *statement.ReturnStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitReturnStatement(statement intmod.IReturnStatement) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatementDefaultLabel(statement *statement.DefaultLabe1) {
+func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatementDefaultLabel(statement intmod.IDefaultLabel) {
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitInnerObjectReference(reference *reference.InnerObjectReference) {
+func (v *AbstractUpdateExpressionVisitor) VisitInnerObjectReference(reference intmod.IInnerObjectReference) {
 }
 func (v *AbstractUpdateExpressionVisitor) VisitTypeArguments(typ *_type.TypeArguments) {}
 func (v *AbstractUpdateExpressionVisitor) VisitWildcardExtendsTypeArgument(typ *_type.WildcardExtendsTypeArgument) {

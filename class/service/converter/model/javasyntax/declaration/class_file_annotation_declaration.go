@@ -1,12 +1,15 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileAnnotationDeclaration(annotationDeclarators intsyn.IFieldDeclarator, annotationReferences intsyn.IAnnotationReference, flags int, internalTypeName string, name string, bodyDeclaration *ClassFileBodyDeclaration) intsyn.IAnnotationDeclaration {
+func NewClassFileAnnotationDeclaration(annotationDeclarators intmod.IFieldDeclarator,
+	annotationReferences intmod.IAnnotationReference, flags int, internalTypeName string,
+	name string, bodyDeclaration *ClassFileBodyDeclaration) intsrv.IClassFileAnnotationDeclaration {
 	d := &ClassFileAnnotationDeclaration{
 		AnnotationDeclaration: *declaration.NewAnnotationDeclaration(annotationDeclarators,
 			annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*declaration.AnnotationDeclaration),

@@ -1,7 +1,7 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
 func NewForEachStatement(typ intsyn.IType, name string, expression intsyn.IExpression, statement intsyn.IStatement) intsyn.IForEachStatement {

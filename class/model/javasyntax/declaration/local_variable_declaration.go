@@ -1,7 +1,7 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
 func NewLocalVariableDeclaration(typ intsyn.IType, localVariableDeclarators intsyn.ILocalVariableDeclarator) intsyn.ILocalVariableDeclaration {

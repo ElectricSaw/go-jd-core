@@ -1,20 +1,22 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 )
 
-func NewClassFileLocalVariableDeclarator(localVariable localvariable.ILocalVariable) *ClassFileLocalVariableDeclarator {
+func NewClassFileLocalVariableDeclarator(localVariable intsrv.ILocalVariable) intsrv.IClassFileLocalVariableDeclarator {
 	return &ClassFileLocalVariableDeclarator{
-		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator(""),
+		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator("").(*declaration.LocalVariableDeclarator),
 		localVariable:           localVariable,
 	}
 }
 
-func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable localvariable.ILocalVariable, initializer declaration.VariableInitializer) *ClassFileLocalVariableDeclarator {
+func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable intsrv.ILocalVariable,
+	initializer intmod.IVariableInitializer) intsrv.IClassFileLocalVariableDeclarator {
 	return &ClassFileLocalVariableDeclarator{
-		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator3(lineNumber, "", initializer),
+		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator3(lineNumber, "", initializer).(*declaration.LocalVariableDeclarator),
 		localVariable:           localVariable,
 	}
 }
@@ -22,7 +24,7 @@ func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable localvar
 type ClassFileLocalVariableDeclarator struct {
 	declaration.LocalVariableDeclarator
 
-	localVariable localvariable.ILocalVariable
+	localVariable intsrv.ILocalVariable
 }
 
 func (d *ClassFileLocalVariableDeclarator) Name() string {
@@ -33,10 +35,10 @@ func (d *ClassFileLocalVariableDeclarator) SetName(name string) {
 	d.localVariable.SetName(name)
 }
 
-func (d *ClassFileLocalVariableDeclarator) LocalVariable() localvariable.ILocalVariableReference {
+func (d *ClassFileLocalVariableDeclarator) LocalVariable() intsrv.ILocalVariableReference {
 	return d.localVariable
 }
 
-func (d *ClassFileLocalVariableDeclarator) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
-	d.localVariable = localVariable.(localvariable.ILocalVariable)
+func (d *ClassFileLocalVariableDeclarator) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
+	d.localVariable = localVariable.(intsrv.ILocalVariable)
 }

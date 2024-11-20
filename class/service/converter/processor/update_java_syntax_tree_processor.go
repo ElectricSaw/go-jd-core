@@ -1,7 +1,7 @@
 package processor
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/message"
+	"bitbucket.org/coontec/go-jd-core/class/model/message"
 )
 
 type UpdateJavaSyntaxTreeProcessor struct {

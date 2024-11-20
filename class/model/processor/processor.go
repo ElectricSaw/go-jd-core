@@ -1,6 +1,6 @@
 package processor
 
-import "bitbucket.org/coontec/javaClass/class/model/message"
+import "bitbucket.org/coontec/go-jd-core/class/model/message"
 
 type Processor interface {
 	Process(message *message.Message) error

@@ -1,6 +1,6 @@
 package cfg
 
-import "bitbucket.org/coontec/javaClass/class/model/classfile"
+import "bitbucket.org/coontec/go-jd-core/class/model/classfile"
 
 func NewControlFlowGraph(method *classfile.Method) *ControlFlowGraph {
 	return &ControlFlowGraph{

@@ -1,24 +1,25 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
 func NewClassFileInterfaceDeclaration(
-	annotationReferences reference.IAnnotationReference,
+	annotationReferences intmod.IAnnotationReference,
 	flags int,
 	internalTypeName string,
 	name string,
-	typeParameters _type.ITypeParameter,
-	interfaces _type.IType,
+	typeParameters intmod.ITypeParameter,
+	interfaces intmod.IType,
 	bodyDeclaration *ClassFileBodyDeclaration,
-) *ClassFileInterfaceDeclaration {
+) intsrv.IClassFileInterfaceDeclaration {
 	return &ClassFileInterfaceDeclaration{
-		InterfaceDeclaration: *declaration.NewInterfaceDeclarationWithAll(annotationReferences, flags,
-			internalTypeName, name, &bodyDeclaration.BodyDeclaration, typeParameters, interfaces),
+		InterfaceDeclaration: *declaration.NewInterfaceDeclarationWithAll(annotationReferences,
+			flags, internalTypeName, name, &bodyDeclaration.BodyDeclaration,
+			typeParameters, interfaces).(*declaration.InterfaceDeclaration),
 		firstLineNumber: bodyDeclaration.FirstLineNumber(),
 	}
 }

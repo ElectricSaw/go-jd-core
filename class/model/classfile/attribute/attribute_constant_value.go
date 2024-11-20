@@ -1,7 +1,7 @@
 package attribute
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile/constant"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 )
 
 func NewAttributeConstantValue(constantValue constant.ConstantValue) *AttributeConstantValue {

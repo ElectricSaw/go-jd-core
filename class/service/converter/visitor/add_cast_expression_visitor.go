@@ -1,13 +1,13 @@
 package visitor
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/utils"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/reference"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
 func NewAddCastExpressionVisitor(typeMaker *utils.TypeMaker) *AddCastExpressionVisitor {

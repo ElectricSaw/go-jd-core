@@ -1,7 +1,7 @@
 package javasyntax
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
 func NewCompilationUnit(typeDeclarations intsyn.ITypeDeclaration) *CompilationUnit {

@@ -1,6 +1,6 @@
 package _type
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 type AbstractTypeArgumentVisitor struct {
 }

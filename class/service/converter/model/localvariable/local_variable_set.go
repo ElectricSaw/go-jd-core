@@ -1,26 +1,27 @@
 package localvariable
 
 import (
-	intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewLocalVariableSet() *LocalVariableSet {
+func NewLocalVariableSet() intsrv.ILocalVariableSet {
 	return &LocalVariableSet{
-		array: make([]ILocalVariable, 0, 10),
+		array: make([]intsrv.ILocalVariable, 0, 10),
 		size:  0,
 	}
 }
 
 type LocalVariableSet struct {
-	array []ILocalVariable
+	array []intsrv.ILocalVariable
 	size  int
 }
 
-func (s *LocalVariableSet) Add(index int, newLV ILocalVariable) {
+func (s *LocalVariableSet) Add(index int, newLV intsrv.ILocalVariable) {
 	if index >= len(s.array) {
 		// Increases array
-		tmp := make([]ILocalVariable, index*2)
+		tmp := make([]intsrv.ILocalVariable, index*2)
 		copy(tmp, s.array)
 		s.array = tmp
 		// Store
@@ -54,7 +55,7 @@ func (s *LocalVariableSet) Add(index int, newLV ILocalVariable) {
 	s.size++
 }
 
-func (s *LocalVariableSet) Root(index int) ILocalVariable {
+func (s *LocalVariableSet) Root(index int) intsrv.ILocalVariable {
 	if index < len(s.array) {
 		lv := s.array[index]
 
@@ -69,9 +70,9 @@ func (s *LocalVariableSet) Root(index int) ILocalVariable {
 	return nil
 }
 
-func (s *LocalVariableSet) Remove(index, offset int) ILocalVariable {
+func (s *LocalVariableSet) Remove(index, offset int) intsrv.ILocalVariable {
 	if index < len(s.array) {
-		var previous ILocalVariable
+		var previous intsrv.ILocalVariable
 		lv := s.array[index]
 
 		for lv != nil {
@@ -94,7 +95,7 @@ func (s *LocalVariableSet) Remove(index, offset int) ILocalVariable {
 	return nil
 }
 
-func (s *LocalVariableSet) Get(index, offset int) ILocalVariable {
+func (s *LocalVariableSet) Get(index, offset int) intsrv.ILocalVariable {
 	if index < len(s.array) {
 		lv := s.array[index]
 
@@ -131,7 +132,7 @@ func (s *LocalVariableSet) Update(index, offset int, typ intsyn.IObjectType) {
 
 func (s *LocalVariableSet) update(index, offset int, typ *_type.GenericType) {
 	if index < len(s.array) {
-		var previous ILocalVariable
+		var previous intsrv.ILocalVariable
 		lv := s.array[index]
 
 		for lv != nil {
@@ -156,14 +157,14 @@ func (s *LocalVariableSet) update(index, offset int, typ *_type.GenericType) {
 	}
 }
 
-func (s *LocalVariableSet) initialize(rootFrame *Frame) []ILocalVariable {
-	cache := make([]ILocalVariable, 0, s.size)
+func (s *LocalVariableSet) initialize(rootFrame intsrv.IFrame) []intsrv.ILocalVariable {
+	cache := make([]intsrv.ILocalVariable, 0, s.size)
 
 	for index := len(s.array) - 1; index >= 0; index-- {
 		lv := s.array[index]
 
 		if lv != nil {
-			var previous ILocalVariable
+			var previous intsrv.ILocalVariable
 
 			for lv.Next() != nil {
 				previous = lv

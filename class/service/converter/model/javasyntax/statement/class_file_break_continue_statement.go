@@ -1,11 +1,12 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"fmt"
 )
 
-func NewClassFileBreakContinueStatement(offset int, targetOffset int) *ClassFileBreakContinueStatement {
+func NewClassFileBreakContinueStatement(offset int, targetOffset int) intsrv.IClassFileBreakContinueStatement {
 	return &ClassFileBreakContinueStatement{
 		offset:       offset,
 		targetOffset: targetOffset,
@@ -13,12 +14,12 @@ func NewClassFileBreakContinueStatement(offset int, targetOffset int) *ClassFile
 }
 
 type ClassFileBreakContinueStatement struct {
-	statement.AbstractStatement
+	intmod.IStatement
 
 	offset        int
 	targetOffset  int
 	continueLabel bool
-	statement     statement.IStatement
+	statement     intmod.IStatement
 }
 
 func (s *ClassFileBreakContinueStatement) Offset() int {
@@ -29,11 +30,11 @@ func (s *ClassFileBreakContinueStatement) TargetOffset() int {
 	return s.targetOffset
 }
 
-func (s *ClassFileBreakContinueStatement) Statement() statement.IStatement {
+func (s *ClassFileBreakContinueStatement) Statement() intmod.IStatement {
 	return s.statement
 }
 
-func (s *ClassFileBreakContinueStatement) SetStatement(statement statement.IStatement) {
+func (s *ClassFileBreakContinueStatement) SetStatement(statement intmod.IStatement) {
 	s.statement = statement
 }
 
@@ -45,7 +46,7 @@ func (s *ClassFileBreakContinueStatement) SetContinueLabel(continueLabel bool) {
 	s.continueLabel = continueLabel
 }
 
-func (s *ClassFileBreakContinueStatement) Accept(visitor statement.IStatementVisitor) {
+func (s *ClassFileBreakContinueStatement) Accept(visitor intmod.IStatementVisitor) {
 	if s.statement == nil {
 		s.statement.Accept(visitor)
 	}

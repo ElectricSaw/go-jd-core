@@ -1,7 +1,7 @@
 package classfile
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile/attribute"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 )
 
 func NewMethod(accessFlags int, name string, descriptor string, attributes map[string]attribute.Attribute, constants ConstantPool) *Method {

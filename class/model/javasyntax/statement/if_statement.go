@@ -1,6 +1,6 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/javaClass/class/interfaces/model"
+import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 func NewIfStatement(condition intsyn.IExpression, statements intsyn.IStatement) intsyn.IIfStatement {
 	return &IfStatement{

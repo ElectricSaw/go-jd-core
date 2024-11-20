@@ -1,26 +1,28 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
-	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 )
 
-func NewClassFileTryStatement(tryStatements statement.IStatement, catchClauses []statement.CatchClause,
-	finallyStatements statement.IStatement, jsr, eclipse bool) *ClassFileTryStatement {
+func NewClassFileTryStatement(tryStatements intmod.IStatement, catchClauses []intmod.ICatchClause,
+	finallyStatements intmod.IStatement, jsr, eclipse bool) intsrv.IClassFileTryStatement {
 	return &ClassFileTryStatement{
-		TryStatement: *statement.NewTryStatement(tryStatements, catchClauses, finallyStatements),
-		jsr:          jsr,
-		eclipse:      eclipse,
+		TryStatement: *statement.NewTryStatement(tryStatements, catchClauses,
+			finallyStatements).(*statement.TryStatement),
+		jsr:     jsr,
+		eclipse: eclipse,
 	}
 }
 
-func NewClassFileTryStatement2(resources []statement.Resource, tryStatements statement.IStatement,
-	catchClauses []statement.CatchClause, finallyStatements statement.IStatement, jsr, eclipse bool) *ClassFileTryStatement {
+func NewClassFileTryStatement2(resources []intmod.IResource, tryStatements intmod.IStatement,
+	catchClauses []intmod.ICatchClause, finallyStatements intmod.IStatement, jsr, eclipse bool) intsrv.IClassFileTryStatement {
 	return &ClassFileTryStatement{
-		TryStatement: *statement.NewTryStatementWithAll(resources, tryStatements, catchClauses, finallyStatements),
-		jsr:          jsr,
-		eclipse:      eclipse,
+		TryStatement: *statement.NewTryStatementWithAll(resources, tryStatements,
+			catchClauses, finallyStatements).(*statement.TryStatement),
+		jsr:     jsr,
+		eclipse: eclipse,
 	}
 }
 
@@ -31,12 +33,12 @@ type ClassFileTryStatement struct {
 	eclipse bool
 }
 
-func (s *ClassFileTryStatement) addResources(resources []statement.Resource) {
+func (s *ClassFileTryStatement) AddResources(resources []intmod.IResource) {
 	if resources != nil {
 		if s.Resources() == nil {
 			s.SetResources(s.Resources())
 		} else {
-			s.AddResources(resources)
+			s.TryStatement.AddResources(resources)
 		}
 	}
 }
@@ -49,9 +51,9 @@ func (s *ClassFileTryStatement) isEclipse() bool {
 	return s.eclipse
 }
 
-func NewCatchClause(lineNumber int, typ _type.ObjectType, localVariable localvariable.ILocalVariable, statements statement.IStatement) *CatchClause {
+func NewCatchClause(lineNumber int, typ intmod.IObjectType, localVariable intsrv.ILocalVariable, statements intmod.IStatement) intsrv.ICatchClause {
 	return &CatchClause{
-		CatchClause:   *statement.NewCatchClause(lineNumber, typ, "", statements),
+		CatchClause:   *statement.NewCatchClause(lineNumber, typ, "", statements).(*statement.CatchClause),
 		localVariable: localVariable,
 	}
 }
@@ -59,13 +61,13 @@ func NewCatchClause(lineNumber int, typ _type.ObjectType, localVariable localvar
 type CatchClause struct {
 	statement.CatchClause
 
-	localVariable localvariable.ILocalVariable
+	localVariable intsrv.ILocalVariable
 }
 
 func (c *CatchClause) Name() string {
 	return c.localVariable.Name()
 }
 
-func (c *CatchClause) LocalVariable() localvariable.ILocalVariable {
+func (c *CatchClause) LocalVariable() intsrv.ILocalVariable {
 	return c.localVariable
 }

@@ -1,24 +1,25 @@
 package statement
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	"bitbucket.org/coontec/javaClass/class/service/converter/model/localvariable"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 	"fmt"
 )
 
-func NewClassFileForEachStatement(localVariable localvariable.ILocalVariable, expr expression.IExpression,
-	state statement.IStatement) *ClassFileForEachStatement {
+func NewClassFileForEachStatement(localVariable intsrv.ILocalVariable, expr intmod.IExpression,
+	state intmod.IStatement) intsrv.IClassFileForEachStatement {
 	return &ClassFileForEachStatement{
-		ForEachStatement: *statement.NewForEachStatement(localVariable.Type(), "", expr, state),
-		localVariable:    localVariable,
+		ForEachStatement: *statement.NewForEachStatement(localVariable.Type(), "", expr,
+			state).(*statement.ForEachStatement),
+		localVariable: localVariable,
 	}
 }
 
 type ClassFileForEachStatement struct {
 	statement.ForEachStatement
 
-	localVariable localvariable.ILocalVariable
+	localVariable intsrv.ILocalVariable
 }
 
 func (s *ClassFileForEachStatement) Name() string {

@@ -1,8 +1,8 @@
 package deserializer
 
 import (
-	"bitbucket.org/coontec/javaClass/class/api"
-	"bitbucket.org/coontec/javaClass/class/model/message"
+	"bitbucket.org/coontec/go-jd-core/class/api"
+	"bitbucket.org/coontec/go-jd-core/class/model/message"
 )
 
 func NewDeserializeClassFileProcessor() *DeserializeClassFileProcessor {

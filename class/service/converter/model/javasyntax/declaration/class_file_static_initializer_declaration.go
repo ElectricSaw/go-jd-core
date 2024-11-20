@@ -1,17 +1,19 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileStaticInitializerDeclaration(bodyDeclaration ClassFileBodyDeclaration, classFile *classfile.ClassFile,
-	method *classfile.Method, bindings map[string]_type.ITypeArgument, typeBounds map[string]_type.IType, firstLineNumber int) *ClassFileStaticInitializerDeclaration {
+func NewClassFileStaticInitializerDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration,
+	classFile *classfile.ClassFile, method *classfile.Method,
+	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
+	firstLineNumber int) intsrv.IClassFileStaticInitializerDeclaration {
 	return &ClassFileStaticInitializerDeclaration{
-		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), nil),
+		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), nil).(*declaration.StaticInitializerDeclaration),
 		bodyDeclaration:              bodyDeclaration,
 		classFile:                    classFile,
 		method:                       method,
@@ -21,11 +23,11 @@ func NewClassFileStaticInitializerDeclaration(bodyDeclaration ClassFileBodyDecla
 	}
 }
 
-func NewClassFileStaticInitializerDeclaration2(bodyDeclaration ClassFileBodyDeclaration, classFile *classfile.ClassFile,
-	method *classfile.Method, bindings map[string]_type.ITypeArgument, typeBounds map[string]_type.IType,
-	firstLineNumber int, statements statement.IStatement) *ClassFileStaticInitializerDeclaration {
+func NewClassFileStaticInitializerDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile *classfile.ClassFile,
+	method *classfile.Method, bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
+	firstLineNumber int, statements intmod.IStatement) intsrv.IClassFileStaticInitializerDeclaration {
 	return &ClassFileStaticInitializerDeclaration{
-		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), statements),
+		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), statements).(*declaration.StaticInitializerDeclaration),
 		bodyDeclaration:              bodyDeclaration,
 		classFile:                    classFile,
 		method:                       method,
@@ -38,11 +40,11 @@ func NewClassFileStaticInitializerDeclaration2(bodyDeclaration ClassFileBodyDecl
 type ClassFileStaticInitializerDeclaration struct {
 	declaration.StaticInitializerDeclaration
 
-	bodyDeclaration ClassFileBodyDeclaration
+	bodyDeclaration intsrv.IClassFileBodyDeclaration
 	classFile       *classfile.ClassFile
 	method          *classfile.Method
-	bindings        map[string]_type.ITypeArgument
-	typeBounds      map[string]_type.IType
+	bindings        map[string]intmod.ITypeArgument
+	typeBounds      map[string]intmod.IType
 	firstLineNumber int
 }
 
@@ -58,34 +60,34 @@ func (d *ClassFileStaticInitializerDeclaration) Method() *classfile.Method {
 	return d.method
 }
 
-func (d *ClassFileStaticInitializerDeclaration) TypeParameters() _type.ITypeParameter {
+func (d *ClassFileStaticInitializerDeclaration) TypeParameters() intmod.ITypeParameter {
 	return nil
 }
 
-func (d *ClassFileStaticInitializerDeclaration) ParameterTypes() _type.IType {
+func (d *ClassFileStaticInitializerDeclaration) ParameterTypes() intmod.IType {
 	return nil
 }
 
-func (d *ClassFileStaticInitializerDeclaration) ReturnedType() _type.IType {
+func (d *ClassFileStaticInitializerDeclaration) ReturnedType() intmod.IType {
 	return nil
 }
 
-func (d *ClassFileStaticInitializerDeclaration) BodyDeclaration() ClassFileBodyDeclaration {
+func (d *ClassFileStaticInitializerDeclaration) BodyDeclaration() intsrv.IClassFileBodyDeclaration {
 	return d.bodyDeclaration
 }
 
-func (d *ClassFileStaticInitializerDeclaration) Bindings() map[string]_type.ITypeArgument {
+func (d *ClassFileStaticInitializerDeclaration) Bindings() map[string]intmod.ITypeArgument {
 	return d.bindings
 }
 
-func (d *ClassFileStaticInitializerDeclaration) TypeBounds() map[string]_type.IType {
+func (d *ClassFileStaticInitializerDeclaration) TypeBounds() map[string]intmod.IType {
 	return d.typeBounds
 }
 
 func (d *ClassFileStaticInitializerDeclaration) SetFlags(flags int) {
 }
 
-func (d *ClassFileStaticInitializerDeclaration) SetFormalParameters(formalParameters declaration.IFormalParameter) {
+func (d *ClassFileStaticInitializerDeclaration) SetFormalParameters(formalParameters intmod.IFormalParameter) {
 }
 
 func (d *ClassFileStaticInitializerDeclaration) FirstLineNumber() int {

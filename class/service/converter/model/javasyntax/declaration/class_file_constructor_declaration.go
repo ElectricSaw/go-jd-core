@@ -1,27 +1,27 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/javaClass/class/model/classfile"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/javaClass/class/model/javasyntax/reference"
-	_type "bitbucket.org/coontec/javaClass/class/model/javasyntax/type"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 )
 
 func NewClassFileConstructorDeclaration(
-	bodyDeclaration ClassFileBodyDeclaration,
+	bodyDeclaration intsrv.IClassFileBodyDeclaration,
 	classFile *classfile.ClassFile,
 	method *classfile.Method,
-	annotationReferences *reference.AnnotationReference,
-	typeParameters _type.ITypeParameter,
-	parameterTypes _type.IType,
-	exceptionTypes _type.IType,
-	bindings map[string]_type.ITypeArgument,
-	typeBounds map[string]_type.IType,
-	firstLineNumber int) *ClassFileConstructorDeclaration {
+	annotationReferences intmod.IAnnotationReference,
+	typeParameters intmod.ITypeParameter,
+	parameterTypes intmod.IType,
+	exceptionTypes intmod.IType,
+	bindings map[string]intmod.ITypeArgument,
+	typeBounds map[string]intmod.IType,
+	firstLineNumber int) intsrv.IClassFileConstructorDeclaration {
 	return &ClassFileConstructorDeclaration{
 		ConstructorDeclaration: *declaration.NewConstructorDeclarationWithAll(
 			annotationReferences, method.AccessFlags(), typeParameters,
-			nil, exceptionTypes, method.Descriptor(), nil),
+			nil, exceptionTypes, method.Descriptor(), nil).(*declaration.ConstructorDeclaration),
 		bodyDeclaration: bodyDeclaration,
 		classFile:       classFile,
 		method:          method,
@@ -35,12 +35,12 @@ func NewClassFileConstructorDeclaration(
 type ClassFileConstructorDeclaration struct {
 	declaration.ConstructorDeclaration
 
-	bodyDeclaration ClassFileBodyDeclaration
+	bodyDeclaration intsrv.IClassFileBodyDeclaration
 	classFile       *classfile.ClassFile
 	method          *classfile.Method
-	parameterTypes  _type.IType
-	bindings        map[string]_type.ITypeArgument
-	typeBounds      map[string]_type.IType
+	parameterTypes  intmod.IType
+	bindings        map[string]intmod.ITypeArgument
+	typeBounds      map[string]intmod.IType
 	firstLineNumber int
 }
 
@@ -52,23 +52,23 @@ func (d *ClassFileConstructorDeclaration) Method() *classfile.Method {
 	return d.method
 }
 
-func (d *ClassFileConstructorDeclaration) ParameterTypes() _type.IType {
+func (d *ClassFileConstructorDeclaration) ParameterTypes() intmod.IType {
 	return d.parameterTypes
 }
 
-func (d *ClassFileConstructorDeclaration) ReturnedType() _type.IType {
+func (d *ClassFileConstructorDeclaration) ReturnedType() intmod.IType {
 	return nil
 }
 
-func (d *ClassFileConstructorDeclaration) BodyDeclaration() ClassFileBodyDeclaration {
+func (d *ClassFileConstructorDeclaration) BodyDeclaration() intsrv.IClassFileBodyDeclaration {
 	return d.bodyDeclaration
 }
 
-func (d *ClassFileConstructorDeclaration) Bindings() map[string]_type.ITypeArgument {
+func (d *ClassFileConstructorDeclaration) Bindings() map[string]intmod.ITypeArgument {
 	return d.bindings
 }
 
-func (d *ClassFileConstructorDeclaration) TypeBounds() map[string]_type.IType {
+func (d *ClassFileConstructorDeclaration) TypeBounds() map[string]intmod.IType {
 	return d.typeBounds
 }
 
