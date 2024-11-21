@@ -1,11 +1,11 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewWildcardExtendsTypeArgument(typ intsyn.IType) intsyn.IWildcardExtendsTypeArgument {
+func NewWildcardExtendsTypeArgument(typ intmod.IType) intmod.IWildcardExtendsTypeArgument {
 	return &WildcardExtendsTypeArgument{
 		typ: typ,
 	}
@@ -14,17 +14,17 @@ func NewWildcardExtendsTypeArgument(typ intsyn.IType) intsyn.IWildcardExtendsTyp
 type WildcardExtendsTypeArgument struct {
 	AbstractTypeArgument
 
-	typ intsyn.IType
+	typ intmod.IType
 }
 
-func (t *WildcardExtendsTypeArgument) Type() intsyn.IType {
+func (t *WildcardExtendsTypeArgument) Type() intmod.IType {
 	return t.typ
 }
 
-func (t *WildcardExtendsTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
+func (t *WildcardExtendsTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
 	if typeArgument.IsWildcardExtendsTypeArgument() {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument.Type())
-	} else if _, ok := typeArgument.(intsyn.ITypeArgument); ok {
+	} else if _, ok := typeArgument.(intmod.ITypeArgument); ok {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
 	}
 	return false
@@ -34,7 +34,7 @@ func (t *WildcardExtendsTypeArgument) IsWildcardExtendsTypeArgument() bool {
 	return true
 }
 
-func (t *WildcardExtendsTypeArgument) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
+func (t *WildcardExtendsTypeArgument) AcceptTypeArgumentVisitor(visitor intmod.ITypeArgumentVisitor) {
 	visitor.VisitWildcardExtendsTypeArgument(t)
 }
 
@@ -46,7 +46,7 @@ func (t *WildcardExtendsTypeArgument) HashCode() int {
 	return 957014778 + t.typ.HashCode()
 }
 
-func (t *WildcardExtendsTypeArgument) Equals(o intsyn.ITypeArgument) bool {
+func (t *WildcardExtendsTypeArgument) Equals(o intmod.ITypeArgument) bool {
 	if t == o {
 		return true
 	}

@@ -1,10 +1,10 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewExpressionVariableInitializer(expression intsyn.IExpression) intsyn.IExpressionVariableInitializer {
+func NewExpressionVariableInitializer(expression intmod.IExpression) intmod.IExpressionVariableInitializer {
 	return &ExpressionVariableInitializer{
 		expression: expression,
 	}
@@ -13,10 +13,10 @@ func NewExpressionVariableInitializer(expression intsyn.IExpression) intsyn.IExp
 type ExpressionVariableInitializer struct {
 	AbstractVariableInitializer
 
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
-func (i *ExpressionVariableInitializer) Expression() intsyn.IExpression {
+func (i *ExpressionVariableInitializer) Expression() intmod.IExpression {
 	return i.expression
 }
 
@@ -24,7 +24,7 @@ func (i *ExpressionVariableInitializer) LineNumber() int {
 	return i.expression.LineNumber()
 }
 
-func (i *ExpressionVariableInitializer) SetExpression(expression intsyn.IExpression) {
+func (i *ExpressionVariableInitializer) SetExpression(expression intmod.IExpression) {
 	i.expression = expression
 }
 
@@ -32,6 +32,6 @@ func (i *ExpressionVariableInitializer) IsExpressionVariableInitializer() bool {
 	return true
 }
 
-func (i *ExpressionVariableInitializer) Accept(visitor intsyn.IDeclarationVisitor) {
+func (i *ExpressionVariableInitializer) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitExpressionVariableInitializer(i)
 }

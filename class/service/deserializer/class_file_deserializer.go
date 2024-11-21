@@ -15,7 +15,7 @@ import (
 var EmptyIntArray = []int{}
 
 func GetConstantTypeName(constants *classfile.ConstantPool, index int, msg string) string {
-	name, ok := constants.GetConstantTypeName(index)
+	name, ok := constants.ConstantTypeName(index)
 	if !ok {
 		log.Fatalf(msg)
 		return ""
@@ -209,7 +209,7 @@ func (d *ClassFileDeserializer) LoadInterfaces(reader *ClassFileReader, constant
 
 	for i := 0; i < count; i++ {
 		index := reader.ReadUnsignedShort()
-		interfaceTypeNames[i], _ = constants.GetConstantTypeName(index)
+		interfaceTypeNames[i], _ = constants.ConstantTypeName(index)
 	}
 
 	return interfaceTypeNames, nil
@@ -229,8 +229,8 @@ func (d *ClassFileDeserializer) LoadFields(reader *ClassFileReader, constants *c
 		descriptorIndex := reader.ReadUnsignedShort()
 		attr, _ := d.LoadAttributes(reader, constants)
 
-		name, _ := constants.GetConstantUtf8(nameIndex)
-		descriptor, _ := constants.GetConstantUtf8(descriptorIndex)
+		name, _ := constants.ConstantUtf8(nameIndex)
+		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 
 		fields[i] = *classfile.NewField(accessFlags, name, descriptor, attr)
 	}
@@ -252,8 +252,8 @@ func (d *ClassFileDeserializer) LoadMethods(reader *ClassFileReader, constants *
 		descriptorIndex := reader.ReadUnsignedShort()
 		attr, _ := d.LoadAttributes(reader, constants)
 
-		name, _ := constants.GetConstantUtf8(nameIndex)
-		descriptor, _ := constants.GetConstantUtf8(descriptorIndex)
+		name, _ := constants.ConstantUtf8(nameIndex)
+		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 
 		methods[i] = *classfile.NewMethod(accessFlags, name, descriptor, attr, *constants)
 	}
@@ -272,7 +272,7 @@ func (d *ClassFileDeserializer) LoadAttributes(reader *ClassFileReader, constant
 	for i := 0; i < count; i++ {
 		attributeNameIndex := reader.ReadUnsignedShort()
 		attributeLength := reader.ReadInt()
-		c0nst := constants.GetConstant(attributeNameIndex)
+		c0nst := constants.Constant(attributeNameIndex)
 
 		if c0nst.Tag() == constant.ConstTagUtf8 {
 			name := c0nst.(*constant.ConstantUtf8).Value()
@@ -316,8 +316,8 @@ func (d *ClassFileDeserializer) LoadAttributes(reader *ClassFileReader, constant
 			case "MethodParameters":
 				attributes[name] = attribute.NewAttributeMethodParameters(d.LoadParameters(reader, constants))
 			case "Module":
-				moduleName, _ := constants.GetConstantTypeName(reader.ReadUnsignedShort())
-				version, _ := constants.GetConstantUtf8(reader.ReadUnsignedShort())
+				moduleName, _ := constants.ConstantTypeName(reader.ReadUnsignedShort())
+				version, _ := constants.ConstantUtf8(reader.ReadUnsignedShort())
 
 				attributes[name] = attribute.NewAttributeModule(moduleName, reader.ReadUnsignedShort(), version,
 					d.LoadModuleInfos(reader, constants),
@@ -329,7 +329,7 @@ func (d *ClassFileDeserializer) LoadAttributes(reader *ClassFileReader, constant
 			case "ModulePackages":
 				attributes[name] = attribute.NewAttributeModulePackages(d.LoadConstantClassNames(reader, constants))
 			case "ModuleMainClass":
-				attributes[name] = attribute.NewAttributeModuleMainClass(constants.GetConstant(reader.ReadUnsignedShort()).(constant.ConstantClass))
+				attributes[name] = attribute.NewAttributeModuleMainClass(constants.Constant(reader.ReadUnsignedShort()).(constant.ConstantClass))
 			case "RuntimeInvisibleAnnotations", "RuntimeVisibleAnnotations":
 				a := d.LoadAnnotations(reader, constants)
 				if a != nil {
@@ -341,13 +341,13 @@ func (d *ClassFileDeserializer) LoadAttributes(reader *ClassFileReader, constant
 				if attributeLength != 2 {
 					return nil, errors.New("invalid attribute length")
 				}
-				v, _ := constants.GetConstantUtf8(reader.ReadUnsignedShort())
+				v, _ := constants.ConstantUtf8(reader.ReadUnsignedShort())
 				attributes[name] = attribute.NewAttributeSignature(v)
 			case "SourceFile":
 				if attributeLength != 2 {
 					return nil, errors.New("invalid attribute length")
 				}
-				v, _ := constants.GetConstantUtf8(reader.ReadUnsignedShort())
+				v, _ := constants.ConstantUtf8(reader.ReadUnsignedShort())
 				attributes[name] = attribute.NewAttributeSourceFile(v)
 			case "Synthetic":
 				if attributeLength != 0 {
@@ -372,21 +372,21 @@ func (d *ClassFileDeserializer) LoadElementValue(reader *ClassFileReader, consta
 	switch t {
 	case 'B', 'D', 'F', 'I', 'J', 'S', 'Z', 'C', 's':
 		constValueIndex := reader.ReadUnsignedShort()
-		constValue := constants.GetConstant(reader.ReadUnsignedShort()).(constant.ConstantValue)
+		constValue := constants.Constant(reader.ReadUnsignedShort()).(constant.ConstantValue)
 		return attribute.NewElementValuePrimitiveType(constValueIndex, constValue), nil
 	case 'e':
 		descriptorIndex := reader.ReadUnsignedShort()
-		descriptor, _ := constants.GetConstantUtf8(descriptorIndex)
+		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 		constNameIndex := reader.ReadUnsignedShort()
-		constName, _ := constants.GetConstantUtf8(constNameIndex)
+		constName, _ := constants.ConstantUtf8(constNameIndex)
 		return attribute.NewElementValueEnumConstValue(descriptor, constName), nil
 	case 'c':
 		classInfoIndex := reader.ReadUnsignedShort()
-		classInfo, _ := constants.GetConstantUtf8(classInfoIndex)
+		classInfo, _ := constants.ConstantUtf8(classInfoIndex)
 		return attribute.NewElementValueClassInfo(classInfo), nil
 	case '@':
 		typeIndex := reader.ReadUnsignedShort()
-		descriptor, _ := constants.GetConstantUtf8(typeIndex)
+		descriptor, _ := constants.ConstantUtf8(typeIndex)
 		return attribute.NewElementValueAnnotationValue(*attribute.NewAnnotation(descriptor, d.LoadElementValuePairs(reader, constants))), nil
 	case '[':
 		return attribute.NewElementValueArrayValue(d.LoadElementValues(reader, constants)), nil
@@ -405,7 +405,7 @@ func (d *ClassFileDeserializer) LoadElementValuePairs(reader *ClassFileReader, c
 
 	for i := 0; i < count; i++ {
 		elementNameIndex := reader.ReadUnsignedShort()
-		elementName, _ := constants.GetConstantUtf8(elementNameIndex)
+		elementName, _ := constants.ConstantUtf8(elementNameIndex)
 		v, _ := d.LoadElementValue(reader, constants)
 		pairs[i] = *attribute.NewElementValuePair(elementName, v)
 	}
@@ -487,7 +487,7 @@ func (d *ClassFileDeserializer) LoadCodeExceptions(reader *ClassFileReader) []at
 
 func (d *ClassFileDeserializer) LoadConstantValue(reader *ClassFileReader, constants *classfile.ConstantPool) constant.ConstantValue {
 	constantValueIndex := reader.ReadUnsignedShort()
-	return constants.GetConstantValue(constantValueIndex)
+	return constants.ConstantValue(constantValueIndex)
 }
 
 func (d *ClassFileDeserializer) LoadExceptionTypeNames(reader *ClassFileReader, constants *classfile.ConstantPool) []string {
@@ -500,7 +500,7 @@ func (d *ClassFileDeserializer) LoadExceptionTypeNames(reader *ClassFileReader, 
 
 	for i := 0; i < count; i++ {
 		exceptionClassIndex := reader.ReadUnsignedShort()
-		exceptionTypeNames[i], _ = constants.GetConstantTypeName(exceptionClassIndex)
+		exceptionTypeNames[i], _ = constants.ConstantTypeName(exceptionClassIndex)
 	}
 
 	return exceptionTypeNames
@@ -520,14 +520,14 @@ func (d *ClassFileDeserializer) LoadInnerClasses(reader *ClassFileReader, consta
 		innerNameIndex := reader.ReadUnsignedShort()
 		innerAccessFlags := reader.ReadUnsignedShort()
 
-		innerTypeName, _ := constants.GetConstantTypeName(innerTypeIndex)
+		innerTypeName, _ := constants.ConstantTypeName(innerTypeIndex)
 		outerTypeName := ""
 		if outerTypeIndex != 0 {
-			outerTypeName, _ = constants.GetConstantTypeName(outerTypeIndex)
+			outerTypeName, _ = constants.ConstantTypeName(outerTypeIndex)
 		}
 		innerName := ""
 		if innerNameIndex != 0 {
-			innerName, _ = constants.GetConstantTypeName(innerNameIndex)
+			innerName, _ = constants.ConstantTypeName(innerNameIndex)
 		}
 
 		innerClasses[i] = *attribute.NewInnerClass(innerTypeName, outerTypeName, innerName, innerAccessFlags)
@@ -551,8 +551,8 @@ func (d *ClassFileDeserializer) LoadLocalVariables(reader *ClassFileReader, cons
 		descriptorIndex := reader.ReadUnsignedShort()
 		index := reader.ReadUnsignedShort()
 
-		name, _ := constants.GetConstantUtf8(nameIndex)
-		descriptor, _ := constants.GetConstantUtf8(descriptorIndex)
+		name, _ := constants.ConstantUtf8(nameIndex)
+		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 
 		localVariables[i] = *attribute.NewLocalVariable(startPc, length, name, descriptor, index)
 	}
@@ -575,8 +575,8 @@ func (d *ClassFileDeserializer) LoadLocalVariableTypes(reader *ClassFileReader, 
 		descriptorIndex := reader.ReadUnsignedShort()
 		index := reader.ReadUnsignedShort()
 
-		name, _ := constants.GetConstantUtf8(nameIndex)
-		descriptor, _ := constants.GetConstantUtf8(descriptorIndex)
+		name, _ := constants.ConstantUtf8(nameIndex)
+		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 
 		localVariables[i] = *attribute.NewLocalVariableType(startPc, length, name, descriptor, index)
 	}
@@ -609,7 +609,7 @@ func (d *ClassFileDeserializer) LoadParameters(reader *ClassFileReader, constant
 
 	for i := 0; i < count; i++ {
 		nameIndex := reader.ReadUnsignedShort()
-		name, _ := constants.GetConstantUtf8(nameIndex)
+		name, _ := constants.ConstantUtf8(nameIndex)
 		parameters[i] = *attribute.NewMethodParameter(name, reader.ReadUnsignedShort())
 	}
 
@@ -629,10 +629,10 @@ func (d *ClassFileDeserializer) LoadModuleInfos(reader *ClassFileReader, constan
 		moduleFlags := reader.ReadUnsignedShort()
 		moduleVersionIndex := reader.ReadUnsignedShort()
 
-		moduleInfoName, _ := constants.GetConstantTypeName(moduleInfoIndex)
+		moduleInfoName, _ := constants.ConstantTypeName(moduleInfoIndex)
 		moduleVersion := ""
 		if moduleVersionIndex == 0 {
-			moduleVersion, _ = constants.GetConstantUtf8(moduleVersionIndex)
+			moduleVersion, _ = constants.ConstantUtf8(moduleVersionIndex)
 		}
 
 		moduleInfos[i] = *attribute.NewModuleInfo(moduleInfoName, moduleFlags, moduleVersion)
@@ -652,7 +652,7 @@ func (d *ClassFileDeserializer) LoadPackageInfos(reader *ClassFileReader, consta
 	for i := 0; i < count; i++ {
 		packageInfoIndex := reader.ReadUnsignedShort()
 		packageFlags := reader.ReadUnsignedShort()
-		packageInfoName, _ := constants.GetConstantTypeName(packageInfoIndex)
+		packageInfoName, _ := constants.ConstantTypeName(packageInfoIndex)
 
 		packageInfos[i] = *attribute.NewPackageInfo(packageInfoName, packageFlags, d.LoadConstantClassNames(reader, constants))
 	}
@@ -669,7 +669,7 @@ func (d *ClassFileDeserializer) LoadConstantClassNames(reader *ClassFileReader, 
 	names := make([]string, count)
 
 	for i := 0; i < count; i++ {
-		names[i], _ = constants.GetConstantTypeName(reader.ReadUnsignedShort())
+		names[i], _ = constants.ConstantTypeName(reader.ReadUnsignedShort())
 	}
 
 	return names
@@ -684,7 +684,7 @@ func (d *ClassFileDeserializer) LoadServiceInfos(reader *ClassFileReader, consta
 	services := make([]attribute.ServiceInfo, count)
 
 	for i := 0; i < count; i++ {
-		name, _ := constants.GetConstantTypeName(reader.ReadUnsignedShort())
+		name, _ := constants.ConstantTypeName(reader.ReadUnsignedShort())
 		services[i] = *attribute.NewServiceInfo(name, d.LoadConstantClassNames(reader, constants))
 	}
 
@@ -701,7 +701,7 @@ func (d *ClassFileDeserializer) LoadAnnotations(reader *ClassFileReader, constan
 
 	for i := 0; i < count; i++ {
 		descriptorIndex := reader.ReadUnsignedShort()
-		descriptor, _ := constants.GetConstantUtf8(descriptorIndex)
+		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 		annotations[i] = *attribute.NewAnnotation(descriptor, d.LoadElementValuePairs(reader, constants))
 	}
 

@@ -1,11 +1,11 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewMethodReferenceExpression(typ intsyn.IType, expression intsyn.IExpression,
-	internalTypeName, name, descriptor string) intsyn.IMethodReferenceExpression {
+func NewMethodReferenceExpression(typ intmod.IType, expression intmod.IExpression,
+	internalTypeName, name, descriptor string) intmod.IMethodReferenceExpression {
 	return &MethodReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		expression:                       expression,
@@ -15,8 +15,8 @@ func NewMethodReferenceExpression(typ intsyn.IType, expression intsyn.IExpressio
 	}
 }
 
-func NewMethodReferenceExpressionWithAll(lineNumber int, typ intsyn.IType, expression intsyn.IExpression,
-	internalTypeName, name, descriptor string) intsyn.IMethodReferenceExpression {
+func NewMethodReferenceExpressionWithAll(lineNumber int, typ intmod.IType, expression intmod.IExpression,
+	internalTypeName, name, descriptor string) intmod.IMethodReferenceExpression {
 	return &MethodReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		expression:                       expression,
@@ -29,13 +29,13 @@ func NewMethodReferenceExpressionWithAll(lineNumber int, typ intsyn.IType, expre
 type MethodReferenceExpression struct {
 	AbstractLineNumberTypeExpression
 
-	expression       intsyn.IExpression
+	expression       intmod.IExpression
 	internalTypeName string
 	name             string
 	descriptor       string
 }
 
-func (e *MethodReferenceExpression) Expression() intsyn.IExpression {
+func (e *MethodReferenceExpression) Expression() intmod.IExpression {
 	return e.expression
 }
 
@@ -51,10 +51,10 @@ func (e *MethodReferenceExpression) Descriptor() string {
 	return e.descriptor
 }
 
-func (e *MethodReferenceExpression) SetExpression(expression intsyn.IExpression) {
+func (e *MethodReferenceExpression) SetExpression(expression intmod.IExpression) {
 	e.expression = expression
 }
 
-func (e *MethodReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *MethodReferenceExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitMethodReferenceExpression(e)
 }

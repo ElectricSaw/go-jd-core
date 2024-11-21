@@ -1,11 +1,11 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewExpressionStatement(expression intsyn.IExpression) intsyn.IExpressionStatement {
+func NewExpressionStatement(expression intmod.IExpression) intmod.IExpressionStatement {
 	return &ExpressionStatement{
 		expression: expression,
 	}
@@ -14,14 +14,14 @@ func NewExpressionStatement(expression intsyn.IExpression) intsyn.IExpressionSta
 type ExpressionStatement struct {
 	AbstractStatement
 
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
-func (s *ExpressionStatement) Expression() intsyn.IExpression {
+func (s *ExpressionStatement) Expression() intmod.IExpression {
 	return s.expression
 }
 
-func (s *ExpressionStatement) SetExpression(expression intsyn.IExpression) {
+func (s *ExpressionStatement) SetExpression(expression intmod.IExpression) {
 	s.expression = expression
 }
 
@@ -29,7 +29,7 @@ func (s *ExpressionStatement) IsExpressionStatement() bool {
 	return true
 }
 
-func (s *ExpressionStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *ExpressionStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitExpressionStatement(s)
 }
 

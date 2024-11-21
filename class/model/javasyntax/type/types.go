@@ -1,17 +1,17 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewTypes() intsyn.ITypes {
+func NewTypes() intmod.ITypes {
 	return &Types{}
 }
 
 type Types struct {
 	AbstractType
-	util.DefaultList[intsyn.IType]
+	util.DefaultList[intmod.IType]
 }
 
 func (t *Types) Size() int {
@@ -22,6 +22,6 @@ func (t *Types) IsTypes() bool {
 	return true
 }
 
-func (t *Types) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
+func (t *Types) AcceptTypeVisitor(visitor intmod.ITypeVisitor) {
 	visitor.VisitTypes(t)
 }

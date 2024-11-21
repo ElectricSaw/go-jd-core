@@ -1,11 +1,11 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewWildcardSuperTypeArgument(typ intsyn.IType) intsyn.IWildcardSuperTypeArgument {
+func NewWildcardSuperTypeArgument(typ intmod.IType) intmod.IWildcardSuperTypeArgument {
 	return &WildcardSuperTypeArgument{
 		typ: typ,
 	}
@@ -14,17 +14,17 @@ func NewWildcardSuperTypeArgument(typ intsyn.IType) intsyn.IWildcardSuperTypeArg
 type WildcardSuperTypeArgument struct {
 	AbstractTypeArgument
 
-	typ intsyn.IType
+	typ intmod.IType
 }
 
-func (t *WildcardSuperTypeArgument) Type() intsyn.IType {
+func (t *WildcardSuperTypeArgument) Type() intmod.IType {
 	return t.typ
 }
 
-func (t *WildcardSuperTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
+func (t *WildcardSuperTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
 	if typeArgument.IsWildcardSuperTypeArgument() {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument.Type())
-	} else if _, ok := typeArgument.(intsyn.ITypeArgument); ok {
+	} else if _, ok := typeArgument.(intmod.ITypeArgument); ok {
 		return t.typ.IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
 	}
 	return false
@@ -34,7 +34,7 @@ func (t *WildcardSuperTypeArgument) IsWildcardSuperTypeArgument() bool {
 	return true
 }
 
-func (t *WildcardSuperTypeArgument) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
+func (t *WildcardSuperTypeArgument) AcceptTypeArgumentVisitor(visitor intmod.ITypeArgumentVisitor) {
 	visitor.VisitWildcardSuperTypeArgument(t)
 }
 
@@ -46,7 +46,7 @@ func (t *WildcardSuperTypeArgument) HashCode() int {
 	return 979510081 + t.typ.HashCode()
 }
 
-func (t *WildcardSuperTypeArgument) Equals(o intsyn.ITypeArgument) bool {
+func (t *WildcardSuperTypeArgument) Equals(o intmod.ITypeArgument) bool {
 	if t == o {
 		return true
 	}

@@ -1,9 +1,8 @@
 package visitor
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 )
 
 func NewSearchFirstLineNumberVisitor() *SearchFirstLineNumberVisitor {
@@ -26,10 +25,10 @@ func (v *SearchFirstLineNumberVisitor) LineNumber() int {
 	return v.lineNumber
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitStatements(statements *statement.Statements) {
+func (v *SearchFirstLineNumberVisitor) VisitStatements(statements intmod.IStatements) {
 	if v.lineNumber == -1 {
 
-		for _, value := range statements.Statements {
+		for _, value := range statements.Elements() {
 			value.Accept(v)
 			if v.lineNumber != -1 {
 				break
@@ -38,144 +37,175 @@ func (v *SearchFirstLineNumberVisitor) VisitStatements(statements *statement.Sta
 	}
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitArrayExpression(expression *expression.ArrayExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitBinaryOperatorExpression(expression *expression.BinaryOperatorExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitBooleanExpression(expression *expression.BooleanExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitCastExpression(expression *expression.CastExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitCommentExpression(expression *expression.CommentExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitConstructorInvocationExpression(expression *expression.ConstructorInvocationExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitConstructorReferenceExpression(expression *expression.ConstructorReferenceExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitDoubleConstantExpression(expression *expression.DoubleConstantExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitEnumConstantReferenceExpression(expression *expression.EnumConstantReferenceExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitFieldReferenceExpression(expression *expression.FieldReferenceExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitFloatConstantExpression(expression *expression.FloatConstantExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitIntegerConstantExpression(expression *expression.IntegerConstantExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitInstanceOfExpression(expression *expression.InstanceOfExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitLambdaFormalParametersExpression(expression *expression.LambdaFormalParametersExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitLambdaIdentifiersExpression(expression *expression.LambdaIdentifiersExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitLengthExpression(expression *expression.LengthExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitLocalVariableReferenceExpression(expression *expression.LocalVariableReferenceExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitLongConstantExpression(expression *expression.LongConstantExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitMethodReferenceExpression(expression *expression.MethodReferenceExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitNewArray(expression *expression.NewArray) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitNewExpression(expression *expression.NewExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitNewInitializedArray(expression *expression.NewInitializedArray) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitNullExpression(expression *expression.NullExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitObjectTypeReferenceExpression(expression *expression.ObjectTypeReferenceExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitParenthesesExpression(expression *expression.ParenthesesExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitPostOperatorExpression(expression *expression.PostOperatorExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitPreOperatorExpression(expression *expression.PreOperatorExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitStringConstantExpression(expression *expression.StringConstantExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitSuperExpression(expression *expression.SuperExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitTernaryOperatorExpression(expression *expression.TernaryOperatorExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitThisExpression(expression *expression.ThisExpression) {
-	v.lineNumber = expression.LineNumber()
-}
-func (v *SearchFirstLineNumberVisitor) VisitTypeReferenceDotClassExpression(expression *expression.TypeReferenceDotClassExpression) {
+func (v *SearchFirstLineNumberVisitor) VisitArrayExpression(expression intmod.IArrayExpression) {
 	v.lineNumber = expression.LineNumber()
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitAssertStatement(statement *statement.AssertStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitBinaryOperatorExpression(expression intmod.IBinaryOperatorExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitBooleanExpression(expression intmod.IBooleanExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitCastExpression(expression intmod.ICastExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitCommentExpression(expression intmod.ICommentExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitConstructorInvocationExpression(expression intmod.IConstructorInvocationExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitConstructorReferenceExpression(expression intmod.IConstructorReferenceExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitDoubleConstantExpression(expression intmod.IDoubleConstantExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitEnumConstantReferenceExpression(expression intmod.IEnumConstantReferenceExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitFieldReferenceExpression(expression intmod.IFieldReferenceExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitFloatConstantExpression(expression intmod.IFloatConstantExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitInstanceOfExpression(expression intmod.IInstanceOfExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitLambdaFormalParametersExpression(expression intmod.ILambdaFormalParametersExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitLambdaIdentifiersExpression(expression intmod.ILambdaIdentifiersExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitLengthExpression(expression intmod.ILengthExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitLocalVariableReferenceExpression(expression intmod.ILocalVariableReferenceExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitLongConstantExpression(expression intmod.ILongConstantExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitMethodReferenceExpression(expression intmod.IMethodReferenceExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitNewArray(expression intmod.INewArray) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitNewExpression(expression intmod.INewExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitNewInitializedArray(expression intmod.INewInitializedArray) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitNullExpression(expression intmod.INullExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitObjectTypeReferenceExpression(expression intmod.IObjectTypeReferenceExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitParenthesesExpression(expression intmod.IParenthesesExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitPostOperatorExpression(expression intmod.IPostOperatorExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitPreOperatorExpression(expression intmod.IPreOperatorExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitStringConstantExpression(expression intmod.IStringConstantExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitSuperExpression(expression intmod.ISuperExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitTernaryOperatorExpression(expression intmod.ITernaryOperatorExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitThisExpression(expression intmod.IThisExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitTypeReferenceDotClassExpression(expression intmod.ITypeReferenceDotClassExpression) {
+	v.lineNumber = expression.LineNumber()
+}
+
+func (v *SearchFirstLineNumberVisitor) VisitAssertStatement(statement intmod.IAssertStatement) {
 	statement.Condition().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitExpressionStatement(statement *statement.ExpressionStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitExpressionStatement(statement intmod.IExpressionStatement) {
 	statement.Expression().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitForEachStatement(statement *statement.ForEachStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitForEachStatement(statement intmod.IForEachStatement) {
 	statement.Expression().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitIfStatement(statement *statement.IfStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitIfStatement(statement intmod.IIfStatement) {
 	statement.Condition().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitIfElseStatement(statement *statement.IfElseStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitIfElseStatement(statement intmod.IIfElseStatement) {
 	statement.Condition().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitLambdaExpressionStatement(statement *statement.LambdaExpressionStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitLambdaExpressionStatement(statement intmod.ILambdaExpressionStatement) {
 	statement.Expression().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitMethodInvocationExpression(expression *expression.MethodInvocationExpression) {
+func (v *SearchFirstLineNumberVisitor) VisitMethodInvocationExpression(expression intmod.IMethodInvocationExpression) {
 	expression.Expression().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitSwitchStatement(statement *statement.SwitchStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitSwitchStatement(statement intmod.ISwitchStatement) {
 	statement.Condition().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitSynchronizedStatement(statement *statement.SynchronizedStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitSynchronizedStatement(statement intmod.ISynchronizedStatement) {
 	statement.Monitor().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitThrowStatement(statement *statement.ThrowStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitThrowStatement(statement intmod.IThrowStatement) {
 	statement.Expression().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitWhileStatement(statement *statement.WhileStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitWhileStatement(statement intmod.IWhileStatement) {
 	if statement.Condition() != nil {
 		statement.Condition().Accept(v)
 	} else if statement.Statements() != nil {
@@ -183,7 +213,7 @@ func (v *SearchFirstLineNumberVisitor) VisitWhileStatement(statement *statement.
 	}
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitDoWhileStatement(statement *statement.DoWhileStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitDoWhileStatement(statement intmod.IDoWhileStatement) {
 	if statement.Statements() != nil {
 		statement.Statements().Accept(v)
 	} else if statement.Condition() != nil {
@@ -191,7 +221,7 @@ func (v *SearchFirstLineNumberVisitor) VisitDoWhileStatement(statement *statemen
 	}
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitForStatement(statement *statement.ForStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitForStatement(statement intmod.IForStatement) {
 	if statement.Init() != nil {
 		statement.Init().Accept(v)
 	} else if statement.Condition() != nil {
@@ -203,11 +233,11 @@ func (v *SearchFirstLineNumberVisitor) VisitForStatement(statement *statement.Fo
 	}
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitReturnExpressionStatement(statement *statement.ReturnExpressionStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitReturnExpressionStatement(statement intmod.IReturnExpressionStatement) {
 	statement.Expression().Accept(v)
 }
 
-func (v *SearchFirstLineNumberVisitor) VisitTryStatement(statement *statement.TryStatement) {
+func (v *SearchFirstLineNumberVisitor) VisitTryStatement(statement intmod.ITryStatement) {
 	if statement.Resources() != nil {
 		v.AcceptListStatement(statement.ResourceList())
 	} else {

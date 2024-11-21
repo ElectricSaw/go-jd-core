@@ -1,10 +1,10 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewTypeDeclarationStatement(typeDeclaration intsyn.ITypeDeclaration) intsyn.ITypeDeclarationStatement {
+func NewTypeDeclarationStatement(typeDeclaration intmod.ITypeDeclaration) intmod.ITypeDeclarationStatement {
 	return &TypeDeclarationStatement{
 		typeDeclaration: typeDeclaration,
 	}
@@ -13,13 +13,13 @@ func NewTypeDeclarationStatement(typeDeclaration intsyn.ITypeDeclaration) intsyn
 type TypeDeclarationStatement struct {
 	AbstractStatement
 
-	typeDeclaration intsyn.ITypeDeclaration
+	typeDeclaration intmod.ITypeDeclaration
 }
 
-func (s *TypeDeclarationStatement) TypeDeclaration() intsyn.ITypeDeclaration {
+func (s *TypeDeclarationStatement) TypeDeclaration() intmod.ITypeDeclaration {
 	return s.typeDeclaration
 }
 
-func (s *TypeDeclarationStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *TypeDeclarationStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitTypeDeclarationStatement(s)
 }

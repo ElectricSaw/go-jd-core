@@ -1,14 +1,14 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
-func NewAnnotationDeclaration(annotationDeclarators intsyn.IFieldDeclarator,
-	annotationReferences intsyn.IAnnotationReference, flags int,
-	internalTypeName string, name string, bodyDeclaration intsyn.IDeclaration) intsyn.IAnnotationDeclaration {
+func NewAnnotationDeclaration(annotationDeclarators intmod.IFieldDeclarator,
+	annotationReferences intmod.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intmod.IDeclaration) intmod.IAnnotationDeclaration {
 	return &AnnotationDeclaration{
 		TypeDeclaration:        *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		annotationDeclaratiors: annotationDeclarators,
@@ -17,16 +17,16 @@ func NewAnnotationDeclaration(annotationDeclarators intsyn.IFieldDeclarator,
 
 type AnnotationDeclaration struct {
 	TypeDeclaration
-	util.DefaultBase[intsyn.IMemberDeclaration]
+	util.DefaultBase[intmod.IMemberDeclaration]
 
-	annotationDeclaratiors intsyn.IFieldDeclarator
+	annotationDeclaratiors intmod.IFieldDeclarator
 }
 
-func (d *AnnotationDeclaration) AnnotationDeclarators() intsyn.IFieldDeclarator {
+func (d *AnnotationDeclaration) AnnotationDeclarators() intmod.IFieldDeclarator {
 	return d.annotationDeclaratiors
 }
 
-func (d *AnnotationDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *AnnotationDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitAnnotationDeclaration(d)
 }
 

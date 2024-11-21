@@ -1,11 +1,11 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewPostOperatorExpression(operator string, expression intsyn.IExpression) intsyn.IPostOperatorExpression {
+func NewPostOperatorExpression(operator string, expression intmod.IExpression) intmod.IPostOperatorExpression {
 	return &PostOperatorExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		operator:                     operator,
@@ -13,7 +13,7 @@ func NewPostOperatorExpression(operator string, expression intsyn.IExpression) i
 	}
 }
 
-func NewPostOperatorExpressionWithAll(lineNumber int, operator string, expression intsyn.IExpression) intsyn.IPostOperatorExpression {
+func NewPostOperatorExpressionWithAll(lineNumber int, operator string, expression intmod.IExpression) intmod.IPostOperatorExpression {
 	return &PostOperatorExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		operator:                     operator,
@@ -25,22 +25,22 @@ type PostOperatorExpression struct {
 	AbstractLineNumberExpression
 
 	operator   string
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
 func (e *PostOperatorExpression) Operator() string {
 	return e.operator
 }
 
-func (e *PostOperatorExpression) Expression() intsyn.IExpression {
+func (e *PostOperatorExpression) Expression() intmod.IExpression {
 	return e.expression
 }
 
-func (e *PostOperatorExpression) SetExpression(expression intsyn.IExpression) {
+func (e *PostOperatorExpression) SetExpression(expression intmod.IExpression) {
 	e.expression = expression
 }
 
-func (e *PostOperatorExpression) Type() intsyn.IType {
+func (e *PostOperatorExpression) Type() intmod.IType {
 	return e.expression.Type()
 }
 
@@ -52,7 +52,7 @@ func (e *PostOperatorExpression) IsPostOperatorExpression() bool {
 	return true
 }
 
-func (e *PostOperatorExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *PostOperatorExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitPostOperatorExpression(e)
 }
 

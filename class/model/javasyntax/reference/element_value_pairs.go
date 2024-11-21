@@ -1,28 +1,30 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
-func NewElementValuePairs() intsyn.IElementValuePairs {
-	return &ElementValuePairs{}
+func NewElementValuePairs() intmod.IElementValuePairs {
+	return &ElementValuePairs{
+		DefaultList: *util.NewDefaultList[intmod.IElementValuePair](0),
+	}
 }
 
 type ElementValuePairs struct {
-	util.DefaultList[intsyn.IElementValuePair]
+	util.DefaultList[intmod.IElementValuePair]
 }
 
 func (e *ElementValuePairs) Name() string {
 	return ""
 }
 
-func (e *ElementValuePairs) ElementValue() intsyn.IElementValue {
+func (e *ElementValuePairs) ElementValue() intmod.IElementValue {
 	return nil
 }
 
-func (e *ElementValuePairs) Accept(visitor intsyn.IReferenceVisitor) {
+func (e *ElementValuePairs) Accept(visitor intmod.IReferenceVisitor) {
 	visitor.VisitElementValuePairs(e)
 }
 

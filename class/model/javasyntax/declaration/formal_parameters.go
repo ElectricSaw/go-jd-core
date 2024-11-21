@@ -1,18 +1,19 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewFormalParameters() intsyn.IFormalParameters {
+func NewFormalParameters() intmod.IFormalParameters {
 	return &FormalParameters{}
 }
 
 type FormalParameters struct {
-	util.DefaultList[intsyn.IFormalParameter]
+	FormalParameter
+	util.DefaultList[intmod.IFormalParameter]
 }
 
-func (d *FormalParameters) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *FormalParameters) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFormalParameters(d)
 }

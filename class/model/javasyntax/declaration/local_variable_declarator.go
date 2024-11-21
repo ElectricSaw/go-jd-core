@@ -1,25 +1,25 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
-func NewLocalVariableDeclarator(name string) intsyn.ILocalVariableDeclarator {
+func NewLocalVariableDeclarator(name string) intmod.ILocalVariableDeclarator {
 	return &LocalVariableDeclarator{
 		name: name,
 	}
 }
 
-func NewLocalVariableDeclarator2(name string, variableInitializer intsyn.IVariableInitializer) intsyn.ILocalVariableDeclarator {
+func NewLocalVariableDeclarator2(name string, variableInitializer intmod.IVariableInitializer) intmod.ILocalVariableDeclarator {
 	return &LocalVariableDeclarator{
 		name:                name,
 		variableInitializer: variableInitializer,
 	}
 }
 
-func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer intsyn.IVariableInitializer) intsyn.ILocalVariableDeclarator {
+func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer intmod.IVariableInitializer) intmod.ILocalVariableDeclarator {
 	return &LocalVariableDeclarator{
 		lineNumber:          lineNumber,
 		name:                name,
@@ -28,12 +28,12 @@ func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitialize
 }
 
 type LocalVariableDeclarator struct {
-	util.DefaultBase[intsyn.ILocalVariableDeclarator]
+	util.DefaultBase[intmod.ILocalVariableDeclarator]
 
 	lineNumber          int
 	name                string
 	dimension           int
-	variableInitializer intsyn.IVariableInitializer
+	variableInitializer intmod.IVariableInitializer
 }
 
 func (d *LocalVariableDeclarator) Name() string {
@@ -56,11 +56,11 @@ func (d *LocalVariableDeclarator) LineNumber() int {
 	return d.lineNumber
 }
 
-func (d *LocalVariableDeclarator) VariableInitializer() intsyn.IVariableInitializer {
+func (d *LocalVariableDeclarator) VariableInitializer() intmod.IVariableInitializer {
 	return d.variableInitializer
 }
 
-func (d *LocalVariableDeclarator) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *LocalVariableDeclarator) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarator(d)
 }
 

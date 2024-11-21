@@ -1,11 +1,11 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewNewArray(lineNumber int, typ intsyn.IType, dimensionExpressionList intsyn.IExpression) intsyn.INewArray {
+func NewNewArray(lineNumber int, typ intmod.IType, dimensionExpressionList intmod.IExpression) intmod.INewArray {
 	return &NewArray{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		dimensionExpressionList:          dimensionExpressionList,
@@ -15,14 +15,14 @@ func NewNewArray(lineNumber int, typ intsyn.IType, dimensionExpressionList intsy
 type NewArray struct {
 	AbstractLineNumberTypeExpression
 
-	dimensionExpressionList intsyn.IExpression
+	dimensionExpressionList intmod.IExpression
 }
 
-func (e *NewArray) DimensionExpressionList() intsyn.IExpression {
+func (e *NewArray) DimensionExpressionList() intmod.IExpression {
 	return e.dimensionExpressionList
 }
 
-func (e *NewArray) SetDimensionExpressionList(dimensionExpressionList intsyn.IExpression) {
+func (e *NewArray) SetDimensionExpressionList(dimensionExpressionList intmod.IExpression) {
 	e.dimensionExpressionList = dimensionExpressionList
 }
 
@@ -34,7 +34,7 @@ func (e *NewArray) IsNewArray() bool {
 	return true
 }
 
-func (e *NewArray) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *NewArray) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitNewArray(e)
 }
 

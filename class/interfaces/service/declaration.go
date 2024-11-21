@@ -16,11 +16,10 @@ type IClassFileAnnotationDeclaration interface {
 type IClassFileBodyDeclaration interface {
 	intmod.IBodyDeclaration
 
-	SetMemberDeclarations(memberDeclaration intmod.IMemberDeclaration)
 	FieldDeclarations() []IClassFileFieldDeclaration
 	SetFieldDeclarations(fieldDeclarations []IClassFileFieldDeclaration)
-	MethodDeclaration() []IClassFileConstructorOrMethodDeclaration
-	SetMethodDeclaration(methodDeclarations []IClassFileConstructorOrMethodDeclaration)
+	MethodDeclarations() []IClassFileConstructorOrMethodDeclaration
+	SetMethodDeclarations(methodDeclarations []IClassFileConstructorOrMethodDeclaration)
 	InnerTypeDeclarations() []IClassFileTypeDeclaration
 	SetInnerTypeDeclarations(innerTypeDeclarations []IClassFileTypeDeclaration)
 	InnerTypeDeclaration(internalName string) IClassFileTypeDeclaration

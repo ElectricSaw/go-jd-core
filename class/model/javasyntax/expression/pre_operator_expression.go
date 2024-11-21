@@ -1,11 +1,11 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewPreOperatorExpression(operator string, expression intsyn.IExpression) intsyn.IPreOperatorExpression {
+func NewPreOperatorExpression(operator string, expression intmod.IExpression) intmod.IPreOperatorExpression {
 	return &PreOperatorExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		operator:                     operator,
@@ -13,7 +13,7 @@ func NewPreOperatorExpression(operator string, expression intsyn.IExpression) in
 	}
 }
 
-func NewPreOperatorExpressionWithAll(lineNumber int, operator string, expression intsyn.IExpression) intsyn.IPreOperatorExpression {
+func NewPreOperatorExpressionWithAll(lineNumber int, operator string, expression intmod.IExpression) intmod.IPreOperatorExpression {
 	return &PreOperatorExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		operator:                     operator,
@@ -25,22 +25,22 @@ type PreOperatorExpression struct {
 	AbstractLineNumberExpression
 
 	operator   string
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
 func (e *PreOperatorExpression) Operator() string {
 	return e.operator
 }
 
-func (e *PreOperatorExpression) Expression() intsyn.IExpression {
+func (e *PreOperatorExpression) Expression() intmod.IExpression {
 	return e.expression
 }
 
-func (e *PreOperatorExpression) SetExpression(expression intsyn.IExpression) {
+func (e *PreOperatorExpression) SetExpression(expression intmod.IExpression) {
 	e.expression = expression
 }
 
-func (e *PreOperatorExpression) Type() intsyn.IType {
+func (e *PreOperatorExpression) Type() intmod.IType {
 	return e.expression.Type()
 }
 
@@ -52,7 +52,7 @@ func (e *PreOperatorExpression) IsPreOperatorExpression() bool {
 	return true
 }
 
-func (e *PreOperatorExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *PreOperatorExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitPreOperatorExpression(e)
 }
 

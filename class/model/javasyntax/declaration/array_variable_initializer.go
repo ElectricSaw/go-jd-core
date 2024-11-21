@@ -1,11 +1,11 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewArrayVariableInitializer(typ intsyn.IType) intsyn.IArrayVariableInitializer {
+func NewArrayVariableInitializer(typ intmod.IType) intmod.IArrayVariableInitializer {
 	return &ArrayVariableInitializer{
 		typ: typ,
 	}
@@ -13,12 +13,12 @@ func NewArrayVariableInitializer(typ intsyn.IType) intsyn.IArrayVariableInitiali
 
 type ArrayVariableInitializer struct {
 	AbstractVariableInitializer
-	util.DefaultList[intsyn.IVariableInitializer]
+	util.DefaultList[intmod.IVariableInitializer]
 
-	typ intsyn.IType
+	typ intmod.IType
 }
 
-func (i *ArrayVariableInitializer) Type() intsyn.IType {
+func (i *ArrayVariableInitializer) Type() intmod.IType {
 	return i.typ
 }
 
@@ -29,6 +29,6 @@ func (i *ArrayVariableInitializer) LineNumber() int {
 	return i.Get(0).LineNumber()
 }
 
-func (i *ArrayVariableInitializer) Accept(visitor intsyn.IDeclarationVisitor) {
+func (i *ArrayVariableInitializer) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitArrayVariableInitializer(i)
 }

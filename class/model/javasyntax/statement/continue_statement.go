@@ -1,10 +1,10 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 var Continue = NewContinueStatement("")
 
-func NewContinueStatement(label string) intsyn.IContinueStatement {
+func NewContinueStatement(label string) intmod.IContinueStatement {
 	return &ContinueStatement{
 		label: label,
 	}
@@ -24,6 +24,6 @@ func (s *ContinueStatement) IsContinueStatement() bool {
 	return true
 }
 
-func (s *ContinueStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *ContinueStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitContinueStatement(s)
 }

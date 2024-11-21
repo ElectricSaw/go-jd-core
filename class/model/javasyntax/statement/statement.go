@@ -1,16 +1,16 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 type AbstractStatement struct {
-	util.DefaultBase[intsyn.IStatement]
+	util.DefaultBase[intmod.IStatement]
 }
 
-func (s *AbstractStatement) Accept(visitor intsyn.IStatementVisitor) {}
+func (s *AbstractStatement) Accept(visitor intmod.IStatementVisitor) {}
 
 func (s *AbstractStatement) IsBreakStatement() bool                    { return false }
 func (s *AbstractStatement) IsContinueStatement() bool                 { return false }
@@ -33,17 +33,17 @@ func (s *AbstractStatement) IsThrowStatement() bool                    { return 
 func (s *AbstractStatement) IsTryStatement() bool                      { return false }
 func (s *AbstractStatement) IsWhileStatement() bool                    { return false }
 
-func (s *AbstractStatement) Condition() intsyn.IExpression        { return expression.NeNoExpression }
-func (s *AbstractStatement) Expression() intsyn.IExpression       { return expression.NeNoExpression }
-func (s *AbstractStatement) Monitor() intsyn.IExpression          { return expression.NeNoExpression }
-func (s *AbstractStatement) ElseStatements() intsyn.IStatement    { return NoStmt.(intsyn.IStatement) }
-func (s *AbstractStatement) FinallyStatements() intsyn.IStatement { return NoStmt.(intsyn.IStatement) }
-func (s *AbstractStatement) Statements() intsyn.IStatement        { return NoStmt.(intsyn.IStatement) }
-func (s *AbstractStatement) TryStatements() intsyn.IStatement     { return NoStmt.(intsyn.IStatement) }
+func (s *AbstractStatement) Condition() intmod.IExpression        { return expression.NeNoExpression }
+func (s *AbstractStatement) Expression() intmod.IExpression       { return expression.NeNoExpression }
+func (s *AbstractStatement) Monitor() intmod.IExpression          { return expression.NeNoExpression }
+func (s *AbstractStatement) ElseStatements() intmod.IStatement    { return NoStmt.(intmod.IStatement) }
+func (s *AbstractStatement) FinallyStatements() intmod.IStatement { return NoStmt.(intmod.IStatement) }
+func (s *AbstractStatement) Statements() intmod.IStatement        { return NoStmt.(intmod.IStatement) }
+func (s *AbstractStatement) TryStatements() intmod.IStatement     { return NoStmt.(intmod.IStatement) }
 
-func (s *AbstractStatement) Init() intsyn.IExpression   { return expression.NeNoExpression }
-func (s *AbstractStatement) Update() intsyn.IExpression { return expression.NeNoExpression }
+func (s *AbstractStatement) Init() intmod.IExpression   { return expression.NeNoExpression }
+func (s *AbstractStatement) Update() intmod.IExpression { return expression.NeNoExpression }
 
-func (s *AbstractStatement) CatchClauses() []intsyn.ICatchClause { return nil }
+func (s *AbstractStatement) CatchClauses() []intmod.ICatchClause { return nil }
 
-func (s *AbstractStatement) LineNumber() int { return intsyn.UnknownLineNumber }
+func (s *AbstractStatement) LineNumber() int { return intmod.UnknownLineNumber }

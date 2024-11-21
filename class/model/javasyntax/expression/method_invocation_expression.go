@@ -1,28 +1,28 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewMethodInvocationExpression(typ intsyn.IType, expression intsyn.IExpression,
-	internalTypeName, name, descriptor string) intsyn.IMethodInvocationExpression {
+func NewMethodInvocationExpression(typ intmod.IType, expression intmod.IExpression,
+	internalTypeName, name, descriptor string) intmod.IMethodInvocationExpression {
 	return &MethodInvocationExpression{
 		MethodReferenceExpression: *NewMethodReferenceExpression(typ, expression,
 			internalTypeName, name, descriptor).(*MethodReferenceExpression),
 	}
 }
 
-func NewMethodInvocationExpressionWithLineNumber(lineNumber int, typ intsyn.IType,
-	expression intsyn.IExpression, internalTypeName, name, descriptor string) intsyn.IMethodInvocationExpression {
+func NewMethodInvocationExpressionWithLineNumber(lineNumber int, typ intmod.IType,
+	expression intmod.IExpression, internalTypeName, name, descriptor string) intmod.IMethodInvocationExpression {
 	return &MethodInvocationExpression{
 		MethodReferenceExpression: *NewMethodReferenceExpressionWithAll(lineNumber,
 			typ, expression, internalTypeName, name, descriptor).(*MethodReferenceExpression),
 	}
 }
 
-func NewMethodInvocationExpressionWithParam(typ intsyn.IType, expression intsyn.IExpression,
-	internalTypeName, name, descriptor string, parameters intsyn.IExpression) intsyn.IMethodInvocationExpression {
+func NewMethodInvocationExpressionWithParam(typ intmod.IType, expression intmod.IExpression,
+	internalTypeName, name, descriptor string, parameters intmod.IExpression) intmod.IMethodInvocationExpression {
 	return &MethodInvocationExpression{
 		MethodReferenceExpression: *NewMethodReferenceExpression(typ, expression,
 			internalTypeName, name, descriptor).(*MethodReferenceExpression),
@@ -30,8 +30,8 @@ func NewMethodInvocationExpressionWithParam(typ intsyn.IType, expression intsyn.
 	}
 }
 
-func NewMethodInvocationExpressionWithAll(lineNumber int, typ intsyn.IType, expression intsyn.IExpression,
-	internalTypeName, name, descriptor string, parameters intsyn.IExpression) intsyn.IMethodInvocationExpression {
+func NewMethodInvocationExpressionWithAll(lineNumber int, typ intmod.IType, expression intmod.IExpression,
+	internalTypeName, name, descriptor string, parameters intmod.IExpression) intmod.IMethodInvocationExpression {
 	return &MethodInvocationExpression{
 		MethodReferenceExpression: *NewMethodReferenceExpressionWithAll(lineNumber, typ,
 			expression, internalTypeName, name, descriptor).(*MethodReferenceExpression),
@@ -42,23 +42,23 @@ func NewMethodInvocationExpressionWithAll(lineNumber int, typ intsyn.IType, expr
 type MethodInvocationExpression struct {
 	MethodReferenceExpression
 
-	nonWildcardTypeArguments intsyn.ITypeArgument
-	parameters               intsyn.IExpression
+	nonWildcardTypeArguments intmod.ITypeArgument
+	parameters               intmod.IExpression
 }
 
-func (e *MethodInvocationExpression) NonWildcardTypeArguments() intsyn.ITypeArgument {
+func (e *MethodInvocationExpression) NonWildcardTypeArguments() intmod.ITypeArgument {
 	return e.nonWildcardTypeArguments
 }
 
-func (e *MethodInvocationExpression) SetNonWildcardTypeArguments(arguments intsyn.ITypeArgument) {
+func (e *MethodInvocationExpression) SetNonWildcardTypeArguments(arguments intmod.ITypeArgument) {
 	e.nonWildcardTypeArguments = arguments
 }
 
-func (e *MethodInvocationExpression) Parameters() intsyn.IExpression {
+func (e *MethodInvocationExpression) Parameters() intmod.IExpression {
 	return e.parameters
 }
 
-func (e *MethodInvocationExpression) SetParameters(params intsyn.IExpression) {
+func (e *MethodInvocationExpression) SetParameters(params intmod.IExpression) {
 	e.parameters = params
 }
 
@@ -66,7 +66,7 @@ func (e *MethodInvocationExpression) Priority() int {
 	return 1
 }
 
-func (e *MethodInvocationExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *MethodInvocationExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitMethodInvocationExpression(e)
 }
 

@@ -1,26 +1,26 @@
 package _type
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
-var PtTypeBoolean = NewPrimitiveType("boolean", intsyn.FlagBoolean, intsyn.FlagBoolean, intsyn.FlagBoolean)
-var PtTypeByte = NewPrimitiveType("byte", intsyn.FlagByte, intsyn.FlagByte, intsyn.FlagByte|intsyn.FlagInt|intsyn.FlagShort)
-var PtTypeChar = NewPrimitiveType("char", intsyn.FlagChar, intsyn.FlagChar, intsyn.FlagChar|intsyn.FlagInt)
-var PtTypeDouble = NewPrimitiveType("double", intsyn.FlagDouble, intsyn.FlagDouble, intsyn.FlagDouble)
-var PtTypeFloat = NewPrimitiveType("float", intsyn.FlagFloat, intsyn.FlagFloat, intsyn.FlagFloat)
-var PtTypeInt = NewPrimitiveType("int", intsyn.FlagInt, intsyn.FlagInt|intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort, intsyn.FlagInt)
-var PtTypeLong = NewPrimitiveType("long", intsyn.FlagLong, intsyn.FlagLong, intsyn.FlagLong)
-var PtTypeShort = NewPrimitiveType("short", intsyn.FlagShort, intsyn.FlagShort|intsyn.FlagByte, intsyn.FlagShort|intsyn.FlagInt)
-var PtTypeVoid = NewPrimitiveType("void", intsyn.FlagVoid, intsyn.FlagVoid, intsyn.FlagVoid)
-var PtMaybeCharType = NewPrimitiveType("maybe_char", intsyn.FlagChar|intsyn.FlagInt, intsyn.FlagChar|intsyn.FlagInt, intsyn.FlagChar|intsyn.FlagInt)                                                                                                                                                                   //  32768 .. 65535
-var PtMaybeShortType = NewPrimitiveType("maybe_short", intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt)                                                                                                              //    128 .. 32767
-var PtMaybeByteType = NewPrimitiveType("maybe_byte", intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt)                                                                //      2 .. 127
-var PtMaybeBooleanType = NewPrimitiveType("maybe_boolean", intsyn.FlagBoolean|intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagBoolean|intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagBoolean|intsyn.FlagByte|intsyn.FlagChar|intsyn.FlagShort|intsyn.FlagInt) //      0 .. 1
-var PtMaybeNegativeByteType = NewPrimitiveType("maybe_negative_byte", intsyn.FlagByte|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagByte|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagByte|intsyn.FlagShort|intsyn.FlagInt)                                                                                               //   -128 .. -1
-var PtMaybeNegativeShortType = NewPrimitiveType("maybe_negative_short", intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagShort|intsyn.FlagInt)                                                                                                                                             // -32768 .. -129
-var PtMaybeIntType = NewPrimitiveType("maybe_int", intsyn.FlagInt, intsyn.FlagInt, intsyn.FlagInt)                                                                                                                                                                                                                     // Otherwise
-var PtMaybeNegativeBooleanType = NewPrimitiveType("maybe_negative_boolean", intsyn.FlagBoolean|intsyn.FlagByte|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagBoolean|intsyn.FlagByte|intsyn.FlagShort|intsyn.FlagInt, intsyn.FlagBoolean|intsyn.FlagByte|intsyn.FlagShort|intsyn.FlagInt)                                // Boolean or negative
+var PtTypeBoolean = NewPrimitiveType("boolean", intmod.FlagBoolean, intmod.FlagBoolean, intmod.FlagBoolean)
+var PtTypeByte = NewPrimitiveType("byte", intmod.FlagByte, intmod.FlagByte, intmod.FlagByte|intmod.FlagInt|intmod.FlagShort)
+var PtTypeChar = NewPrimitiveType("char", intmod.FlagChar, intmod.FlagChar, intmod.FlagChar|intmod.FlagInt)
+var PtTypeDouble = NewPrimitiveType("double", intmod.FlagDouble, intmod.FlagDouble, intmod.FlagDouble)
+var PtTypeFloat = NewPrimitiveType("float", intmod.FlagFloat, intmod.FlagFloat, intmod.FlagFloat)
+var PtTypeInt = NewPrimitiveType("int", intmod.FlagInt, intmod.FlagInt|intmod.FlagByte|intmod.FlagChar|intmod.FlagShort, intmod.FlagInt)
+var PtTypeLong = NewPrimitiveType("long", intmod.FlagLong, intmod.FlagLong, intmod.FlagLong)
+var PtTypeShort = NewPrimitiveType("short", intmod.FlagShort, intmod.FlagShort|intmod.FlagByte, intmod.FlagShort|intmod.FlagInt)
+var PtTypeVoid = NewPrimitiveType("void", intmod.FlagVoid, intmod.FlagVoid, intmod.FlagVoid)
+var PtMaybeCharType = NewPrimitiveType("maybe_char", intmod.FlagChar|intmod.FlagInt, intmod.FlagChar|intmod.FlagInt, intmod.FlagChar|intmod.FlagInt)                                                                                                                                                                   //  32768 .. 65535
+var PtMaybeShortType = NewPrimitiveType("maybe_short", intmod.FlagChar|intmod.FlagShort|intmod.FlagInt, intmod.FlagChar|intmod.FlagShort|intmod.FlagInt, intmod.FlagChar|intmod.FlagShort|intmod.FlagInt)                                                                                                              //    128 .. 32767
+var PtMaybeByteType = NewPrimitiveType("maybe_byte", intmod.FlagByte|intmod.FlagChar|intmod.FlagShort|intmod.FlagInt, intmod.FlagByte|intmod.FlagChar|intmod.FlagShort|intmod.FlagInt, intmod.FlagByte|intmod.FlagChar|intmod.FlagShort|intmod.FlagInt)                                                                //      2 .. 127
+var PtMaybeBooleanType = NewPrimitiveType("maybe_boolean", intmod.FlagBoolean|intmod.FlagByte|intmod.FlagChar|intmod.FlagShort|intmod.FlagInt, intmod.FlagBoolean|intmod.FlagByte|intmod.FlagChar|intmod.FlagShort|intmod.FlagInt, intmod.FlagBoolean|intmod.FlagByte|intmod.FlagChar|intmod.FlagShort|intmod.FlagInt) //      0 .. 1
+var PtMaybeNegativeByteType = NewPrimitiveType("maybe_negative_byte", intmod.FlagByte|intmod.FlagShort|intmod.FlagInt, intmod.FlagByte|intmod.FlagShort|intmod.FlagInt, intmod.FlagByte|intmod.FlagShort|intmod.FlagInt)                                                                                               //   -128 .. -1
+var PtMaybeNegativeShortType = NewPrimitiveType("maybe_negative_short", intmod.FlagShort|intmod.FlagInt, intmod.FlagShort|intmod.FlagInt, intmod.FlagShort|intmod.FlagInt)                                                                                                                                             // -32768 .. -129
+var PtMaybeIntType = NewPrimitiveType("maybe_int", intmod.FlagInt, intmod.FlagInt, intmod.FlagInt)                                                                                                                                                                                                                     // Otherwise
+var PtMaybeNegativeBooleanType = NewPrimitiveType("maybe_negative_boolean", intmod.FlagBoolean|intmod.FlagByte|intmod.FlagShort|intmod.FlagInt, intmod.FlagBoolean|intmod.FlagByte|intmod.FlagShort|intmod.FlagInt, intmod.FlagBoolean|intmod.FlagByte|intmod.FlagShort|intmod.FlagInt)                                // Boolean or negative
 
-var descriptorToType = []intsyn.IPrimitiveType{
+var descriptorToType = []intmod.IPrimitiveType{
 	PtTypeByte,
 	PtTypeChar,
 	PtTypeDouble,
@@ -32,11 +32,11 @@ var descriptorToType = []intsyn.IPrimitiveType{
 	PtTypeBoolean,
 }
 
-func GetPrimitiveType(primitiveDescriptor int) intsyn.IPrimitiveType {
+func GetPrimitiveType(primitiveDescriptor int) intmod.IPrimitiveType {
 	return descriptorToType[primitiveDescriptor-66] // int('B')
 }
 
-func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intsyn.IPrimitiveType {
+func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intmod.IPrimitiveType {
 	t := &PrimitiveType{
 		name:       name,
 		flags:      flags,
@@ -46,19 +46,19 @@ func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intsyn.IPri
 
 	sb := ""
 
-	if flags&intsyn.FlagDouble != 0 {
+	if flags&intmod.FlagDouble != 0 {
 		sb += "D"
-	} else if flags&intsyn.FlagFloat != 0 {
+	} else if flags&intmod.FlagFloat != 0 {
 		sb += "F"
-	} else if flags&intsyn.FlagLong != 0 {
+	} else if flags&intmod.FlagLong != 0 {
 		sb += "J"
-	} else if flags&intsyn.FlagBoolean != 0 {
+	} else if flags&intmod.FlagBoolean != 0 {
 		sb += "Z"
-	} else if flags&intsyn.FlagByte != 0 {
+	} else if flags&intmod.FlagByte != 0 {
 		sb += "B"
-	} else if flags&intsyn.FlagChar != 0 {
+	} else if flags&intmod.FlagChar != 0 {
 		sb += "C"
-	} else if flags&intsyn.FlagShort != 0 {
+	} else if flags&intmod.FlagShort != 0 {
 		sb += "S"
 	} else {
 		sb += "I"
@@ -100,11 +100,11 @@ func (t *PrimitiveType) Dimension() int {
 	return 0
 }
 
-func (t *PrimitiveType) CreateType(dimension int) intsyn.IType {
+func (t *PrimitiveType) CreateType(dimension int) intmod.IType {
 	if dimension == 0 {
 		return t
 	} else {
-		return NewObjectTypeWithDescAndDim(t.descriptor, dimension).(intsyn.IType)
+		return NewObjectTypeWithDescAndDim(t.descriptor, dimension).(intmod.IType)
 	}
 }
 
@@ -112,13 +112,13 @@ func (t *PrimitiveType) IsPrimitiveType() bool {
 	return true
 }
 
-func (t *PrimitiveType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
+func (t *PrimitiveType) AcceptTypeVisitor(visitor intmod.ITypeVisitor) {
 	visitor.VisitPrimitiveType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *PrimitiveType) IsTypeArgumentAssignableFrom(_ map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
+func (t *PrimitiveType) IsTypeArgumentAssignableFrom(_ map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
 	return t.Equals(typeArgument)
 }
 
@@ -126,13 +126,13 @@ func (t *PrimitiveType) IsPrimitiveTypeArgument() bool {
 	return true
 }
 
-func (t *PrimitiveType) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
+func (t *PrimitiveType) AcceptTypeArgumentVisitor(visitor intmod.ITypeArgumentVisitor) {
 	visitor.VisitPrimitiveType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *PrimitiveType) Equals(o intsyn.ITypeArgument) bool {
+func (t *PrimitiveType) Equals(o intmod.ITypeArgument) bool {
 	if t == o {
 		return true
 	}
@@ -166,16 +166,16 @@ func (t *PrimitiveType) RightFlags() int {
 }
 
 func (t *PrimitiveType) JavaPrimitiveFlags() int {
-	if t.flags&intsyn.FlagBoolean != 0 {
-		return intsyn.FlagBoolean
-	} else if t.flags&intsyn.FlagInt != 0 {
-		return intsyn.FlagInt
-	} else if t.flags&intsyn.FlagChar != 0 {
-		return intsyn.FlagChar
-	} else if t.flags&intsyn.FlagShort != 0 {
-		return intsyn.FlagShort
-	} else if t.flags&intsyn.FlagByte != 0 {
-		return intsyn.FlagByte
+	if t.flags&intmod.FlagBoolean != 0 {
+		return intmod.FlagBoolean
+	} else if t.flags&intmod.FlagInt != 0 {
+		return intmod.FlagInt
+	} else if t.flags&intmod.FlagChar != 0 {
+		return intmod.FlagChar
+	} else if t.flags&intmod.FlagShort != 0 {
+		return intmod.FlagShort
+	} else if t.flags&intmod.FlagByte != 0 {
+		return intmod.FlagByte
 	}
 	return t.flags
 }

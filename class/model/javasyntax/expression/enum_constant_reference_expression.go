@@ -1,21 +1,21 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewEnumConstantReferenceExpression(typ intsyn.IObjectType, name string) intsyn.IEnumConstantReferenceExpression {
+func NewEnumConstantReferenceExpression(typ intmod.IObjectType, name string) intmod.IEnumConstantReferenceExpression {
 	return &EnumConstantReferenceExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: intsyn.UnknownLineNumber,
+			lineNumber: intmod.UnknownLineNumber,
 		},
 		typ:  typ,
 		name: name,
 	}
 }
 
-func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intsyn.IObjectType, name string) intsyn.IEnumConstantReferenceExpression {
+func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intmod.IObjectType, name string) intmod.IEnumConstantReferenceExpression {
 	return &EnumConstantReferenceExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
@@ -28,19 +28,19 @@ func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intsyn.IObjec
 type EnumConstantReferenceExpression struct {
 	AbstractLineNumberExpression
 
-	typ  intsyn.IObjectType
+	typ  intmod.IObjectType
 	name string
 }
 
-func (e *EnumConstantReferenceExpression) Type() intsyn.IType {
-	return e.typ.(intsyn.IType)
+func (e *EnumConstantReferenceExpression) Type() intmod.IType {
+	return e.typ.(intmod.IType)
 }
 
-func (e *EnumConstantReferenceExpression) SetType(typ intsyn.IType) {
-	e.typ = typ.(intsyn.IObjectType)
+func (e *EnumConstantReferenceExpression) SetType(typ intmod.IType) {
+	e.typ = typ.(intmod.IObjectType)
 }
 
-func (e *EnumConstantReferenceExpression) ObjectType() intsyn.IObjectType {
+func (e *EnumConstantReferenceExpression) ObjectType() intmod.IObjectType {
 	return e.typ
 }
 
@@ -48,7 +48,7 @@ func (e *EnumConstantReferenceExpression) Name() string {
 	return e.name
 }
 
-func (e *EnumConstantReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *EnumConstantReferenceExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitEnumConstantReferenceExpression(e)
 }
 

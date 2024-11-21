@@ -1,14 +1,14 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewUnmodifiableTypes(types ...intsyn.IType) intsyn.IUnmodifiableTypes {
+func NewUnmodifiableTypes(types ...intmod.IType) intmod.IUnmodifiableTypes {
 	return NewUnmodifiableTypesWithSlice(types)
 }
 
-func NewUnmodifiableTypesWithSlice(types []intsyn.IType) intsyn.IUnmodifiableTypes {
+func NewUnmodifiableTypesWithSlice(types []intmod.IType) intmod.IUnmodifiableTypes {
 	t := &UnmodifiableTypes{}
 	t.AddAll(types)
 
@@ -19,6 +19,6 @@ type UnmodifiableTypes struct {
 	Types
 }
 
-func (t *UnmodifiableTypes) ListIterator(i int) []intsyn.IType {
+func (t *UnmodifiableTypes) ListIterator(i int) []intmod.IType {
 	return t.Elements()
 }

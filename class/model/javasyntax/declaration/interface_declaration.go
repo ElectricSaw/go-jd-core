@@ -1,11 +1,11 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces intsyn.IType) intsyn.IInterfaceDeclaration {
+func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces intmod.IType) intmod.IInterfaceDeclaration {
 	return &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: nil,
@@ -18,9 +18,9 @@ func NewInterfaceDeclaration(flags int, internalTypeName string, name string, in
 	}
 }
 
-func NewInterfaceDeclarationWithAll(annotationReferences intsyn.IAnnotationReference, flags int,
-	internalTypeName string, name string, bodyDeclaration intsyn.IBodyDeclaration,
-	typeParameters intsyn.ITypeParameter, interfaces intsyn.IType) intsyn.IInterfaceDeclaration {
+func NewInterfaceDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intmod.IBodyDeclaration,
+	typeParameters intmod.ITypeParameter, interfaces intmod.IType) intmod.IInterfaceDeclaration {
 	return &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: annotationReferences,
@@ -37,19 +37,19 @@ func NewInterfaceDeclarationWithAll(annotationReferences intsyn.IAnnotationRefer
 type InterfaceDeclaration struct {
 	TypeDeclaration
 
-	typeParameters intsyn.ITypeParameter
-	interfaces     intsyn.IType
+	typeParameters intmod.ITypeParameter
+	interfaces     intmod.IType
 }
 
-func (d *InterfaceDeclaration) TypeParameters() intsyn.ITypeParameter {
+func (d *InterfaceDeclaration) TypeParameters() intmod.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *InterfaceDeclaration) Interfaces() intsyn.IType {
+func (d *InterfaceDeclaration) Interfaces() intmod.IType {
 	return d.interfaces
 }
 
-func (d *InterfaceDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *InterfaceDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitInterfaceDeclaration(d)
 }
 

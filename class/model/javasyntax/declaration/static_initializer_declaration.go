@@ -1,10 +1,10 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewStaticInitializerDeclaration(descriptor string, statements intsyn.IStatement) intsyn.IStaticInitializerDeclaration {
+func NewStaticInitializerDeclaration(descriptor string, statements intmod.IStatement) intmod.IStaticInitializerDeclaration {
 	return &StaticInitializerDeclaration{
 		descriptor: descriptor,
 		statements: statements,
@@ -15,22 +15,22 @@ type StaticInitializerDeclaration struct {
 	AbstractMemberDeclaration
 
 	descriptor string
-	statements intsyn.IStatement
+	statements intmod.IStatement
 }
 
 func (d *StaticInitializerDeclaration) Description() string {
 	return d.descriptor
 }
 
-func (d *StaticInitializerDeclaration) Statements() intsyn.IStatement {
+func (d *StaticInitializerDeclaration) Statements() intmod.IStatement {
 	return d.statements
 }
 
-func (d *StaticInitializerDeclaration) SetStatements(statements intsyn.IStatement) {
+func (d *StaticInitializerDeclaration) SetStatements(statements intmod.IStatement) {
 	d.statements = statements
 }
 
-func (d *StaticInitializerDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *StaticInitializerDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitStaticInitializerDeclaration(d)
 }
 

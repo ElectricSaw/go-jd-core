@@ -1,12 +1,9 @@
 package visitor
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/reference"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
@@ -22,13 +19,13 @@ type AddCastExpressionVisitor struct {
 
 	searchFirstLineNumberVisitor *SearchFirstLineNumberVisitor
 	typeMaker                    *utils.TypeMaker
-	typeBounds                   map[string]_type.IType
-	returnedType                 _type.IType
-	exceptionType                _type.IType
-	typ                          _type.IType
+	typeBounds                   map[string]intmod.IType
+	returnedType                 intmod.IType
+	exceptionType                intmod.IType
+	typ                          intmod.IType
 }
 
-func (v *AddCastExpressionVisitor) VisitBodyDeclaration(decl declaration.IBodyDeclaration) {
+func (v *AddCastExpressionVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {
 	memberDeclarations := decl.MemberDeclarations()
 
 	if memberDeclarations != nil {
@@ -42,8 +39,8 @@ func (v *AddCastExpressionVisitor) VisitBodyDeclaration(decl declaration.IBodyDe
 	}
 }
 
-func (v *AddCastExpressionVisitor) VisitFieldDeclaration(decl *declaration.FieldDeclaration) {
-	if (decl.Flags() & declaration.FlagSynthetic) == 0 {
+func (v *AddCastExpressionVisitor) VisitFieldDeclaration(decl intmod.IFieldDeclaration) {
+	if (decl.Flags() & intmod.FlagSynthetic) == 0 {
 		t := v.typ
 
 		v.typ = decl.Type()
@@ -52,7 +49,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclaration(decl *declaration.Field
 	}
 }
 
-func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.FieldDeclarator) {
+func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator intmod.IFieldDeclarator) {
 	variableInitializer := declarator.VariableInitializer()
 
 	if variableInitializer != nil {
@@ -119,7 +116,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitLambdaIdentifiersExpression( expression *expression.LambdaIdentifiersExpression) {
+//func (v *AddCastExpressionVisitor) VisitLambdaIdentifiersExpression( expression intmod.ILambdaIdentifiersExpression) {
 //	BaseStatement statements = expression.Statements();
 //
 //	if (statements != nil) {
@@ -198,7 +195,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitSuperConstructorInvocationExpression( expression *expression.SuperConstructorInvocationExpression) {
+//func (v *AddCastExpressionVisitor) VisitSuperConstructorInvocationExpression( expression intmod.ISuperConstructorInvocationExpression) {
 //	BaseExpression parameters = expression.Parameters();
 //
 //	if ((parameters != nil) && (parameters.size() > 0)) {
@@ -208,7 +205,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitConstructorInvocationExpression( expression *expression.ConstructorInvocationExpression) {
+//func (v *AddCastExpressionVisitor) VisitConstructorInvocationExpression( expression intmod.IConstructorInvocationExpression) {
 //	BaseExpression parameters = expression.Parameters();
 //
 //	if ((parameters != nil) && (parameters.size() > 0)) {
@@ -218,7 +215,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitMethodInvocationExpression( expression *expression.MethodInvocationExpression) {
+//func (v *AddCastExpressionVisitor) VisitMethodInvocationExpression( expression intmod.IMethodInvocationExpression) {
 //	BaseExpression parameters = expression.Parameters();
 //
 //	if ((parameters != nil) && (parameters.size() > 0)) {
@@ -230,7 +227,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	expression.IExpression().Accept(v);
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitNewExpression( expression *expression.NewExpression) {
+//func (v *AddCastExpressionVisitor) VisitNewExpression( expression intmod.INewExpression) {
 //	BaseExpression parameters = expression.Parameters();
 //
 //	if (parameters != nil) {
@@ -240,7 +237,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitNewInitializedArray( expression *expression.NewInitializedArray) {
+//func (v *AddCastExpressionVisitor) VisitNewInitializedArray( expression intmod.INewInitializedArray) {
 //	ArrayVariableInitializer arrayInitializer = expression.ArrayInitializer();
 //
 //	if (arrayInitializer != nil) {
@@ -252,7 +249,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitFieldReferenceExpression( expression *expression.FieldReferenceExpression) {
+//func (v *AddCastExpressionVisitor) VisitFieldReferenceExpression( expression intmod.IFieldReferenceExpression) {
 //	IExpression exp = expression.IExpression();
 //
 //	if ((exp != nil) && !exp.isObjectTypeReferenceExpression()) {
@@ -264,7 +261,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitBinaryOperatorExpression( expression *expression.BinaryOperatorExpression) {
+//func (v *AddCastExpressionVisitor) VisitBinaryOperatorExpression( expression intmod.IBinaryOperatorExpression) {
 //	expression.LeftExpression().Accept(v);
 //
 //	IExpression rightExpression = expression.RightExpression();
@@ -287,7 +284,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	rightExpression.Accept(v);
 //}
 //
-//func (v *AddCastExpressionVisitor) VisitTernaryOperatorExpression( expression *expression.TernaryOperatorExpression) {
+//func (v *AddCastExpressionVisitor) VisitTernaryOperatorExpression( expression intmod.ITernaryOperatorExpression) {
 //	Type expressionType = expression.Type();
 //
 //	expression.Condition().Accept(v);
@@ -420,40 +417,40 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator *declaration.
 //	}
 //}
 
-func (v *AddCastExpressionVisitor) VisitFloatConstantExpression(expression *expression.FloatConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitFloatConstantExpression(expression intmod.IFloatConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitIntegerConstantExpression(expression *expression.IntegerConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitConstructorReferenceExpression(expression *expression.ConstructorReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitConstructorReferenceExpression(expression intmod.IConstructorReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitDoubleConstantExpression(expression *expression.DoubleConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitDoubleConstantExpression(expression intmod.IDoubleConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitEnumConstantReferenceExpression(expression *expression.EnumConstantReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitEnumConstantReferenceExpression(expression intmod.IEnumConstantReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitLocalVariableReferenceExpression(expression *expression.LocalVariableReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitLocalVariableReferenceExpression(expression intmod.ILocalVariableReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitLongConstantExpression(expression *expression.LongConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitLongConstantExpression(expression intmod.ILongConstantExpression) {
 }
 func (v *AddCastExpressionVisitor) VisitBreakStatement(statement *statement.BreakStatement)       {}
 func (v *AddCastExpressionVisitor) VisitByteCodeStatement(statement *statement.ByteCodeStatement) {}
 func (v *AddCastExpressionVisitor) VisitContinueStatement(statement *statement.ContinueStatement) {}
-func (v *AddCastExpressionVisitor) VisitNullExpression(expression *expression.NullExpression)     {}
-func (v *AddCastExpressionVisitor) VisitObjectTypeReferenceExpression(expression *expression.ObjectTypeReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitNullExpression(expression intmod.INullExpression)         {}
+func (v *AddCastExpressionVisitor) VisitObjectTypeReferenceExpression(expression intmod.IObjectTypeReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitSuperExpression(expression *expression.SuperExpression) {}
-func (v *AddCastExpressionVisitor) VisitThisExpression(expression *expression.ThisExpression)   {}
-func (v *AddCastExpressionVisitor) VisitTypeReferenceDotClassExpression(expression *expression.TypeReferenceDotClassExpression) {
+func (v *AddCastExpressionVisitor) VisitSuperExpression(expression intmod.ISuperExpression) {}
+func (v *AddCastExpressionVisitor) VisitThisExpression(expression intmod.IThisExpression)   {}
+func (v *AddCastExpressionVisitor) VisitTypeReferenceDotClassExpression(expression intmod.ITypeReferenceDotClassExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitObjectReference(reference *reference.ObjectReference) {}
-func (v *AddCastExpressionVisitor) VisitInnerObjectReference(reference *reference.InnerObjectReference) {
+func (v *AddCastExpressionVisitor) VisitObjectReference(reference intmod.IObjectReference) {}
+func (v *AddCastExpressionVisitor) VisitInnerObjectReference(reference intmod.IInnerObjectReference) {
 }
-func (v *AddCastExpressionVisitor) VisitTypeArguments(typ *_type.TypeArguments) {}
-func (v *AddCastExpressionVisitor) VisitWildcardExtendsTypeArgument(typ *_type.WildcardExtendsTypeArgument) {
+func (v *AddCastExpressionVisitor) VisitTypeArguments(typ intmod.ITypeArguments) {}
+func (v *AddCastExpressionVisitor) VisitWildcardExtendsTypeArgument(typ intmod.IWildcardExtendsTypeArgument) {
 }
-func (v *AddCastExpressionVisitor) VisitObjectType(typ *_type.ObjectType)           {}
-func (v *AddCastExpressionVisitor) VisitInnerObjectType(typ *_type.InnerObjectType) {}
-func (v *AddCastExpressionVisitor) VisitWildcardSuperTypeArgument(typ *_type.WildcardSuperTypeArgument) {
+func (v *AddCastExpressionVisitor) VisitObjectType(typ intmod.IObjectType)           {}
+func (v *AddCastExpressionVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {}
+func (v *AddCastExpressionVisitor) VisitWildcardSuperTypeArgument(typ intmod.IWildcardSuperTypeArgument) {
 }
-func (v *AddCastExpressionVisitor) VisitTypes(list *_type.Types) {}
-func (v *AddCastExpressionVisitor) VisitTypeParameterWithTypeBounds(typ *_type.TypeParameterWithTypeBounds) {
+func (v *AddCastExpressionVisitor) VisitTypes(list intmod.ITypes) {}
+func (v *AddCastExpressionVisitor) VisitTypeParameterWithTypeBounds(typ intmod.ITypeParameterWithTypeBounds) {
 }

@@ -1,21 +1,21 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewLongConstantExpression(value int64) intsyn.ILongConstantExpression {
+func NewLongConstantExpression(value int64) intmod.ILongConstantExpression {
 	return &LongConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeLong.(intsyn.IType)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeLong.(intmod.IType)),
 		value:                            value,
 	}
 }
 
-func NewLongConstantExpressionWithAll(lineNumber int, value int64) intsyn.ILongConstantExpression {
+func NewLongConstantExpressionWithAll(lineNumber int, value int64) intmod.ILongConstantExpression {
 	return &LongConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeLong.(intsyn.IType)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeLong.(intmod.IType)),
 		value:                            value,
 	}
 }
@@ -34,7 +34,7 @@ func (e *LongConstantExpression) IsLongConstantExpression() bool {
 	return true
 }
 
-func (e *LongConstantExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *LongConstantExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitLongConstantExpression(e)
 }
 

@@ -1,8 +1,8 @@
 package declaration
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
-func NewBodyDeclaration(internalTypeName string, memberDeclaration intsyn.IMemberDeclaration) intsyn.IBodyDeclaration {
+func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMemberDeclaration) intmod.IBodyDeclaration {
 	return &BodyDeclaration{
 		internalTypeName:   internalTypeName,
 		memberDeclarations: memberDeclaration,
@@ -11,21 +11,21 @@ func NewBodyDeclaration(internalTypeName string, memberDeclaration intsyn.IMembe
 
 type BodyDeclaration struct {
 	internalTypeName   string
-	memberDeclarations intsyn.IMemberDeclaration
+	memberDeclarations intmod.IMemberDeclaration
 }
 
 func (d *BodyDeclaration) InternalTypeName() string {
 	return d.internalTypeName
 }
 
-func (d *BodyDeclaration) MemberDeclarations() intsyn.IMemberDeclaration {
+func (d *BodyDeclaration) MemberDeclarations() intmod.IMemberDeclaration {
 	return d.memberDeclarations
 }
 
-func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration intsyn.IMemberDeclaration) {
+func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration intmod.IMemberDeclaration) {
 	d.memberDeclarations = memberDeclaration
 }
 
-func (d *BodyDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *BodyDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitBodyDeclaration(d)
 }

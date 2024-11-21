@@ -1,11 +1,11 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewNewExpression(lineNumber int, typ intsyn.IObjectType, descriptor string) intsyn.INewExpression {
+func NewNewExpression(lineNumber int, typ intmod.IObjectType, descriptor string) intmod.INewExpression {
 	return &NewExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -13,7 +13,7 @@ func NewNewExpression(lineNumber int, typ intsyn.IObjectType, descriptor string)
 	}
 }
 
-func NewNewExpressionWithAll(lineNumber int, typ intsyn.IObjectType, descriptor string, bodyDeclaration intsyn.IBodyDeclaration) intsyn.INewExpression {
+func NewNewExpressionWithAll(lineNumber int, typ intmod.IObjectType, descriptor string, bodyDeclaration intmod.IBodyDeclaration) intmod.INewExpression {
 	return &NewExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -25,25 +25,25 @@ func NewNewExpressionWithAll(lineNumber int, typ intsyn.IObjectType, descriptor 
 type NewExpression struct {
 	AbstractLineNumberExpression
 
-	typ             intsyn.IObjectType
+	typ             intmod.IObjectType
 	descriptor      string
-	parameters      intsyn.IExpression
-	bodyDeclaration intsyn.IBodyDeclaration
+	parameters      intmod.IExpression
+	bodyDeclaration intmod.IBodyDeclaration
 }
 
-func (e *NewExpression) ObjectType() intsyn.IObjectType {
+func (e *NewExpression) ObjectType() intmod.IObjectType {
 	return e.typ
 }
 
-func (e *NewExpression) SetObjectType(objectType intsyn.IObjectType) {
+func (e *NewExpression) SetObjectType(objectType intmod.IObjectType) {
 	e.typ = objectType
 }
 
-func (e *NewExpression) Type() intsyn.IType {
-	return e.typ.(intsyn.IType)
+func (e *NewExpression) Type() intmod.IType {
+	return e.typ.(intmod.IType)
 }
 
-func (e *NewExpression) SetType(objectType intsyn.IObjectType) {
+func (e *NewExpression) SetType(objectType intmod.IObjectType) {
 	e.typ = objectType
 }
 
@@ -59,15 +59,15 @@ func (e *NewExpression) SetDescriptor(descriptor string) {
 	e.descriptor = descriptor
 }
 
-func (e *NewExpression) Parameters() intsyn.IExpression {
+func (e *NewExpression) Parameters() intmod.IExpression {
 	return e.parameters
 }
 
-func (e *NewExpression) SetParameters(params intsyn.IExpression) {
+func (e *NewExpression) SetParameters(params intmod.IExpression) {
 	e.parameters = params
 }
 
-func (e *NewExpression) BodyDeclaration() intsyn.IBodyDeclaration {
+func (e *NewExpression) BodyDeclaration() intmod.IBodyDeclaration {
 	return e.bodyDeclaration
 }
 
@@ -75,7 +75,7 @@ func (e *NewExpression) IsNewExpression() bool {
 	return true
 }
 
-func (e *NewExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *NewExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitNewExpression(e)
 }
 

@@ -1,6 +1,6 @@
 package expression
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 func NewAbstractLineNumberExpression(lineNumber int) *AbstractLineNumberExpression {
 	return &AbstractLineNumberExpression{
@@ -10,7 +10,7 @@ func NewAbstractLineNumberExpression(lineNumber int) *AbstractLineNumberExpressi
 
 func NewAbstractLineNumberExpressionEmpty() *AbstractLineNumberExpression {
 	return &AbstractLineNumberExpression{
-		lineNumber: intsyn.UnknownLineNumber,
+		lineNumber: intmod.UnknownLineNumber,
 	}
 }
 

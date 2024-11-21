@@ -277,7 +277,7 @@ func (m *TypeMaker) parseMethodSignature3(descriptor, signature string, exceptio
 			return mtSignature
 		} else {
 			// TODO: 테스트 필요.
-			parameterTypes := &_type.UnmodifiableTypes{}
+			parameterTypes := _type.NewUnmodifiableTypes()
 			parameterTypes.Add(mtSignature.ParameterTypes)
 
 			mt := &MethodTypes{}

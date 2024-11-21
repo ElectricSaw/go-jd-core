@@ -1,10 +1,10 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewDoWhileStatement(condition intsyn.IExpression, statements intsyn.IStatement) intsyn.IDoWhileStatement {
+func NewDoWhileStatement(condition intmod.IExpression, statements intmod.IStatement) intmod.IDoWhileStatement {
 	return &DoWhileStatement{
 		condition:  condition,
 		statements: statements,
@@ -14,22 +14,22 @@ func NewDoWhileStatement(condition intsyn.IExpression, statements intsyn.IStatem
 type DoWhileStatement struct {
 	AbstractStatement
 
-	condition  intsyn.IExpression
-	statements intsyn.IStatement
+	condition  intmod.IExpression
+	statements intmod.IStatement
 }
 
-func (s *DoWhileStatement) Condition() intsyn.IExpression {
+func (s *DoWhileStatement) Condition() intmod.IExpression {
 	return s.condition
 }
 
-func (s *DoWhileStatement) SetCondition(condition intsyn.IExpression) {
+func (s *DoWhileStatement) SetCondition(condition intmod.IExpression) {
 	s.condition = condition
 }
 
-func (s *DoWhileStatement) Statements() intsyn.IStatement {
+func (s *DoWhileStatement) Statements() intmod.IStatement {
 	return s.statements
 }
 
-func (s *DoWhileStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *DoWhileStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitDoWhileStatement(s)
 }

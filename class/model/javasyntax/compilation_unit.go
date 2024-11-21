@@ -1,19 +1,19 @@
 package javasyntax
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewCompilationUnit(typeDeclarations intsyn.ITypeDeclaration) *CompilationUnit {
+func NewCompilationUnit(typeDeclarations intmod.ITypeDeclaration) *CompilationUnit {
 	return &CompilationUnit{
 		typeDeclarations: typeDeclarations,
 	}
 }
 
 type CompilationUnit struct {
-	typeDeclarations intsyn.ITypeDeclaration
+	typeDeclarations intmod.ITypeDeclaration
 }
 
-func (u *CompilationUnit) TypeDeclarations() intsyn.ITypeDeclaration {
+func (u *CompilationUnit) TypeDeclarations() intmod.ITypeDeclaration {
 	return u.typeDeclarations
 }

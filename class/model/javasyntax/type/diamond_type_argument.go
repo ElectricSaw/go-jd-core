@@ -1,19 +1,20 @@
 package _type
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
-func NewDiamondTypeArgument() intsyn.IDiamondTypeArgument {
+func NewDiamondTypeArgument() intmod.IDiamondTypeArgument {
 	return &DiamondTypeArgument{}
 }
 
 type DiamondTypeArgument struct {
+	AbstractType
 	AbstractTypeArgument
 }
 
-func (a *DiamondTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
+func (a *DiamondTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
 	return true
 }
 
-func (a *DiamondTypeArgument) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
+func (a *DiamondTypeArgument) AcceptTypeArgumentVisitor(visitor intmod.ITypeArgumentVisitor) {
 	visitor.VisitDiamondTypeArgument(a)
 }

@@ -1,11 +1,11 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewTypeParameterWithTypeBounds(identifier string, typeBounds intsyn.IType) intsyn.ITypeParameterWithTypeBounds {
+func NewTypeParameterWithTypeBounds(identifier string, typeBounds intmod.IType) intmod.ITypeParameterWithTypeBounds {
 	return &TypeParameterWithTypeBounds{
 		TypeParameter: TypeParameter{
 			identifier: identifier,
@@ -17,14 +17,14 @@ func NewTypeParameterWithTypeBounds(identifier string, typeBounds intsyn.IType) 
 type TypeParameterWithTypeBounds struct {
 	TypeParameter
 
-	typeBounds intsyn.IType
+	typeBounds intmod.IType
 }
 
-func (t *TypeParameterWithTypeBounds) TypeBounds() intsyn.IType {
+func (t *TypeParameterWithTypeBounds) TypeBounds() intmod.IType {
 	return t.typeBounds
 }
 
-func (t *TypeParameterWithTypeBounds) AcceptTypeParameterVisitor(visitor intsyn.ITypeParameterVisitor) {
+func (t *TypeParameterWithTypeBounds) AcceptTypeParameterVisitor(visitor intmod.ITypeParameterVisitor) {
 	visitor.VisitTypeParameterWithTypeBounds(t)
 }
 

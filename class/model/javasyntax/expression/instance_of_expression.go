@@ -1,57 +1,57 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewInstanceOfExpression(expression intsyn.IExpression, instanceOfType intsyn.IObjectType) intsyn.IInstanceOfExpression {
+func NewInstanceOfExpression(expression intmod.IExpression, instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
 	return &InstanceOfExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: UnknownLineNumber,
+			lineNumber: intmod.UnknownLineNumber,
 		},
 		expression:     expression,
-		instanceOfType: instanceOfType.(intsyn.IType),
+		instanceOfType: instanceOfType.(intmod.IType),
 	}
 }
 
-func NewInstanceOfExpressionWithAll(lineNumber int, expression intsyn.IExpression, instanceOfType intsyn.IObjectType) intsyn.IInstanceOfExpression {
+func NewInstanceOfExpressionWithAll(lineNumber int, expression intmod.IExpression, instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
 	return &InstanceOfExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
 		},
 		expression:     expression,
-		instanceOfType: instanceOfType.(intsyn.IType),
+		instanceOfType: instanceOfType.(intmod.IType),
 	}
 }
 
 type InstanceOfExpression struct {
 	AbstractLineNumberExpression
 
-	expression     intsyn.IExpression
-	instanceOfType intsyn.IType
+	expression     intmod.IExpression
+	instanceOfType intmod.IType
 }
 
-func (e *InstanceOfExpression) Expression() intsyn.IExpression {
+func (e *InstanceOfExpression) Expression() intmod.IExpression {
 	return e.expression
 }
 
-func (e *InstanceOfExpression) InstanceOfType() intsyn.IType {
+func (e *InstanceOfExpression) InstanceOfType() intmod.IType {
 	return e.instanceOfType
 }
 
-func (e *InstanceOfExpression) Type() intsyn.IType {
-	return _type.PtTypeBoolean.(intsyn.IType)
+func (e *InstanceOfExpression) Type() intmod.IType {
+	return _type.PtTypeBoolean.(intmod.IType)
 }
 
 func (e *InstanceOfExpression) Priority() int {
 	return 8
 }
 
-func (e *InstanceOfExpression) SetExpression(expression intsyn.IExpression) {
+func (e *InstanceOfExpression) SetExpression(expression intmod.IExpression) {
 	e.expression = expression
 }
 
-func (e *InstanceOfExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *InstanceOfExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitInstanceOfExpression(e)
 }

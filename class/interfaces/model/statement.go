@@ -3,6 +3,8 @@ package model
 import "bitbucket.org/coontec/go-jd-core/class/util"
 
 type IAssertStatement interface {
+	IStatement
+
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Message() IExpression
@@ -10,29 +12,39 @@ type IAssertStatement interface {
 }
 
 type IBreakStatement interface {
+	IStatement
+
 	Label() string
 	IsBreakStatement() bool
 	Accept(visitor IStatementVisitor)
 }
 
 type IByteCodeStatement interface {
+	IStatement
+
 	Text() string
 	Accept(visitor IStatementVisitor)
 }
 
 type ICommentStatement interface {
+	IStatement
+
 	Label() string
 	IsContinueStatement() bool
 	Accept(visitor IStatementVisitor)
 }
 
 type IContinueStatement interface {
+	IStatement
+
 	Label() string
 	IsContinueStatement() bool
 	Accept(visitor IStatementVisitor)
 }
 
 type IDoWhileStatement interface {
+	IStatement
+
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Statements() IStatement
@@ -40,6 +52,8 @@ type IDoWhileStatement interface {
 }
 
 type IExpressionStatement interface {
+	IStatement
+
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	IsExpressionStatement() bool
@@ -48,6 +62,8 @@ type IExpressionStatement interface {
 }
 
 type IForEachStatement interface {
+	IStatement
+
 	Type() IType
 	Name() string
 	Expression() IExpression
@@ -58,6 +74,8 @@ type IForEachStatement interface {
 }
 
 type IForStatement interface {
+	IStatement
+
 	Declaration() ILocalVariableDeclaration
 	SetDeclaration(declaration ILocalVariableDeclaration)
 	Init() IExpression
@@ -72,6 +90,8 @@ type IForStatement interface {
 }
 
 type IIfElseStatement interface {
+	IIfStatement
+
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Statements() IStatement
@@ -81,6 +101,8 @@ type IIfElseStatement interface {
 }
 
 type IIfStatement interface {
+	IStatement
+
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Statements() IStatement
@@ -89,6 +111,8 @@ type IIfStatement interface {
 }
 
 type ILabelStatement interface {
+	IStatement
+
 	Label() string
 	Statement() IStatement
 	Statements() IStatement
@@ -98,6 +122,8 @@ type ILabelStatement interface {
 }
 
 type ILambdaExpressionStatement interface {
+	IStatement
+
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	IsLambdaExpressionStatement() bool
@@ -106,6 +132,8 @@ type ILambdaExpressionStatement interface {
 }
 
 type ILocalVariableDeclarationStatement interface {
+	IStatement
+
 	IsFinal() bool
 	SetFinal(final bool)
 	Type() IType
@@ -115,11 +143,15 @@ type ILocalVariableDeclarationStatement interface {
 }
 
 type INoStatement interface {
+	IStatement
+
 	Accept(visitor IStatementVisitor)
 	String() string
 }
 
 type IReturnExpressionStatement interface {
+	IStatement
+
 	LineNumber() int
 	SetLineNumber(lineNumber int)
 	Expression() IExpression
@@ -131,13 +163,17 @@ type IReturnExpressionStatement interface {
 }
 
 type IReturnStatement interface {
+	IStatement
+
 	IsReturnStatement() bool
 	Accept(visitor IStatementVisitor)
 	String() string
 }
 
 type IStatements interface {
+	IStatement
 	util.IList[IStatement]
+
 	IsStatements() bool
 	Accept(visitor IStatementVisitor)
 }
@@ -215,6 +251,8 @@ type IStatementVisitor interface {
 }
 
 type ISwitchStatement interface {
+	IStatement
+
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	List() []IStatement
@@ -224,6 +262,8 @@ type ISwitchStatement interface {
 }
 
 type ISynchronizedStatement interface {
+	IStatement
+
 	Monitor() IExpression
 	SetMonitor(monitor IExpression)
 	Statements() IStatement
@@ -231,6 +271,8 @@ type ISynchronizedStatement interface {
 }
 
 type IThrowStatement interface {
+	IStatement
+
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	IsThrowStatement() bool
@@ -239,6 +281,8 @@ type IThrowStatement interface {
 }
 
 type ITryStatement interface {
+	IStatement
+
 	ResourceList() []IStatement
 	Resources() []IResource
 	SetResources(resources []IResource)
@@ -255,11 +299,15 @@ type ITryStatement interface {
 }
 
 type ITypeDeclarationStatement interface {
+	IStatement
+
 	TypeDeclaration() ITypeDeclaration
 	Accept(visitor IStatementVisitor)
 }
 
 type IWhileStatement interface {
+	IStatement
+
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Statements() IStatement
@@ -305,6 +353,8 @@ type IMultiLabelsBlock interface {
 }
 
 type IResource interface {
+	IStatement
+
 	Type() IObjectType
 	Name() string
 	Expression() IExpression
@@ -313,6 +363,8 @@ type IResource interface {
 }
 
 type ICatchClause interface {
+	IStatement
+
 	LineNumber() int
 	Type() IObjectType
 	OtherType() []IObjectType

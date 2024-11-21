@@ -1,10 +1,10 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewFieldDeclaration(flags int, typ intsyn.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
+func NewFieldDeclaration(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intmod.IFieldDeclaration {
 	return &FieldDeclaration{
 		flags:            flags,
 		typ:              typ,
@@ -12,8 +12,8 @@ func NewFieldDeclaration(flags int, typ intsyn.IType, fieldDeclaration intsyn.IF
 	}
 }
 
-func NewFieldDeclarationWithAll(annotationReferences intsyn.IAnnotationReference, flags int,
-	typ intsyn.IType, fieldDeclaration intsyn.IFieldDeclarator) intsyn.IFieldDeclaration {
+func NewFieldDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
+	typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intmod.IFieldDeclaration {
 	return &FieldDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -25,10 +25,10 @@ func NewFieldDeclarationWithAll(annotationReferences intsyn.IAnnotationReference
 type FieldDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences intsyn.IAnnotationReference
+	annotationReferences intmod.IAnnotationReference
 	flags                int
-	typ                  intsyn.IType
-	fieldDeclarators     intsyn.IFieldDeclarator
+	typ                  intmod.IType
+	fieldDeclarators     intmod.IFieldDeclarator
 }
 
 func (d *FieldDeclaration) Flags() int {
@@ -39,26 +39,26 @@ func (d *FieldDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *FieldDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
+func (d *FieldDeclaration) AnnotationReferences() intmod.IAnnotationReference {
 	return d.annotationReferences
 }
 
-func (d *FieldDeclaration) Type() intsyn.IType {
+func (d *FieldDeclaration) Type() intmod.IType {
 	return d.typ
 }
 
-func (d *FieldDeclaration) SetType(t intsyn.IType) {
+func (d *FieldDeclaration) SetType(t intmod.IType) {
 	d.typ = t
 }
 
-func (d *FieldDeclaration) FieldDeclarators() intsyn.IFieldDeclarator {
+func (d *FieldDeclaration) FieldDeclarators() intmod.IFieldDeclarator {
 	return d.fieldDeclarators
 }
 
-func (d *FieldDeclaration) SetFieldDeclarators(fd intsyn.IFieldDeclarator) {
+func (d *FieldDeclaration) SetFieldDeclarators(fd intmod.IFieldDeclarator) {
 	d.fieldDeclarators = fd
 }
 
-func (d *FieldDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *FieldDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFieldDeclaration(d)
 }

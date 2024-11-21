@@ -1,28 +1,30 @@
 package visitor
 
-import _type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+)
 
 type PopulateBindingsWithTypeParameterVisitor struct {
-	Bindings   map[string]_type.ITypeArgument
-	TypeBounds map[string]_type.IType
+	Bindings   map[string]intmod.ITypeArgument
+	TypeBounds map[string]intmod.IType
 }
 
-func (v *PopulateBindingsWithTypeParameterVisitor) Init(bindings map[string]_type.ITypeArgument, typeBounds map[string]_type.IType) {
+func (v *PopulateBindingsWithTypeParameterVisitor) Init(bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType) {
 	v.Bindings = bindings
 	v.TypeBounds = typeBounds
 }
 
-func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter *_type.TypeParameter) {
+func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
 	v.Bindings[parameter.Identifier()] = nil
 }
 
-func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter *_type.TypeParameterWithTypeBounds) {
+func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
 	v.Bindings[parameter.Identifier()] = nil
 	v.TypeBounds[parameter.Identifier()] = parameter.TypeBounds()
 }
 
-func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameters(parameters *_type.TypeParameters) {
-	for _, parameter := range parameters.TypeParameters {
+func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
+	for _, parameter := range parameters.Elements() {
 		parameter.AcceptTypeParameterVisitor(v)
 	}
 }

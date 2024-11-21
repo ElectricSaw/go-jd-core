@@ -1,25 +1,25 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewConstructorInvocationExpression(objectType intsyn.IObjectType, descriptor string,
-	parameters intsyn.IExpression) intsyn.IConstructorInvocationExpression {
+func NewConstructorInvocationExpression(objectType intmod.IObjectType, descriptor string,
+	parameters intmod.IExpression) intmod.IConstructorInvocationExpression {
 	return &ConstructorInvocationExpression{
-		ConstructorReferenceExpression: *NewConstructorReferenceExpression(_type.PtTypeVoid.(intsyn.IType),
+		ConstructorReferenceExpression: *NewConstructorReferenceExpression(_type.PtTypeVoid.(intmod.IType),
 			objectType, descriptor).(*ConstructorReferenceExpression),
 		parameters: parameters,
 	}
 }
 
-func NewConstructorInvocationExpressionWithAll(lineNumber int, objectType intsyn.IObjectType,
-	descriptor string, parameters intsyn.IExpression) intsyn.IConstructorInvocationExpression {
+func NewConstructorInvocationExpressionWithAll(lineNumber int, objectType intmod.IObjectType,
+	descriptor string, parameters intmod.IExpression) intmod.IConstructorInvocationExpression {
 	return &ConstructorInvocationExpression{
 		ConstructorReferenceExpression: *NewConstructorReferenceExpressionWithAll(lineNumber,
-			_type.PtTypeVoid.(intsyn.IType), objectType, descriptor).(*ConstructorReferenceExpression),
+			_type.PtTypeVoid.(intmod.IType), objectType, descriptor).(*ConstructorReferenceExpression),
 		parameters: parameters,
 	}
 }
@@ -27,10 +27,10 @@ func NewConstructorInvocationExpressionWithAll(lineNumber int, objectType intsyn
 type ConstructorInvocationExpression struct {
 	ConstructorReferenceExpression
 
-	parameters intsyn.IExpression
+	parameters intmod.IExpression
 }
 
-func (e *ConstructorInvocationExpression) Parameters() intsyn.IExpression {
+func (e *ConstructorInvocationExpression) Parameters() intmod.IExpression {
 	return e.parameters
 }
 
@@ -38,7 +38,7 @@ func (e *ConstructorInvocationExpression) Priority() int {
 	return 1
 }
 
-func (e *ConstructorInvocationExpression) SetParameters(params intsyn.IExpression) {
+func (e *ConstructorInvocationExpression) SetParameters(params intmod.IExpression) {
 	e.parameters = params
 }
 
@@ -46,7 +46,7 @@ func (e *ConstructorInvocationExpression) IsConstructorInvocationExpression() bo
 	return true
 }
 
-func (e *ConstructorInvocationExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *ConstructorInvocationExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitConstructorInvocationExpression(e)
 }
 

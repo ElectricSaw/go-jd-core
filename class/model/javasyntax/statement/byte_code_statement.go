@@ -1,8 +1,8 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
-func NewByteCodeStatement(text string) intsyn.IByteCodeStatement {
+func NewByteCodeStatement(text string) intmod.IByteCodeStatement {
 	return &ByteCodeStatement{
 		text: text,
 	}
@@ -18,6 +18,6 @@ func (s *ByteCodeStatement) Text() string {
 	return s.text
 }
 
-func (s *ByteCodeStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *ByteCodeStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitByteCodeStatement(s)
 }

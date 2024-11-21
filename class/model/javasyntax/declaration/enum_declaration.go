@@ -1,20 +1,20 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewEnumDeclaration(flags int, internalTypeName, name string, constants []intsyn.IConstant,
-	bodyDeclaration intsyn.IDeclaration) intsyn.IEnumDeclaration {
+func NewEnumDeclaration(flags int, internalTypeName, name string, constants []intmod.IConstant,
+	bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
 	return &EnumDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		constants:       constants,
 	}
 }
 
-func NewEnumDeclarationWithAll(annotationReferences intsyn.IAnnotationReference, flags int, internalTypeName,
-	name string, interfaces intsyn.IType, constants []intsyn.IConstant, bodyDeclaration intsyn.IDeclaration) intsyn.IEnumDeclaration {
+func NewEnumDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int, internalTypeName,
+	name string, interfaces intmod.IType, constants []intmod.IConstant, bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
 	return &EnumDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		interfaces:      interfaces,
@@ -25,23 +25,23 @@ func NewEnumDeclarationWithAll(annotationReferences intsyn.IAnnotationReference,
 type EnumDeclaration struct {
 	TypeDeclaration
 
-	interfaces intsyn.IType
-	constants  []intsyn.IConstant
+	interfaces intmod.IType
+	constants  []intmod.IConstant
 }
 
-func (d *EnumDeclaration) Interfaces() intsyn.IType {
+func (d *EnumDeclaration) Interfaces() intmod.IType {
 	return d.interfaces
 }
 
-func (d *EnumDeclaration) Constants() []intsyn.IConstant {
+func (d *EnumDeclaration) Constants() []intmod.IConstant {
 	return d.constants
 }
 
-func (d *EnumDeclaration) SetConstants(constants []intsyn.IConstant) {
+func (d *EnumDeclaration) SetConstants(constants []intmod.IConstant) {
 	d.constants = constants
 }
 
-func (d *EnumDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *EnumDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitEnumDeclaration(d)
 }
 
@@ -62,14 +62,14 @@ func NewConstant2(lineNumber int, name string) *Constant {
 	}
 }
 
-func NewConstant3(name string, arguments intsyn.IExpression) *Constant {
+func NewConstant3(name string, arguments intmod.IExpression) *Constant {
 	return &Constant{
 		name:      name,
 		arguments: arguments,
 	}
 }
 
-func NewConstant4(lineNumber int, name string, arguments intsyn.IExpression) *Constant {
+func NewConstant4(lineNumber int, name string, arguments intmod.IExpression) *Constant {
 	return &Constant{
 		lineNumber: lineNumber,
 		name:       name,
@@ -77,8 +77,8 @@ func NewConstant4(lineNumber int, name string, arguments intsyn.IExpression) *Co
 	}
 }
 
-func NewConstant5(lineNumber int, name string, arguments intsyn.IExpression,
-	bodyDeclaration intsyn.IBodyDeclaration) intsyn.IConstant {
+func NewConstant5(lineNumber int, name string, arguments intmod.IExpression,
+	bodyDeclaration intmod.IBodyDeclaration) intmod.IConstant {
 	return &Constant{
 		lineNumber:      lineNumber,
 		name:            name,
@@ -87,8 +87,8 @@ func NewConstant5(lineNumber int, name string, arguments intsyn.IExpression,
 	}
 }
 
-func NewConstant6(lineNumber int, annotationReferences intsyn.IAnnotationReference, name string,
-	arguments intsyn.IExpression, bodyDeclaration intsyn.IBodyDeclaration) intsyn.IConstant {
+func NewConstant6(lineNumber int, annotationReferences intmod.IAnnotationReference, name string,
+	arguments intmod.IExpression, bodyDeclaration intmod.IBodyDeclaration) intmod.IConstant {
 	return &Constant{
 		lineNumber:           lineNumber,
 		annotationReferences: annotationReferences,
@@ -99,18 +99,20 @@ func NewConstant6(lineNumber int, annotationReferences intsyn.IAnnotationReferen
 }
 
 type Constant struct {
+	TypeDeclaration
+
 	lineNumber           int
-	annotationReferences intsyn.IAnnotationReference
+	annotationReferences intmod.IAnnotationReference
 	name                 string
-	arguments            intsyn.IExpression
-	bodyDeclaration      intsyn.IBodyDeclaration
+	arguments            intmod.IExpression
+	bodyDeclaration      intmod.IBodyDeclaration
 }
 
 func (c *Constant) LineNumber() int {
 	return c.lineNumber
 }
 
-func (c *Constant) AnnotationReferences() intsyn.IAnnotationReference {
+func (c *Constant) AnnotationReferences() intmod.IAnnotationReference {
 	return c.annotationReferences
 }
 
@@ -118,18 +120,18 @@ func (c *Constant) Name() string {
 	return c.name
 }
 
-func (c *Constant) Arguments() intsyn.IExpression {
+func (c *Constant) Arguments() intmod.IExpression {
 	return c.arguments
 }
 
-func (c *Constant) SetArguments(arguments intsyn.IExpression) {
+func (c *Constant) SetArguments(arguments intmod.IExpression) {
 	c.arguments = arguments
 }
 
-func (c *Constant) BodyDeclaration() intsyn.IBodyDeclaration {
+func (c *Constant) BodyDeclaration() intmod.IBodyDeclaration {
 	return c.bodyDeclaration
 }
 
-func (c *Constant) Accept(visitor intsyn.IDeclarationVisitor) {
+func (c *Constant) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitEnumDeclarationConstant(c)
 }

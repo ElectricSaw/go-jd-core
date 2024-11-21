@@ -1,12 +1,12 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 )
 
-func NewLocalVariableDeclarationStatement(typ intsyn.IType,
-	localVariableDeclarators intsyn.ILocalVariableDeclarator) intsyn.ILocalVariableDeclarationStatement {
+func NewLocalVariableDeclarationStatement(typ intmod.IType,
+	localVariableDeclarators intmod.ILocalVariableDeclarator) intmod.ILocalVariableDeclarationStatement {
 	return &LocalVariableDeclarationStatement{
 		typ:                      typ,
 		localVariableDeclarators: localVariableDeclarators,
@@ -18,8 +18,8 @@ type LocalVariableDeclarationStatement struct {
 	declaration.LocalVariableDeclaration
 
 	final                    bool
-	typ                      intsyn.IType
-	localVariableDeclarators intsyn.ILocalVariableDeclarator
+	typ                      intmod.IType
+	localVariableDeclarators intmod.ILocalVariableDeclarator
 }
 
 func (s *LocalVariableDeclarationStatement) IsFinal() bool {
@@ -30,18 +30,18 @@ func (s *LocalVariableDeclarationStatement) SetFinal(final bool) {
 	s.final = final
 }
 
-func (s *LocalVariableDeclarationStatement) Type() intsyn.IType {
+func (s *LocalVariableDeclarationStatement) Type() intmod.IType {
 	return s.typ
 }
 
-func (s *LocalVariableDeclarationStatement) LocalVariableDeclarators() intsyn.ILocalVariableDeclarator {
+func (s *LocalVariableDeclarationStatement) LocalVariableDeclarators() intmod.ILocalVariableDeclarator {
 	return s.localVariableDeclarators
 }
 
-func (s *LocalVariableDeclarationStatement) SetLocalVariableDeclarators(declarators intsyn.ILocalVariableDeclarator) {
+func (s *LocalVariableDeclarationStatement) SetLocalVariableDeclarators(declarators intmod.ILocalVariableDeclarator) {
 	s.localVariableDeclarators = declarators
 }
 
-func (s *LocalVariableDeclarationStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *LocalVariableDeclarationStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitLocalVariableDeclarationStatement(s)
 }

@@ -1,13 +1,13 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 type AbstractTypeParameter struct {
-	util.DefaultBase[intsyn.ITypeParameter]
+	util.DefaultBase[intmod.ITypeParameter]
 }
 
-func (p *AbstractTypeParameter) AcceptTypeParameterVisitor(visitor intsyn.ITypeParameterVisitor) {
+func (p *AbstractTypeParameter) AcceptTypeParameterVisitor(visitor intmod.ITypeParameterVisitor) {
 }

@@ -1,18 +1,18 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewLocalVariableReferenceExpression(typ intsyn.IType, name string) intsyn.ILocalVariableReferenceExpression {
+func NewLocalVariableReferenceExpression(typ intmod.IType, name string) intmod.ILocalVariableReferenceExpression {
 	return &LocalVariableReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		name:                             name,
 	}
 }
 
-func NewLocalVariableReferenceExpressionWithAll(lineNumber int, typ intsyn.IType, name string) intsyn.ILocalVariableReferenceExpression {
+func NewLocalVariableReferenceExpressionWithAll(lineNumber int, typ intmod.IType, name string) intmod.ILocalVariableReferenceExpression {
 	return &LocalVariableReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		name:                             name,
@@ -33,7 +33,7 @@ func (e *LocalVariableReferenceExpression) IsLocalVariableReferenceExpression() 
 	return true
 }
 
-func (e *LocalVariableReferenceExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *LocalVariableReferenceExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitLocalVariableReferenceExpression(e)
 }
 

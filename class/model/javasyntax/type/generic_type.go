@@ -1,11 +1,11 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewGenericType(name string, dimension int) intsyn.IGenericType {
+func NewGenericType(name string, dimension int) intmod.IGenericType {
 	return &GenericType{
 		name:      name,
 		dimension: dimension,
@@ -42,11 +42,11 @@ func (t *GenericType) Dimension() int {
 	return t.dimension
 }
 
-func (t *GenericType) CreateType(dimension int) intsyn.IType {
+func (t *GenericType) CreateType(dimension int) intmod.IType {
 	if t.dimension == dimension {
 		return t
 	} else {
-		return NewGenericType(t.name, dimension).(intsyn.IType)
+		return NewGenericType(t.name, dimension).(intmod.IType)
 	}
 }
 
@@ -54,13 +54,13 @@ func (t *GenericType) IsGenericType() bool {
 	return true
 }
 
-func (t *GenericType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
+func (t *GenericType) AcceptTypeVisitor(visitor intmod.ITypeVisitor) {
 	visitor.VisitGenericType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *GenericType) IsTypeArgumentAssignableFrom(_ map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
+func (t *GenericType) IsTypeArgumentAssignableFrom(_ map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
 	if o, ok := typeArgument.(*GenericType); ok {
 		return t.Equals(o)
 	}
@@ -72,13 +72,13 @@ func (t *GenericType) IsGenericTypeArgument() bool {
 	return true
 }
 
-func (t *GenericType) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
+func (t *GenericType) AcceptTypeArgumentVisitor(visitor intmod.ITypeArgumentVisitor) {
 	visitor.VisitGenericType(t)
 }
 
 /////////////////////////////////////////////////////////////////////
 
-func (t *GenericType) Equals(o intsyn.IGenericType) bool {
+func (t *GenericType) Equals(o intmod.IGenericType) bool {
 	if o == nil {
 		return false
 	}

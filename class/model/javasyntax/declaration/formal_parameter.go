@@ -1,18 +1,19 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
-func NewFormalParameter(typ intsyn.IType, name string) intsyn.IFormalParameter {
+func NewFormalParameter(typ intmod.IType, name string) intmod.IFormalParameter {
 	return &FormalParameter{
 		typ:  typ,
 		name: name,
 	}
 }
 
-func NewFormalParameter2(annotationReferences intsyn.IAnnotationReference, typ intsyn.IType, name string) intsyn.IFormalParameter {
+func NewFormalParameter2(annotationReferences intmod.IAnnotationReference, typ intmod.IType, name string) intmod.IFormalParameter {
 	return &FormalParameter{
 		annotationReferences: annotationReferences,
 		typ:                  typ,
@@ -20,7 +21,7 @@ func NewFormalParameter2(annotationReferences intsyn.IAnnotationReference, typ i
 	}
 }
 
-func NewFormalParameter3(typ intsyn.IType, varargs bool, name string) intsyn.IFormalParameter {
+func NewFormalParameter3(typ intmod.IType, varargs bool, name string) intmod.IFormalParameter {
 	return &FormalParameter{
 		typ:     typ,
 		varargs: varargs,
@@ -28,7 +29,7 @@ func NewFormalParameter3(typ intsyn.IType, varargs bool, name string) intsyn.IFo
 	}
 }
 
-func NewFormalParameter4(annotationReferences intsyn.IAnnotationReference, typ intsyn.IType, varargs bool, name string) intsyn.IFormalParameter {
+func NewFormalParameter4(annotationReferences intmod.IAnnotationReference, typ intmod.IType, varargs bool, name string) intmod.IFormalParameter {
 	return &FormalParameter{
 		annotationReferences: annotationReferences,
 		typ:                  typ,
@@ -38,14 +39,16 @@ func NewFormalParameter4(annotationReferences intsyn.IAnnotationReference, typ i
 }
 
 type FormalParameter struct {
-	annotationReferences intsyn.IAnnotationReference
+	util.DefaultBase[intmod.IFormalParameter]
+	
+	annotationReferences intmod.IAnnotationReference
 	final                bool
-	typ                  intsyn.IType
+	typ                  intmod.IType
 	varargs              bool
 	name                 string
 }
 
-func (d *FormalParameter) AnnotationReferences() intsyn.IAnnotationReference {
+func (d *FormalParameter) AnnotationReferences() intmod.IAnnotationReference {
 	return d.annotationReferences
 }
 
@@ -57,7 +60,7 @@ func (d *FormalParameter) SetFinal(final bool) {
 	d.final = final
 }
 
-func (d *FormalParameter) Type() intsyn.IType {
+func (d *FormalParameter) Type() intmod.IType {
 	return d.typ
 }
 
@@ -73,7 +76,7 @@ func (d *FormalParameter) SetName(name string) {
 	d.name = name
 }
 
-func (d *FormalParameter) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *FormalParameter) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFormalParameter(d)
 }
 

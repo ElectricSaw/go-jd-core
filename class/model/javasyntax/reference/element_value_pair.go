@@ -1,12 +1,12 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
-func NewElementValuePair(name string, elementValue intsyn.IElementValue) intsyn.IElementValuePair {
+func NewElementValuePair(name string, elementValue intmod.IElementValue) intmod.IElementValuePair {
 	return &ElementValuePair{
 		name:         name,
 		elementValue: elementValue,
@@ -14,21 +14,21 @@ func NewElementValuePair(name string, elementValue intsyn.IElementValue) intsyn.
 }
 
 type ElementValuePair struct {
-	util.DefaultBase[intsyn.IElementValuePair]
+	util.DefaultBase[intmod.IElementValuePair]
 
 	name         string
-	elementValue intsyn.IElementValue
+	elementValue intmod.IElementValue
 }
 
 func (e *ElementValuePair) Name() string {
 	return e.name
 }
 
-func (e *ElementValuePair) ElementValue() intsyn.IElementValue {
+func (e *ElementValuePair) ElementValue() intmod.IElementValue {
 	return e.elementValue
 }
 
-func (e *ElementValuePair) Accept(visitor intsyn.IReferenceVisitor) {
+func (e *ElementValuePair) Accept(visitor intmod.IReferenceVisitor) {
 	visitor.VisitElementValuePair(e)
 }
 

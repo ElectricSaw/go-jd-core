@@ -1,7 +1,7 @@
 package localvariable
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
@@ -114,14 +114,14 @@ func (s *LocalVariableSet) IsEmpty() bool {
 	return s.size == 0
 }
 
-func (s *LocalVariableSet) Update(index, offset int, typ intsyn.IObjectType) {
+func (s *LocalVariableSet) Update(index, offset int, typ intmod.IObjectType) {
 	if index < len(s.array) {
 		lv := s.array[index]
 
 		for lv != nil {
 			if lv.FromOffset() == offset {
 				olv := lv.(*ObjectLocalVariable)
-				olv.typ = typ.(intsyn.IType)
+				olv.typ = typ.(intmod.IType)
 				break
 			}
 

@@ -1,8 +1,8 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
-func NewWhileStatement(condition intsyn.IExpression, statements intsyn.IStatement) intsyn.IWhileStatement {
+func NewWhileStatement(condition intmod.IExpression, statements intmod.IStatement) intmod.IWhileStatement {
 	return &WhileStatement{
 		condition:  condition,
 		statements: statements,
@@ -12,19 +12,19 @@ func NewWhileStatement(condition intsyn.IExpression, statements intsyn.IStatemen
 type WhileStatement struct {
 	AbstractStatement
 
-	condition  intsyn.IExpression
-	statements intsyn.IStatement
+	condition  intmod.IExpression
+	statements intmod.IStatement
 }
 
-func (s *WhileStatement) Condition() intsyn.IExpression {
+func (s *WhileStatement) Condition() intmod.IExpression {
 	return s.condition
 }
 
-func (s *WhileStatement) SetCondition(condition intsyn.IExpression) {
+func (s *WhileStatement) SetCondition(condition intmod.IExpression) {
 	s.condition = condition
 }
 
-func (s *WhileStatement) Statements() intsyn.IStatement {
+func (s *WhileStatement) Statements() intmod.IStatement {
 	return s.statements
 }
 
@@ -32,6 +32,6 @@ func (s *WhileStatement) IsWhileStatement() bool {
 	return true
 }
 
-func (s *WhileStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *WhileStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitWhileStatement(s)
 }

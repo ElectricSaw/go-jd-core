@@ -1,11 +1,11 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewTypeDeclaration(annotationReferences intsyn.IAnnotationReference, flags int,
-	internalTypeName string, name string, bodyDeclaration intsyn.IDeclaration) intsyn.ITypeDeclaration {
+func NewTypeDeclaration(annotationReferences intmod.IAnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration intmod.IDeclaration) intmod.ITypeDeclaration {
 	return &TypeDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -18,14 +18,14 @@ func NewTypeDeclaration(annotationReferences intsyn.IAnnotationReference, flags 
 type TypeDeclaration struct {
 	AbstractTypeDeclaration
 
-	annotationReferences intsyn.IAnnotationReference
+	annotationReferences intmod.IAnnotationReference
 	flags                int
 	internalTypeName     string
 	name                 string
-	bodyDeclaration      intsyn.IDeclaration
+	bodyDeclaration      intmod.IDeclaration
 }
 
-func (d *TypeDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
+func (d *TypeDeclaration) AnnotationReferences() intmod.IAnnotationReference {
 	return d.annotationReferences
 }
 
@@ -45,6 +45,6 @@ func (d *TypeDeclaration) Name() string {
 	return d.name
 }
 
-func (d *TypeDeclaration) BodyDeclaration() intsyn.IBodyDeclaration {
-	return d.bodyDeclaration.(intsyn.IBodyDeclaration)
+func (d *TypeDeclaration) BodyDeclaration() intmod.IBodyDeclaration {
+	return d.bodyDeclaration.(intmod.IBodyDeclaration)
 }

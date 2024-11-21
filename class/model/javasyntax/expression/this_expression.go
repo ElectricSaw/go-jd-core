@@ -1,11 +1,11 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewThisExpression(typ intsyn.IType) intsyn.IThisExpression {
+func NewThisExpression(typ intmod.IType) intmod.IThisExpression {
 	return &ThisExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		typ:                          typ,
@@ -13,7 +13,7 @@ func NewThisExpression(typ intsyn.IType) intsyn.IThisExpression {
 	}
 }
 
-func NewThisExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.IThisExpression {
+func NewThisExpressionWithAll(lineNumber int, typ intmod.IType) intmod.IThisExpression {
 	return &ThisExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -24,11 +24,11 @@ func NewThisExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.IThisExpr
 type ThisExpression struct {
 	AbstractLineNumberExpression
 
-	typ      intsyn.IType
+	typ      intmod.IType
 	explicit bool
 }
 
-func (e *ThisExpression) Type() intsyn.IType {
+func (e *ThisExpression) Type() intmod.IType {
 	return e.typ
 }
 
@@ -44,7 +44,7 @@ func (e *ThisExpression) IsThisExpression() bool {
 	return true
 }
 
-func (e *ThisExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *ThisExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitThisExpression(e)
 }
 

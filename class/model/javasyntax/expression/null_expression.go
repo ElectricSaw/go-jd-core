@@ -1,17 +1,17 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewNullExpression(typ intsyn.IType) intsyn.INullExpression {
+func NewNullExpression(typ intmod.IType) intmod.INullExpression {
 	return &NullExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 	}
 }
 
-func NewNullExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.INullExpression {
+func NewNullExpressionWithAll(lineNumber int, typ intmod.IType) intmod.INullExpression {
 	return &NullExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 	}
@@ -25,7 +25,7 @@ func (e *NullExpression) IsNullExpression() bool {
 	return true
 }
 
-func (e *NullExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *NullExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitNullExpression(e)
 }
 

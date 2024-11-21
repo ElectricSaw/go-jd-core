@@ -1,10 +1,10 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewParenthesesExpression(expression intsyn.IExpression) intsyn.IParenthesesExpression {
+func NewParenthesesExpression(expression intmod.IExpression) intmod.IParenthesesExpression {
 	return &ParenthesesExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(expression.LineNumber()),
 		expression:                   expression,
@@ -14,21 +14,21 @@ func NewParenthesesExpression(expression intsyn.IExpression) intsyn.IParentheses
 type ParenthesesExpression struct {
 	AbstractLineNumberExpression
 
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
-func (e *ParenthesesExpression) Type() intsyn.IType {
+func (e *ParenthesesExpression) Type() intmod.IType {
 	return e.expression.Type()
 }
 
-func (e *ParenthesesExpression) Expression() intsyn.IExpression {
+func (e *ParenthesesExpression) Expression() intmod.IExpression {
 	return e.expression
 }
 
-func (e *ParenthesesExpression) SetExpression(expression intsyn.IExpression) {
+func (e *ParenthesesExpression) SetExpression(expression intmod.IExpression) {
 	e.expression = expression
 }
 
-func (e *ParenthesesExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *ParenthesesExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitParenthesesExpression(e)
 }

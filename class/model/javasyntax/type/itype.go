@@ -1,7 +1,7 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bytes"
 	"encoding/gob"
 	"hash/fnv"
@@ -23,7 +23,7 @@ func (t *AbstractType) Dimension() int {
 	return -1
 }
 
-func (t *AbstractType) CreateType(dimension int) intsyn.IType {
+func (t *AbstractType) CreateType(dimension int) intmod.IType {
 	return nil
 }
 
@@ -51,7 +51,7 @@ func (t *AbstractType) IsTypes() bool {
 	return false
 }
 
-func (t *AbstractType) OuterType() intsyn.IObjectType {
+func (t *AbstractType) OuterType() intmod.IObjectType {
 	return OtTypeUndefinedObject
 }
 
@@ -59,7 +59,7 @@ func (t *AbstractType) InternalName() string {
 	return ""
 }
 
-func (t *AbstractType) AcceptTypeVisitor(visitor intsyn.ITypeVisitor) {
+func (t *AbstractType) AcceptTypeVisitor(visitor intmod.ITypeVisitor) {
 }
 
 func hashCodeWithString(str string) int {

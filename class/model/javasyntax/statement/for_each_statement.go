@@ -1,10 +1,10 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewForEachStatement(typ intsyn.IType, name string, expression intsyn.IExpression, statement intsyn.IStatement) intsyn.IForEachStatement {
+func NewForEachStatement(typ intmod.IType, name string, expression intmod.IExpression, statement intmod.IStatement) intmod.IForEachStatement {
 	return &ForEachStatement{
 		typ:        typ,
 		name:       name,
@@ -16,13 +16,13 @@ func NewForEachStatement(typ intsyn.IType, name string, expression intsyn.IExpre
 type ForEachStatement struct {
 	AbstractStatement
 
-	typ        intsyn.IType
+	typ        intmod.IType
 	name       string
-	expression intsyn.IExpression
-	statement  intsyn.IStatement
+	expression intmod.IExpression
+	statement  intmod.IStatement
 }
 
-func (s *ForEachStatement) Type() intsyn.IType {
+func (s *ForEachStatement) Type() intmod.IType {
 	return s.typ
 }
 
@@ -30,18 +30,18 @@ func (s *ForEachStatement) Name() string {
 	return s.name
 }
 
-func (s *ForEachStatement) Expression() intsyn.IExpression {
+func (s *ForEachStatement) Expression() intmod.IExpression {
 	return s.expression
 }
 
-func (s *ForEachStatement) SetExpression(expression intsyn.IExpression) {
+func (s *ForEachStatement) SetExpression(expression intmod.IExpression) {
 	s.expression = expression
 }
 
-func (s *ForEachStatement) Statement() intsyn.IStatement {
+func (s *ForEachStatement) Statement() intmod.IStatement {
 	return s.statement
 }
 
-func (s *ForEachStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *ForEachStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitForEachStatement(s)
 }

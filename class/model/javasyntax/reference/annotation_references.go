@@ -1,20 +1,21 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewAnnotationReferences() intsyn.IAnnotationReferences {
+func NewAnnotationReferences() intmod.IAnnotationReferences {
 	return &AnnotationReferences{
-		DefaultList: *util.NewDefaultList[intsyn.IAnnotationReference](0),
+		DefaultList: *util.NewDefaultList[intmod.IAnnotationReference](0),
 	}
 }
 
 type AnnotationReferences struct {
-	util.DefaultList[intsyn.IAnnotationReference]
+	AnnotationReference
+	util.DefaultList[intmod.IAnnotationReference]
 }
 
-func (r *AnnotationReferences) Accept(visitor intsyn.IReferenceVisitor) {
+func (r *AnnotationReferences) Accept(visitor intmod.IReferenceVisitor) {
 	visitor.VisitAnnotationReferences(r)
 }

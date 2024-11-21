@@ -12,6 +12,8 @@ const (
 )
 
 type IAnnotationElementValue interface {
+	IAnnotationReference
+
 	Type() IObjectType
 	ElementValue() IElementValue
 	ElementValuePairs() IElementValuePair
@@ -20,7 +22,9 @@ type IAnnotationElementValue interface {
 }
 
 type IAnnotationReferences interface {
+	IAnnotationReference
 	util.IList[IAnnotationReference]
+
 	Accept(visitor IReferenceVisitor)
 }
 
@@ -38,21 +42,26 @@ type IElementValuePair interface {
 }
 
 type IElementValueArrayInitializerElementValue interface {
+	IElementValue
+
 	ElementValueArrayInitializer() IElementValue
 	Accept(visitor IReferenceVisitor)
 	String() string
 }
 
 type IElementValuePairs interface {
-	util.IList[IElementValuePair]
 	IElementValuePair
+	util.IList[IElementValuePair]
 }
 
 type IElementValues interface {
+	IElementValue
 	util.IList[IElementValue]
 }
 
 type IExpressionElementValue interface {
+	IElementValue
+
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	Accept(visitor IReferenceVisitor)
@@ -60,6 +69,8 @@ type IExpressionElementValue interface {
 }
 
 type IInnerObjectReference interface {
+	IReference
+
 	HashCode() int
 	CreateType(dimension int) IType
 	CreateTypeWithArg(typeArguments ITypeArgument) IType
@@ -74,6 +85,8 @@ type IInnerObjectReference interface {
 }
 
 type IObjectReference interface {
+	IReference
+
 	QualifiedName() string
 	HashCode() int
 	Name() string

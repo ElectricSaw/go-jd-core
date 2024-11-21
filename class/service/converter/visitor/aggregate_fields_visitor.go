@@ -1,38 +1,39 @@
 package visitor
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
-	srvdecl "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
 )
 
 type AggregateFieldsVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 }
 
-func (v *AggregateFieldsVisitor) VisitAnnotationDeclaration(declaration *declaration.AnnotationDeclaration) {
+func (v *AggregateFieldsVisitor) VisitAnnotationDeclaration(declaration intmod.IAnnotationDeclaration) {
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *AggregateFieldsVisitor) VisitBodyDeclaration(declaration declaration.IBodyDeclaration) {
-	bodyDeclaration := declaration.(*srvdecl.ClassFileBodyDeclaration)
+func (v *AggregateFieldsVisitor) VisitBodyDeclaration(declaration intmod.IBodyDeclaration) {
+	bodyDeclaration := declaration.(intsrv.IClassFileBodyDeclaration)
 	// Aggregate fields
 	Aggregate(bodyDeclaration.FieldDeclarations())
 }
 
-func (v *AggregateFieldsVisitor) VisitClassDeclaration(declaration *declaration.ClassDeclaration) {
+func (v *AggregateFieldsVisitor) VisitClassDeclaration(declaration intmod.IClassDeclaration) {
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *AggregateFieldsVisitor) VisitEnumDeclaration(declaration *declaration.EnumDeclaration) {
+func (v *AggregateFieldsVisitor) VisitEnumDeclaration(declaration intmod.IEnumDeclaration) {
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *AggregateFieldsVisitor) VisitInterfaceDeclaration(declaration *declaration.InterfaceDeclaration) {
+func (v *AggregateFieldsVisitor) VisitInterfaceDeclaration(declaration intmod.IInterfaceDeclaration) {
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func Aggregate(fields []srvdecl.ClassFileFieldDeclaration) {
+func Aggregate(fields []intsrv.IClassFileFieldDeclaration) {
 	if fields != nil {
 		size := len(fields)
 
@@ -76,7 +77,7 @@ func Aggregate(fields []srvdecl.ClassFileFieldDeclaration) {
 	}
 }
 
-func aggregate(fields []srvdecl.ClassFileFieldDeclaration, firstField srvdecl.ClassFileFieldDeclaration, firstIndex, lastIndex int) {
+func aggregate(fields []intsrv.IClassFileFieldDeclaration, firstField intsrv.IClassFileFieldDeclaration, firstIndex, lastIndex int) {
 	if firstIndex < lastIndex {
 		sublist := fields[firstIndex+1 : lastIndex+1]
 
@@ -102,6 +103,6 @@ func aggregate(fields []srvdecl.ClassFileFieldDeclaration, firstField srvdecl.Cl
 			}
 		}
 
-		firstField.SetFieldDeclarators(declarators)
+		firstField.SetFieldDeclarators(declarators.(intmod.IFieldDeclarator))
 	}
 }

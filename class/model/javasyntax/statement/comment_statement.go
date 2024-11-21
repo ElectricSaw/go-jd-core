@@ -1,8 +1,8 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
-func NewCommentStatement(text string) intsyn.ICommentStatement {
+func NewCommentStatement(text string) intmod.ICommentStatement {
 	return &CommentStatement{
 		text: text,
 	}
@@ -22,6 +22,6 @@ func (s *CommentStatement) IsContinueStatement() bool {
 	return true
 }
 
-func (s *CommentStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *CommentStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitCommentStatement(s)
 }

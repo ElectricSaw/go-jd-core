@@ -1,18 +1,18 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewBooleanExpression(value bool) intsyn.IBooleanExpression {
+func NewBooleanExpression(value bool) intmod.IBooleanExpression {
 	return &BooleanExpression{
 		value: value,
 	}
 }
 
-func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intsyn.IBooleanExpression {
+func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intmod.IBooleanExpression {
 	return &BooleanExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
@@ -27,8 +27,8 @@ type BooleanExpression struct {
 	value bool
 }
 
-func (e *BooleanExpression) Type() intsyn.IType {
-	return _type.PtTypeBoolean.(intsyn.IType)
+func (e *BooleanExpression) Type() intmod.IType {
+	return _type.PtTypeBoolean.(intmod.IType)
 }
 
 func (e *BooleanExpression) IsTrue() bool {
@@ -43,7 +43,7 @@ func (e *BooleanExpression) IsBooleanExpression() bool {
 	return true
 }
 
-func (e *BooleanExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *BooleanExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitBooleanExpression(e)
 }
 

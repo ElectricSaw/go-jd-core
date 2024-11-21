@@ -1,11 +1,11 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewAnnotationElementValue(reference *AnnotationReference) intsyn.IAnnotationElementValue {
+func NewAnnotationElementValue(reference intmod.IAnnotationReference) intmod.IAnnotationElementValue {
 	return &AnnotationElementValue{
 		AnnotationReference: *NewAnnotationReferenceWithAll(reference.Type(),
 			reference.ElementValue(), reference.ElementValuePairs()).(*AnnotationReference),
@@ -16,7 +16,7 @@ type AnnotationElementValue struct {
 	AnnotationReference
 }
 
-func (r *AnnotationElementValue) Accept(visitor intsyn.IReferenceVisitor) {
+func (r *AnnotationElementValue) Accept(visitor intmod.IReferenceVisitor) {
 	visitor.VisitAnnotationElementValue(r)
 }
 

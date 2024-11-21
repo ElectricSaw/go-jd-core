@@ -1,7 +1,7 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 )
 
@@ -12,7 +12,7 @@ func (d *AbstractMemberDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *AbstractMemberDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *AbstractMemberDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 
 }
 
@@ -24,11 +24,11 @@ func (d *AbstractTypeDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *AbstractTypeDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *AbstractTypeDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 
 }
 
-func (d *AbstractTypeDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
+func (d *AbstractTypeDeclaration) AnnotationReferences() intmod.IAnnotationReference {
 	return nil
 }
 
@@ -48,7 +48,7 @@ func (d *AbstractTypeDeclaration) Name() string {
 	return ""
 }
 
-func (d *AbstractTypeDeclaration) BodyDeclaration() intsyn.IBodyDeclaration {
+func (d *AbstractTypeDeclaration) BodyDeclaration() intmod.IBodyDeclaration {
 	return nil
 }
 
@@ -63,10 +63,10 @@ func (d *AbstractVariableInitializer) IsExpressionVariableInitializer() bool {
 	return false
 }
 
-func (d *AbstractVariableInitializer) Expression() intsyn.IExpression {
+func (d *AbstractVariableInitializer) Expression() intmod.IExpression {
 	return expression.NeNoExpression
 }
 
-func (d *AbstractVariableInitializer) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *AbstractVariableInitializer) Accept(visitor intmod.IDeclarationVisitor) {
 
 }

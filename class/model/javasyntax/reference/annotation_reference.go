@@ -1,31 +1,31 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewAnnotationReference(typ intsyn.IObjectType) intsyn.IAnnotationReference {
+func NewAnnotationReference(typ intmod.IObjectType) intmod.IAnnotationReference {
 	return &AnnotationReference{
 		typ: typ,
 	}
 }
 
-func NewAnnotationReferenceWithEv(typ intsyn.IObjectType, elementValue intsyn.IElementValue) intsyn.IAnnotationReference {
+func NewAnnotationReferenceWithEv(typ intmod.IObjectType, elementValue intmod.IElementValue) intmod.IAnnotationReference {
 	return &AnnotationReference{
 		typ:          typ,
 		elementValue: elementValue,
 	}
 }
 
-func NewAnnotationReferenceWithEvp(typ intsyn.IObjectType, elementValuePairs intsyn.IElementValuePair) intsyn.IAnnotationReference {
+func NewAnnotationReferenceWithEvp(typ intmod.IObjectType, elementValuePairs intmod.IElementValuePair) intmod.IAnnotationReference {
 	return &AnnotationReference{
 		typ:               typ,
 		elementValuePairs: elementValuePairs,
 	}
 }
 
-func NewAnnotationReferenceWithAll(typ intsyn.IObjectType, elementValue intsyn.IElementValue,
-	elementValuePairs intsyn.IElementValuePair) intsyn.IAnnotationReference {
+func NewAnnotationReferenceWithAll(typ intmod.IObjectType, elementValue intmod.IElementValue,
+	elementValuePairs intmod.IElementValuePair) intmod.IAnnotationReference {
 	return &AnnotationReference{
 		typ:               typ,
 		elementValue:      elementValue,
@@ -34,23 +34,23 @@ func NewAnnotationReferenceWithAll(typ intsyn.IObjectType, elementValue intsyn.I
 }
 
 type AnnotationReference struct {
-	typ               intsyn.IObjectType
-	elementValue      intsyn.IElementValue
-	elementValuePairs intsyn.IElementValuePair
+	typ               intmod.IObjectType
+	elementValue      intmod.IElementValue
+	elementValuePairs intmod.IElementValuePair
 }
 
-func (r *AnnotationReference) Type() intsyn.IObjectType {
+func (r *AnnotationReference) Type() intmod.IObjectType {
 	return r.typ
 }
 
-func (r *AnnotationReference) ElementValue() intsyn.IElementValue {
+func (r *AnnotationReference) ElementValue() intmod.IElementValue {
 	return r.elementValue
 }
 
-func (r *AnnotationReference) ElementValuePairs() intsyn.IElementValuePair {
+func (r *AnnotationReference) ElementValuePairs() intmod.IElementValuePair {
 	return r.elementValuePairs
 }
 
-func (r *AnnotationReference) Accept(visitor intsyn.IReferenceVisitor) {
+func (r *AnnotationReference) Accept(visitor intmod.IReferenceVisitor) {
 	visitor.VisitAnnotationReference(r)
 }

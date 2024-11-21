@@ -32,12 +32,13 @@ func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attr
 			return c.ConvertWithAnnotations(visibles)
 		} else {
 			aral := reference.NewAnnotationReferences()
+
 			for _, a := range visibles.Annotations() {
-				aral.AnnotationReferences = append(aral.AnnotationReferences, c.ConvertWithAnnotation(a))
+				aral.Add(c.ConvertWithAnnotation(a))
 			}
 
 			for _, a := range invisibles.Annotations() {
-				aral.AnnotationReferences = append(aral.AnnotationReferences, c.ConvertWithAnnotation(a))
+				aral.Add(c.ConvertWithAnnotation(a))
 			}
 
 			return aral
@@ -60,7 +61,7 @@ func (c *AnnotationConverter) ConvertWithAnnotations(annotations *attribute.Anno
 	}
 }
 
-func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotation) *reference.AnnotationReference {
+func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotation) intmod.IAnnotationReference {
 	descriptor := annotation.Descriptor()
 	ot := c.TypeMaker.MakeFromDescriptor(descriptor)
 	elementValuePairs := annotation.ElementValuePairs()
@@ -78,21 +79,19 @@ func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotat
 			return reference.NewAnnotationReferenceWithEv(ot, reference.NewElementValuePair(elementName, c.ConvertWithElementValue(elementValue)))
 		}
 	} else {
-		list := &reference.ElementValuePairs{
-			ElementValuePair: make([]reference.IElementValuePair, 0, len(elementValuePairs)),
-		}
+		list := reference.NewElementValuePairs()
 
 		for _, elementValuePair := range elementValuePairs {
 			elementName := elementValuePair.ElementName
 			elementValue := elementValuePair.ElementValue
-			list.ElementValuePair = append(list.ElementValuePair, reference.NewElementValuePair(elementName, c.ConvertWithElementValue(elementValue)))
+			list.Add(reference.NewElementValuePair(elementName, c.ConvertWithElementValue(elementValue)))
 		}
 
 		return reference.NewAnnotationReferenceWithEv(ot, list)
 	}
 }
 
-func (c *AnnotationConverter) ConvertWithElementValue(ev attribute.ElementValue) reference.IElementValue {
+func (c *AnnotationConverter) ConvertWithElementValue(ev attribute.ElementValue) intmod.IElementValue {
 	ev.Accept(c)
 	return c.ElementValue
 }
@@ -141,7 +140,7 @@ func (c *AnnotationConverter) VisitPrimitiveType(elementValue *attribute.Element
 func (c *AnnotationConverter) VisitClassInfo(elementValue *attribute.ElementValueClassInfo) {
 	classInfo := elementValue.ClassInfo()
 	ot := c.TypeMaker.MakeFromDescriptor(classInfo)
-	c.ElementValue = reference.NewExpressionElementValue(expression.NewTypeReferenceDotClassExpression(ot.(_type.IType)))
+	c.ElementValue = reference.NewExpressionElementValue(expression.NewTypeReferenceDotClassExpression(ot))
 }
 
 func (c *AnnotationConverter) VisitAnnotationValue(elementValue *attribute.ElementValueAnnotationValue) {
@@ -156,8 +155,8 @@ func (c *AnnotationConverter) VisitEnumConstValue(elementValue *attribute.Elemen
 	constName := elementValue.ConstName()
 	internalTypeName := descriptor[1 : len(descriptor)-1]
 	c.ElementValue = reference.NewExpressionElementValue(
-		expression.NewFieldReferenceExpression(
-			ot.(_type.IType), expression.NewObjectTypeReferenceExpression(ot),
+		expression.NewFieldReferenceExpression(ot,
+			expression.NewObjectTypeReferenceExpression(ot),
 			internalTypeName, constName, descriptor,
 		),
 	)
@@ -172,14 +171,12 @@ func (c *AnnotationConverter) VisitArrayValue(elementValue *attribute.ElementVal
 		values[0].Accept(c)
 		c.ElementValue = reference.NewElementValueArrayInitializerElementValue(c.ElementValue)
 	} else {
-		list := reference.ElementValues{}
-		list.ElementValuePair = make([]reference.IElementValue, len(values))
-
+		list := reference.NewElementValues()
 		for _, value := range values {
 			value.Accept(c)
-			list.ElementValuePair = append(list.ElementValuePair, c.ElementValue)
+			list.Add(c.ElementValue)
 		}
 
-		c.ElementValue = reference.NewElementValueArrayInitializerElementValueList(&list)
+		c.ElementValue = reference.NewElementValueArrayInitializerElementValues(list)
 	}
 }

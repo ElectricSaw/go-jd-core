@@ -1,20 +1,20 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 	"math"
 )
 
-func NewIntegerConstantExpression(typ intsyn.IType, value int) intsyn.IIntegerConstantExpression {
+func NewIntegerConstantExpression(typ intmod.IType, value int) intmod.IIntegerConstantExpression {
 	return &IntegerConstantExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		value:                            value,
 	}
 }
 
-func NewIntegerConstantExpressionWithAll(lineNumber int, typ intsyn.IType, value int) intsyn.IIntegerConstantExpression {
+func NewIntegerConstantExpressionWithAll(lineNumber int, typ intmod.IType, value int) intmod.IIntegerConstantExpression {
 	return &IntegerConstantExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		value:                            value,
@@ -31,7 +31,7 @@ func (e *IntegerConstantExpression) IntegerValue() int {
 	return e.value
 }
 
-func (e *IntegerConstantExpression) SetType(typ intsyn.IType) {
+func (e *IntegerConstantExpression) SetType(typ intmod.IType) {
 	e.checkType(typ)
 	e.AbstractLineNumberTypeExpression.SetType(typ)
 }
@@ -40,7 +40,7 @@ func (e *IntegerConstantExpression) IsIntegerConstantExpression() bool {
 	return true
 }
 
-func (e *IntegerConstantExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *IntegerConstantExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitIntegerConstantExpression(e)
 }
 
@@ -48,7 +48,7 @@ func (e *IntegerConstantExpression) String() string {
 	return fmt.Sprintf("IntegerConstantExpression{type=%s, value=%d}", e.typ, e.value)
 }
 
-func (e *IntegerConstantExpression) checkType(typ intsyn.IType) bool {
+func (e *IntegerConstantExpression) checkType(typ intmod.IType) bool {
 	if typ.IsPrimitiveType() {
 		valueType := GetPrimitiveTypeFromValue(e.value)
 		pt, ok := e.typ.(*_type.PrimitiveType)
@@ -59,7 +59,7 @@ func (e *IntegerConstantExpression) checkType(typ intsyn.IType) bool {
 	return false
 }
 
-func GetPrimitiveTypeFromValue(value int) intsyn.IPrimitiveType {
+func GetPrimitiveTypeFromValue(value int) intmod.IPrimitiveType {
 	if value >= 0 {
 		if value <= 1 {
 			return _type.PtMaybeBooleanType

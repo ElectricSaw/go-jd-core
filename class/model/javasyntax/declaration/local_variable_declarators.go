@@ -1,16 +1,17 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewLocalVariableDeclarators() intsyn.ILocalVariableDeclarators {
+func NewLocalVariableDeclarators() intmod.ILocalVariableDeclarators {
 	return &LocalVariableDeclarators{}
 }
 
 type LocalVariableDeclarators struct {
-	util.DefaultList[intsyn.ILocalVariableDeclarator]
+	LocalVariableDeclarator
+	util.DefaultList[intmod.ILocalVariableDeclarator]
 }
 
 func (d *LocalVariableDeclarators) Name() string { return "" }
@@ -29,9 +30,9 @@ func (d *LocalVariableDeclarators) LineNumber() int {
 	return d.Get(0).LineNumber()
 }
 
-func (d *LocalVariableDeclarators) VariableInitializer() intsyn.IVariableInitializer { return nil }
+func (d *LocalVariableDeclarators) VariableInitializer() intmod.IVariableInitializer { return nil }
 
-func (d *LocalVariableDeclarators) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *LocalVariableDeclarators) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarators(d)
 }
 

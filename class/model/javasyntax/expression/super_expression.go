@@ -1,18 +1,18 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewSuperExpression(typ intsyn.IType) intsyn.ISuperExpression {
+func NewSuperExpression(typ intmod.IType) intmod.ISuperExpression {
 	return &SuperExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		typ:                          typ,
 	}
 }
 
-func NewSuperExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.ISuperExpression {
+func NewSuperExpressionWithAll(lineNumber int, typ intmod.IType) intmod.ISuperExpression {
 	return &SuperExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -22,10 +22,10 @@ func NewSuperExpressionWithAll(lineNumber int, typ intsyn.IType) intsyn.ISuperEx
 type SuperExpression struct {
 	AbstractLineNumberExpression
 
-	typ intsyn.IType
+	typ intmod.IType
 }
 
-func (e *SuperExpression) Type() intsyn.IType {
+func (e *SuperExpression) Type() intmod.IType {
 	return e.typ
 }
 
@@ -33,7 +33,7 @@ func (e *SuperExpression) IsSuperExpression() bool {
 	return true
 }
 
-func (e *SuperExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *SuperExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitSuperExpression(e)
 }
 

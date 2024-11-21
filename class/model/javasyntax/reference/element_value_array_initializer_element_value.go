@@ -1,35 +1,35 @@
 package reference
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer intsyn.IElementValue) intsyn.IElementValueArrayInitializerElementValue {
+func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer intmod.IElementValue) intmod.IElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{
 		elementValueArrayInitializer: elementValueArrayInitializer,
 	}
 }
 
-func NewElementValueArrayInitializerElementValueList(elementValueArrayInitializer intsyn.IElementValuePair) intsyn.IElementValueArrayInitializerElementValue {
+func NewElementValueArrayInitializerElementValues(elementValueArrayInitializer intmod.IElementValues) intmod.IElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{
 		elementValueArrayInitializer: elementValueArrayInitializer,
 	}
 }
 
-func NewElementValueArrayInitializerElementValueEmpty() intsyn.IElementValueArrayInitializerElementValue {
+func NewElementValueArrayInitializerElementValueEmpty() intmod.IElementValueArrayInitializerElementValue {
 	return &ElementValueArrayInitializerElementValue{elementValueArrayInitializer: nil}
 }
 
 type ElementValueArrayInitializerElementValue struct {
-	elementValueArrayInitializer intsyn.IElementValue
+	elementValueArrayInitializer intmod.IElementValue
 }
 
-func (e *ElementValueArrayInitializerElementValue) ElementValueArrayInitializer() intsyn.IElementValue {
+func (e *ElementValueArrayInitializerElementValue) ElementValueArrayInitializer() intmod.IElementValue {
 	return e.elementValueArrayInitializer
 }
 
-func (e *ElementValueArrayInitializerElementValue) Accept(visitor intsyn.IReferenceVisitor) {
+func (e *ElementValueArrayInitializerElementValue) Accept(visitor intmod.IReferenceVisitor) {
 	visitor.VisitElementValueArrayInitializerElementValue(e)
 }
 

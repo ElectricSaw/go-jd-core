@@ -1,19 +1,19 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewLengthExpression(expression intsyn.IExpression) intsyn.ILengthExpression {
+func NewLengthExpression(expression intmod.IExpression) intmod.ILengthExpression {
 	return &LengthExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
 		expression:                   expression,
 	}
 }
 
-func NewLengthExpressionWithAll(lineNumber int, expression intsyn.IExpression) intsyn.ILengthExpression {
+func NewLengthExpressionWithAll(lineNumber int, expression intmod.IExpression) intmod.ILengthExpression {
 	return &LengthExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		expression:                   expression,
@@ -23,18 +23,18 @@ func NewLengthExpressionWithAll(lineNumber int, expression intsyn.IExpression) i
 type LengthExpression struct {
 	AbstractLineNumberExpression
 
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
-func (e *LengthExpression) Type() intsyn.IType {
-	return _type.PtTypeInt.(intsyn.IType)
+func (e *LengthExpression) Type() intmod.IType {
+	return _type.PtTypeInt.(intmod.IType)
 }
 
-func (e *LengthExpression) Expression() intsyn.IExpression {
+func (e *LengthExpression) Expression() intmod.IExpression {
 	return e.expression
 }
 
-func (e *LengthExpression) SetExpression(expression intsyn.IExpression) {
+func (e *LengthExpression) SetExpression(expression intmod.IExpression) {
 	e.expression = expression
 }
 
@@ -42,7 +42,7 @@ func (e *LengthExpression) IsLengthExpression() bool {
 	return true
 }
 
-func (e *LengthExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *LengthExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitLengthExpression(e)
 }
 

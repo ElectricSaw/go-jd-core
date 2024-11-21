@@ -7,6 +7,9 @@ type IFrame interface {
 	AddLocalVariable(ILocalVariable)
 }
 
+type IRootFrame interface {
+}
+
 type ILocalVariableReference interface {
 	LocalVariable() ILocalVariableReference
 	SetLocalVariable(localVariable ILocalVariableReference)

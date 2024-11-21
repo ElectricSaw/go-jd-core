@@ -102,7 +102,29 @@ type IExpressionVisitor interface {
 	VisitTypeReferenceDotClassExpression(expression ITypeReferenceDotClassExpression)
 }
 
+type ILineNumberExpression interface {
+	IExpression
+	
+	LineNumber() int
+	Priority() int
+}
+
+type ILineNumberTypeExpression interface {
+	ILineNumberExpression
+
+	Type() IType
+	SetType(typ IType)
+}
+
+type ILambdaExpression interface {
+	ILineNumberTypeExpression
+
+	Statements() IStatement
+}
+
 type IArrayExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	Expression() IExpression
@@ -116,6 +138,8 @@ type IArrayExpression interface {
 }
 
 type IBinaryOperatorExpression interface {
+	ILineNumberTypeExpression
+
 	LeftExpression() IExpression
 	Operator() string
 	RightExpression() IExpression
@@ -130,6 +154,8 @@ type IBinaryOperatorExpression interface {
 }
 
 type IBooleanExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	IsTrue() bool
 	IsFalse() bool
@@ -139,6 +165,8 @@ type IBooleanExpression interface {
 }
 
 type ICastExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	Expression() IExpression
@@ -152,6 +180,8 @@ type ICastExpression interface {
 }
 
 type ICommentExpression interface {
+	IExpression
+
 	LineNumber() int
 	Type() IType
 	Priority() int
@@ -161,6 +191,8 @@ type ICommentExpression interface {
 }
 
 type IConstructorInvocationExpression interface {
+	IConstructorReferenceExpression
+
 	Type() IType
 	SetType(typ IType)
 	Parameters() IExpression
@@ -172,6 +204,8 @@ type IConstructorInvocationExpression interface {
 }
 
 type IConstructorReferenceExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	ObjectType() IObjectType
@@ -180,6 +214,8 @@ type IConstructorReferenceExpression interface {
 }
 
 type IDoubleConstantExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	DoubleValue() float64
@@ -189,6 +225,8 @@ type IDoubleConstantExpression interface {
 }
 
 type IEnumConstantReferenceExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	SetType(typ IType)
 	ObjectType() IObjectType
@@ -198,11 +236,14 @@ type IEnumConstantReferenceExpression interface {
 }
 
 type IExpressions interface {
+	IExpression
 	util.IList[IExpression]
 	Accept(visitor IExpressionVisitor)
 }
 
 type IFieldReferenceExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	Expression() IExpression
@@ -217,6 +258,8 @@ type IFieldReferenceExpression interface {
 }
 
 type IFloatConstantExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	FloatValue() float32
@@ -226,6 +269,8 @@ type IFloatConstantExpression interface {
 }
 
 type IInstanceOfExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	Expression() IExpression
 	InstanceOfType() IType
@@ -235,6 +280,8 @@ type IInstanceOfExpression interface {
 }
 
 type IIntegerConstantExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	IntegerValue() int
@@ -244,6 +291,8 @@ type IIntegerConstantExpression interface {
 }
 
 type ILambdaFormalParametersExpression interface {
+	ILambdaExpression
+
 	Priority() int
 	Statements() IStatement
 	FormalParameters() IFormalParameter
@@ -253,6 +302,8 @@ type ILambdaFormalParametersExpression interface {
 }
 
 type ILambdaIdentifiersExpression interface {
+	ILambdaExpression
+
 	Priority() int
 	Statements() IStatement
 	ReturnedType() IType
@@ -262,6 +313,8 @@ type ILambdaIdentifiersExpression interface {
 }
 
 type ILengthExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	Expression() IExpression
 	SetExpression(expression IExpression)
@@ -271,6 +324,8 @@ type ILengthExpression interface {
 }
 
 type ILocalVariableReferenceExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	Name() string
@@ -280,6 +335,8 @@ type ILocalVariableReferenceExpression interface {
 }
 
 type ILongConstantExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	LongValue() int64
@@ -289,6 +346,8 @@ type ILongConstantExpression interface {
 }
 
 type IMethodInvocationExpression interface {
+	IMethodReferenceExpression
+
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	NonWildcardTypeArguments() ITypeArgument
@@ -301,6 +360,8 @@ type IMethodInvocationExpression interface {
 }
 
 type IMethodReferenceExpression interface {
+	ILineNumberTypeExpression
+
 	Expression() IExpression
 	InternalTypeName() string
 	Name() string
@@ -310,6 +371,8 @@ type IMethodReferenceExpression interface {
 }
 
 type INewArray interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	DimensionExpressionList() IExpression
@@ -321,6 +384,8 @@ type INewArray interface {
 }
 
 type INewExpression interface {
+	ILineNumberExpression
+
 	ObjectType() IObjectType
 	SetObjectType(objectType IObjectType)
 	Type() IType
@@ -337,6 +402,8 @@ type INewExpression interface {
 }
 
 type INewInitializedArray interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	ArrayInitializer() IArrayVariableInitializer
@@ -347,11 +414,15 @@ type INewInitializedArray interface {
 }
 
 type INoExpression interface {
+	ILineNumberTypeExpression
+
 	Accept(visitor IExpressionVisitor)
 	String() string
 }
 
 type INullExpression interface {
+	ILineNumberTypeExpression
+
 	Type() IType
 	SetType(typ IType)
 	IsNullExpression() bool
@@ -360,6 +431,8 @@ type INullExpression interface {
 }
 
 type IObjectTypeReferenceExpression interface {
+	IExpression
+
 	LineNumber() int
 	ObjectType() IObjectType
 	Type() IType
@@ -372,6 +445,8 @@ type IObjectTypeReferenceExpression interface {
 }
 
 type IParenthesesExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	Expression() IExpression
 	SetExpression(expression IExpression)
@@ -379,6 +454,8 @@ type IParenthesesExpression interface {
 }
 
 type IPostOperatorExpression interface {
+	ILineNumberExpression
+
 	Operator() string
 	Expression() IExpression
 	SetExpression(expression IExpression)
@@ -390,6 +467,8 @@ type IPostOperatorExpression interface {
 }
 
 type IPreOperatorExpression interface {
+	ILineNumberExpression
+
 	Operator() string
 	Expression() IExpression
 	SetExpression(expression IExpression)
@@ -401,6 +480,8 @@ type IPreOperatorExpression interface {
 }
 
 type IStringConstantExpression interface {
+	ILineNumberExpression
+
 	StringValue() string
 	Type() IType
 	IsStringConstantExpression() bool
@@ -409,6 +490,8 @@ type IStringConstantExpression interface {
 }
 
 type ISuperConstructorInvocationExpression interface {
+	IConstructorReferenceExpression
+
 	Type() IType
 	SetType(typ IType)
 	Parameters() IExpression
@@ -420,6 +503,8 @@ type ISuperConstructorInvocationExpression interface {
 }
 
 type ISuperExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	IsSuperExpression() bool
 	Accept(visitor IExpressionVisitor)
@@ -427,6 +512,8 @@ type ISuperExpression interface {
 }
 
 type ITernaryOperatorExpression interface {
+	ILineNumberTypeExpression
+
 	Condition() IExpression
 	SetCondition(expression IExpression)
 	TrueExpression() IExpression
@@ -440,6 +527,8 @@ type ITernaryOperatorExpression interface {
 }
 
 type IThisExpression interface {
+	ILineNumberExpression
+
 	Type() IType
 	IsExplicit() bool
 	SetExplicit(explicit bool)
@@ -449,6 +538,8 @@ type IThisExpression interface {
 }
 
 type ITypeReferenceDotClassExpression interface {
+	IExpression
+
 	LineNumber() int
 	TypeDotClass() IType
 	Type() IType

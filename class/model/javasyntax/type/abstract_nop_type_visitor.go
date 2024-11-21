@@ -1,12 +1,12 @@
 package _type
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 type AbstractNopTypeVisitor struct {
 }
 
-func (v *AbstractNopTypeVisitor) VisitPrimitiveType(y intsyn.IPrimitiveType)     {}
-func (v *AbstractNopTypeVisitor) VisitObjectType(y intsyn.IObjectType)           {}
-func (v *AbstractNopTypeVisitor) VisitInnerObjectType(y intsyn.IInnerObjectType) {}
-func (v *AbstractNopTypeVisitor) VisitTypes(types intsyn.ITypes)                 {}
-func (v *AbstractNopTypeVisitor) VisitGenericType(y intsyn.IGenericType)         {}
+func (v *AbstractNopTypeVisitor) VisitPrimitiveType(y intmod.IPrimitiveType)     {}
+func (v *AbstractNopTypeVisitor) VisitObjectType(y intmod.IObjectType)           {}
+func (v *AbstractNopTypeVisitor) VisitInnerObjectType(y intmod.IInnerObjectType) {}
+func (v *AbstractNopTypeVisitor) VisitTypes(types intmod.ITypes)                 {}
+func (v *AbstractNopTypeVisitor) VisitGenericType(y intmod.IGenericType)         {}

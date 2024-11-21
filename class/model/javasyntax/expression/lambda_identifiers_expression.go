@@ -1,12 +1,12 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewLambdaIdentifiersExpression(typ intsyn.IType, returnedType intsyn.IType,
-	paramNames []string, statements intsyn.IStatement) intsyn.ILambdaIdentifiersExpression {
+func NewLambdaIdentifiersExpression(typ intmod.IType, returnedType intmod.IType,
+	paramNames []string, statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
 	return &LambdaIdentifiersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpression(typ, statements),
 		returnedType:             returnedType,
@@ -14,8 +14,8 @@ func NewLambdaIdentifiersExpression(typ intsyn.IType, returnedType intsyn.IType,
 	}
 }
 
-func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intsyn.IType,
-	returnedType intsyn.IType, paramNames []string, statements intsyn.IStatement) intsyn.ILambdaIdentifiersExpression {
+func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intmod.IType,
+	returnedType intmod.IType, paramNames []string, statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
 	return &LambdaIdentifiersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpressionWithAll(lineNumber, typ, statements),
 		returnedType:             returnedType,
@@ -26,11 +26,11 @@ func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intsyn.IType,
 type LambdaIdentifiersExpression struct {
 	AbstractLambdaExpression
 
-	returnedType   intsyn.IType
+	returnedType   intmod.IType
 	parameterNames []string
 }
 
-func (e *LambdaIdentifiersExpression) ReturnedType() intsyn.IType {
+func (e *LambdaIdentifiersExpression) ReturnedType() intmod.IType {
 	return e.returnedType
 }
 
@@ -38,7 +38,7 @@ func (e *LambdaIdentifiersExpression) ParameterNames() []string {
 	return e.parameterNames
 }
 
-func (e *LambdaIdentifiersExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *LambdaIdentifiersExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitLambdaIdentifiersExpression(e)
 }
 

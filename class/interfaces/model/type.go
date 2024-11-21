@@ -15,11 +15,17 @@ const (
 )
 
 type IDiamondTypeArgument interface {
+	IType
+	ITypeArgument
+
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor)
 }
 
 type IGenericType interface {
+	IType
+	ITypeArgument
+
 	HashCode() int
 	Name() string
 	Descriptor() string
@@ -35,6 +41,8 @@ type IGenericType interface {
 }
 
 type IInnerObjectType interface {
+	IObjectType
+
 	HashCode() int
 	CreateType(dimension int) IType
 	CreateTypeWithArg(typeArguments ITypeArgument) IType
@@ -48,6 +56,7 @@ type IInnerObjectType interface {
 }
 
 type IType interface {
+	ITypeArgument
 	ITypeVisitable
 
 	Name() string
@@ -65,24 +74,6 @@ type IType interface {
 	OuterType() IObjectType
 	InternalName() string
 
-	///////////////////////////////////////////////////////////////
-
-	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
-	IsTypeArgumentList() bool
-	TypeArgumentFirst() ITypeArgument  // ITypeArgument
-	TypeArgumentList() []ITypeArgument // ITypeArgument
-	TypeArgumentSize() int
-	IsGenericTypeArgument() bool
-	IsInnerObjectTypeArgument() bool
-	IsObjectTypeArgument() bool
-	IsPrimitiveTypeArgument() bool
-	IsWildcardExtendsTypeArgument() bool
-	IsWildcardSuperTypeArgument() bool
-	IsWildcardTypeArgument() bool
-	Type() IType
-
-	///////////////////////////////////////////////////////////////
-
 	HashCode() int
 }
 
@@ -99,6 +90,9 @@ type ITypeVisitable interface {
 }
 
 type IObjectType interface {
+	IType
+	ITypeArgument
+
 	QualifiedName() string
 	HashCode() int
 	Name() string
@@ -118,6 +112,8 @@ type IObjectType interface {
 }
 
 type ITypeArgument interface {
+	ITypeArgumentVisitable
+
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsTypeArgumentList() bool
 	TypeArgumentFirst() ITypeArgument  // ITypeArgument
@@ -151,8 +147,8 @@ type ITypeArgumentVisitor interface {
 }
 
 type ITypeParameter interface {
-	util.Base[ITypeParameter]
 	ITypeParameterVisitable
+	util.Base[ITypeParameter]
 
 	Identifier() string
 	AcceptTypeParameterVisitor(visitor ITypeParameterVisitor)
@@ -170,6 +166,9 @@ type ITypeParameterVisitor interface {
 }
 
 type IPrimitiveType interface {
+	IType
+	ITypeArgument
+
 	HashCode() int
 	Name() string
 	Descriptor() string
@@ -189,6 +188,9 @@ type IPrimitiveType interface {
 }
 
 type ITypeArguments interface {
+	ITypeArgument
+	util.IList[ITypeArgument]
+
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsTypeArgumentList() bool
 	TypeArgumentFirst() ITypeArgument
@@ -198,28 +200,37 @@ type ITypeArguments interface {
 }
 
 type ITypeParameterWithTypeBounds interface {
+	ITypeParameter
+
 	TypeBounds() IType
 	AcceptTypeParameterVisitor(visitor ITypeParameterVisitor)
 	String() string
 }
 
 type ITypeParameters interface {
+	ITypeParameter
 	util.IList[ITypeParameter]
+
 	AcceptTypeParameterVisitor(visitor ITypeParameterVisitor)
 }
 
 type ITypes interface {
+	IType
 	util.IList[IType]
+
 	IsTypes() bool
 	AcceptTypeVisitor(visitor ITypeVisitor)
 }
 
 type IUnmodifiableTypes interface {
-	util.IList[IType]
+	ITypes
+
 	ListIterator(i int) []IType
 }
 
 type IWildcardExtendsTypeArgument interface {
+	ITypeArgument
+
 	Type() IType
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsWildcardExtendsTypeArgument() bool
@@ -230,6 +241,8 @@ type IWildcardExtendsTypeArgument interface {
 }
 
 type IWildcardSuperTypeArgument interface {
+	ITypeArgument
+
 	Type() IType
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsWildcardSuperTypeArgument() bool
@@ -240,6 +253,8 @@ type IWildcardSuperTypeArgument interface {
 }
 
 type IWildcardTypeArgument interface {
+	ITypeArgument
+
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
 	IsWildcardTypeArgument() bool
 	AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor)

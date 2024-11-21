@@ -1,13 +1,13 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
 var DefaultLabe1 = NewDefaultLabel()
 
-func NewSwitchStatement(condition intsyn.IExpression, blocks []intsyn.IBlock) intsyn.ISwitchStatement {
+func NewSwitchStatement(condition intmod.IExpression, blocks []intmod.IBlock) intmod.ISwitchStatement {
 	return &SwitchStatement{
 		condition: condition,
 		blocks:    blocks,
@@ -17,27 +17,27 @@ func NewSwitchStatement(condition intsyn.IExpression, blocks []intsyn.IBlock) in
 type SwitchStatement struct {
 	AbstractStatement
 
-	condition intsyn.IExpression
-	blocks    []intsyn.IBlock
+	condition intmod.IExpression
+	blocks    []intmod.IBlock
 }
 
-func (s *SwitchStatement) Condition() intsyn.IExpression {
+func (s *SwitchStatement) Condition() intmod.IExpression {
 	return s.condition
 }
 
-func (s *SwitchStatement) SetCondition(condition intsyn.IExpression) {
+func (s *SwitchStatement) SetCondition(condition intmod.IExpression) {
 	s.condition = condition
 }
 
-func (s *SwitchStatement) List() []intsyn.IStatement {
-	ret := make([]intsyn.IStatement, 0, len(s.blocks))
+func (s *SwitchStatement) List() []intmod.IStatement {
+	ret := make([]intmod.IStatement, 0, len(s.blocks))
 	for _, block := range s.blocks {
-		ret = append(ret, block.(intsyn.IStatement))
+		ret = append(ret, block.(intmod.IStatement))
 	}
 	return ret
 }
 
-func (s *SwitchStatement) Blocks() []intsyn.IBlock {
+func (s *SwitchStatement) Blocks() []intmod.IBlock {
 	return s.blocks
 }
 
@@ -45,13 +45,13 @@ func (s *SwitchStatement) IsSwitchStatement() bool {
 	return true
 }
 
-func (s *SwitchStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *SwitchStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatement(s)
 }
 
 // --- Label --- //
 
-func NewDefaultLabel() intsyn.IDefaultLabel {
+func NewDefaultLabel() intmod.IDefaultLabel {
 	return &DefaultLabel{}
 }
 
@@ -59,7 +59,7 @@ type DefaultLabel struct {
 	AbstractStatement
 }
 
-func (l *DefaultLabel) Accept(visitor intsyn.IStatementVisitor) {
+func (l *DefaultLabel) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementDefaultLabel(l)
 }
 
@@ -67,7 +67,7 @@ func (l *DefaultLabel) String() string {
 	return "DefaultLabel"
 }
 
-func NewExpressionLabel(expression intsyn.IExpression) intsyn.IExpressionLabel {
+func NewExpressionLabel(expression intmod.IExpression) intmod.IExpressionLabel {
 	return &ExpressionLabel{
 		expression: expression,
 	}
@@ -76,18 +76,18 @@ func NewExpressionLabel(expression intsyn.IExpression) intsyn.IExpressionLabel {
 type ExpressionLabel struct {
 	AbstractStatement
 
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
-func (l *ExpressionLabel) Expression() intsyn.IExpression {
+func (l *ExpressionLabel) Expression() intmod.IExpression {
 	return l.expression
 }
 
-func (l *ExpressionLabel) SetExpression(expression intsyn.IExpression) {
+func (l *ExpressionLabel) SetExpression(expression intmod.IExpression) {
 	l.expression = expression
 }
 
-func (l *ExpressionLabel) Accept(visitor intsyn.IStatementVisitor) {
+func (l *ExpressionLabel) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementExpressionLabel(l)
 }
 
@@ -97,7 +97,7 @@ func (l *ExpressionLabel) String() string {
 
 // --- Block --- //
 
-func NewBlock(statements intsyn.IStatement) intsyn.IBlock {
+func NewBlock(statements intmod.IStatement) intmod.IBlock {
 	return &Block{
 		statements: statements,
 	}
@@ -106,14 +106,14 @@ func NewBlock(statements intsyn.IStatement) intsyn.IBlock {
 type Block struct {
 	AbstractStatement
 
-	statements intsyn.IStatement
+	statements intmod.IStatement
 }
 
-func (b *Block) Statements() intsyn.IStatement {
+func (b *Block) Statements() intmod.IStatement {
 	return b.statements
 }
 
-func NewLabelBlock(label intsyn.ILabel, statements intsyn.IStatement) intsyn.ILabelBlock {
+func NewLabelBlock(label intmod.ILabel, statements intmod.IStatement) intmod.ILabelBlock {
 	return &LabelBlock{
 		Block: Block{
 			statements: statements,
@@ -125,10 +125,10 @@ func NewLabelBlock(label intsyn.ILabel, statements intsyn.IStatement) intsyn.ILa
 type LabelBlock struct {
 	Block
 
-	label intsyn.ILabel
+	label intmod.ILabel
 }
 
-func (b *LabelBlock) Label() intsyn.ILabel {
+func (b *LabelBlock) Label() intmod.ILabel {
 	return b.label
 }
 
@@ -136,7 +136,7 @@ func (b *LabelBlock) IsSwitchStatementLabelBlock() bool {
 	return true
 }
 
-func (b *LabelBlock) Accept(visitor intsyn.IStatementVisitor) {
+func (b *LabelBlock) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementLabelBlock(b)
 }
 
@@ -144,7 +144,7 @@ func (b *LabelBlock) String() string {
 	return fmt.Sprintf("LabelBlock{label=%s}", b.label)
 }
 
-func NewMultiLabelsBlock(labels []intsyn.ILabel, statements intsyn.IStatement) intsyn.IMultiLabelsBlock {
+func NewMultiLabelsBlock(labels []intmod.ILabel, statements intmod.IStatement) intmod.IMultiLabelsBlock {
 	return &MultiLabelsBlock{
 		Block: Block{
 			statements: statements,
@@ -156,18 +156,18 @@ func NewMultiLabelsBlock(labels []intsyn.ILabel, statements intsyn.IStatement) i
 type MultiLabelsBlock struct {
 	Block
 
-	labels []intsyn.ILabel
+	labels []intmod.ILabel
 }
 
-func (b *MultiLabelsBlock) List() []intsyn.IStatement {
-	ret := make([]intsyn.IStatement, 0, len(b.labels))
+func (b *MultiLabelsBlock) List() []intmod.IStatement {
+	ret := make([]intmod.IStatement, 0, len(b.labels))
 	for _, label := range b.labels {
 		ret = append(ret, label)
 	}
 	return ret
 }
 
-func (b *MultiLabelsBlock) Labels() []intsyn.ILabel {
+func (b *MultiLabelsBlock) Labels() []intmod.ILabel {
 	return b.labels
 }
 
@@ -175,7 +175,7 @@ func (b *MultiLabelsBlock) IsSwitchStatementMultiLabelsBlock() bool {
 	return true
 }
 
-func (b *MultiLabelsBlock) Accept(visitor intsyn.IStatementVisitor) {
+func (b *MultiLabelsBlock) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementMultiLabelsBlock(b)
 }
 

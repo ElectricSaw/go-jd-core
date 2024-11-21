@@ -1,10 +1,10 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewLocalVariableDeclaration(typ intsyn.IType, localVariableDeclarators intsyn.ILocalVariableDeclarator) intsyn.ILocalVariableDeclaration {
+func NewLocalVariableDeclaration(typ intmod.IType, localVariableDeclarators intmod.ILocalVariableDeclarator) intmod.ILocalVariableDeclaration {
 	return &LocalVariableDeclaration{
 		typ:                      typ,
 		localVariableDeclarators: localVariableDeclarators,
@@ -13,8 +13,8 @@ func NewLocalVariableDeclaration(typ intsyn.IType, localVariableDeclarators ints
 
 type LocalVariableDeclaration struct {
 	final                    bool
-	typ                      intsyn.IType
-	localVariableDeclarators intsyn.ILocalVariableDeclarator
+	typ                      intmod.IType
+	localVariableDeclarators intmod.ILocalVariableDeclarator
 }
 
 func (d *LocalVariableDeclaration) IsFinal() bool {
@@ -25,18 +25,18 @@ func (d *LocalVariableDeclaration) SetFinal(final bool) {
 	d.final = final
 }
 
-func (d *LocalVariableDeclaration) Type() intsyn.IType {
+func (d *LocalVariableDeclaration) Type() intmod.IType {
 	return d.typ
 }
 
-func (d *LocalVariableDeclaration) LocalVariableDeclarators() intsyn.ILocalVariableDeclarator {
+func (d *LocalVariableDeclaration) LocalVariableDeclarators() intmod.ILocalVariableDeclarator {
 	return d.localVariableDeclarators
 }
 
-func (d *LocalVariableDeclaration) SetLocalVariableDeclarators(localVariableDeclarators intsyn.ILocalVariableDeclarator) {
+func (d *LocalVariableDeclaration) SetLocalVariableDeclarators(localVariableDeclarators intmod.ILocalVariableDeclarator) {
 	d.localVariableDeclarators = localVariableDeclarators
 }
 
-func (d *LocalVariableDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *LocalVariableDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclaration(d)
 }

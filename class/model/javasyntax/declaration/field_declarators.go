@@ -1,24 +1,25 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewFieldDeclarators(length int) intsyn.IFieldDeclarators {
+func NewFieldDeclarators(length int) intmod.IFieldDeclarators {
 	return &FieldDeclarators{}
 }
 
 type FieldDeclarators struct {
-	util.DefaultList[intsyn.IFieldDeclarator]
+	FieldDeclarator
+	util.DefaultList[intmod.IFieldDeclarator]
 }
 
-func (d *FieldDeclarators) SetFieldDeclaration(fieldDeclaration intsyn.IFieldDeclaration) {
+func (d *FieldDeclarators) SetFieldDeclaration(fieldDeclaration intmod.IFieldDeclaration) {
 	for _, fieldDeclarator := range d.Elements() {
 		fieldDeclarator.SetFieldDeclaration(fieldDeclaration)
 	}
 }
 
-func (d *FieldDeclarators) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *FieldDeclarators) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFieldDeclarators(d)
 }

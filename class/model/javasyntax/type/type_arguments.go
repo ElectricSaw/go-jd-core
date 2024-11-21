@@ -1,7 +1,7 @@
 package _type
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
@@ -10,11 +10,16 @@ func NewTypeArguments() *TypeArguments {
 }
 
 type TypeArguments struct {
+	AbstractType
 	AbstractTypeArgument
-	util.DefaultList[intsyn.ITypeArgument]
+	util.DefaultList[intmod.ITypeArgument]
 }
 
-func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]intsyn.IType, typeArgument intsyn.ITypeArgument) bool {
+func (t *TypeArguments) Size() int {
+	return t.DefaultList.Size()
+}
+
+func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
 	ata, ok := typeArgument.(*TypeArguments)
 	if !ok {
 		return false
@@ -24,7 +29,7 @@ func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]intsy
 		return false
 	}
 
-	for i := 0; i < t.Size(); i++ {
+	for i := 0; i < t.DefaultList.Size(); i++ {
 
 		if !t.Get(i).IsTypeArgumentAssignableFrom(typeBounds, ata.Get(i)) {
 			return false
@@ -38,18 +43,18 @@ func (t *TypeArguments) IsTypeArgumentList() bool {
 	return true
 }
 
-func (t *TypeArguments) TypeArgumentFirst() intsyn.ITypeArgument {
+func (t *TypeArguments) TypeArgumentFirst() intmod.ITypeArgument {
 	return t.Get(0)
 }
 
-func (t *TypeArguments) TypeArgumentList() []intsyn.ITypeArgument {
+func (t *TypeArguments) TypeArgumentList() []intmod.ITypeArgument {
 	return t.Elements()
 }
 
 func (t *TypeArguments) TypeArgumentSize() int {
-	return t.Size()
+	return t.DefaultList.Size()
 }
 
-func (t *TypeArguments) AcceptTypeArgumentVisitor(visitor intsyn.ITypeArgumentVisitor) {
+func (t *TypeArguments) AcceptTypeArgumentVisitor(visitor intmod.ITypeArgumentVisitor) {
 	visitor.VisitTypeArguments(t)
 }

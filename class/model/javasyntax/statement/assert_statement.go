@@ -1,10 +1,10 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewAssertStatement(condition intsyn.IExpression, message intsyn.IExpression) intsyn.IAssertStatement {
+func NewAssertStatement(condition intmod.IExpression, message intmod.IExpression) intmod.IAssertStatement {
 	return &AssertStatement{
 		condition: condition,
 		message:   message,
@@ -14,22 +14,22 @@ func NewAssertStatement(condition intsyn.IExpression, message intsyn.IExpression
 type AssertStatement struct {
 	AbstractStatement
 
-	condition intsyn.IExpression
-	message   intsyn.IExpression
+	condition intmod.IExpression
+	message   intmod.IExpression
 }
 
-func (s *AssertStatement) Condition() intsyn.IExpression {
+func (s *AssertStatement) Condition() intmod.IExpression {
 	return s.condition
 }
 
-func (s *AssertStatement) SetCondition(condition intsyn.IExpression) {
+func (s *AssertStatement) SetCondition(condition intmod.IExpression) {
 	s.condition = condition
 }
 
-func (s *AssertStatement) Message() intsyn.IExpression {
+func (s *AssertStatement) Message() intmod.IExpression {
 	return s.message
 }
 
-func (s *AssertStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *AssertStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitAssertStatement(s)
 }

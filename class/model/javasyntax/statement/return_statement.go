@@ -1,10 +1,10 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 var Return = NewReturnStatement()
 
-func NewReturnStatement() intsyn.IReturnStatement {
+func NewReturnStatement() intmod.IReturnStatement {
 	return &ReturnStatement{}
 }
 
@@ -16,7 +16,7 @@ func (s *ReturnStatement) IsReturnStatement() bool {
 	return true
 }
 
-func (s *ReturnStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *ReturnStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitReturnStatement(s)
 }
 

@@ -1,10 +1,10 @@
 package statement
 
-import intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 
 var Break = NewBreakStatement("")
 
-func NewBreakStatement(label string) intsyn.IBreakStatement {
+func NewBreakStatement(label string) intmod.IBreakStatement {
 	return &BreakStatement{
 		label: label,
 	}
@@ -24,6 +24,6 @@ func (s *BreakStatement) IsBreakStatement() bool {
 	return true
 }
 
-func (s *BreakStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *BreakStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitBreakStatement(s)
 }

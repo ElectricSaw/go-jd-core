@@ -1,10 +1,10 @@
 package statement
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewTryStatement(tryStatements intsyn.IStatement, catchClauses []intsyn.ICatchClause, finallyStatement intsyn.IStatement) intsyn.ITryStatement {
+func NewTryStatement(tryStatements intmod.IStatement, catchClauses []intmod.ICatchClause, finallyStatement intmod.IStatement) intmod.ITryStatement {
 	return &TryStatement{
 		resources:        nil,
 		tryStatements:    tryStatements,
@@ -13,7 +13,7 @@ func NewTryStatement(tryStatements intsyn.IStatement, catchClauses []intsyn.ICat
 	}
 }
 
-func NewTryStatementWithAll(resource []intsyn.IResource, tryStatements intsyn.IStatement, catchClauses []intsyn.ICatchClause, finallyStatement intsyn.IStatement) intsyn.ITryStatement {
+func NewTryStatementWithAll(resource []intmod.IResource, tryStatements intmod.IStatement, catchClauses []intmod.ICatchClause, finallyStatement intmod.IStatement) intmod.ITryStatement {
 	return &TryStatement{
 		resources:        resource,
 		tryStatements:    tryStatements,
@@ -25,61 +25,61 @@ func NewTryStatementWithAll(resource []intsyn.IResource, tryStatements intsyn.IS
 type TryStatement struct {
 	AbstractStatement
 
-	resources        []intsyn.IResource
-	tryStatements    intsyn.IStatement
-	catchClauses     []intsyn.ICatchClause
-	finallyStatement intsyn.IStatement
+	resources        []intmod.IResource
+	tryStatements    intmod.IStatement
+	catchClauses     []intmod.ICatchClause
+	finallyStatement intmod.IStatement
 }
 
-func (s *TryStatement) ResourceList() []intsyn.IStatement {
-	ret := make([]intsyn.IStatement, 0, len(s.resources))
+func (s *TryStatement) ResourceList() []intmod.IStatement {
+	ret := make([]intmod.IStatement, 0, len(s.resources))
 	for _, resource := range s.resources {
-		ret = append(ret, resource.(intsyn.IStatement))
+		ret = append(ret, resource.(intmod.IStatement))
 	}
 	return ret
 }
 
-func (s *TryStatement) Resources() []intsyn.IResource {
+func (s *TryStatement) Resources() []intmod.IResource {
 	return s.resources
 }
 
-func (s *TryStatement) SetResources(resources []intsyn.IResource) {
+func (s *TryStatement) SetResources(resources []intmod.IResource) {
 	s.resources = resources
 }
 
-func (s *TryStatement) AddResources(resources []intsyn.IResource) {
+func (s *TryStatement) AddResources(resources []intmod.IResource) {
 	s.resources = append(s.resources, resources...)
 }
 
-func (s *TryStatement) AddResource(resource intsyn.IResource) {
+func (s *TryStatement) AddResource(resource intmod.IResource) {
 	s.resources = append(s.resources, resource)
 }
 
-func (s *TryStatement) TryStatements() intsyn.IStatement {
+func (s *TryStatement) TryStatements() intmod.IStatement {
 	return s.tryStatements
 }
 
-func (s *TryStatement) SetTryStatements(tryStatement intsyn.IStatement) {
+func (s *TryStatement) SetTryStatements(tryStatement intmod.IStatement) {
 	s.tryStatements = tryStatement
 }
 
-func (s *TryStatement) CatchClauseList() []intsyn.IStatement {
-	ret := make([]intsyn.IStatement, 0, len(s.catchClauses))
+func (s *TryStatement) CatchClauseList() []intmod.IStatement {
+	ret := make([]intmod.IStatement, 0, len(s.catchClauses))
 	for _, resource := range s.catchClauses {
-		ret = append(ret, resource.(intsyn.IStatement))
+		ret = append(ret, resource.(intmod.IStatement))
 	}
 	return ret
 }
 
-func (s *TryStatement) CatchClauses() []intsyn.ICatchClause {
+func (s *TryStatement) CatchClauses() []intmod.ICatchClause {
 	return s.catchClauses
 }
 
-func (s *TryStatement) FinallyStatements() intsyn.IStatement {
+func (s *TryStatement) FinallyStatements() intmod.IStatement {
 	return s.finallyStatement
 }
 
-func (s *TryStatement) SetFinallyStatement(finallyStatement intsyn.IStatement) {
+func (s *TryStatement) SetFinallyStatement(finallyStatement intmod.IStatement) {
 	s.finallyStatement = finallyStatement
 }
 
@@ -87,11 +87,11 @@ func (s *TryStatement) IsTryStatement() bool {
 	return true
 }
 
-func (s *TryStatement) Accept(visitor intsyn.IStatementVisitor) {
+func (s *TryStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitTryStatement(s)
 }
 
-func NewResource(typ intsyn.IObjectType, name string, expression intsyn.IExpression) intsyn.IResource {
+func NewResource(typ intmod.IObjectType, name string, expression intmod.IExpression) intmod.IResource {
 	return &Resource{
 		typ:        typ,
 		name:       name,
@@ -102,12 +102,12 @@ func NewResource(typ intsyn.IObjectType, name string, expression intsyn.IExpress
 type Resource struct {
 	AbstractStatement
 
-	typ        intsyn.IObjectType
+	typ        intmod.IObjectType
 	name       string
-	expression intsyn.IExpression
+	expression intmod.IExpression
 }
 
-func (r *Resource) Type() intsyn.IObjectType {
+func (r *Resource) Type() intmod.IObjectType {
 	return r.typ
 }
 
@@ -115,19 +115,19 @@ func (r *Resource) Name() string {
 	return r.name
 }
 
-func (r *Resource) Expression() intsyn.IExpression {
+func (r *Resource) Expression() intmod.IExpression {
 	return r.expression
 }
 
-func (r *Resource) SetExpression(expression intsyn.IExpression) {
+func (r *Resource) SetExpression(expression intmod.IExpression) {
 	r.expression = expression
 }
 
-func (r *Resource) Accept(visitor intsyn.IStatementVisitor) {
+func (r *Resource) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitTryStatementResource(r)
 }
 
-func NewCatchClause(lineNumber int, typ intsyn.IObjectType, name string, statements intsyn.IStatement) intsyn.ICatchClause {
+func NewCatchClause(lineNumber int, typ intmod.IObjectType, name string, statements intmod.IStatement) intmod.ICatchClause {
 	return &CatchClause{
 		lineNumber: lineNumber,
 		typ:        typ,
@@ -140,21 +140,21 @@ type CatchClause struct {
 	AbstractStatement
 
 	lineNumber int
-	typ        intsyn.IObjectType
-	otherType  []intsyn.IObjectType
+	typ        intmod.IObjectType
+	otherType  []intmod.IObjectType
 	name       string
-	statements intsyn.IStatement
+	statements intmod.IStatement
 }
 
 func (c *CatchClause) LineNumber() int {
 	return c.lineNumber
 }
 
-func (c *CatchClause) Type() intsyn.IObjectType {
+func (c *CatchClause) Type() intmod.IObjectType {
 	return c.typ
 }
 
-func (c *CatchClause) OtherType() []intsyn.IObjectType {
+func (c *CatchClause) OtherType() []intmod.IObjectType {
 	return c.otherType
 }
 
@@ -162,14 +162,14 @@ func (c *CatchClause) Name() string {
 	return c.name
 }
 
-func (c *CatchClause) Statements() intsyn.IStatement {
+func (c *CatchClause) Statements() intmod.IStatement {
 	return c.statements
 }
 
-func (c *CatchClause) AddType(typ intsyn.IObjectType) {
+func (c *CatchClause) AddType(typ intmod.IObjectType) {
 	c.otherType = append(c.otherType, typ)
 }
 
-func (c *CatchClause) Accept(visitor intsyn.IStatementVisitor) {
+func (c *CatchClause) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitTryStatementCatchClause(c)
 }

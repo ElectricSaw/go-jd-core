@@ -1,16 +1,16 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
-func NewAbstractLineNumberTypeExpression(typ intsyn.IType) *AbstractLineNumberTypeExpression {
+func NewAbstractLineNumberTypeExpression(typ intmod.IType) *AbstractLineNumberTypeExpression {
 	return &AbstractLineNumberTypeExpression{
 		typ: typ,
 	}
 }
 
-func NewAbstractLineNumberTypeExpressionWithAll(lineNumber int, typ intsyn.IType) *AbstractLineNumberTypeExpression {
+func NewAbstractLineNumberTypeExpressionWithAll(lineNumber int, typ intmod.IType) *AbstractLineNumberTypeExpression {
 	return &AbstractLineNumberTypeExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
@@ -20,13 +20,13 @@ func NewAbstractLineNumberTypeExpressionWithAll(lineNumber int, typ intsyn.IType
 type AbstractLineNumberTypeExpression struct {
 	AbstractLineNumberExpression
 
-	typ intsyn.IType
+	typ intmod.IType
 }
 
-func (e *AbstractLineNumberTypeExpression) Type() intsyn.IType {
+func (e *AbstractLineNumberTypeExpression) Type() intmod.IType {
 	return e.typ
 }
 
-func (e *AbstractLineNumberTypeExpression) SetType(typ intsyn.IType) {
+func (e *AbstractLineNumberTypeExpression) SetType(typ intmod.IType) {
 	e.typ = typ
 }

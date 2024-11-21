@@ -1,13 +1,13 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"fmt"
 )
 
-func NewMethodDeclaration(flags int, name string, returnedType intsyn.IType,
-	descriptor string) intsyn.IMethodDeclaration {
+func NewMethodDeclaration(flags int, name string, returnedType intmod.IType,
+	descriptor string) intmod.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:        flags,
 		name:         name,
@@ -16,8 +16,8 @@ func NewMethodDeclaration(flags int, name string, returnedType intsyn.IType,
 	}
 }
 
-func NewMethodDeclaration2(flags int, name string, returnedType intsyn.IType,
-	descriptor string, statements intsyn.IStatement) intsyn.IMethodDeclaration {
+func NewMethodDeclaration2(flags int, name string, returnedType intmod.IType,
+	descriptor string, statements intmod.IStatement) intmod.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:        flags,
 		name:         name,
@@ -27,8 +27,8 @@ func NewMethodDeclaration2(flags int, name string, returnedType intsyn.IType,
 	}
 }
 
-func NewMethodDeclaration3(flags int, name string, returnedType intsyn.IType,
-	descriptor string, defaultAnnotationValue intsyn.IElementValue) intsyn.IMethodDeclaration {
+func NewMethodDeclaration3(flags int, name string, returnedType intmod.IType,
+	descriptor string, defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:                  flags,
 		name:                   name,
@@ -38,9 +38,9 @@ func NewMethodDeclaration3(flags int, name string, returnedType intsyn.IType,
 	}
 }
 
-func NewMethodDeclaration4(flags int, name string, returnedType intsyn.IType,
-	formalParameter intsyn.IFormalParameter, descriptor string,
-	statements intsyn.IStatement) intsyn.IMethodDeclaration {
+func NewMethodDeclaration4(flags int, name string, returnedType intmod.IType,
+	formalParameter intmod.IFormalParameter, descriptor string,
+	statements intmod.IStatement) intmod.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:           flags,
 		name:            name,
@@ -51,9 +51,9 @@ func NewMethodDeclaration4(flags int, name string, returnedType intsyn.IType,
 	}
 }
 
-func NewMethodDeclaration5(flags int, name string, returnedType intsyn.IType,
-	formalParameter intsyn.IFormalParameter, descriptor string,
-	defaultAnnotationValue intsyn.IElementValue) intsyn.IMethodDeclaration {
+func NewMethodDeclaration5(flags int, name string, returnedType intmod.IType,
+	formalParameter intmod.IFormalParameter, descriptor string,
+	defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
 	return &MethodDeclaration{
 		flags:                  flags,
 		name:                   name,
@@ -64,10 +64,10 @@ func NewMethodDeclaration5(flags int, name string, returnedType intsyn.IType,
 	}
 }
 
-func NewMethodDeclaration6(annotationReferences intsyn.IAnnotationReference,
-	flags int, name string, typeParameters intsyn.ITypeParameter, returnedType intsyn.IType,
-	formalParameter intsyn.IFormalParameter, exceptionTypes intsyn.IType, descriptor string,
-	statements intsyn.IStatement, defaultAnnotationValue intsyn.IElementValue) intsyn.IMethodDeclaration {
+func NewMethodDeclaration6(annotationReferences intmod.IAnnotationReference,
+	flags int, name string, typeParameters intmod.ITypeParameter, returnedType intmod.IType,
+	formalParameter intmod.IFormalParameter, exceptionTypes intmod.IType, descriptor string,
+	statements intmod.IStatement, defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
 	return &MethodDeclaration{
 		annotationReferences:   annotationReferences,
 		flags:                  flags,
@@ -85,16 +85,16 @@ func NewMethodDeclaration6(annotationReferences intsyn.IAnnotationReference,
 type MethodDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences   intsyn.IAnnotationReference
+	annotationReferences   intmod.IAnnotationReference
 	flags                  int
 	name                   string
-	typeParameters         intsyn.ITypeParameter
-	returnedType           intsyn.IType
-	formalParameter        intsyn.IFormalParameter
-	exceptionTypes         intsyn.IType
+	typeParameters         intmod.ITypeParameter
+	returnedType           intmod.IType
+	formalParameter        intmod.IFormalParameter
+	exceptionTypes         intmod.IType
 	descriptor             string
-	statements             intsyn.IStatement
-	defaultAnnotationValue intsyn.IElementValue
+	statements             intmod.IStatement
+	defaultAnnotationValue intmod.IElementValue
 }
 
 func (d *MethodDeclaration) Flags() int {
@@ -105,7 +105,7 @@ func (d *MethodDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *MethodDeclaration) AnnotationReferences() intsyn.IAnnotationReference {
+func (d *MethodDeclaration) AnnotationReferences() intmod.IAnnotationReference {
 	return d.annotationReferences
 }
 
@@ -117,23 +117,23 @@ func (d *MethodDeclaration) Name() string {
 	return d.name
 }
 
-func (d *MethodDeclaration) TypeParameters() intsyn.ITypeParameter {
+func (d *MethodDeclaration) TypeParameters() intmod.ITypeParameter {
 	return d.typeParameters
 }
 
-func (d *MethodDeclaration) ReturnedType() intsyn.IType {
+func (d *MethodDeclaration) ReturnedType() intmod.IType {
 	return d.returnedType
 }
 
-func (d *MethodDeclaration) FormalParameter() intsyn.IFormalParameter {
+func (d *MethodDeclaration) FormalParameter() intmod.IFormalParameter {
 	return d.formalParameter
 }
 
-func (d *MethodDeclaration) SetFormalParameters(formalParameter intsyn.IFormalParameter) {
+func (d *MethodDeclaration) SetFormalParameters(formalParameter intmod.IFormalParameter) {
 	d.formalParameter = formalParameter
 }
 
-func (d *MethodDeclaration) ExceptionTypes() intsyn.IType {
+func (d *MethodDeclaration) ExceptionTypes() intmod.IType {
 	return d.exceptionTypes
 }
 
@@ -141,19 +141,19 @@ func (d *MethodDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *MethodDeclaration) Statements() intsyn.IStatement {
+func (d *MethodDeclaration) Statements() intmod.IStatement {
 	return d.statements
 }
 
-func (d *MethodDeclaration) SetStatements(statements intsyn.IStatement) {
+func (d *MethodDeclaration) SetStatements(statements intmod.IStatement) {
 	d.statements = statements
 }
 
-func (d *MethodDeclaration) DefaultAnnotationValue() intsyn.IElementValue {
+func (d *MethodDeclaration) DefaultAnnotationValue() intmod.IElementValue {
 	return d.defaultAnnotationValue
 }
 
-func (d *MethodDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *MethodDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitMethodDeclaration(d)
 }
 

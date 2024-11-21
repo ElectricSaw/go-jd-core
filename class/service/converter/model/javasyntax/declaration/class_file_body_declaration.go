@@ -35,10 +35,6 @@ type ClassFileBodyDeclaration struct {
 	typeBounds               map[string]intmod.IType
 }
 
-func (d *ClassFileBodyDeclaration) SetMemberDeclarations(memberDeclaration intmod.IMemberDeclaration) {
-	d.SetMemberDeclarations(memberDeclaration)
-}
-
 func (d *ClassFileBodyDeclaration) FieldDeclarations() []intsrv.IClassFileFieldDeclaration {
 	return d.fieldDeclarations
 }
@@ -54,11 +50,11 @@ func (d *ClassFileBodyDeclaration) SetFieldDeclarations(fieldDeclarations []ints
 	}
 }
 
-func (d *ClassFileBodyDeclaration) MethodDeclaration() []intsrv.IClassFileConstructorOrMethodDeclaration {
+func (d *ClassFileBodyDeclaration) MethodDeclarations() []intsrv.IClassFileConstructorOrMethodDeclaration {
 	return d.methodDeclarations
 }
 
-func (d *ClassFileBodyDeclaration) SetMethodDeclaration(methodDeclarations []intsrv.IClassFileConstructorOrMethodDeclaration) {
+func (d *ClassFileBodyDeclaration) SetMethodDeclarations(methodDeclarations []intsrv.IClassFileConstructorOrMethodDeclaration) {
 	if methodDeclarations != nil {
 		d.methodDeclarations = methodDeclarations
 		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(methodDeclarations))

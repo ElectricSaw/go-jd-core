@@ -1,20 +1,20 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 type AbstractExpression struct {
-	util.DefaultBase[intsyn.IExpression]
+	util.DefaultBase[intmod.IExpression]
 }
 
-func (e *AbstractExpression) LineNumber() int    { return intsyn.UnknownLineNumber }
-func (e *AbstractExpression) Type() intsyn.IType { return nil }
+func (e *AbstractExpression) LineNumber() int    { return intmod.UnknownLineNumber }
+func (e *AbstractExpression) Type() intmod.IType { return nil }
 func (e *AbstractExpression) Priority() int      { return -1 }
 
-func (e *AbstractExpression) Accept(visitor intsyn.IExpressionVisitor) {}
+func (e *AbstractExpression) Accept(visitor intmod.IExpressionVisitor) {}
 
 func (e *AbstractExpression) IsArrayExpression() bool                      { return false }
 func (e *AbstractExpression) IsBinaryOperatorExpression() bool             { return false }
@@ -42,15 +42,15 @@ func (e *AbstractExpression) IsSuperExpression() bool                      { ret
 func (e *AbstractExpression) IsTernaryOperatorExpression() bool            { return false }
 func (e *AbstractExpression) IsThisExpression() bool                       { return false }
 
-func (e *AbstractExpression) DimensionExpressionList() intsyn.IExpression { return NeNoExpression }
-func (e *AbstractExpression) Parameters() intsyn.IExpression              { return NeNoExpression }
-func (e *AbstractExpression) Condition() intsyn.IExpression               { return NeNoExpression }
-func (e *AbstractExpression) Expression() intsyn.IExpression              { return NeNoExpression }
-func (e *AbstractExpression) TrueExpression() intsyn.IExpression          { return NeNoExpression }
-func (e *AbstractExpression) FalseExpression() intsyn.IExpression         { return NeNoExpression }
-func (e *AbstractExpression) Index() intsyn.IExpression                   { return NeNoExpression }
-func (e *AbstractExpression) LeftExpression() intsyn.IExpression          { return NeNoExpression }
-func (e *AbstractExpression) RightExpression() intsyn.IExpression         { return NeNoExpression }
+func (e *AbstractExpression) DimensionExpressionList() intmod.IExpression { return NeNoExpression }
+func (e *AbstractExpression) Parameters() intmod.IExpression              { return NeNoExpression }
+func (e *AbstractExpression) Condition() intmod.IExpression               { return NeNoExpression }
+func (e *AbstractExpression) Expression() intmod.IExpression              { return NeNoExpression }
+func (e *AbstractExpression) TrueExpression() intmod.IExpression          { return NeNoExpression }
+func (e *AbstractExpression) FalseExpression() intmod.IExpression         { return NeNoExpression }
+func (e *AbstractExpression) Index() intmod.IExpression                   { return NeNoExpression }
+func (e *AbstractExpression) LeftExpression() intmod.IExpression          { return NeNoExpression }
+func (e *AbstractExpression) RightExpression() intmod.IExpression         { return NeNoExpression }
 func (e *AbstractExpression) Descriptor() string                          { return "" }
 func (e *AbstractExpression) DoubleValue() float64                        { return 0 }
 func (e *AbstractExpression) FloatValue() float32                         { return 0 }
@@ -58,6 +58,6 @@ func (e *AbstractExpression) IntegerValue() int                           { retu
 func (e *AbstractExpression) InternalTypeName() string                    { return "" }
 func (e *AbstractExpression) LongValue() int64                            { return 0 }
 func (e *AbstractExpression) Name() string                                { return "" }
-func (e *AbstractExpression) ObjectType() intsyn.IObjectType              { return _type.OtTypeUndefinedObject }
+func (e *AbstractExpression) ObjectType() intmod.IObjectType              { return _type.OtTypeUndefinedObject }
 func (e *AbstractExpression) Operator() string                            { return "" }
 func (e *AbstractExpression) StringValue() string                         { return "" }

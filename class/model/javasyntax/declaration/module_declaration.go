@@ -1,13 +1,13 @@
 package declaration
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
 func NewModuleDeclaration(flags int, internalTypeName, name, version string,
-	requires []intsyn.IModuleInfo, exports []intsyn.IPackageInfo, opens []intsyn.IPackageInfo,
-	uses []string, provides []intsyn.IServiceInfo) intsyn.IModuleDeclaration {
+	requires []intmod.IModuleInfo, exports []intmod.IPackageInfo, opens []intmod.IPackageInfo,
+	uses []string, provides []intmod.IServiceInfo) intmod.IModuleDeclaration {
 	return &ModuleDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil).(*TypeDeclaration),
 		version:         version,
@@ -23,26 +23,26 @@ type ModuleDeclaration struct {
 	TypeDeclaration
 
 	version  string
-	requires []intsyn.IModuleInfo
-	exports  []intsyn.IPackageInfo
-	opens    []intsyn.IPackageInfo
+	requires []intmod.IModuleInfo
+	exports  []intmod.IPackageInfo
+	opens    []intmod.IPackageInfo
 	uses     []string
-	provides []intsyn.IServiceInfo
+	provides []intmod.IServiceInfo
 }
 
 func (d *ModuleDeclaration) Version() string {
 	return d.version
 }
 
-func (d *ModuleDeclaration) Requires() []intsyn.IModuleInfo {
+func (d *ModuleDeclaration) Requires() []intmod.IModuleInfo {
 	return d.requires
 }
 
-func (d *ModuleDeclaration) Exports() []intsyn.IPackageInfo {
+func (d *ModuleDeclaration) Exports() []intmod.IPackageInfo {
 	return d.exports
 }
 
-func (d *ModuleDeclaration) Opens() []intsyn.IPackageInfo {
+func (d *ModuleDeclaration) Opens() []intmod.IPackageInfo {
 	return d.opens
 }
 
@@ -50,11 +50,11 @@ func (d *ModuleDeclaration) Uses() []string {
 	return d.uses
 }
 
-func (d *ModuleDeclaration) Provides() []intsyn.IServiceInfo {
+func (d *ModuleDeclaration) Provides() []intmod.IServiceInfo {
 	return d.provides
 }
 
-func (d *ModuleDeclaration) Accept(visitor intsyn.IDeclarationVisitor) {
+func (d *ModuleDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitModuleDeclaration(d)
 }
 
@@ -62,7 +62,7 @@ func (d *ModuleDeclaration) String() string {
 	return fmt.Sprintf("ModuleDeclaration{%s}", d.internalTypeName)
 }
 
-func NewModuleInfo(name string, flags int, version string) intsyn.IModuleInfo {
+func NewModuleInfo(name string, flags int, version string) intmod.IModuleInfo {
 	return &ModuleInfo{
 		name:    name,
 		flags:   flags,
@@ -98,7 +98,7 @@ func (i *ModuleInfo) String() string {
 	return msg
 }
 
-func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) intsyn.IPackageInfo {
+func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) intmod.IPackageInfo {
 	return &PackageInfo{
 		internalName:    internalName,
 		flags:           flags,
@@ -134,7 +134,7 @@ func (i *PackageInfo) String() string {
 	return msg
 }
 
-func NewServiceInfo(internalTypeName string, implementationTypeNames []string) intsyn.IServiceInfo {
+func NewServiceInfo(internalTypeName string, implementationTypeNames []string) intmod.IServiceInfo {
 	return &ServiceInfo{
 		internalTypeName:        internalTypeName,
 		implementationTypeNames: implementationTypeNames,

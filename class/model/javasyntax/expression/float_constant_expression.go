@@ -1,21 +1,21 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewFloatConstantExpression(value float32) intsyn.IFloatConstantExpression {
+func NewFloatConstantExpression(value float32) intmod.IFloatConstantExpression {
 	return &FloatConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeFloat.(intsyn.IType)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeFloat.(intmod.IType)),
 		value:                            value,
 	}
 }
 
-func NewFloatConstantExpressionWithAll(lineNumber int, value float32) intsyn.IFloatConstantExpression {
+func NewFloatConstantExpressionWithAll(lineNumber int, value float32) intmod.IFloatConstantExpression {
 	return &FloatConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeFloat.(intsyn.IType)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeFloat.(intmod.IType)),
 		value:                            value,
 	}
 }
@@ -34,7 +34,7 @@ func (e *FloatConstantExpression) IsFloatConstantExpression() bool {
 	return true
 }
 
-func (e *FloatConstantExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *FloatConstantExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitFloatConstantExpression(e)
 }
 

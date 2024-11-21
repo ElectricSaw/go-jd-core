@@ -1,25 +1,25 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"fmt"
 )
 
-func NewSuperConstructorInvocationExpression(typ intsyn.IObjectType, descriptor string,
-	parameters intsyn.IExpression) intsyn.ISuperConstructorInvocationExpression {
+func NewSuperConstructorInvocationExpression(typ intmod.IObjectType, descriptor string,
+	parameters intmod.IExpression) intmod.ISuperConstructorInvocationExpression {
 	return &SuperConstructorInvocationExpression{
-		ConstructorReferenceExpression: *NewConstructorReferenceExpression(_type.PtTypeVoid.(intsyn.IType),
+		ConstructorReferenceExpression: *NewConstructorReferenceExpression(_type.PtTypeVoid.(intmod.IType),
 			typ, descriptor).(*ConstructorReferenceExpression),
 		parameters: parameters,
 	}
 }
 
-func NewSuperConstructorInvocationExpressionWithAll(lineNumber int, typ intsyn.IObjectType,
-	descriptor string, parameters intsyn.IExpression) intsyn.ISuperConstructorInvocationExpression {
+func NewSuperConstructorInvocationExpressionWithAll(lineNumber int, typ intmod.IObjectType,
+	descriptor string, parameters intmod.IExpression) intmod.ISuperConstructorInvocationExpression {
 	return &SuperConstructorInvocationExpression{
 		ConstructorReferenceExpression: *NewConstructorReferenceExpressionWithAll(lineNumber,
-			_type.PtTypeVoid.(intsyn.IType), typ, descriptor).(*ConstructorReferenceExpression),
+			_type.PtTypeVoid.(intmod.IType), typ, descriptor).(*ConstructorReferenceExpression),
 		parameters: parameters,
 	}
 }
@@ -27,14 +27,14 @@ func NewSuperConstructorInvocationExpressionWithAll(lineNumber int, typ intsyn.I
 type SuperConstructorInvocationExpression struct {
 	ConstructorReferenceExpression
 
-	parameters intsyn.IExpression
+	parameters intmod.IExpression
 }
 
-func (e *SuperConstructorInvocationExpression) Parameters() intsyn.IExpression {
+func (e *SuperConstructorInvocationExpression) Parameters() intmod.IExpression {
 	return e.parameters
 }
 
-func (e *SuperConstructorInvocationExpression) SetParameters(expression intsyn.IExpression) {
+func (e *SuperConstructorInvocationExpression) SetParameters(expression intmod.IExpression) {
 	e.parameters = expression
 }
 
@@ -46,7 +46,7 @@ func (e *SuperConstructorInvocationExpression) IsSuperConstructorInvocationExpre
 	return true
 }
 
-func (e *SuperConstructorInvocationExpression) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *SuperConstructorInvocationExpression) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitSuperConstructorInvocationExpression(e)
 }
 

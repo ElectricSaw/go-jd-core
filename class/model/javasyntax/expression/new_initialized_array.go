@@ -1,19 +1,19 @@
 package expression
 
 import (
-	intsyn "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
 
-func NewNewInitializedArray(typ intsyn.IType, arrayInitializer intsyn.IArrayVariableInitializer) intsyn.INewInitializedArray {
+func NewNewInitializedArray(typ intmod.IType, arrayInitializer intmod.IArrayVariableInitializer) intmod.INewInitializedArray {
 	return &NewInitializedArray{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
 		arrayInitializer:                 arrayInitializer,
 	}
 }
 
-func NewNewInitializedArrayWithAll(lineNumber int, typ intsyn.IType,
-	arrayInitializer intsyn.IArrayVariableInitializer) intsyn.INewInitializedArray {
+func NewNewInitializedArrayWithAll(lineNumber int, typ intmod.IType,
+	arrayInitializer intmod.IArrayVariableInitializer) intmod.INewInitializedArray {
 	return &NewInitializedArray{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		arrayInitializer:                 arrayInitializer,
@@ -23,10 +23,10 @@ func NewNewInitializedArrayWithAll(lineNumber int, typ intsyn.IType,
 type NewInitializedArray struct {
 	AbstractLineNumberTypeExpression
 
-	arrayInitializer intsyn.IArrayVariableInitializer
+	arrayInitializer intmod.IArrayVariableInitializer
 }
 
-func (e *NewInitializedArray) ArrayInitializer() intsyn.IArrayVariableInitializer {
+func (e *NewInitializedArray) ArrayInitializer() intmod.IArrayVariableInitializer {
 	return e.arrayInitializer
 }
 
@@ -38,7 +38,7 @@ func (e *NewInitializedArray) IsNewInitializedArray() bool {
 	return true
 }
 
-func (e *NewInitializedArray) Accept(visitor intsyn.IExpressionVisitor) {
+func (e *NewInitializedArray) Accept(visitor intmod.IExpressionVisitor) {
 	visitor.VisitNewInitializedArray(e)
 }
 
