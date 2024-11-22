@@ -75,6 +75,7 @@ type IConstantPool interface {
 	Constant(index int) constant.Constant
 	ConstantTypeName(index int) (string, bool)
 	ConstantString(index int) (string, bool)
+	ConstantUtf8(index int) (string, bool)
 	ConstantValue(index int) constant.ConstantValue
 	String() string
 }
