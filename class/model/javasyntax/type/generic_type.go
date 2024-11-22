@@ -5,7 +5,11 @@ import (
 	"fmt"
 )
 
-func NewGenericType(name string, dimension int) intmod.IGenericType {
+func NewGenericType(name string) intmod.IGenericType {
+	return NewGenericTypeWithAll(name, 0)
+}
+
+func NewGenericTypeWithAll(name string, dimension int) intmod.IGenericType {
 	return &GenericType{
 		name:      name,
 		dimension: dimension,

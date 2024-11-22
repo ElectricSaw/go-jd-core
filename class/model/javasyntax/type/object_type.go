@@ -238,3 +238,19 @@ func (t *ObjectType) String() string {
 	msg += " }"
 	return msg
 }
+
+func (t *ObjectType) RawEquals(o intmod.IObjectType) bool {
+	if t == o {
+		return true
+	}
+
+	if o == nil {
+		return false
+	}
+
+	if t.dimension != o.Dimension() {
+		return false
+	}
+
+	return t.internalName == o.InternalName()
+}

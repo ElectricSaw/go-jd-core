@@ -3,7 +3,6 @@ package utils
 import (
 	"bitbucket.org/coontec/go-jd-core/class/api"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
@@ -80,7 +79,7 @@ type TypeMaker struct {
 	loader                                                           api.Loader
 }
 
-func (m *TypeMaker) ParseClassFileSignature(classFile classfile.ClassFile) TypeTypes {
+func (m *TypeMaker) ParseClassFileSignature(classFile intmod.IClassFile) TypeTypes {
 	typeTypes := TypeTypes{}
 	internalTypeName := classFile.InternalTypeName()
 
@@ -119,12 +118,12 @@ func (m *TypeMaker) ParseClassFileSignature(classFile classfile.ClassFile) TypeT
 	return typeTypes
 }
 
-func (m *TypeMaker) ParseMethodSignature(classFile *classfile.ClassFile, method *classfile.Method) *MethodTypes {
+func (m *TypeMaker) ParseMethodSignature(classFile intmod.IClassFile, method intmod.IMethod) *MethodTypes {
 	key := classFile.InternalTypeName() + ":" + method.Name() + method.Descriptor()
 	return m.parseMethodSignature(method, key)
 }
 
-func (m *TypeMaker) parseMethodSignature(method *classfile.Method, key string) *MethodTypes {
+func (m *TypeMaker) parseMethodSignature(method intmod.IMethod, key string) *MethodTypes {
 	attributeSignature := method.Attributes()["Signature"].(*attribute.AttributeSignature)
 	exceptionTypeNames := getExceptionTypeNames(method)
 	var methodTypes *MethodTypes
@@ -140,7 +139,7 @@ func (m *TypeMaker) parseMethodSignature(method *classfile.Method, key string) *
 	return methodTypes
 }
 
-func (m *TypeMaker) ParseFieldSignature(classFile *classfile.ClassFile, field *classfile.Field) intmod.IType {
+func (m *TypeMaker) ParseFieldSignature(classFile intmod.IClassFile, field intmod.IField) intmod.IType {
 	key := classFile.InternalTypeName() + ":" + field.Name()
 	attributeSignature := field.Attributes()["Signature"].(*attribute.AttributeSignature)
 	signature := ""
@@ -524,7 +523,7 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) intmod.
 			identifier := reader.Substring(index)
 			reader.index++
 
-			return _type.NewGenericType(identifier, dimension).(intmod.IType)
+			return _type.NewGenericTypeWithAll(identifier, dimension).(intmod.IType)
 		case 'V':
 			if dimension == 0 {
 				return _type.PtTypeVoid.(intmod.IType)
@@ -874,7 +873,7 @@ func CountDimension(descriptor string) int {
 	return count
 }
 
-func getExceptionTypeNames(method *classfile.Method) []string {
+func getExceptionTypeNames(method intmod.IMethod) []string {
 	if method != nil {
 		attributeExceptions := method.Attributes()["Exceptions"].(*attribute.AttributeExceptions)
 

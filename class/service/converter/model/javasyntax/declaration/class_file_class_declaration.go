@@ -1,12 +1,16 @@
 package declaration
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileClassDeclaration() intsrv.IClassFileClassDeclaration {
+func NewClassFileClassDeclaration(annotationReferences intmod.IAnnotationReference,
+	flags int, internalName string, name string, typeParameters intmod.ITypeParameter,
+	superType intmod.IType, interfaces intmod.IType, bodyDeclaration intsrv.IClassFileBodyDeclaration,
+) intsrv.IClassFileClassDeclaration {
 	return &ClassFileClassDeclaration{}
 }
 

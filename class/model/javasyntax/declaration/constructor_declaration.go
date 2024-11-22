@@ -2,7 +2,6 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"fmt"
 )
 
@@ -51,7 +50,7 @@ func (d *ConstructorDeclaration) SetFlags(flags int) {
 }
 
 func (d *ConstructorDeclaration) IsStatic() bool {
-	return d.flags&classfile.AccStatic != 0
+	return d.flags&intmod.AccStatic != 0
 }
 
 func (d *ConstructorDeclaration) AnnotationReferences() intmod.IReference {

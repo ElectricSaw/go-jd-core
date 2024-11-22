@@ -58,6 +58,7 @@ type IInnerObjectType interface {
 type IType interface {
 	ITypeArgument
 	ITypeVisitable
+	util.Base[IType]
 
 	Name() string
 	Descriptor() string
@@ -75,6 +76,25 @@ type IType interface {
 	InternalName() string
 
 	HashCode() int
+
+	//////////////////////////////////////////////////////
+	// ITypeArgument 추가시 아래와 같은 오류 발생.
+	// Invalid recursive type: anonymous interface refers to itsel
+	//////////////////////////////////////////////////////
+
+	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
+	IsTypeArgumentList() bool
+	TypeArgumentFirst() ITypeArgument  // ITypeArgument
+	TypeArgumentList() []ITypeArgument // ITypeArgument
+	TypeArgumentSize() int
+	IsGenericTypeArgument() bool
+	IsInnerObjectTypeArgument() bool
+	IsObjectTypeArgument() bool
+	IsPrimitiveTypeArgument() bool
+	IsWildcardExtendsTypeArgument() bool
+	IsWildcardSuperTypeArgument() bool
+	IsWildcardTypeArgument() bool
+	Type() IType
 }
 
 type ITypeVisitor interface {
@@ -90,7 +110,6 @@ type ITypeVisitable interface {
 }
 
 type IObjectType interface {
-	IType
 	ITypeArgument
 
 	QualifiedName() string
@@ -109,6 +128,7 @@ type IObjectType interface {
 	TypeArguments() ITypeArgument
 	CreateTypeWithArgs(typeArguments ITypeArgument) IObjectType
 	String() string
+	RawEquals(other IObjectType) bool
 }
 
 type ITypeArgument interface {

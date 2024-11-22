@@ -1,6 +1,8 @@
 package service
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+)
 
 type IFrame interface {
 	// TODO: AddLocalVariable(ILocalVariable) 메소드는 호출을 위해 심시 추가.
@@ -115,4 +117,7 @@ type ILocalVariableSet interface {
 	Remove(index, offset int) ILocalVariable
 	Get(index, offset int) ILocalVariable
 	IsEmpty() bool
+	Update(index, offset int, typ intmod.IObjectType)
+	Update2(index, offset int, typ intmod.IGenericType)
+	Initialize(rootFrame IFrame) []ILocalVariable
 }

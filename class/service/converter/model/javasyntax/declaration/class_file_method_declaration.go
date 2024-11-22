@@ -3,13 +3,12 @@ package declaration
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileMethodDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile *classfile.ClassFile,
-	method *classfile.Method, name string, returnedType intmod.IType, parameterTypes intmod.IType,
+func NewClassFileMethodDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
+	method intmod.IMethod, name string, returnedType intmod.IType, parameterTypes intmod.IType,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType) intsrv.IClassFileMethodDeclaration {
 	return &ClassFileMethodDeclaration{
 		MethodDeclaration: *declaration.NewMethodDeclaration6(nil, method.AccessFlags(), name, nil, returnedType,
@@ -23,8 +22,8 @@ func NewClassFileMethodDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclarat
 	}
 }
 
-func NewClassFileMethodDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile *classfile.ClassFile,
-	method *classfile.Method, name string, returnedType intmod.IType, parameterTypes intmod.IType,
+func NewClassFileMethodDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
+	method intmod.IMethod, name string, returnedType intmod.IType, parameterTypes intmod.IType,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType, firstLineNumber int) intsrv.IClassFileMethodDeclaration {
 	return &ClassFileMethodDeclaration{
 		MethodDeclaration: *declaration.NewMethodDeclaration6(nil, method.AccessFlags(), name, nil, returnedType,
@@ -39,8 +38,8 @@ func NewClassFileMethodDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclara
 	}
 }
 
-func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile *classfile.ClassFile,
-	method *classfile.Method, annotationReferences intmod.IAnnotationReference, name string,
+func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
+	method intmod.IMethod, annotationReferences intmod.IAnnotationReference, name string,
 	typeParameters intmod.ITypeParameter, returnedType intmod.IType, parameterTypes intmod.IType,
 	exceptionTypes intmod.IType, defaultAnnotationValue intmod.IElementValue,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType, firstLineNumber int) intsrv.IClassFileMethodDeclaration {
@@ -61,19 +60,19 @@ type ClassFileMethodDeclaration struct {
 	declaration.MethodDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	classFile       *classfile.ClassFile
-	method          *classfile.Method
+	classFile       intmod.IClassFile
+	method          intmod.IMethod
 	parameterTypes  intmod.IType
 	bindings        map[string]intmod.ITypeArgument
 	typeBounds      map[string]intmod.IType
 	firstLineNumber int
 }
 
-func (d *ClassFileMethodDeclaration) ClassFile() *classfile.ClassFile {
+func (d *ClassFileMethodDeclaration) ClassFile() intmod.IClassFile {
 	return d.classFile
 }
 
-func (d *ClassFileMethodDeclaration) Method() *classfile.Method {
+func (d *ClassFileMethodDeclaration) Method() intmod.IMethod {
 	return d.method
 }
 

@@ -1,8 +1,6 @@
 package cfg
 
-import "bitbucket.org/coontec/go-jd-core/class/model/classfile"
-
-func NewControlFlowGraph(method *classfile.Method) *ControlFlowGraph {
+func NewControlFlowGraph(method intmod.IMethod) *ControlFlowGraph {
 	return &ControlFlowGraph{
 		Method:              method,
 		List:                make([]IBasicBlock, 0),
@@ -11,7 +9,7 @@ func NewControlFlowGraph(method *classfile.Method) *ControlFlowGraph {
 }
 
 type ControlFlowGraph struct {
-	Method              *classfile.Method
+	Method              intmod.IMethod
 	List                []IBasicBlock
 	OffsetToLineNumbers []int
 }

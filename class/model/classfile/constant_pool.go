@@ -1,10 +1,11 @@
 package classfile
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 )
 
-func NewConstantPool(constants []constant.Constant) *ConstantPool {
+func NewConstantPool(constants []constant.Constant) intmod.IConstantPool {
 	return &ConstantPool{
 		constants: constants,
 	}

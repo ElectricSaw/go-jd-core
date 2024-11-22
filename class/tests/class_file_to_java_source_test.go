@@ -2,6 +2,7 @@ package tests
 
 import (
 	"bitbucket.org/coontec/go-jd-core/class/model/message"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter"
 	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
 	"bitbucket.org/coontec/go-jd-core/class/tests/testutils"
 	"strings"
@@ -21,14 +22,15 @@ func TestLog4j(t *testing.T) {
 	message.Headers["configuration"] = configuration
 
 	// 실행 테스트.
-	deserializer := deserializer.NewDeserializeClassFileProcessor()
+	dsr := deserializer.NewDeserializeClassFileProcessor()
+	cnv := converter.NewClassFileToJavaSyntaxProcessor()
 
 	for k, _ := range classLoader.Map {
 		if strings.HasSuffix(k, ".class") && (strings.Index(k, "$") == -1) {
 			internalTypeName := k[:len(k)-6]
 			message.Headers["mainInternalTypeName"] = internalTypeName
 
-			err := deserializer.Process(message)
+			err := dsr.Process(message)
 			if err != nil {
 				t.Fatal(err)
 			}

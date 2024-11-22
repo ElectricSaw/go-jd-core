@@ -13,6 +13,7 @@ type IList[T any] interface {
 	RemoveLast() T
 	Add(element T)
 	AddAll(elements []T)
+	Set(i int, element T)
 	IsEmpty() bool
 	Size() int
 }
@@ -89,6 +90,10 @@ func (d *DefaultList[T]) Add(element T) {
 
 func (d *DefaultList[T]) AddAll(elements []T) {
 	d.elements = append(d.elements, elements...)
+}
+
+func (d *DefaultList[T]) Set(i int, element T) {
+	d.elements[i] = element
 }
 
 // 리스트가 비어있는지 확인

@@ -3,7 +3,6 @@ package localvariable
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
 func NewLocalVariableSet() intsrv.ILocalVariableSet {
@@ -130,7 +129,7 @@ func (s *LocalVariableSet) Update(index, offset int, typ intmod.IObjectType) {
 	}
 }
 
-func (s *LocalVariableSet) update(index, offset int, typ *_type.GenericType) {
+func (s *LocalVariableSet) Update2(index, offset int, typ intmod.IGenericType) {
 	if index < len(s.array) {
 		var previous intsrv.ILocalVariable
 		lv := s.array[index]
@@ -157,7 +156,7 @@ func (s *LocalVariableSet) update(index, offset int, typ *_type.GenericType) {
 	}
 }
 
-func (s *LocalVariableSet) initialize(rootFrame intsrv.IFrame) []intsrv.ILocalVariable {
+func (s *LocalVariableSet) Initialize(rootFrame intsrv.IFrame) []intsrv.ILocalVariable {
 	cache := make([]intsrv.ILocalVariable, 0, s.size)
 
 	for index := len(s.array) - 1; index >= 0; index-- {

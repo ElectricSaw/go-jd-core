@@ -12,7 +12,7 @@ type AttributeConstantValue struct {
 	constantValue constant.ConstantValue
 }
 
-func (a AttributeConstantValue) GetValue() constant.ConstantValue {
+func (a AttributeConstantValue) ConstantValue() constant.ConstantValue {
 	return a.constantValue
 }
 

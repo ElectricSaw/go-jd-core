@@ -2,11 +2,10 @@ package service
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 )
 
 type IClassFileAnnotationDeclaration interface {
+	IClassFileTypeDeclaration
 	intmod.IAnnotationDeclaration
 
 	FirstLineNumber() int
@@ -14,6 +13,7 @@ type IClassFileAnnotationDeclaration interface {
 }
 
 type IClassFileBodyDeclaration interface {
+	IClassFileMemberDeclaration
 	intmod.IBodyDeclaration
 
 	FieldDeclarations() []IClassFileFieldDeclaration
@@ -25,7 +25,7 @@ type IClassFileBodyDeclaration interface {
 	InnerTypeDeclaration(internalName string) IClassFileTypeDeclaration
 	RemoveInnerTypeDeclaration(internalName string) IClassFileTypeDeclaration
 	UpdateFirstLineNumber(members []IClassFileMemberDeclaration)
-	ClassFile() *classfile.ClassFile
+	ClassFile() intmod.IClassFile
 	FirstLineNumber() int
 	OuterTypeFieldName() string
 	SetOuterTypeFieldName(outerTypeFieldName string)
@@ -38,6 +38,7 @@ type IClassFileBodyDeclaration interface {
 }
 
 type IClassFileClassDeclaration interface {
+	IClassFileTypeDeclaration
 	intmod.IClassDeclaration
 
 	FirstLineNumber() int
@@ -45,10 +46,11 @@ type IClassFileClassDeclaration interface {
 }
 
 type IClassFileConstructorDeclaration interface {
+	IClassFileConstructorOrMethodDeclaration
 	intmod.IConstructorDeclaration
 
-	ClassFile() *classfile.ClassFile
-	Method() *classfile.Method
+	ClassFile() intmod.IClassFile
+	Method() intmod.IMethod
 	ParameterTypes() intmod.IType
 	ReturnedType() intmod.IType
 	BodyDeclaration() IClassFileBodyDeclaration
@@ -61,8 +63,8 @@ type IClassFileConstructorOrMethodDeclaration interface {
 	IClassFileMemberDeclaration
 
 	Flags() int
-	ClassFile() *classfile.ClassFile
-	Method() *classfile.Method
+	ClassFile() intmod.IClassFile
+	Method() intmod.IMethod
 	TypeParameters() intmod.ITypeParameter
 	ParameterTypes() intmod.IType
 	ReturnedType() intmod.IType
@@ -77,6 +79,7 @@ type IClassFileConstructorOrMethodDeclaration interface {
 }
 
 type IClassFileEnumDeclaration interface {
+	IClassFileTypeDeclaration
 	intmod.IEnumDeclaration
 
 	FirstLineNumber() int
@@ -91,6 +94,7 @@ type IClassFileConstant interface {
 }
 
 type IClassFileFieldDeclaration interface {
+	IClassFileMethodDeclaration
 	intmod.IFieldDeclaration
 
 	FirstLineNumber() int
@@ -99,6 +103,7 @@ type IClassFileFieldDeclaration interface {
 }
 
 type IClassFileFormalParameter interface {
+	ILocalVariableReference
 	intmod.IFormalParameter
 
 	Type() intmod.IType
@@ -109,6 +114,7 @@ type IClassFileFormalParameter interface {
 }
 
 type IClassFileInterfaceDeclaration interface {
+	IClassFileTypeDeclaration
 	intmod.IInterfaceDeclaration
 
 	FirstLineNumber() int
@@ -116,6 +122,7 @@ type IClassFileInterfaceDeclaration interface {
 }
 
 type IClassFileLocalVariableDeclarator interface {
+	ILocalVariableReference
 	intmod.ILocalVariableDeclarator
 
 	Name() string
@@ -131,10 +138,11 @@ type IClassFileMemberDeclaration interface {
 }
 
 type IClassFileMethodDeclaration interface {
+	IClassFileConstructorOrMethodDeclaration
 	intmod.IMethodDeclaration
 
-	ClassFile() *classfile.ClassFile
-	Method() *classfile.Method
+	ClassFile() intmod.IClassFile
+	Method() intmod.IMethod
 	ParameterTypes() intmod.IType
 	BodyDeclaration() IClassFileBodyDeclaration
 	Bindings() map[string]intmod.ITypeArgument
@@ -144,11 +152,12 @@ type IClassFileMethodDeclaration interface {
 }
 
 type IClassFileStaticInitializerDeclaration interface {
+	IClassFileConstructorOrMethodDeclaration
 	intmod.IStaticInitializerDeclaration
 
 	Flags() int
-	ClassFile() *classfile.ClassFile
-	Method() *classfile.Method
+	ClassFile() intmod.IClassFile
+	Method() intmod.IMethod
 	TypeParameters() intmod.ITypeParameter
 	ParameterTypes() intmod.IType
 	ReturnedType() intmod.IType
@@ -165,5 +174,5 @@ type IClassFileTypeDeclaration interface {
 	IClassFileMemberDeclaration
 
 	InternalTypeName() string
-	BodyDeclaration() *declaration.BodyDeclaration
+	BodyDeclaration() intmod.IBodyDeclaration
 }

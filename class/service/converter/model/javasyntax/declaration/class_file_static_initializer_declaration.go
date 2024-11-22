@@ -3,13 +3,12 @@ package declaration
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
 func NewClassFileStaticInitializerDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration,
-	classFile *classfile.ClassFile, method *classfile.Method,
+	classFile intmod.IClassFile, method intmod.IMethod,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
 	firstLineNumber int) intsrv.IClassFileStaticInitializerDeclaration {
 	return &ClassFileStaticInitializerDeclaration{
@@ -23,8 +22,8 @@ func NewClassFileStaticInitializerDeclaration(bodyDeclaration intsrv.IClassFileB
 	}
 }
 
-func NewClassFileStaticInitializerDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile *classfile.ClassFile,
-	method *classfile.Method, bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
+func NewClassFileStaticInitializerDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
+	method intmod.IMethod, bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
 	firstLineNumber int, statements intmod.IStatement) intsrv.IClassFileStaticInitializerDeclaration {
 	return &ClassFileStaticInitializerDeclaration{
 		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), statements).(*declaration.StaticInitializerDeclaration),
@@ -41,8 +40,8 @@ type ClassFileStaticInitializerDeclaration struct {
 	declaration.StaticInitializerDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	classFile       *classfile.ClassFile
-	method          *classfile.Method
+	classFile       intmod.IClassFile
+	method          intmod.IMethod
 	bindings        map[string]intmod.ITypeArgument
 	typeBounds      map[string]intmod.IType
 	firstLineNumber int
@@ -52,11 +51,11 @@ func (d *ClassFileStaticInitializerDeclaration) Flags() int {
 	return 0
 }
 
-func (d *ClassFileStaticInitializerDeclaration) ClassFile() *classfile.ClassFile {
+func (d *ClassFileStaticInitializerDeclaration) ClassFile() intmod.IClassFile {
 	return d.classFile
 }
 
-func (d *ClassFileStaticInitializerDeclaration) Method() *classfile.Method {
+func (d *ClassFileStaticInitializerDeclaration) Method() intmod.IMethod {
 	return d.method
 }
 

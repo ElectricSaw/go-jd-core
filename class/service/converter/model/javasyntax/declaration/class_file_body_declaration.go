@@ -3,12 +3,11 @@ package declaration
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileBodyDeclaration(classFile *classfile.ClassFile, bindings map[string]intmod.ITypeArgument,
+func NewClassFileBodyDeclaration(classFile intmod.IClassFile, bindings map[string]intmod.ITypeArgument,
 	typeBounds map[string]intmod.IType, outerBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
 	return &ClassFileBodyDeclaration{
 		BodyDeclaration:      *declaration.NewBodyDeclaration(classFile.InternalTypeName(), nil).(*declaration.BodyDeclaration),
@@ -22,7 +21,7 @@ func NewClassFileBodyDeclaration(classFile *classfile.ClassFile, bindings map[st
 type ClassFileBodyDeclaration struct {
 	declaration.BodyDeclaration
 
-	classFile                *classfile.ClassFile
+	classFile                intmod.IClassFile
 	fieldDeclarations        []intsrv.IClassFileFieldDeclaration
 	methodDeclarations       []intsrv.IClassFileConstructorOrMethodDeclaration
 	innerTypeDeclarations    []intsrv.IClassFileTypeDeclaration
@@ -130,7 +129,7 @@ func (d *ClassFileBodyDeclaration) UpdateFirstLineNumber(members []intsrv.IClass
 	}
 }
 
-func (d *ClassFileBodyDeclaration) ClassFile() *classfile.ClassFile {
+func (d *ClassFileBodyDeclaration) ClassFile() intmod.IClassFile {
 	return d.classFile
 }
 

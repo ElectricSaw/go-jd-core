@@ -22,11 +22,11 @@ func NewObjectLocalVariable2(typeMaker *utils.TypeMaker, index, offset int, typ 
 	return v
 }
 
-func NewObjectLocalVariable3(typeMaker *utils.TypeMaker, index, offset int, objectLocalVariable *ObjectLocalVariable) intsrv.IObjectLocalVariable {
+func NewObjectLocalVariable3(typeMaker *utils.TypeMaker, index, offset int, objectLocalVariable intsrv.IObjectLocalVariable) intsrv.IObjectLocalVariable {
 	return &ObjectLocalVariable{
 		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, "").(*AbstractLocalVariable),
 		typeMaker:             typeMaker,
-		typ:                   objectLocalVariable.typ,
+		typ:                   objectLocalVariable.Type(),
 	}
 }
 

@@ -7,12 +7,11 @@ import (
 	"fmt"
 )
 
-func NewClassFileAnnotationDeclaration(annotationDeclarators intmod.IFieldDeclarator,
-	annotationReferences intmod.IAnnotationReference, flags int, internalTypeName string,
-	name string, bodyDeclaration *ClassFileBodyDeclaration) intsrv.IClassFileAnnotationDeclaration {
+func NewClassFileAnnotationDeclaration(annotationReferences intmod.IAnnotationReference,
+	flags int, internalTypeName string, name string, bodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileAnnotationDeclaration {
 	d := &ClassFileAnnotationDeclaration{
-		AnnotationDeclaration: *declaration.NewAnnotationDeclaration(annotationDeclarators,
-			annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*declaration.AnnotationDeclaration),
+		AnnotationDeclaration: *declaration.NewAnnotationDeclaration(nil, annotationReferences,
+			flags, internalTypeName, name, bodyDeclaration).(*declaration.AnnotationDeclaration),
 	}
 	if bodyDeclaration == nil {
 		d.firstLineNumber = 0

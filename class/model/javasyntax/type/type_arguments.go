@@ -9,6 +9,12 @@ func NewTypeArguments() *TypeArguments {
 	return &TypeArguments{}
 }
 
+func NewTypeArgumentsWithSize(size int) *TypeArguments {
+	return &TypeArguments{
+		DefaultList: util.NewDefaultList(size),
+	}
+}
+
 type TypeArguments struct {
 	AbstractType
 	AbstractTypeArgument
