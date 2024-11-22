@@ -4,6 +4,10 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
+func NewPopulateBindingsWithTypeParameterVisitor() *PopulateBindingsWithTypeParameterVisitor {
+	return &PopulateBindingsWithTypeParameterVisitor{}
+}
+
 type PopulateBindingsWithTypeParameterVisitor struct {
 	Bindings   map[string]intmod.ITypeArgument
 	TypeBounds map[string]intmod.IType

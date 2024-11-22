@@ -6,6 +6,10 @@ import (
 	"strings"
 )
 
+func NewAutoboxingVisitor() *AutoboxingVisitor {
+	return &AutoboxingVisitor{}
+}
+
 var ValueOfDescriptorMap = map[string]string{
 	"java/lang/Byte":      "(B)Ljava/lang/Byte;",
 	"java/lang/Character": "(C)Ljava/lang/Character;",

@@ -1,4 +1,9 @@
-package classfile
+package model
+
+import (
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
+	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
+)
 
 // Access flags for Class, Field, Method, Nested class, Module, Module Requires, Module Exports, Module Opens
 const (
@@ -26,3 +31,50 @@ const (
 	AccModule       = 0x8000 // C  .  .  .  .  .  .  .
 	AccMandated     = 0x8000 // .  .  .  .  Mo MR ME MO
 )
+
+type IClassFile interface {
+	MajorVersion() int
+	MinorVersion() int
+	IsEnum() bool
+	IsAnnotation() bool
+	IsInterface() bool
+	IsModule() bool
+	IsStatic() bool
+	AccessFlags() int
+	InternalTypeName() string
+	SuperTypeName() string
+	InterfaceTypeNames() []string
+	Fields() []IField
+	Methods() []IMethod
+	Attributes() map[string]attribute.Attribute
+	Attribute(name string) attribute.Attribute
+	OuterClassFile() IClassFile
+	InnerClassFiles() []IClassFile
+}
+
+type IField interface {
+	AccessFlags() int
+	Name() string
+	Descriptor() string
+	Attributes() map[string]attribute.Attribute
+	Attribute(name string) attribute.Attribute
+	String() string
+}
+
+type IMethod interface {
+	AccessFlags() int
+	Name() string
+	Descriptor() string
+	Attributes() map[string]attribute.Attribute
+	Attribute(name string) attribute.Attribute
+	Constants() IConstantPool
+	String() string
+}
+
+type IConstantPool interface {
+	Constant(index int) constant.Constant
+	ConstantTypeName(index int) (string, bool)
+	ConstantString(index int) (string, bool)
+	ConstantValue(index int) constant.ConstantValue
+	String() string
+}

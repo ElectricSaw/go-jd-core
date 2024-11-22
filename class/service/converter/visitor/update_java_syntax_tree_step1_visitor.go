@@ -1,10 +1,10 @@
 package visitor
 
-import "bitbucket.org/coontec/go-jd-core/class/model/message"
+import "bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
 
 type UpdateJavaSyntaxTreeStep1Visitor struct {
-}
+	javasyntax.AbstractJavaSyntaxVisitor
 
-func (p *UpdateJavaSyntaxTreeStep1Visitor) Process(message message.Message) error {
-	return nil
+	createInstructionsVisitor  *CreateInstructionsVisitor
+	initInnerClassStep1Visitor *InitInnerClassVisitor
 }

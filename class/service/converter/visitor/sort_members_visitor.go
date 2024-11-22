@@ -9,6 +9,10 @@ import (
 	"sort"
 )
 
+func NewSortMembersVisitor() *SortMembersVisitor {
+	return &SortMembersVisitor{}
+}
+
 type SortMembersVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 }

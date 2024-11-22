@@ -7,6 +7,10 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 )
 
+func NewAggregateFieldsVisitor() *AggregateFieldsVisitor {
+	return &AggregateFieldsVisitor{}
+}
+
 type AggregateFieldsVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 }

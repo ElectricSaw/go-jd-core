@@ -1,10 +1,21 @@
 package visitor
 
-import "bitbucket.org/coontec/go-jd-core/class/model/message"
+import (
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
+)
+
+var aggregateFieldsVisitor = NewAggregateFieldsVisitor()
+var sortMembersVisitor = NewSortMembersVisitor()
+var autoboxingVisitor = NewAutoboxingVisitor()
 
 type UpdateJavaSyntaxTreeStep2Visitor struct {
-}
+	javasyntax.AbstractJavaSyntaxVisitor
 
-func (p *UpdateJavaSyntaxTreeStep2Visitor) Process(message message.Message) error {
-	return nil
+	initStaticFieldVisitor          *InitStaticFieldVisitor
+	initInstanceFieldVisitor        *InitInstanceFieldVisitor
+	initEnumVisitor                 *InitEnumVisitor
+	removeDefaultConstructorVisitor *RemoveDefaultConstructorVisitor
+	replaceBridgeMethodVisitor      *UpdateBridgeMethodVisitor
+	initInnerClassStep2Visitor      *UpdateNewExpressionVisitor
+	addCastExpressionVisitor        *AddCastExpressionVisitor
 }

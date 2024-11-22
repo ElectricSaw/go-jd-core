@@ -2,8 +2,10 @@ package visitor
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
@@ -29,13 +31,13 @@ func (v *AddCastExpressionVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclara
 	memberDeclarations := decl.MemberDeclarations()
 
 	if memberDeclarations != nil {
-		//tb := v.typeBounds
+		tb := v.typeBounds
 
-		//if obj, ok := decl.(*servdecl.ClassFileBodyDeclaration); ok {
-		//	v.typeBounds = obj.TypeBounds()
-		//	memberDeclarations.Accept(v)
-		//	v.typeBounds = tb
-		//}
+		if obj, ok := decl.(intsrv.IClassFileBodyDeclaration); ok {
+			v.typeBounds = obj.TypeBounds()
+			memberDeclarations.Accept(v)
+			v.typeBounds = tb
+		}
 	}
 }
 
@@ -67,355 +69,362 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator intmod.IField
 	}
 }
 
-//func (v *AddCastExpressionVisitor) VisitStaticInitializerDeclaration( decl *declaration.StaticInitializerDeclaration) {
-//	statements := decl.Statements();
-//
-//	if (statements != nil) {
-//		tb := v.typeBounds;
-//
-//		typeBounds = decl.(*servdecl.ClassFileStaticInitializerDeclaration).TypeBounds();
-//		statements.Accept(v);
-//		typeBounds = tb;
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitConstructorDeclaration( declaration *declaration.ConstructorDeclaration) {
-//	if ((declaration.Flags() & (FLAG_SYNTHETIC|FLAG_BRIDGE)) == 0) {
-//		BaseStatement statements = declaration.Statements();
-//
-//		if (statements != nil) {
-//			Map<String, BaseType> tb = typeBounds;
-//			BaseType et = exceptionTypes;
-//
-//			typeBounds = ((ClassFileConstructorDeclaration) declaration).TypeBounds();
-//			exceptionTypes = declaration.ExceptionTypes();
-//			statements.Accept(v);
-//			typeBounds = tb;
-//			exceptionTypes = et;
-//		}
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitMethodDeclaration( declaration *declaration.MethodDeclaration) {
-//	if ((declaration.Flags() & (FLAG_SYNTHETIC|FLAG_BRIDGE)) == 0) {
-//		BaseStatement statements = declaration.Statements();
-//
-//		if (statements != nil) {
-//			Map<String, BaseType> tb = typeBounds;
-//			Type rt = returnedType;
-//			BaseType et = exceptionTypes;
-//
-//			typeBounds = ((ClassFileMethodDeclaration) declaration).TypeBounds();
-//			returnedType = declaration.ReturnedType();
-//			exceptionTypes = declaration.ExceptionTypes();
-//			statements.Accept(v);
-//			typeBounds = tb;
-//			returnedType = rt;
-//			exceptionTypes = et;
-//		}
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitLambdaIdentifiersExpression( expression intmod.ILambdaIdentifiersExpression) {
-//	BaseStatement statements = expression.Statements();
-//
-//	if (statements != nil) {
-//		Type rt = returnedType;
-//
-//		returnedType = ObjectType.TYPE_OBJECT;
-//		statements.Accept(v);
-//		returnedType = rt;
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitReturnExpressionStatement( statement *statement.ReturnExpressionStatement) {
-//	statement.setExpression(updateExpression(returnedType, statement.IExpression(), false, true));
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitThrowStatement( statement *ThrowStatement) {
-//	if ((exceptionTypes != nil) && (exceptionTypes.size() == 1)) {
-//		Type exceptionType = exceptionTypes.First();
-//
-//		if (exceptionType.isGenericType() && !statement.IExpression().Type().equals(exceptionType)) {
-//			statement.setExpression(addCastExpression(exceptionType, statement.IExpression()));
-//		}
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitLocalVariableDeclaration( declaration *declaration.LocalVariableDeclaration) {
-//	Type t = type;
-//
-//	type = declaration.Type();
-//	declaration.LocalVariableDeclarators().Accept(v);
-//	type = t;
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitLocalVariableDeclarator( declarator *declaration.LocalVariableDeclarator) {
-//	VariableInitializer variableInitializer = declarator.VariableInitializer();
-//
-//	if (variableInitializer != nil) {
-//		int extraDimension = declarator.Dimension();
-//
-//		if (extraDimension == 0) {
-//			variableInitializer.Accept(v);
-//		} else {
-//			Type t = type;
-//
-//			type = type.createType(type.Dimension() + extraDimension);
-//			variableInitializer.Accept(v);
-//			type = t;
-//		}
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitArrayVariableInitializer( declaration *declaration.ArrayVariableInitializer) {
-//	if (type.Dimension() == 0) {
-//		AcceptListDeclaration(declaration);
-//	} else {
-//		Type t = type;
-//
-//		type = type.createType(type.Dimension() - 1);
-//		AcceptListDeclaration(declaration);
-//		type = t;
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitExpressionVariableInitializer( declaration *declaration.ExpressionVariableInitializer) {
-//	IExpression expression = declaration.IExpression();
-//
-//	if (expression.isNewInitializedArray()) {
-//		NewInitializedArray nia = (NewInitializedArray)expression;
-//		Type t = type;
-//
-//		type = nia.Type();
-//		nia.ArrayInitializer().Accept(v);
-//		type = t;
-//	} else {
-//		declaration.setExpression(updateExpression(type, expression, false, true));
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitSuperConstructorInvocationExpression( expression intmod.ISuperConstructorInvocationExpression) {
-//	BaseExpression parameters = expression.Parameters();
-//
-//	if ((parameters != nil) && (parameters.size() > 0)) {
-//		boolean unique = typeMaker.matchCount(expression.ObjectType().InternalName(), "<init>", parameters.size(), true) <= 1;
-//		boolean forceCast = !unique && (typeMaker.matchCount(typeBounds, expression.ObjectType().InternalName(), "<init>", parameters, true) > 1);
-//		expression.setParameters(updateParameters(((ClassFileSuperConstructorInvocationExpression)expression).ParameterTypes(), parameters, forceCast, unique));
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitConstructorInvocationExpression( expression intmod.IConstructorInvocationExpression) {
-//	BaseExpression parameters = expression.Parameters();
-//
-//	if ((parameters != nil) && (parameters.size() > 0)) {
-//		boolean unique = typeMaker.matchCount(expression.ObjectType().InternalName(), "<init>", parameters.size(), true) <= 1;
-//		boolean forceCast = !unique && (typeMaker.matchCount(typeBounds, expression.ObjectType().InternalName(), "<init>", parameters, true) > 1);
-//		expression.setParameters(updateParameters(((ClassFileConstructorInvocationExpression)expression).ParameterTypes(), parameters, forceCast, unique));
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitMethodInvocationExpression( expression intmod.IMethodInvocationExpression) {
-//	BaseExpression parameters = expression.Parameters();
-//
-//	if ((parameters != nil) && (parameters.size() > 0)) {
-//		boolean unique = typeMaker.matchCount(expression.InternalTypeName(), expression.Name(), parameters.size(), false) <= 1;
-//		boolean forceCast = !unique && (typeMaker.matchCount(typeBounds, expression.InternalTypeName(), expression.Name(), parameters, false) > 1);
-//		expression.setParameters(updateParameters(((ClassFileMethodInvocationExpression)expression).ParameterTypes(), parameters, forceCast, unique));
-//	}
-//
-//	expression.IExpression().Accept(v);
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitNewExpression( expression intmod.INewExpression) {
-//	BaseExpression parameters = expression.Parameters();
-//
-//	if (parameters != nil) {
-//		boolean unique = typeMaker.matchCount(expression.ObjectType().InternalName(), "<init>", parameters.size(), true) <= 1;
-//		boolean forceCast = !unique && (typeMaker.matchCount(typeBounds, expression.ObjectType().InternalName(), "<init>", parameters, true) > 1);
-//		expression.setParameters(updateParameters(((ClassFileNewExpression)expression).ParameterTypes(), parameters, forceCast, unique));
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitNewInitializedArray( expression intmod.INewInitializedArray) {
-//	ArrayVariableInitializer arrayInitializer = expression.ArrayInitializer();
-//
-//	if (arrayInitializer != nil) {
-//		Type t = type;
-//
-//		type = expression.Type();
-//		arrayInitializer.Accept(v);
-//		type = t;
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitFieldReferenceExpression( expression intmod.IFieldReferenceExpression) {
-//	IExpression exp = expression.IExpression();
-//
-//	if ((exp != nil) && !exp.isObjectTypeReferenceExpression()) {
-//		Type type = typeMaker.makeFromInternalTypeName(expression.InternalTypeName());
-//
-//		if (type.Name() != nil) {
-//			expression.setExpression(updateExpression(type, exp, false, true));
-//		}
-//	}
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitBinaryOperatorExpression( expression intmod.IBinaryOperatorExpression) {
-//	expression.LeftExpression().Accept(v);
-//
-//	IExpression rightExpression = expression.RightExpression();
-//
-//	if (expression.Operator().equals("=")) {
-//		if (rightExpression.isMethodInvocationExpression()) {
-//			ClassFileMethodInvocationExpression mie = (ClassFileMethodInvocationExpression)rightExpression;
-//
-//			if (mie.TypeParameters() != nil) {
-//				// Do not add cast expression if method contains type parameters
-//				rightExpression.Accept(v);
-//				return;
-//			}
-//		}
-//
-//		expression.setRightExpression(updateExpression(expression.LeftExpression().Type(), rightExpression, false, true));
-//		return;
-//	}
-//
-//	rightExpression.Accept(v);
-//}
-//
-//func (v *AddCastExpressionVisitor) VisitTernaryOperatorExpression( expression intmod.ITernaryOperatorExpression) {
-//	Type expressionType = expression.Type();
-//
-//	expression.Condition().Accept(v);
-//	expression.setTrueExpression(updateExpression(expressionType, expression.TrueExpression(), false, true));
-//	expression.setFalseExpression(updateExpression(expressionType, expression.FalseExpression(), false, true));
-//}
-//
-//func (v *AddCastExpressionVisitor)  updateParameters(types _type.IType, expression expression.IExpression,  forceCast bool,  unique bool) expression.IExpression
-//if (expressions != nil) {
-//if (expressions.isList()) {
-//DefaultList<Type> typeList = types.List();
-//DefaultList<IExpression> expressionList = expressions.List();
-//
-//for (int i = expressionList.size() - 1; i >= 0; i--) {
-//expressionList.set(i, updateParameter(typeList.(i), expressionList.(i), forceCast, unique));
-//}
-//} else {
-//expressions = updateParameter(types.First(), expressions.First(), forceCast, unique);
-//}
-//}
-//
-//return expressions;
-//}
-//
-//func (v *AddCastExpressionVisitor)  updateParameter(typ _type.IType, expression expression.IExpression,  forceCast bool,  unique bool) expression.IExpression {
-//	expression = updateExpression(type, expression, forceCast, unique);
-//
-//	if (type == TYPE_BYTE) {
-//		if (expression.isIntegerConstantExpression()) {
-//			expression = new CastExpression(TYPE_BYTE, expression);
-//		} else if (expression.isTernaryOperatorExpression()) {
-//			IExpression exp = expression.TrueExpression();
-//
-//			if (exp.isIntegerConstantExpression() || exp.isTernaryOperatorExpression()) {
-//				expression = new CastExpression(TYPE_BYTE, expression);
-//			} else {
-//				exp = expression.FalseExpression();
-//
-//				if (exp.isIntegerConstantExpression() || exp.isTernaryOperatorExpression()) {
-//					expression = new CastExpression(TYPE_BYTE, expression);
-//				}
-//			}
-//		}
-//	}
-//
-//	return expression;
-//}
-//
-//func (v *AddCastExpressionVisitor)  updateExpression(typ _type.IType, expression expression.IExpression, forceCast bool,  unique bool)  expression.IExpression {
-//	if (expression.isnilExpression()) {
-//		if (forceCast) {
-//			searchFirstLineNumberVisitor.init();
-//			expression.Accept(searchFirstLineNumberVisitor);
-//			expression = new CastExpression(searchFirstLineNumberVisitor.LineNumber(), type, expression);
-//		}
-//	} else {
-//		Type expressionType = expression.Type();
-//
-//		if (!expressionType.equals(type)) {
-//		if (type.isObjectType()) {
-//		if (expressionType.isObjectType()) {
-//		ObjectType objectType = (ObjectType) type;
-//		ObjectType expressionObjectType = (ObjectType) expressionType;
-//
-//		if (forceCast && !objectType.rawEquals(expressionObjectType)) {
-//		// Force disambiguation of method invocation => Add cast
-//		if (expression.isNewExpression()) {
-//		ClassFileNewExpression ne = (ClassFileNewExpression)expression;
-//		ne.setObjectType(ne.ObjectType().createType(nil));
-//		}
-//		expression = addCastExpression(objectType, expression);
-//		} else if (!ObjectType.TYPE_OBJECT.equals(type) && !typeMaker.isAssignable(typeBounds, objectType, expressionObjectType)) {
-//		BaseTypeArgument ta1 = objectType.TypeArguments();
-//		BaseTypeArgument ta2 = expressionObjectType.TypeArguments();
-//		Type t = type;
-//
-//		if ((ta1 != nil) && (ta2 != nil) && !ta1.isTypeArgumentAssignableFrom(typeBounds, ta2)) {
-//		// Incompatible typeArgument arguments => Add cast
-//		t = objectType.createType(nil);
-//		}
-//		expression = addCastExpression(t, expression);
-//		}
-//		} else if (expressionType.isGenericType() && !ObjectType.TYPE_OBJECT.equals(type)) {
-//		expression = addCastExpression(type, expression);
-//		}
-//		} else if (type.isGenericType()) {
-//		if (expressionType.isObjectType() || expressionType.isGenericType()) {
-//		expression = addCastExpression(type, expression);
-//		}
-//		}
-//		}
-//
-//		if (expression.isCastExpression()) {
-//			Type ceExpressionType = expression.IExpression().Type();
-//
-//			if (type.isObjectType() && ceExpressionType.isObjectType()) {
-//				ObjectType ot1 = (ObjectType)type;
-//				ObjectType ot2 = (ObjectType)ceExpressionType;
-//
-//				if (ot1.equals(ot2)) {
-//					// Remove cast expression
-//					expression = expression.IExpression();
-//				} else if (unique && typeMaker.isAssignable(typeBounds, ot1, ot2)) {
-//					// Remove cast expression
-//					expression = expression.IExpression();
-//				}
-//			}
-//		}
-//
-//		expression.Accept(v);
-//	}
-//
-//	return expression;
-//}
-//
-//func (v *AddCastExpressionVisitor)  addCastExpression( typ _type.IType,  expression expression.IExpression) expression.IExpression{
-//	if (expression.isCastExpression()) {
-//		if (type.equals(expression.IExpression().Type())) {
-//			return expression.IExpression();
-//		} else {
-//			CastExpression ce = (CastExpression)expression;
-//
-//			ce.setType(type);
-//			return ce;
-//		}
-//	} else {
-//		searchFirstLineNumberVisitor.init();
-//		expression.Accept(searchFirstLineNumberVisitor);
-//		return new CastExpression(searchFirstLineNumberVisitor.LineNumber(), type, expression);
-//	}
-//}
+func (v *AddCastExpressionVisitor) VisitStaticInitializerDeclaration(decl intmod.IStaticInitializerDeclaration) {
+	state := decl.Statements()
+
+	if state != nil {
+		tb := v.typeBounds
+
+		v.typeBounds = decl.(intsrv.IClassFileStaticInitializerDeclaration).TypeBounds()
+		state.Accept(v)
+		v.typeBounds = tb
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitConstructorDeclaration(decl intmod.IConstructorDeclaration) {
+	if (decl.Flags() & (intmod.FlagSynthetic | intmod.FlagBridge)) == 0 {
+		statements := decl.Statements()
+
+		if statements != nil {
+			tb := v.typeBounds
+			et := v.exceptionType
+
+			v.typeBounds = decl.(intsrv.IClassFileConstructorDeclaration).TypeBounds()
+			v.exceptionType = decl.ExceptionTypes()
+			statements.Accept(v)
+			v.typeBounds = tb
+			v.exceptionType = et
+		}
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitMethodDeclaration(decl intmod.IMethodDeclaration) {
+	if (decl.Flags() & (intmod.FlagSynthetic | intmod.FlagBridge)) == 0 {
+		statements := decl.Statements()
+
+		if statements != nil {
+			tb := v.typeBounds
+			rt := v.returnedType
+			et := v.exceptionType
+
+			v.typeBounds = decl.(intsrv.IClassFileMethodDeclaration).TypeBounds()
+			v.returnedType = decl.ReturnedType()
+			v.exceptionType = decl.ExceptionTypes()
+			statements.Accept(v)
+			v.typeBounds = tb
+			v.returnedType = rt
+			v.exceptionType = et
+		}
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitLambdaIdentifiersExpression(expression intmod.ILambdaIdentifiersExpression) {
+	statements := expression.Statements()
+
+	if statements != nil {
+		rt := v.returnedType
+
+		v.returnedType = _type.OtTypeObject.(intmod.IType)
+		statements.Accept(v)
+		v.returnedType = rt
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitReturnExpressionStatement(statement intmod.IReturnExpressionStatement) {
+	statement.SetExpression(v.updateExpression(v.returnedType, statement.Expression(), false, true))
+}
+
+func (v *AddCastExpressionVisitor) VisitThrowStatement(statement intmod.IThrowStatement) {
+	if v.exceptionType != nil && v.exceptionType.Size() == 1 {
+		exceptionType := v.exceptionType.First()
+
+		if exceptionType.IsGenericType() && statement.Expression().Type() != exceptionType {
+			statement.SetExpression(v.addCastExpression(exceptionType, statement.Expression()))
+		}
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitLocalVariableDeclaration(decl intmod.ILocalVariableDeclaration) {
+	t := v.typ
+
+	v.typ = decl.Type()
+	decl.LocalVariableDeclarators().Accept(v)
+	v.typ = t
+}
+
+func (v *AddCastExpressionVisitor) VisitLocalVariableDeclarator(declarator intmod.ILocalVariableDeclarator) {
+	variableInitializer := declarator.VariableInitializer()
+
+	if variableInitializer != nil {
+		extraDimension := declarator.Dimension()
+
+		if extraDimension == 0 {
+			variableInitializer.Accept(v)
+		} else {
+			t := v.typ
+
+			v.typ = v.typ.CreateType(v.typ.Dimension() + extraDimension)
+			variableInitializer.Accept(v)
+			v.typ = t
+		}
+	}
+}
+
+func ConvertArrayVariable(list []intmod.IVariableInitializer) []intmod.IDeclaration {
+	ret := make([]intmod.IDeclaration, 0, len(list))
+	for _, item := range list {
+		ret = append(ret, item)
+	}
+	return ret
+}
+
+func (v *AddCastExpressionVisitor) VisitArrayVariableInitializer(decl intmod.IArrayVariableInitializer) {
+	if v.typ.Dimension() == 0 {
+		v.AcceptListDeclaration(ConvertArrayVariable(decl.Elements()))
+	} else {
+		t := v.typ
+
+		v.typ = v.typ.CreateType(v.typ.Dimension() - 1)
+		v.AcceptListDeclaration(ConvertArrayVariable(decl.Elements()))
+		v.typ = t
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitExpressionVariableInitializer(decl intmod.IExpressionVariableInitializer) {
+	expr := decl.Expression()
+
+	if expr.IsNewInitializedArray() {
+		nia := expr.(intmod.INewInitializedArray)
+		t := v.typ
+
+		v.typ = nia.Type()
+		nia.ArrayInitializer().Accept(v)
+		v.typ = t
+	} else {
+		decl.SetExpression(v.updateExpression(v.typ, expr, false, true))
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitSuperConstructorInvocationExpression(expression intmod.ISuperConstructorInvocationExpression) {
+	parameters := expression.Parameters()
+
+	if (parameters != nil) && (parameters.Size() > 0) {
+		unique := v.typeMaker.MatchCount(expression.ObjectType().InternalName(),
+			"<init>", parameters.Size(), true) <= 1
+		forceCast := !unique && (v.typeMaker.MatchCount2(v.typeBounds,
+			expression.ObjectType().InternalName(), "<init>", parameters, true) > 1)
+		expression.SetParameters(v.updateParameters(
+			expression.(intsrv.IClassFileSuperConstructorInvocationExpression).ParameterTypes(), parameters, forceCast, unique))
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitConstructorInvocationExpression(expression intmod.IConstructorInvocationExpression) {
+	parameters := expression.Parameters()
+
+	if (parameters != nil) && (parameters.Size() > 0) {
+		unique := v.typeMaker.MatchCount(expression.ObjectType().InternalName(), "<init>", parameters.Size(), true) <= 1
+		forceCast := !unique && (v.typeMaker.MatchCount2(v.typeBounds, expression.ObjectType().InternalName(), "<init>", parameters, true) > 1)
+		expression.SetParameters(v.updateParameters(expression.(intsrv.IClassFileConstructorInvocationExpression).ParameterTypes(), parameters, forceCast, unique))
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitMethodInvocationExpression(expression intmod.IMethodInvocationExpression) {
+	parameters := expression.Parameters()
+
+	if (parameters != nil) && (parameters.Size() > 0) {
+		unique := v.typeMaker.MatchCount(expression.InternalTypeName(), expression.Name(), parameters.Size(), false) <= 1
+		forceCast := !unique && (v.typeMaker.MatchCount2(v.typeBounds, expression.InternalTypeName(), expression.Name(), parameters, false) > 1)
+		expression.SetParameters(v.updateParameters(expression.(intsrv.IClassFileMethodInvocationExpression).ParameterTypes(), parameters, forceCast, unique))
+	}
+
+	expression.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitNewExpression(expression intmod.INewExpression) {
+	parameters := expression.Parameters()
+
+	if parameters != nil {
+		unique := v.typeMaker.MatchCount(expression.ObjectType().InternalName(), "<init>", parameters.Size(), true) <= 1
+		forceCast := !unique && (v.typeMaker.MatchCount2(v.typeBounds, expression.ObjectType().InternalName(), "<init>", parameters, true) > 1)
+		expression.SetParameters(v.updateParameters(expression.(intsrv.IClassFileNewExpression).ParameterTypes(), parameters, forceCast, unique))
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitNewInitializedArray(expression intmod.INewInitializedArray) {
+	arrayInitializer := expression.ArrayInitializer()
+
+	if arrayInitializer != nil {
+		t := v.typ
+
+		v.typ = expression.Type()
+		arrayInitializer.Accept(v)
+		v.typ = t
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitFieldReferenceExpression(expression intmod.IFieldReferenceExpression) {
+	exp := expression.Expression()
+
+	if (exp != nil) && !exp.IsObjectTypeReferenceExpression() {
+		typ := v.typeMaker.MakeFromInternalTypeName(expression.InternalTypeName())
+
+		if typ.Name() != "" {
+			expression.SetExpression(v.updateExpression(typ.(intmod.IType), exp, false, true))
+		}
+	}
+}
+
+func (v *AddCastExpressionVisitor) VisitBinaryOperatorExpression(expression intmod.IBinaryOperatorExpression) {
+	expression.LeftExpression().Accept(v)
+	rightExpression := expression.RightExpression()
+
+	if expression.Operator() == "=" {
+		if rightExpression.IsMethodInvocationExpression() {
+			mie := rightExpression.(intsrv.IClassFileMethodInvocationExpression)
+
+			if mie.TypeParameters() != nil {
+				// Do not add cast expression if method contains type parameters
+				rightExpression.Accept(v)
+				return
+			}
+		}
+
+		expression.SetRightExpression(v.updateExpression(expression.LeftExpression().Type(), rightExpression, false, true))
+		return
+	}
+
+	rightExpression.Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitTernaryOperatorExpression(expression intmod.ITernaryOperatorExpression) {
+	expressionType := expression.Type()
+
+	expression.Condition().Accept(v)
+	expression.SetTrueExpression(v.updateExpression(expressionType, expression.TrueExpression(), false, true))
+	expression.SetFalseExpression(v.updateExpression(expressionType, expression.FalseExpression(), false, true))
+}
+
+func (v *AddCastExpressionVisitor) updateParameters(types intmod.IType, expression intmod.IExpression, forceCast bool, unique bool) intmod.IExpression {
+	if expression != nil {
+		if expression.IsList() {
+			typeList := sliceToDefaultList[intmod.IType](types.List())
+			expressionList := sliceToDefaultList[intmod.IExpression](expression.List())
+
+			for i := expressionList.Size() - 1; i >= 0; i-- {
+				expressionList.Set(i, v.updateParameter(typeList.Get(i), expressionList.Get(i), forceCast, unique))
+			}
+		} else {
+			expression = v.updateParameter(types.First(), expression.First(), forceCast, unique)
+		}
+	}
+
+	return expression
+}
+
+func (v *AddCastExpressionVisitor) updateParameter(typ intmod.IType, expr intmod.IExpression, forceCast bool, unique bool) intmod.IExpression {
+	expr = v.updateExpression(typ, expr, forceCast, unique)
+
+	if typ == _type.PtTypeByte {
+		if expr.IsIntegerConstantExpression() {
+			expr = expression.NewCastExpression(_type.PtTypeByte, expr)
+		} else if expr.IsTernaryOperatorExpression() {
+			exp := expr.TrueExpression()
+			if exp.IsIntegerConstantExpression() || exp.IsTernaryOperatorExpression() {
+				expr = expression.NewCastExpression(_type.PtTypeByte, expr)
+			} else {
+				exp = expr.FalseExpression()
+				if exp.IsIntegerConstantExpression() || exp.IsTernaryOperatorExpression() {
+					expr = expression.NewCastExpression(_type.PtTypeByte, expr)
+				}
+			}
+		}
+	}
+
+	return expr
+}
+
+func (v *AddCastExpressionVisitor) updateExpression(typ intmod.IType, expr intmod.IExpression, forceCast bool, unique bool) intmod.IExpression {
+	if expr.IsNullExpression() {
+		if forceCast {
+			v.searchFirstLineNumberVisitor.Init()
+			expr.Accept(v.searchFirstLineNumberVisitor)
+			expr = expression.NewCastExpressionWithLineNumber(v.searchFirstLineNumberVisitor.LineNumber(), typ, expr)
+		}
+	} else {
+		expressionType := expr.Type()
+
+		if expressionType != typ {
+			if typ.IsObjectType() {
+				if expressionType.IsObjectType() {
+					objectType := typ.(intmod.IObjectType)
+					expressionObjectType := expressionType.(intmod.IObjectType)
+
+					if forceCast && !objectType.RawEquals(expressionObjectType) {
+						// Force disambiguation of method invocation => Add cast
+						if expr.IsNewExpression() {
+							ne := expr.(intsrv.IClassFileNewExpression)
+							ne.SetObjectType(ne.ObjectType().CreateTypeWithArgs(nil))
+						}
+						expr = v.addCastExpression(objectType.(intmod.IType), expr)
+					} else if _type.OtTypeObject.(intmod.IType) != typ && !v.typeMaker.IsAssignable(v.typeBounds, objectType, expressionObjectType) {
+						ta1 := objectType.TypeArguments()
+						ta2 := expressionObjectType.TypeArguments()
+						t := typ
+
+						if (ta1 != nil) && (ta2 != nil) && !ta1.IsTypeArgumentAssignableFrom(v.typeBounds, ta2) {
+							// Incompatible typeArgument arguments => Add cast
+							t = objectType.CreateTypeWithArgs(nil).(intmod.IType)
+						}
+						expr = v.addCastExpression(t, expr)
+					}
+				} else if expressionType.IsGenericType() && _type.OtTypeObject.(intmod.IType) != typ {
+					expr = v.addCastExpression(typ, expr)
+				}
+			} else if typ.IsGenericType() {
+				if expressionType.IsObjectType() || expressionType.IsGenericType() {
+					expr = v.addCastExpression(typ, expr)
+				}
+			}
+		}
+
+		if expr.IsCastExpression() {
+			ceExpressionType := expr.Expression().Type()
+
+			if typ.IsObjectType() && ceExpressionType.IsObjectType() {
+				ot1 := typ.(intmod.IObjectType)
+				ot2 := ceExpressionType.(intmod.IObjectType)
+
+				if ot1 == ot2 {
+					// Remove cast expr
+					expr = expr.Expression()
+				} else if unique && v.typeMaker.IsAssignable(v.typeBounds, ot1, ot2) {
+					// Remove cast expr
+					expr = expr.Expression()
+				}
+			}
+		}
+
+		expr.Accept(v)
+	}
+
+	return expr
+}
+
+func (v *AddCastExpressionVisitor) addCastExpression(typ intmod.IType, expr intmod.IExpression) intmod.IExpression {
+	if expr.IsCastExpression() {
+		if typ == expr.Expression().Type() {
+			return expr.Expression()
+		} else {
+			ce := expr.(intmod.ICastExpression)
+			ce.SetType(typ)
+			return ce
+		}
+	} else {
+		v.searchFirstLineNumberVisitor.Init()
+		expr.Accept(v.searchFirstLineNumberVisitor)
+		return expression.NewCastExpressionWithLineNumber(v.searchFirstLineNumberVisitor.LineNumber(), typ, expr)
+	}
+}
 
 func (v *AddCastExpressionVisitor) VisitFloatConstantExpression(expression intmod.IFloatConstantExpression) {
 }
@@ -431,10 +440,10 @@ func (v *AddCastExpressionVisitor) VisitLocalVariableReferenceExpression(express
 }
 func (v *AddCastExpressionVisitor) VisitLongConstantExpression(expression intmod.ILongConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitBreakStatement(statement *statement.BreakStatement)       {}
-func (v *AddCastExpressionVisitor) VisitByteCodeStatement(statement *statement.ByteCodeStatement) {}
-func (v *AddCastExpressionVisitor) VisitContinueStatement(statement *statement.ContinueStatement) {}
-func (v *AddCastExpressionVisitor) VisitNullExpression(expression intmod.INullExpression)         {}
+func (v *AddCastExpressionVisitor) VisitBreakStatement(statement intmod.IBreakStatement)       {}
+func (v *AddCastExpressionVisitor) VisitByteCodeStatement(statement intmod.IByteCodeStatement) {}
+func (v *AddCastExpressionVisitor) VisitContinueStatement(statement intmod.IContinueStatement) {}
+func (v *AddCastExpressionVisitor) VisitNullExpression(expression intmod.INullExpression)      {}
 func (v *AddCastExpressionVisitor) VisitObjectTypeReferenceExpression(expression intmod.IObjectTypeReferenceExpression) {
 }
 func (v *AddCastExpressionVisitor) VisitSuperExpression(expression intmod.ISuperExpression) {}

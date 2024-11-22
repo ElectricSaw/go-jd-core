@@ -2,6 +2,7 @@ package deserializer
 
 import (
 	"bitbucket.org/coontec/go-jd-core/class/api"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
@@ -26,7 +27,7 @@ func GetConstantTypeName(constants *classfile.ConstantPool, index int, msg strin
 type ClassFileDeserializer struct {
 }
 
-func (d *ClassFileDeserializer) LoadClassFileWithRaw(loader api.Loader, internalTypeName string) (*classfile.ClassFile, error) {
+func (d *ClassFileDeserializer) LoadClassFileWithRaw(loader api.Loader, internalTypeName string) (intmod.IClassFile, error) {
 	classFile, err := d.InnerLoadClassFile(loader, internalTypeName)
 	if err != nil {
 		return nil, err
@@ -34,7 +35,7 @@ func (d *ClassFileDeserializer) LoadClassFileWithRaw(loader api.Loader, internal
 	return classFile, nil
 }
 
-func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTypeName string) (*classfile.ClassFile, error) {
+func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTypeName string) (intmod.IClassFile, error) {
 	if !loader.CanLoad(internalTypeName) {
 		return nil, errors.New("Can't load '" + internalTypeName + "'")
 	}
@@ -56,7 +57,7 @@ func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTy
 	}
 
 	if aic != nil {
-		var innerClassFiles []classfile.IClassFile
+		var innerClassFiles []intmod.IClassFile
 		innerTypePrefix := internalTypeName + "$"
 
 		for _, ic := range aic.InnerClasses() {
@@ -80,7 +81,7 @@ func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTy
 					}
 
 					if unicode.IsDigit(rune(innerTypeName[length])) {
-						flags |= classfile.AccSynthetic
+						flags |= intmod.AccSynthetic
 					}
 
 					if innerClassFile == nil {
@@ -112,7 +113,7 @@ func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTy
 	return classFile, nil
 }
 
-func (d *ClassFileDeserializer) LoadClassFile(reader *ClassFileReader) (*classfile.ClassFile, error) {
+func (d *ClassFileDeserializer) LoadClassFile(reader *ClassFileReader) (intmod.IClassFile, error) {
 	magic := reader.ReadMagic()
 
 	if magic != JavaMagicNumber {
