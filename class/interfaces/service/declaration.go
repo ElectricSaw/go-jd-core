@@ -30,7 +30,9 @@ type IClassFileBodyDeclaration interface {
 	OuterTypeFieldName() string
 	SetOuterTypeFieldName(outerTypeFieldName string)
 	SyntheticInnerFieldNames() []string
+	SetSyntheticInnerFieldNames(names []string)
 	OuterBodyDeclaration() IClassFileBodyDeclaration
+	SetOuterBodyDeclaration(bodyDeclaration IClassFileBodyDeclaration)
 	Bindings() map[string]intmod.ITypeArgument
 	TypeBounds() map[string]intmod.IType
 	IsClassDeclaration() bool

@@ -6,11 +6,16 @@ import (
 )
 
 func NewLocalVariableDeclarators() intmod.ILocalVariableDeclarators {
-	return &LocalVariableDeclarators{}
+	return NewLocalVariableDeclaratorsWithCapacity(0)
+}
+
+func NewLocalVariableDeclaratorsWithCapacity(capacity int) intmod.ILocalVariableDeclarators {
+	return &LocalVariableDeclarators{
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.ILocalVariableDeclarator](capacity),
+	}
 }
 
 type LocalVariableDeclarators struct {
-	LocalVariableDeclarator
 	util.DefaultList[intmod.ILocalVariableDeclarator]
 }
 

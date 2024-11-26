@@ -8,20 +8,18 @@ import (
 
 func NewSuperConstructorInvocationExpression(typ intmod.IObjectType, descriptor string,
 	parameters intmod.IExpression) intmod.ISuperConstructorInvocationExpression {
-	return &SuperConstructorInvocationExpression{
-		ConstructorReferenceExpression: *NewConstructorReferenceExpression(_type.PtTypeVoid.(intmod.IType),
-			typ, descriptor).(*ConstructorReferenceExpression),
-		parameters: parameters,
-	}
+	return NewSuperConstructorInvocationExpressionWithAll(0, typ, descriptor, parameters)
 }
 
 func NewSuperConstructorInvocationExpressionWithAll(lineNumber int, typ intmod.IObjectType,
 	descriptor string, parameters intmod.IExpression) intmod.ISuperConstructorInvocationExpression {
-	return &SuperConstructorInvocationExpression{
+	e := &SuperConstructorInvocationExpression{
 		ConstructorReferenceExpression: *NewConstructorReferenceExpressionWithAll(lineNumber,
 			_type.PtTypeVoid.(intmod.IType), typ, descriptor).(*ConstructorReferenceExpression),
 		parameters: parameters,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type SuperConstructorInvocationExpression struct {

@@ -307,8 +307,8 @@ func (v *AddCastExpressionVisitor) VisitTernaryOperatorExpression(expression int
 func (v *AddCastExpressionVisitor) updateParameters(types intmod.IType, expression intmod.IExpression, forceCast bool, unique bool) intmod.IExpression {
 	if expression != nil {
 		if expression.IsList() {
-			typeList := sliceToDefaultList[intmod.IType](types.List())
-			expressionList := sliceToDefaultList[intmod.IExpression](expression.List())
+			typeList := sliceToDefaultList[intmod.IType](types.ToSlice())
+			expressionList := sliceToDefaultList[intmod.IExpression](expression.ToSlice())
 
 			for i := expressionList.Size() - 1; i >= 0; i-- {
 				expressionList.Set(i, v.updateParameter(typeList.Get(i), expressionList.Get(i), forceCast, unique))

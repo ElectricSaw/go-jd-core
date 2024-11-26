@@ -8,7 +8,7 @@ import (
 func NewModuleDeclaration(flags int, internalTypeName, name, version string,
 	requires []intmod.IModuleInfo, exports []intmod.IPackageInfo, opens []intmod.IPackageInfo,
 	uses []string, provides []intmod.IServiceInfo) intmod.IModuleDeclaration {
-	return &ModuleDeclaration{
+	d := &ModuleDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil).(*TypeDeclaration),
 		version:         version,
 		requires:        requires,
@@ -17,6 +17,8 @@ func NewModuleDeclaration(flags int, internalTypeName, name, version string,
 		uses:            uses,
 		provides:        provides,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ModuleDeclaration struct {

@@ -14,8 +14,10 @@ type Types struct {
 	util.DefaultList[intmod.IType]
 }
 
-func (t *Types) Size() int {
-	return t.DefaultList.Size()
+func (t *Types) ForEach(action func(intmod.IType)) {
+	for _, item := range t.ToSlice() {
+		action(item.(intmod.IType))
+	}
 }
 
 func (t *Types) IsTypes() bool {

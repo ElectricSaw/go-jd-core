@@ -2,14 +2,28 @@ package service
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
 type IFrame interface {
-	// TODO: AddLocalVariable(ILocalVariable) 메소드는 호출을 위해 심시 추가.
-	AddLocalVariable(ILocalVariable)
+	Statements() intmod.IStatements
+	AddLocalVariable(lv ILocalVariable)
+	LocalVariable(index int) ILocalVariable
+	Parent() IFrame
+	SetExceptionLocalVariable(e ILocalVariable)
+	MergeLocalVariable(typeBounds map[string]intmod.IType, localVariableMaker utils.LocalVariableMaker, lv ILocalVariable)
+	RemoveLocalVariable(lv ILocalVariable)
+	AddChild(child IFrame)
+	Close()
+	CreateNames(parentNames []string)
+	UpdateLocalVariableInForStatements(typeMaker *utils.TypeMaker)
+	CreateDeclarations(containsLineNumber bool)
+	AddIndex() int
 }
 
 type IRootFrame interface {
+	IFrame
+	CreateDeclarations(containsLineNumber bool)
 }
 
 type ILocalVariableReference interface {

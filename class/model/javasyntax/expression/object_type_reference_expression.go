@@ -2,41 +2,35 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewObjectTypeReferenceExpression(typ intmod.IObjectType) intmod.IObjectTypeReferenceExpression {
-	return &ObjectTypeReferenceExpression{
-		typ:      typ,
-		explicit: true,
-	}
+	return NewObjectTypeReferenceExpressionWithAll(0, typ, true)
 }
 
 func NewObjectTypeReferenceExpressionWithLineNumber(lineNumber int, typ intmod.IObjectType) intmod.IObjectTypeReferenceExpression {
-	return &ObjectTypeReferenceExpression{
-		lineNumber: lineNumber,
-		typ:        typ,
-		explicit:   true,
-	}
+	return NewObjectTypeReferenceExpressionWithAll(lineNumber, typ, true)
 }
 
 func NewObjectTypeReferenceExpressionWithExplicit(typ intmod.IObjectType, explicit bool) intmod.IObjectTypeReferenceExpression {
-	return &ObjectTypeReferenceExpression{
-		typ:      typ,
-		explicit: explicit,
-	}
+	return NewObjectTypeReferenceExpressionWithAll(0, typ, explicit)
 }
 
 func NewObjectTypeReferenceExpressionWithAll(lineNumber int, typ intmod.IObjectType, explicit bool) intmod.IObjectTypeReferenceExpression {
-	return &ObjectTypeReferenceExpression{
+	e := &ObjectTypeReferenceExpression{
 		lineNumber: lineNumber,
 		typ:        typ,
 		explicit:   explicit,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ObjectTypeReferenceExpression struct {
 	AbstractExpression
+	util.DefaultBase[intmod.IObjectTypeReferenceExpression]
 
 	lineNumber int
 	typ        intmod.IObjectType

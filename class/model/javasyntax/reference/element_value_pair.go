@@ -7,10 +7,12 @@ import (
 )
 
 func NewElementValuePair(name string, elementValue intmod.IElementValue) intmod.IElementValuePair {
-	return &ElementValuePair{
+	p := &ElementValuePair{
 		name:         name,
 		elementValue: elementValue,
 	}
+	p.SetValue(p)
+	return p
 }
 
 type ElementValuePair struct {

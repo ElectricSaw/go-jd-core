@@ -2,27 +2,27 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewThisExpression(typ intmod.IType) intmod.IThisExpression {
-	return &ThisExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
-		typ:                          typ,
-		explicit:                     true,
-	}
+	return NewThisExpressionWithAll(0, typ)
 }
 
 func NewThisExpressionWithAll(lineNumber int, typ intmod.IType) intmod.IThisExpression {
-	return &ThisExpression{
+	e := &ThisExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
 		explicit:                     true,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ThisExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.IThisExpression]
 
 	typ      intmod.IType
 	explicit bool

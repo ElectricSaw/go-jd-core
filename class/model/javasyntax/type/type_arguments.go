@@ -5,13 +5,13 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewTypeArguments() *TypeArguments {
-	return &TypeArguments{}
+func NewTypeArguments() intmod.ITypeArguments {
+	return NewTypeArgumentsWithSize(0)
 }
 
-func NewTypeArgumentsWithSize(size int) *TypeArguments {
+func NewTypeArgumentsWithSize(size int) intmod.ITypeArguments {
 	return &TypeArguments{
-		DefaultList: util.NewDefaultList(size),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.ITypeArgument](size),
 	}
 }
 
@@ -19,10 +19,6 @@ type TypeArguments struct {
 	AbstractType
 	AbstractTypeArgument
 	util.DefaultList[intmod.ITypeArgument]
-}
-
-func (t *TypeArguments) Size() int {
-	return t.DefaultList.Size()
 }
 
 func (t *TypeArguments) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
@@ -54,7 +50,7 @@ func (t *TypeArguments) TypeArgumentFirst() intmod.ITypeArgument {
 }
 
 func (t *TypeArguments) TypeArgumentList() []intmod.ITypeArgument {
-	return t.Elements()
+	return t.ToSlice()
 }
 
 func (t *TypeArguments) TypeArgumentSize() int {

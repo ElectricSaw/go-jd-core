@@ -31,6 +31,7 @@ func TestLog4j(t *testing.T) {
 			message.Headers["mainInternalTypeName"] = internalTypeName
 
 			err := dsr.Process(message)
+			err = cnv.Process(message)
 			if err != nil {
 				t.Fatal(err)
 			}

@@ -3,25 +3,26 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewLengthExpression(expression intmod.IExpression) intmod.ILengthExpression {
-	return &LengthExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
-		expression:                   expression,
-	}
+	return NewLengthExpressionWithAll(0, expression)
 }
 
 func NewLengthExpressionWithAll(lineNumber int, expression intmod.IExpression) intmod.ILengthExpression {
-	return &LengthExpression{
+	e := &LengthExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		expression:                   expression,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type LengthExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.ILengthExpression]
 
 	expression intmod.IExpression
 }

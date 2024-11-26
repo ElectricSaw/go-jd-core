@@ -5,23 +5,14 @@ import (
 	"fmt"
 )
 
-func NewInterfaceDeclaration(flags int, internalTypeName string, name string, interfaces intmod.IType) intmod.IInterfaceDeclaration {
-	return &InterfaceDeclaration{
-		TypeDeclaration: TypeDeclaration{
-			annotationReferences: nil,
-			flags:                flags,
-			internalTypeName:     internalTypeName,
-			name:                 name,
-			bodyDeclaration:      nil,
-		},
-		interfaces: interfaces,
-	}
+func NewInterfaceDeclaration(flags int, internalTypeName, name string, interfaces intmod.IType) intmod.IInterfaceDeclaration {
+	return NewInterfaceDeclarationWithAll(nil, flags, internalTypeName, name, nil, nil, interfaces)
 }
 
 func NewInterfaceDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
-	internalTypeName string, name string, bodyDeclaration intmod.IBodyDeclaration,
+	internalTypeName, name string, bodyDeclaration intmod.IBodyDeclaration,
 	typeParameters intmod.ITypeParameter, interfaces intmod.IType) intmod.IInterfaceDeclaration {
-	return &InterfaceDeclaration{
+	d := &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: annotationReferences,
 			flags:                flags,
@@ -32,6 +23,8 @@ func NewInterfaceDeclarationWithAll(annotationReferences intmod.IAnnotationRefer
 		typeParameters: typeParameters,
 		interfaces:     interfaces,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type InterfaceDeclaration struct {

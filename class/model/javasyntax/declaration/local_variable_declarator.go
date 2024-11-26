@@ -7,24 +7,21 @@ import (
 )
 
 func NewLocalVariableDeclarator(name string) intmod.ILocalVariableDeclarator {
-	return &LocalVariableDeclarator{
-		name: name,
-	}
+	return NewLocalVariableDeclarator3(0, name, nil)
 }
 
 func NewLocalVariableDeclarator2(name string, variableInitializer intmod.IVariableInitializer) intmod.ILocalVariableDeclarator {
-	return &LocalVariableDeclarator{
-		name:                name,
-		variableInitializer: variableInitializer,
-	}
+	return NewLocalVariableDeclarator3(0, name, variableInitializer)
 }
 
 func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer intmod.IVariableInitializer) intmod.ILocalVariableDeclarator {
-	return &LocalVariableDeclarator{
+	d := &LocalVariableDeclarator{
 		lineNumber:          lineNumber,
 		name:                name,
 		variableInitializer: variableInitializer,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type LocalVariableDeclarator struct {

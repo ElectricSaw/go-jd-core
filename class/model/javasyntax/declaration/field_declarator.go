@@ -7,24 +7,21 @@ import (
 )
 
 func NewFieldDeclarator(name string) intmod.IFieldDeclarator {
-	return &FieldDeclarator{
-		name: name,
-	}
+	return NewFieldDeclarator3(name, 0, nil)
 }
 
 func NewFieldDeclarator2(name string, variableInitializer intmod.IVariableInitializer) intmod.IFieldDeclarator {
-	return &FieldDeclarator{
-		name:                name,
-		variableInitializer: variableInitializer,
-	}
+	return NewFieldDeclarator3(name, 0, variableInitializer)
 }
 
 func NewFieldDeclarator3(name string, dimension int, variableInitializer intmod.IVariableInitializer) intmod.IFieldDeclarator {
-	return &FieldDeclarator{
+	d := &FieldDeclarator{
 		name:                name,
 		variableInitializer: variableInitializer,
 		dimension:           dimension,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type FieldDeclarator struct {

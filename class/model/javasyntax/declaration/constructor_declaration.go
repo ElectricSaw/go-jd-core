@@ -2,23 +2,20 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewConstructorDeclaration(flags int, formalParameter intmod.IFormalParameter, descriptor string,
 	statements intmod.IStatement) intmod.IConstructorDeclaration {
-	return &ConstructorDeclaration{
-		flags:           flags,
-		formalParameter: formalParameter,
-		descriptor:      descriptor,
-		statements:      statements,
-	}
+	return NewConstructorDeclarationWithAll(nil, flags, nil,
+		formalParameter, nil, descriptor, statements)
 }
 
 func NewConstructorDeclarationWithAll(annotationReferences intmod.IReference, flags int,
 	typeParameters intmod.ITypeParameter, formalParameter intmod.IFormalParameter,
 	exceptionTypes intmod.IType, descriptor string, statements intmod.IStatement) intmod.IConstructorDeclaration {
-	return &ConstructorDeclaration{
+	d := &ConstructorDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
 		typeParameters:       typeParameters,
@@ -27,10 +24,13 @@ func NewConstructorDeclarationWithAll(annotationReferences intmod.IReference, fl
 		descriptor:           descriptor,
 		statements:           statements,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ConstructorDeclaration struct {
 	AbstractMemberDeclaration
+	util.DefaultBase[intmod.IConstructorDeclaration]
 
 	annotationReferences intmod.IReference
 	flags                int

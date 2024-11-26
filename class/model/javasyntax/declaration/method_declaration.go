@@ -2,72 +2,47 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewMethodDeclaration(flags int, name string, returnedType intmod.IType,
 	descriptor string) intmod.IMethodDeclaration {
-	return &MethodDeclaration{
-		flags:        flags,
-		name:         name,
-		returnedType: returnedType,
-		descriptor:   descriptor,
-	}
+	return NewMethodDeclaration6(nil, flags, name, nil,
+		returnedType, nil, nil, descriptor, nil, nil)
 }
 
 func NewMethodDeclaration2(flags int, name string, returnedType intmod.IType,
 	descriptor string, statements intmod.IStatement) intmod.IMethodDeclaration {
-	return &MethodDeclaration{
-		flags:        flags,
-		name:         name,
-		returnedType: returnedType,
-		descriptor:   descriptor,
-		statements:   statements,
-	}
+	return NewMethodDeclaration6(nil, flags, name, nil,
+		returnedType, nil, nil, descriptor, statements, nil)
 }
 
 func NewMethodDeclaration3(flags int, name string, returnedType intmod.IType,
 	descriptor string, defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
-	return &MethodDeclaration{
-		flags:                  flags,
-		name:                   name,
-		returnedType:           returnedType,
-		descriptor:             descriptor,
-		defaultAnnotationValue: defaultAnnotationValue,
-	}
+	return NewMethodDeclaration6(nil, flags, name, nil,
+		returnedType, nil, nil, descriptor, nil, defaultAnnotationValue)
 }
 
 func NewMethodDeclaration4(flags int, name string, returnedType intmod.IType,
 	formalParameter intmod.IFormalParameter, descriptor string,
 	statements intmod.IStatement) intmod.IMethodDeclaration {
-	return &MethodDeclaration{
-		flags:           flags,
-		name:            name,
-		returnedType:    returnedType,
-		formalParameter: formalParameter,
-		descriptor:      descriptor,
-		statements:      statements,
-	}
+	return NewMethodDeclaration6(nil, flags, name, nil,
+		returnedType, formalParameter, nil, descriptor, statements, nil)
 }
 
 func NewMethodDeclaration5(flags int, name string, returnedType intmod.IType,
 	formalParameter intmod.IFormalParameter, descriptor string,
 	defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
-	return &MethodDeclaration{
-		flags:                  flags,
-		name:                   name,
-		returnedType:           returnedType,
-		formalParameter:        formalParameter,
-		descriptor:             descriptor,
-		defaultAnnotationValue: defaultAnnotationValue,
-	}
+	return NewMethodDeclaration6(nil, flags, name, nil,
+		returnedType, formalParameter, nil, descriptor, nil, defaultAnnotationValue)
 }
 
 func NewMethodDeclaration6(annotationReferences intmod.IAnnotationReference,
 	flags int, name string, typeParameters intmod.ITypeParameter, returnedType intmod.IType,
 	formalParameter intmod.IFormalParameter, exceptionTypes intmod.IType, descriptor string,
 	statements intmod.IStatement, defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
-	return &MethodDeclaration{
+	d := &MethodDeclaration{
 		annotationReferences:   annotationReferences,
 		flags:                  flags,
 		name:                   name,
@@ -79,10 +54,13 @@ func NewMethodDeclaration6(annotationReferences intmod.IAnnotationReference,
 		statements:             statements,
 		defaultAnnotationValue: defaultAnnotationValue,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type MethodDeclaration struct {
 	AbstractMemberDeclaration
+	util.DefaultBase[intmod.IMethodDeclaration]
 
 	annotationReferences   intmod.IAnnotationReference
 	flags                  int

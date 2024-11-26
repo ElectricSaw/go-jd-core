@@ -7,36 +7,28 @@ import (
 
 func NewMethodInvocationExpression(typ intmod.IType, expression intmod.IExpression,
 	internalTypeName, name, descriptor string) intmod.IMethodInvocationExpression {
-	return &MethodInvocationExpression{
-		MethodReferenceExpression: *NewMethodReferenceExpression(typ, expression,
-			internalTypeName, name, descriptor).(*MethodReferenceExpression),
-	}
+	return NewMethodInvocationExpressionWithAll(0, typ, expression, internalTypeName, name, descriptor, nil)
 }
 
 func NewMethodInvocationExpressionWithLineNumber(lineNumber int, typ intmod.IType,
 	expression intmod.IExpression, internalTypeName, name, descriptor string) intmod.IMethodInvocationExpression {
-	return &MethodInvocationExpression{
-		MethodReferenceExpression: *NewMethodReferenceExpressionWithAll(lineNumber,
-			typ, expression, internalTypeName, name, descriptor).(*MethodReferenceExpression),
-	}
+	return NewMethodInvocationExpressionWithAll(lineNumber, typ, expression, internalTypeName, name, descriptor, nil)
 }
 
 func NewMethodInvocationExpressionWithParam(typ intmod.IType, expression intmod.IExpression,
 	internalTypeName, name, descriptor string, parameters intmod.IExpression) intmod.IMethodInvocationExpression {
-	return &MethodInvocationExpression{
-		MethodReferenceExpression: *NewMethodReferenceExpression(typ, expression,
-			internalTypeName, name, descriptor).(*MethodReferenceExpression),
-		parameters: parameters,
-	}
+	return NewMethodInvocationExpressionWithAll(0, typ, expression, internalTypeName, name, descriptor, parameters)
 }
 
 func NewMethodInvocationExpressionWithAll(lineNumber int, typ intmod.IType, expression intmod.IExpression,
 	internalTypeName, name, descriptor string, parameters intmod.IExpression) intmod.IMethodInvocationExpression {
-	return &MethodInvocationExpression{
+	e := &MethodInvocationExpression{
 		MethodReferenceExpression: *NewMethodReferenceExpressionWithAll(lineNumber, typ,
 			expression, internalTypeName, name, descriptor).(*MethodReferenceExpression),
 		parameters: parameters,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type MethodInvocationExpression struct {

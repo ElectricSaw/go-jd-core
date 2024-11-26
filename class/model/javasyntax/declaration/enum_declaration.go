@@ -7,19 +7,20 @@ import (
 
 func NewEnumDeclaration(flags int, internalTypeName, name string, constants []intmod.IConstant,
 	bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
-	return &EnumDeclaration{
-		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
-		constants:       constants,
-	}
+	return NewEnumDeclarationWithAll(nil, flags,
+		internalTypeName, name, nil, constants, bodyDeclaration)
 }
 
-func NewEnumDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int, internalTypeName,
-	name string, interfaces intmod.IType, constants []intmod.IConstant, bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
-	return &EnumDeclaration{
+func NewEnumDeclarationWithAll(annotationReferences intmod.IAnnotationReference,
+	flags int, internalTypeName, name string, interfaces intmod.IType,
+	constants []intmod.IConstant, bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
+	d := &EnumDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		interfaces:      interfaces,
 		constants:       constants,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type EnumDeclaration struct {

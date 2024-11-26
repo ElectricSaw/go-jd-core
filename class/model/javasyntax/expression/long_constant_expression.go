@@ -3,25 +3,26 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewLongConstantExpression(value int64) intmod.ILongConstantExpression {
-	return &LongConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeLong.(intmod.IType)),
-		value:                            value,
-	}
+	return NewLongConstantExpressionWithAll(0, value)
 }
 
 func NewLongConstantExpressionWithAll(lineNumber int, value int64) intmod.ILongConstantExpression {
-	return &LongConstantExpression{
+	e := &LongConstantExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeLong.(intmod.IType)),
 		value:                            value,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type LongConstantExpression struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.ILongConstantExpression]
 
 	value int64
 }

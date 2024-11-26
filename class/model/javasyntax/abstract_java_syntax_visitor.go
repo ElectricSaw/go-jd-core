@@ -10,7 +10,7 @@ type AbstractJavaSyntaxVisitor struct {
 	_type.AbstractTypeArgumentVisitor
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit CompilationUnit) {
+func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit *CompilationUnit) {
 	compilationUnit.TypeDeclarations().Accept(v)
 }
 

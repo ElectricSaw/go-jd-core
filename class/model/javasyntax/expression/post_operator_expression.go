@@ -2,27 +2,27 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewPostOperatorExpression(operator string, expression intmod.IExpression) intmod.IPostOperatorExpression {
-	return &PostOperatorExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
-		operator:                     operator,
-		expression:                   expression,
-	}
+	return NewPostOperatorExpressionWithAll(0, operator, expression)
 }
 
 func NewPostOperatorExpressionWithAll(lineNumber int, operator string, expression intmod.IExpression) intmod.IPostOperatorExpression {
-	return &PostOperatorExpression{
+	e := &PostOperatorExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		operator:                     operator,
 		expression:                   expression,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type PostOperatorExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.IPostOperatorExpression]
 
 	operator   string
 	expression intmod.IExpression

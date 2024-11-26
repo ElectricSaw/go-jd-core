@@ -13,9 +13,11 @@ import (
 )
 
 func NewLocalVariableMaker(typeMaker *TypeMaker, comd intsrv.IClassFileConstructorOrMethodDeclaration, constructor bool) *LocalVariableMaker {
-	return &LocalVariableMaker{
+	m := &LocalVariableMaker{
 		typeMaker: typeMaker,
 	}
+
+	return m
 }
 
 type LocalVariableMaker struct {
@@ -33,75 +35,74 @@ type LocalVariableMaker struct {
 	createLocalVariableVisitor    *visitor.CreateLocalVariableVisitor
 }
 
-
 func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intmod.IMethod) {
-	code := method.Attribute("Code").(*attribute.AttributeCode);
+	code := method.Attribute("Code").(*attribute.AttributeCode)
 
 	// Init local variables from attributes
 	if code != nil {
 		localVariableTable := code.Attribute("LocalVariableTable").(*attribute.AttributeLocalVariableTable)
 
 		if localVariableTable != nil {
-			staticFlag := (method.AccessFlags() & intmod.FlagStatic) != 0;
+			staticFlag := (method.AccessFlags() & intmod.FlagStatic) != 0
 
 			for _, localVariable := range localVariableTable.LocalVariableTable() {
-				index := localVariable.Index();
+				index := localVariable.Index()
 				startPc := 0
-				if !staticFlag && index==0 {
-					startPc = localVariable.StartPc();
+				if !staticFlag && index == 0 {
+					startPc = localVariable.StartPc()
 				}
-				descriptor := localVariable.Descriptor();
-				name := localVariable.Name();
-				var lv intsrv.ILocalVariable;
+				descriptor := localVariable.Descriptor()
+				name := localVariable.Name()
+				var lv intsrv.ILocalVariable
 
-				if descriptor[len(descriptor) - 1] == ';' {
+				if descriptor[len(descriptor)-1] == ';' {
 					lv = localvariable.NewObjectLocalVariable(m.typeMaker, index, startPc,
-						m.typeMaker.MakeFromDescriptor(descriptor).(intmod.IType), name);
+						m.typeMaker.MakeFromDescriptor(descriptor).(intmod.IType), name)
 				} else {
-					dimension := CountDimension(descriptor);
+					dimension := CountDimension(descriptor)
 
 					if dimension == 0 {
 						lv = localvariable.NewPrimitiveLocalVariable(index, startPc,
-							_type.GetPrimitiveType(int(descriptor[0])), name);
+							_type.GetPrimitiveType(int(descriptor[0])), name)
 					} else {
 						lv = localvariable.NewObjectLocalVariable(m.typeMaker, index, startPc,
-							m.typeMaker.MakeFromSignature(descriptor[dimension:]).CreateType(dimension), name);
+							m.typeMaker.MakeFromSignature(descriptor[dimension:]).CreateType(dimension), name)
 					}
 				}
 
-				m.localVariableSet.Add(index, lv);
-				m.names = append(m.names, name);
+				m.localVariableSet.Add(index, lv)
+				m.names = append(m.names, name)
 			}
 		}
 
 		localVariableTypeTable := code.Attribute("LocalVariableTypeTable").(*attribute.AttributeLocalVariableTypeTable)
 
 		if localVariableTypeTable != nil {
-			updateTypeVisitor := visitor.NewUpdateTypeVisitor(m.localVariableSet);
+			updateTypeVisitor := visitor.NewUpdateTypeVisitor(m.localVariableSet)
 
 			for _, lv := range localVariableTypeTable.LocalVariableTypeTable() {
-				updateTypeVisitor.SetLocalVariableType(lv);
-				m.typeMaker.MakeFromSignature(lv.Signature()).AcceptTypeArgumentVisitor(updateTypeVisitor);
+				updateTypeVisitor.SetLocalVariableType(lv)
+				m.typeMaker.MakeFromSignature(lv.Signature()).AcceptTypeArgumentVisitor(updateTypeVisitor)
 			}
 		}
 	}
 }
 
 func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intmod.IClassFile,
-	parameterTypes intmod.IType, varargs bool,  firstVariableIndex, lastParameterIndex int) {
+	parameterTypes intmod.IType, varargs bool, firstVariableIndex, lastParameterIndex int) {
 	typeMap := make(map[intmod.IType]bool)
-	t := sliceToDefaultList[intmod.IType](parameterTypes.List());
+	t := sliceToDefaultList[intmod.IType](parameterTypes.ToSlice())
 
-	for parameterIndex:=0; parameterIndex<=lastParameterIndex; parameterIndex++ {
-		y := t.Get(parameterIndex);
+	for parameterIndex := 0; parameterIndex <= lastParameterIndex; parameterIndex++ {
+		y := t.Get(parameterIndex)
 		_, ok := typeMap[y]
 		typeMap[y] = ok
 	}
 
-	parameterNamePrefix := "param";
+	parameterNamePrefix := "param"
 
 	if classFile.OuterClassFile() != nil {
-		innerTypeDepth := 1;
+		innerTypeDepth := 1
 		y := m.typeMaker.MakeFromInternalTypeName(classFile.OuterClassFile().InternalTypeName()).(intmod.IType)
 
 		for y != nil && y.IsInnerObjectType() {
@@ -112,321 +113,338 @@ func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intm
 		parameterNamePrefix = fmt.Sprintf("%s%d", parameterNamePrefix, innerTypeDepth)
 	}
 
-	StringBuilder sb = new StringBuilder();
-	GenerateParameterSuffixNameVisitor generateParameterSuffixNameVisitor = new GenerateParameterSuffixNameVisitor();
+	sb := ""
+	generateParameterSuffixNameVisitor := visitor.NewGenerateParameterSuffixNameVisitor()
 
-	for (int parameterIndex=0, variableIndex=firstVariableIndex; parameterIndex<=lastParameterIndex; parameterIndex++, variableIndex++) {
-		Type type = t.(parameterIndex);
-		AbstractLocalVariable lv = localVariableSet.root(variableIndex);
+	variableIndex := firstVariableIndex
+	for parameterIndex := 0; parameterIndex <= lastParameterIndex; parameterIndex++ {
+		typ := t.Get(parameterIndex)
+		lv := m.localVariableSet.Root(variableIndex).(intsrv.ILocalVariable)
 
-		if (lv == nil) {
-			sb.SetLength(0);
-			sb.append(parameterNamePrefix);
+		if lv == nil {
+			sb = ""
+			sb += parameterNamePrefix
 
-			if ((parameterIndex == lastParameterIndex) && varargs) {
-				sb.append("VarArgs");
+			if (parameterIndex == lastParameterIndex) && varargs {
+				sb += "VarArgs"
 				//                } else if (type.Dimension() > 1) {
 				//                    sb.append("ArrayOfArray");
 			} else {
-				if (type.Dimension() > 0) {
-					sb.append("ArrayOf");
+				if typ.Dimension() > 0 {
+					sb += "ArrayOf"
 				}
-				type.accept(generateParameterSuffixNameVisitor);
-				sb.append(generateParameterSuffixNameVisitor.Suffix());
+				typ.AcceptTypeArgumentVisitor(generateParameterSuffixNameVisitor)
+				sb += generateParameterSuffixNameVisitor.Suffix()
 			}
 
-			int length = sb.length();
-			int counter = 1;
+			length := len(sb)
+			counter := 1
 
-			if (typeMap.(type)) {
-				sb.append(counter++);
+			if typeMap[typ] {
+				sb += fmt.Sprintf("%d", counter)
+				counter++
 			}
 
-			String name = sb.toString();
+			name := sb
 
-			while (names.contains(name)) {
-				sb.SetLength(length);
-				sb.append(counter++);
-				name = sb.toString();
+			for _, value := range m.names {
+				if value == name {
+					sb = sb[:length]
+					sb += fmt.Sprintf("%d", counter)
+					counter++
+					name = sb
+				}
 			}
 
-			names.add(name);
-			createParameterVisitor.init(variableIndex, name);
-			type.accept(createParameterVisitor);
-
-			AbstractLocalVariable alv = createParameterVisitor.LocalVariable();
-
-			alv.SetDeclared(true);
-			localVariableSet.add(variableIndex, alv);
+			m.names = append(m.names, name)
+			m.createParameterVisitor.Init(variableIndex, name)
+			typ.AcceptTypeArgumentVisitor(m.createParameterVisitor)
+			alv := m.createParameterVisitor.LocalVariable().(intsrv.ILocalVariable)
+			alv.SetDeclared(true)
+			m.localVariableSet.Add(variableIndex, alv)
 		}
 
-		if (PrimitiveType.TYPE_LONG.equals(type) || PrimitiveType.TYPE_DOUBLE.equals(type)) {
-variableIndex++;
-}
-}
+		if _type.PtTypeLong == typ || _type.PtTypeDouble == typ {
+			variableIndex++
+		}
+		variableIndex++
+	}
 }
 
-func (m *LocalVariableMaker) getLocalVariable(int index, int offset)  AbstractLocalVariable {
-	AbstractLocalVariable lv = localVariableCache[index];
+func (m *LocalVariableMaker) LocalVariable(index, offset int) intsrv.ILocalVariable {
+	lv := m.localVariableCache[index]
 
-	if (lv == nil) {
-		lv = currentFrame.LocalVariable(index);
+	if lv == nil {
+		lv = m.currentFrame.LocalVariable(index)
 		//            assert lv != nil : "getLocalVariable : local variable not found";
-		if (lv == nil) {
-			lv = new ObjectLocalVariable(typeMaker, index, offset, ObjectType.TYPE_OBJECT, "SYNTHETIC_LOCAL_VARIABLE_"+index, true);
+		if lv == nil {
+			lv = localvariable.NewObjectLocalVariable2(m.typeMaker, index, offset, _type.OtTypeObject.(intmod.IType),
+				fmt.Sprintf("SYNTHETIC_LOCAL_VARIABLE_%d", index), true)
 		}
-	} else if (lv.Frame() != currentFrame) {
-		Frame frame = searchCommonParentFrame(lv.Frame(), currentFrame);
-		frame.mergeLocalVariable(typeBounds, this, lv);
+	} else if lv.Frame() != m.currentFrame {
+		frame := searchCommonParentFrame(lv.Frame(), currentFrame)
+		frame.MergeLocalVariable(typeBounds, this, lv)
 
-		if (lv.Frame() != frame) {
-			lv.Frame().removeLocalVariable(lv);
-			frame.addLocalVariable(lv);
+		if lv.Frame() != frame {
+			lv.Frame().RemoveLocalVariable(lv)
+			frame.AddLocalVariable(lv)
 		}
 	}
 
-	lv.SetToOffset(offset);
+	lv.SetToOffset(offset)
 
-	return lv;
+	return lv
 }
 
-func (m *LocalVariableMaker) searchLocalVariable(int index, int offset)  AbstractLocalVariable {
-	AbstractLocalVariable lv = localVariableSet.(index, offset);
+func (m *LocalVariableMaker) searchLocalVariable(index, offset int) intsrv.ILocalVariable {
+	lv := m.localVariableSet.Get(index, offset)
 
-	if (lv == nil) {
-		lv = currentFrame.LocalVariable(index);
+	if lv == nil {
+		lv = m.currentFrame.LocalVariable(index)
 	} else {
-		AbstractLocalVariable lv2 = currentFrame.LocalVariable(index);
+		lv2 := m.currentFrame.LocalVariable(index)
 
-		if ((lv2 != nil) && ((lv.Name() == nil) ? (lv2.Name() == nil) : lv.Name().equals(lv2.Name())) && lv.Type().equals(lv2.Type())) {
-			lv = lv2;
+		if lv2 != nil && lv.Type() == lv2.Type() {
+			if lv.Name() == "" && lv2.Name() == nil || lv.Name() == lv2.Name() {
+				lv = lv2
+			}
 		}
 
-		localVariableSet.remove(index, offset);
+		m.localVariableSet.Remove(index, offset)
 	}
 
-	return lv;
+	return lv
 }
 
-func (m *LocalVariableMaker) isCompatible(AbstractLocalVariable lv, Type valueType)  boolean {
-	if (valueType == ObjectType.TYPE_UNDEFINED_OBJECT) {
-		return true;
-	} else if (valueType.isObjectType() && (lv.Type().Dimension() == valueType.Dimension())) {
-		ObjectType valueObjectType = (ObjectType) valueType;
+func (m *LocalVariableMaker) IsCompatible(lv intsrv.ILocalVariable, valueType intmod.IType) bool {
+	if valueType == _type.OtTypeUndefinedObject.(intmod.IType) {
+		return true
+	} else if valueType.IsObjectType() && (lv.Type().Dimension() == valueType.Dimension()) {
+		valueObjectType := valueType.(intmod.IObjectType)
 
-		if (lv.Type().isObjectType()) {
-			ObjectType lvObjectType = (ObjectType) lv.Type();
+		if lv.Type().IsObjectType() {
+			lvObjectType := lv.Type().(intmod.IObjectType)
 
-			BaseTypeArgument lvTypeArguments = lvObjectType.TypeArguments();
-			BaseTypeArgument valueTypeArguments = valueObjectType.TypeArguments();
+			lvTypeArguments := lvObjectType.TypeArguments()
+			valueTypeArguments := valueObjectType.TypeArguments()
 
-			if ((lvTypeArguments == nil) || (valueTypeArguments == nil) || (valueTypeArguments == WildcardTypeArgument.WILDCARD_TYPE_ARGUMENT)) {
-				return typeMaker.isRawTypeAssignable(lvObjectType, valueObjectType);
+			if (lvTypeArguments == nil) || (valueTypeArguments == nil) || (valueTypeArguments == _type.WildcardTypeArgumentEmpty) {
+				return m.typeMaker.IsRawTypeAssignable(lvObjectType, valueObjectType)
 			}
 
-			searchInTypeArgumentVisitor.init();
-			lvTypeArguments.accept(searchInTypeArgumentVisitor);
+			m.searchInTypeArgumentVisitor.Init()
+			lvTypeArguments.AcceptTypeArgumentVisitor(m.searchInTypeArgumentVisitor)
 
-			if (!searchInTypeArgumentVisitor.containsGeneric()) {
-				searchInTypeArgumentVisitor.init();
-				valueTypeArguments.accept(searchInTypeArgumentVisitor);
+			if !m.searchInTypeArgumentVisitor.ContainsGeneric() {
+				m.searchInTypeArgumentVisitor.Init()
+				valueTypeArguments.AcceptTypeArgumentVisitor(m.searchInTypeArgumentVisitor)
 
-				if (searchInTypeArgumentVisitor.containsGeneric()) {
-					return typeMaker.isRawTypeAssignable(lvObjectType, valueObjectType);
+				if m.searchInTypeArgumentVisitor.ContainsGeneric() {
+					return m.typeMaker.IsRawTypeAssignable(lvObjectType, valueObjectType)
 				}
 			}
-		} else if (lv.Type().isGenericType() && valueObjectType.InternalName().equals(ObjectType.TYPE_OBJECT.InternalName())) {
-			return true;
+		} else if lv.Type().IsGenericType() && valueObjectType.InternalName() == _type.OtTypeObject.InternalName() {
+			return true
 		}
 	}
 
-	return false;
+	return false
 }
 
-func (m *LocalVariableMaker) getLocalVariableInAssignment(Map<String, BaseType> typeBounds, int index, int offset, Type valueType)  AbstractLocalVariable {
-	AbstractLocalVariable lv = searchLocalVariable(index, offset);
+func (m *LocalVariableMaker) LocalVariableInAssignment(typeBounds map[string]intmod.IType, index, offset int, valueType intmod.IType) intsrv.ILocalVariable {
+	lv := m.searchLocalVariable(index, offset)
 
-	if (lv == nil) {
+	if lv == nil {
 		// Create a new local variable
-		createLocalVariableVisitor.init(index, offset);
-		valueType.accept(createLocalVariableVisitor);
-		lv = createLocalVariableVisitor.LocalVariable();
-	} else if (lv.isAssignableFrom(typeBounds, valueType) || isCompatible(lv, valueType)) {
+		m.createLocalVariableVisitor.Init(index, offset)
+		valueType.AcceptTypeArgumentVisitor(m.createLocalVariableVisitor)
+		lv = m.createLocalVariableVisitor.LocalVariable()
+	} else if lv.IsAssignableFrom(typeBounds, valueType) || m.IsCompatible(lv, valueType) {
 		// Assignable, reduce type
-		lv.typeOnRight(typeBounds, valueType);
-	} else if (!lv.Type().isGenericType() || (ObjectType.TYPE_OBJECT != valueType)) {
+		lv.TypeOnRight(typeBounds, valueType)
+	} else if !lv.Type().IsGenericType() || _type.OtTypeObject.(intmod.IType) != valueType {
 		// Not assignable -> Create a new local variable
-		createLocalVariableVisitor.init(index, offset);
-		valueType.accept(createLocalVariableVisitor);
-		lv = createLocalVariableVisitor.LocalVariable();
+		m.createLocalVariableVisitor.Init(index, offset)
+		valueType.AcceptTypeArgumentVisitor(m.createLocalVariableVisitor)
+		lv = m.createLocalVariableVisitor.LocalVariable()
 	}
 
-	lv.SetToOffset(offset);
-	store(lv);
+	lv.SetToOffset(offset)
+	m.store(lv)
 
-	return lv;
+	return lv
 }
 
-func (m *LocalVariableMaker) getLocalVariableInnilAssignment(int index, int offset, Type valueType)  AbstractLocalVariable {
-	AbstractLocalVariable lv = searchLocalVariable(index, offset);
+func (m *LocalVariableMaker) LocalVariableInNullAssignment(index, offset int, valueType intmod.IType) intsrv.ILocalVariable {
+	lv := m.searchLocalVariable(index, offset)
 
-	if (lv == nil) {
+	if lv == nil {
 		// Create a new local variable
-		createLocalVariableVisitor.init(index, offset);
-		valueType.accept(createLocalVariableVisitor);
-		lv = createLocalVariableVisitor.LocalVariable();
+		m.createLocalVariableVisitor.Init(index, offset)
+		valueType.AcceptTypeArgumentVisitor(m.createLocalVariableVisitor)
+		lv = m.createLocalVariableVisitor.LocalVariable()
 	} else {
-		Type type = lv.Type();
+		t := lv.Type()
 
-		if ((type.Dimension() == 0) && type.isPrimitiveType()) {
+		if (t.Dimension() == 0) && t.IsPrimitiveType() {
 			// Not assignable -> Create a new local variable
-			createLocalVariableVisitor.init(index, offset);
-			valueType.accept(createLocalVariableVisitor);
-			lv = createLocalVariableVisitor.LocalVariable();
+			m.createLocalVariableVisitor.Init(index, offset)
+			valueType.AcceptTypeArgumentVisitor(m.createLocalVariableVisitor)
+			lv = m.createLocalVariableVisitor.LocalVariable()
 		}
 	}
 
-	lv.SetToOffset(offset);
-	store(lv);
+	lv.SetToOffset(offset)
+	m.store(lv)
 
-	return lv;
+	return lv
 }
 
-func (m *LocalVariableMaker) getLocalVariableInAssignment(Map<String, BaseType> typeBounds, int index, int offset, AbstractLocalVariable valueLocalVariable)  AbstractLocalVariable {
-	AbstractLocalVariable lv = searchLocalVariable(index, offset);
+func (m *LocalVariableMaker) LocalVariableInAssignmentWithLocalVariable(typeBounds map[string]intmod.IType, index, offset int, valueLocalVariable intsrv.ILocalVariable) intsrv.ILocalVariable {
+	lv := m.searchLocalVariable(index, offset)
 
-	if (lv == nil) {
+	if lv == nil {
 		// Create a new local variable
-		createLocalVariableVisitor.init(index, offset);
-		valueLocalVariable.accept(createLocalVariableVisitor);
-		lv = createLocalVariableVisitor.LocalVariable();
-	} else if (lv.isAssignableFrom(typeBounds, valueLocalVariable) || isCompatible(lv, valueLocalVariable.Type())) {
+		m.createLocalVariableVisitor.Init(index, offset)
+		valueLocalVariable.Accept(m.createLocalVariableVisitor)
+		lv = m.createLocalVariableVisitor.LocalVariable()
+	} else if lv.IsAssignableFrom(typeBounds, valueLocalVariable.(intmod.IType)) || m.IsCompatible(lv, valueLocalVariable.Type()) {
 		// Assignable
-	} else if (!lv.Type().isGenericType() || (ObjectType.TYPE_OBJECT != valueLocalVariable.Type())) {
+	} else if !lv.Type().IsGenericType() || _type.OtTypeObject.(intmod.IType) != valueLocalVariable.Type() {
 		// Not assignable -> Create a new local variable
-		createLocalVariableVisitor.init(index, offset);
-		valueLocalVariable.accept(createLocalVariableVisitor);
-		lv = createLocalVariableVisitor.LocalVariable();
+		m.createLocalVariableVisitor.Init(index, offset)
+		valueLocalVariable.Accept(m.createLocalVariableVisitor)
+		lv = m.createLocalVariableVisitor.LocalVariable()
 	}
 
-	lv.variableOnRight(typeBounds, valueLocalVariable);
-	lv.SetToOffset(offset);
-	store(lv);
+	lv.VariableOnRight(typeBounds, valueLocalVariable)
+	lv.SetToOffset(offset)
+	m.store(lv)
 
-	return lv;
+	return lv
 }
 
-func (m *LocalVariableMaker) getExceptionLocalVariable(int index, int offset, ObjectType type)  AbstractLocalVariable {
-AbstractLocalVariable lv;
+func (m *LocalVariableMaker) ExceptionLocalVariable(index, offset int, t intmod.IObjectType) intsrv.ILocalVariable {
+	var lv intsrv.ILocalVariable
 
-if (index == -1) {
-currentFrame.SetExceptionLocalVariable(lv = new ObjectLocalVariable(typeMaker, index, offset, type, nil, true));
-} else {
-lv = localVariableSet.remove(index, offset);
+	if index == -1 {
+		lv = localvariable.NewObjectLocalVariable2(m.typeMaker, index, offset, t.(intmod.IType), "", true)
+		m.currentFrame.SetExceptionLocalVariable(lv)
+	} else {
+		lv = m.localVariableSet.Remove(index, offset)
 
-if (lv == nil) {
-lv = new ObjectLocalVariable(typeMaker, index, offset, type, nil, true);
-} else {
-lv.SetDeclared(true);
+		if lv == nil {
+			lv = localvariable.NewObjectLocalVariable2(m.typeMaker, index, offset, t.(intmod.IType), nil, true)
+		} else {
+			lv.SetDeclared(true)
+		}
+
+		m.currentFrame.AddLocalVariable(lv)
+	}
+
+	return lv
 }
 
-currentFrame.addLocalVariable(lv);
-}
+func (m *LocalVariableMaker) RemoveLocalVariable(lv intsrv.ILocalVariable) {
+	index := lv.Index()
 
-return lv;
-}
-
-func (m *LocalVariableMaker) removeLocalVariable(AbstractLocalVariable lv)  void {
-	int index = lv.Index();
-
-	if (index < localVariableCache.length) {
+	if index < len(m.localVariableCache) {
 		// Remove from cache
-		localVariableCache[index] = nil;
+		m.localVariableCache[index] = nil
 		// Remove from current frame
-		currentFrame.removeLocalVariable(lv);
+		m.currentFrame.RemoveLocalVariable(lv)
 	}
 }
 
-func (m *LocalVariableMaker) store(lv AbstractLocalVariable) {
+func (m *LocalVariableMaker) store(lv intsrv.ILocalVariable) {
 	// Store to cache
-	int index = lv.Index();
+	index := lv.Index()
 
-	if (index >= localVariableCache.length) {
-		AbstractLocalVariable[] tmp = localVariableCache;
-		localVariableCache = new AbstractLocalVariable[index * 2];
-		System.arraycopy(tmp, 0, localVariableCache, 0, tmp.length);
+	if index >= len(m.localVariableCache) {
+		tmp := m.localVariableCache
+		m.localVariableCache = make([]intsrv.ILocalVariable, 0, len(tmp)*2)
+		for _, item := range tmp {
+			m.localVariableCache = append(m.localVariableCache, item)
+		}
 	}
 
-	localVariableCache[index] = lv;
+	// FIXME: 오류 발생 예상 지점.
+	m.localVariableCache[index] = lv
 
 	// Store to current frame
-	if (lv.Frame() == nil) {
-		currentFrame.addLocalVariable(lv);
+	if lv.Frame() == nil {
+		m.currentFrame.addLocalVariable(lv)
 	}
 }
 
-func (m *LocalVariableMaker) containsName(String name)  boolean {
-	return names.contains(name);
-}
-
-func (m *LocalVariableMaker) make(boolean containsLineNumber, TypeMaker typeMaker)  void {
-	currentFrame.updateLocalVariableInForStatements(typeMaker);
-	currentFrame.createNames(blackListNames);
-	currentFrame.createDeclarations(containsLineNumber);
-}
-
-func (m *LocalVariableMaker) getFormalParameters()  BaseFormalParameter {
-	return formalParameters;
-}
-
-func (m *LocalVariableMaker) pushFrame(Statements statements)  void {
-	Frame parent = currentFrame;
-	currentFrame = new Frame(currentFrame, statements);
-	parent.addChild(currentFrame);
-}
-
-func (m *LocalVariableMaker) popFrame()  void {
-	currentFrame.close();
-	currentFrame = currentFrame.Parent();
-}
-
-func (m *LocalVariableMaker) Frame searchCommonParentFrame(Frame frame1, Frame frame2)  static {
-	if (frame1 == frame2) {
-		return frame1;
-	}
-
-	if (frame2.Parent() == frame1) {
-		return frame1;
-	}
-
-	if (frame1.Parent() == frame2) {
-		return frame2;
-	}
-
-	HashSet<Frame> set = new HashSet<>();
-
-	while (frame1 != nil) {
-		set.add(frame1);
-		frame1 = frame1.Parent();
-	}
-
-	while (frame2 != nil) {
-		if (set.contains(frame2)) {
-			return frame2;
+func (m *LocalVariableMaker) ContainsName(name string) bool {
+	for _, item := range m.names {
+		if item == name {
+			return true
 		}
-		frame2 = frame2.Parent();
 	}
 
-	return nil;
+	return false
 }
 
-func (m *LocalVariableMaker) changeFrame(AbstractLocalVariable localVariable)  void {
-	Frame frame = LocalVariableMaker.searchCommonParentFrame(localVariable.Frame(), currentFrame);
+func (m *LocalVariableMaker) Make(containsLineNumber bool, typeMaker *TypeMaker) {
+	m.currentFrame.updateLocalVariableInForStatements(typeMaker)
+	m.currentFrame.createNames(m.blackListNames)
+	m.currentFrame.createDeclarations(containsLineNumber)
+}
 
-	if (localVariable.Frame() != frame) {
-		localVariable.Frame().removeLocalVariable(localVariable);
-		frame.addLocalVariable(localVariable);
+func (m *LocalVariableMaker) FormalParameters() intmod.IFormalParameter {
+	return m.formalParameters
+}
+
+func (m *LocalVariableMaker) PushFrame(statements intmod.IStatements) {
+	parent := m.currentFrame
+	m.currentFrame = localvariable.NewFrame(m.currentFrame, statements)
+	parent.AddChild(m.currentFrame)
+}
+
+func (m *LocalVariableMaker) PopFrame() {
+	m.currentFrame.Close()
+	m.currentFrame = m.currentFrame.Parent()
+}
+
+func (m *LocalVariableMaker) ChangeFrame(localVariable intsrv.ILocalVariable) {
+	frame := searchCommonParentFrame(localVariable.Frame(), m.currentFrame)
+
+	if localVariable.Frame() != frame {
+		localVariable.Frame().RemoveLocalVariable(localVariable)
+		frame.AddLocalVariable(localVariable)
 	}
+}
+
+func searchCommonParentFrame(frame1, frame2 localvariable.IFrame) localvariable.IFrame {
+	if frame1 == frame2 {
+		return frame1
+	}
+
+	if frame2.Parent() == frame1 {
+		return frame1
+	}
+
+	if frame1.Parent() == frame2 {
+		return frame2
+	}
+
+	set := make([]localvariable.IFrame, 0)
+
+	for frame1 != nil {
+		set = append(set, frame1)
+		frame1 = frame1.Parent()
+	}
+
+	for frame2 != nil {
+		if ContainsFrame(set, frame2) {
+			return frame2
+		}
+		frame2 = frame2.Parent()
+	}
+
+	return nil
 }
 
 func sliceToDefaultList[T any](slice []T) util.DefaultList[T] {
@@ -435,4 +453,13 @@ func sliceToDefaultList[T any](slice []T) util.DefaultList[T] {
 		ret.Add(item)
 	}
 	return ret
+}
+
+func ContainsFrame(slice []localvariable.IFrame, item localvariable.IFrame) bool {
+	for _, i := range slice {
+		if i == item {
+			return true
+		}
+	}
+	return false
 }

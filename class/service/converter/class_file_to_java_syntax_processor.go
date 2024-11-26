@@ -7,9 +7,13 @@ import (
 
 var ConvertClassFileProcessor = processor.NewConvertClassFileProcessor()
 
+func NewClassFileToJavaSyntaxProcessor() *ClassFileToJavaSyntaxProcessor {
+	return &ClassFileToJavaSyntaxProcessor{}
+}
+
 type ClassFileToJavaSyntaxProcessor struct {
 }
 
-func (p *ClassFileToJavaSyntaxProcessor) Process(message message.Message) error {
+func (p *ClassFileToJavaSyntaxProcessor) Process(message *message.Message) error {
 	return nil
 }

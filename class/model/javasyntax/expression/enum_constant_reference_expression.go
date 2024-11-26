@@ -2,31 +2,29 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewEnumConstantReferenceExpression(typ intmod.IObjectType, name string) intmod.IEnumConstantReferenceExpression {
-	return &EnumConstantReferenceExpression{
-		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: intmod.UnknownLineNumber,
-		},
-		typ:  typ,
-		name: name,
-	}
+	return NewEnumConstantReferenceExpressionWithAll(0, typ, name)
 }
 
 func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intmod.IObjectType, name string) intmod.IEnumConstantReferenceExpression {
-	return &EnumConstantReferenceExpression{
+	e := &EnumConstantReferenceExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
 		},
 		typ:  typ,
 		name: name,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type EnumConstantReferenceExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.IEnumConstantReferenceExpression]
 
 	typ  intmod.IObjectType
 	name string

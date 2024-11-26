@@ -90,7 +90,7 @@ func aggregate(fields []intsrv.IClassFileFieldDeclaration, firstField intsrv.ICl
 		bfd := firstField.FieldDeclarators()
 
 		if bfd.IsList() {
-			l := bfd.List()
+			l := bfd.ToSlice()
 			declarators.AddAll(l)
 		} else {
 			declarators.Add(bfd.First())
@@ -100,7 +100,7 @@ func aggregate(fields []intsrv.IClassFileFieldDeclaration, firstField intsrv.ICl
 			bfd = f.FieldDeclarators()
 
 			if bfd.IsList() {
-				l := bfd.List()
+				l := bfd.ToSlice()
 				declarators.AddAll(l)
 			} else {
 				declarators.Add(bfd.First())

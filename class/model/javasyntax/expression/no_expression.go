@@ -8,15 +8,17 @@ import (
 
 var NeNoExpression = NewNoExpression()
 
-func NewNoExpression() intmod.IExpression {
-	return &NoExpression{
+func NewNoExpression() intmod.INoExpression {
+	e := &NoExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeVoid.(intmod.IType)),
 	}
+	e.SetValue(e)
+	return e
 }
 
 type NoExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.IExpression]
+	util.DefaultBase[intmod.INoExpression]
 }
 
 func (e *NoExpression) Accept(visitor intmod.IExpressionVisitor) {

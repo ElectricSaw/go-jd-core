@@ -2,25 +2,26 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewSuperExpression(typ intmod.IType) intmod.ISuperExpression {
-	return &SuperExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpressionEmpty(),
-		typ:                          typ,
-	}
+	return NewSuperExpressionWithAll(0, typ)
 }
 
 func NewSuperExpressionWithAll(lineNumber int, typ intmod.IType) intmod.ISuperExpression {
-	return &SuperExpression{
+	e := &SuperExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type SuperExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.ISuperExpression]
 
 	typ intmod.IType
 }

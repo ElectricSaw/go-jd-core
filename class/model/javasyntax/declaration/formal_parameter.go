@@ -7,40 +7,31 @@ import (
 )
 
 func NewFormalParameter(typ intmod.IType, name string) intmod.IFormalParameter {
-	return &FormalParameter{
-		typ:  typ,
-		name: name,
-	}
+	return NewFormalParameter4(nil, typ, false, name)
 }
 
 func NewFormalParameter2(annotationReferences intmod.IAnnotationReference, typ intmod.IType, name string) intmod.IFormalParameter {
-	return &FormalParameter{
-		annotationReferences: annotationReferences,
-		typ:                  typ,
-		name:                 name,
-	}
+	return NewFormalParameter4(annotationReferences, typ, false, name)
 }
 
 func NewFormalParameter3(typ intmod.IType, varargs bool, name string) intmod.IFormalParameter {
-	return &FormalParameter{
-		typ:     typ,
-		varargs: varargs,
-		name:    name,
-	}
+	return NewFormalParameter4(nil, typ, varargs, name)
 }
 
 func NewFormalParameter4(annotationReferences intmod.IAnnotationReference, typ intmod.IType, varargs bool, name string) intmod.IFormalParameter {
-	return &FormalParameter{
+	p := &FormalParameter{
 		annotationReferences: annotationReferences,
 		typ:                  typ,
 		varargs:              varargs,
 		name:                 name,
 	}
+	p.SetValue(p)
+	return p
 }
 
 type FormalParameter struct {
 	util.DefaultBase[intmod.IFormalParameter]
-	
+
 	annotationReferences intmod.IAnnotationReference
 	final                bool
 	typ                  intmod.IType

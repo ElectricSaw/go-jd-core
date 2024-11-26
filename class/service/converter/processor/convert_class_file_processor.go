@@ -381,11 +381,11 @@ type CustomPopulateBindingsWithTypeParameterVisitor struct {
 }
 
 func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter *_type.TypeParameter) {
-	v.Bindings[parameter.Identifier()] = _type.NewGenericType(parameter.Identifier(), 0)
+	v.Bindings[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
 }
 
 func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter *_type.TypeParameterWithTypeBounds) {
-	v.Bindings[parameter.Identifier()] = _type.NewGenericType(parameter.Identifier(), 0)
+	v.Bindings[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
 	v.TypeBounds[parameter.Identifier()] = parameter.TypeBounds()
 }
 

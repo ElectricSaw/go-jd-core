@@ -5,6 +5,7 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
 	"errors"
 	"fmt"
@@ -693,73 +694,437 @@ func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalT
 	rightTypeTypes := m.MakeTypeTypes(rightInternalTypeName)
 
 	if rightTypeTypes != nil {
-		bindTypesToTypesVisitor := NewBindTypesToTypesVisitor()
+		bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
+		bindings := make(map[string]intmod.ITypeArgument)
+
+		if (rightTypeTypes.TypeParameters == nil) || (right.TypeArguments() == nil) {
+			bindings = make(map[string]intmod.ITypeArgument)
+		} else {
+			bindings = make(map[string]intmod.ITypeArgument)
+
+			if rightTypeTypes.TypeParameters.IsList() && right.TypeArguments().IsTypeArgumentList() {
+				iteratorTypeParameter := rightTypeTypes.TypeParameters.ToSlice()
+				iteratorTypeArgument := right.TypeArguments().TypeArgumentList()
+
+				for i := 0; i < len(iteratorTypeParameter); i++ {
+					bindings[iteratorTypeParameter[i].Identifier()] = iteratorTypeArgument[i]
+				}
+			} else {
+				bindings[rightTypeTypes.TypeParameters.First().Identifier()] = right.TypeArguments().TypeArgumentFirst()
+			}
+		}
+
+		bindTypesToTypesVisitor.SetBindings(bindings)
+
+		if rightTypeTypes.SuperType != nil {
+			bindTypesToTypesVisitor.Init()
+			rightTypeTypes.SuperType.AcceptTypeVisitor(bindTypesToTypesVisitor)
+			ot := bindTypesToTypesVisitor.Type().(intmod.IObjectType)
+			ot = m.searchSuperParameterizedType(leftHashCode, leftInternalTypeName, ot)
+
+			if ot != nil {
+				m.superParameterizedObjectTypes[key] = ot
+				return ot
+			}
+		}
+
+		if rightTypeTypes.Interfaces != nil {
+			for _, interfaze := range rightTypeTypes.Interfaces.ToSlice() {
+				bindTypesToTypesVisitor.Init()
+				interfaze.AcceptTypeVisitor(bindTypesToTypesVisitor)
+				ot := bindTypesToTypesVisitor.Type().(intmod.IObjectType)
+				ot = m.searchSuperParameterizedType(leftHashCode, leftInternalTypeName, ot)
+
+				if ot != nil {
+					m.superParameterizedObjectTypes[key] = ot
+					return ot
+				}
+			}
+		}
 	}
 
+	m.superParameterizedObjectTypes[key] = nil
 	return nil
 }
 
 func (m *TypeMaker) IsRawTypeAssignable(left, right intmod.IObjectType) bool {
-	// TODO
-	return false
+	if left == _type.OtTypeUndefinedObject || left == _type.OtTypeObject || left == right {
+		return true
+	} else if left.Dimension() > 0 || right.Dimension() > 0 {
+		return false
+	} else {
+		leftInternalName := left.InternalName()
+		rightInternalName := right.InternalName()
+
+		if leftInternalName == rightInternalName {
+			return true
+		} else {
+			return m.isRawTypeAssignable(hashCodeWithString(leftInternalName)*31, leftInternalName, rightInternalName)
+		}
+	}
 }
 
 func (m *TypeMaker) isRawTypeAssignable(leftHashCode int, leftInternalName, rightInternalName string) bool {
-	// TODO
+	if rightInternalName == "java/lang/Object" {
+		return false
+	}
+
+	key := int64(leftHashCode + hashCodeWithString(rightInternalName))
+
+	if value, ok := m.assignableRawTypes[key]; ok {
+		return value
+	}
+
+	superClassAndInterfaceNames := m.hierarchy[rightInternalName]
+
+	if superClassAndInterfaceNames == nil {
+		m.loadType(rightInternalName)
+		superClassAndInterfaceNames = m.hierarchy[rightInternalName]
+	}
+
+	if superClassAndInterfaceNames != nil {
+		for _, name := range superClassAndInterfaceNames {
+			if leftInternalName == name {
+				m.assignableRawTypes[key] = true
+				return true
+			}
+		}
+
+		for _, name := range superClassAndInterfaceNames {
+			if m.isRawTypeAssignable(leftHashCode, leftInternalName, name) {
+				m.assignableRawTypes[key] = true
+				return true
+			}
+		}
+	}
+
+	m.assignableRawTypes[key] = false
 	return false
 }
 
 func (m *TypeMaker) MakeTypeTypes(internalTypeName string) *TypeTypes {
-	// TODO
-	return nil
+	if value, ok := m.internalTypeNameToTypeTypes[internalTypeName]; ok {
+		return value
+	}
+
+	var typeTypes *TypeTypes
+
+	if m.loader.CanLoad(internalTypeName) {
+		data, err := m.loader.Load(internalTypeName)
+		if err != nil {
+			return nil
+		}
+		typeTypes = m.makeTypeTypes(internalTypeName, data)
+		m.internalTypeNameToTypeTypes[internalTypeName] = typeTypes
+	} else if m.classPathLoader.CanLoad(internalTypeName) {
+		data, err := m.classPathLoader.Load(internalTypeName)
+		if err != nil {
+			return nil
+		}
+		typeTypes = m.makeTypeTypes(internalTypeName, data)
+		m.internalTypeNameToTypeTypes[internalTypeName] = typeTypes
+	}
+
+	return typeTypes
 }
 
 func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) *TypeTypes {
-	// TODO
-	return nil
+	if data == nil {
+		return nil
+	}
+
+	reader := deserializer.NewClassFileReader(data)
+	constants, err := m.loadClassFile(internalTypeName, reader)
+	if err != nil {
+		return nil
+	}
+
+	// Skip fields
+	skipMembers(reader)
+
+	// Skip methods
+	skipMembers(reader)
+
+	// Load attributes
+	var signature string
+	count := reader.ReadUnsignedShort()
+
+	for j := 0; j < count; j++ {
+		attributeNameIndex := reader.ReadUnsignedShort()
+		attributeLength := reader.ReadInt()
+
+		if constants[attributeNameIndex] == "Signature" {
+			signature = constants[reader.ReadUnsignedShort()].(string)
+			break
+		} else {
+			reader.Skip(attributeLength)
+		}
+	}
+
+	superClassAndInterfaceNames := m.hierarchy[internalTypeName]
+	typeTypes := &TypeTypes{}
+
+	typeTypes.ThisType = m.MakeFromInternalTypeName(internalTypeName)
+
+	if signature == "" {
+		superTypeName := superClassAndInterfaceNames[0]
+
+		if superTypeName == "" {
+			typeTypes.SuperType = nil
+		} else {
+			typeTypes.SuperType = m.MakeFromInternalTypeName(superTypeName)
+		}
+
+		switch len(superClassAndInterfaceNames) {
+		case 0, 1:
+		case 2:
+			typeTypes.Interfaces = m.MakeFromInternalTypeName(superClassAndInterfaceNames[1]).(intmod.IType)
+		default:
+			length := len(superClassAndInterfaceNames)
+			list := _type.NewUnmodifiableTypes()
+			for i := 1; i < length; i++ {
+				list.Add(m.MakeFromInternalTypeName(superClassAndInterfaceNames[i]).(intmod.IType))
+			}
+			typeTypes.Interfaces = list
+			break
+		}
+	} else {
+		// Parse 'signature' attribute
+		signatureReader := &SignatureReader{signature: signature}
+
+		typeTypes.TypeParameters = m.parseTypeParameters(signatureReader)
+		typeTypes.SuperType = m.parseClassTypeSignature(signatureReader, 0)
+
+		firstInterface := m.parseClassTypeSignature(signatureReader, 0)
+
+		if firstInterface != nil {
+			nextInterface := m.parseClassTypeSignature(signatureReader, 0)
+
+			if nextInterface == nil {
+				typeTypes.Interfaces = firstInterface.(intmod.IType)
+			} else {
+				// length := len(superClassAndInterfaceNames)
+				list := _type.NewUnmodifiableTypes()
+				list.Add(firstInterface.(intmod.IType))
+
+				for nextInterface != nil {
+					list.Add(nextInterface.(intmod.IType))
+					nextInterface = m.parseClassTypeSignature(signatureReader, 0)
+				}
+
+				typeTypes.Interfaces = list
+			}
+		}
+	}
+
+	return typeTypes
 }
 
 func (m *TypeMaker) SetFieldType(internalTypeName, fieldName string, typ intmod.IType) {
-	// TODO
+	key := internalTypeName + ":" + fieldName
+	m.internalTypeNameFieldNameToType[key] = typ
 }
 
 func (m *TypeMaker) MakeFieldType(internalTypeName, fieldName, descriptor string) intmod.IType {
-	// TODO
-	return nil
+	typ := m.loadFieldType(internalTypeName, fieldName, descriptor)
+
+	if typ == nil {
+		key := internalTypeName + ":" + fieldName
+		typ = m.MakeFromSignature(descriptor)
+		m.internalTypeNameFieldNameToType[key] = typ
+	}
+
+	return typ
 }
 
 func (m *TypeMaker) loadFieldType(internalTypeName, fieldName, descriptor string) intmod.IType {
-	// TODO
-	return nil
+	key := internalTypeName + ":" + fieldName
+	typ := m.internalTypeNameFieldNameToType[key]
+
+	if typ == nil {
+		// Load fields
+		if m.loadFieldsAndMethods(internalTypeName) {
+			typ = m.internalTypeNameFieldNameToType[key]
+
+			if typ == nil {
+				typeTypes := m.MakeTypeTypes(internalTypeName)
+
+				if typeTypes != nil {
+					if typeTypes.SuperType != nil {
+						typ = m.loadFieldType2(typeTypes.SuperType, fieldName, descriptor)
+					}
+
+					if (typ == nil) && (typeTypes.Interfaces != nil) {
+						if typeTypes.Interfaces.IsList() {
+							for _, interfaze := range typeTypes.Interfaces.ToSlice() {
+								typ = m.loadFieldType2(interfaze.(intmod.IObjectType), fieldName, descriptor)
+								if typ != nil {
+									break
+								}
+							}
+						} else {
+							typ = m.loadFieldType2(typeTypes.Interfaces.First().(intmod.IObjectType), fieldName, descriptor)
+						}
+					}
+				}
+			}
+
+			if typ != nil {
+				m.internalTypeNameFieldNameToType[key] = typ
+			}
+		}
+	}
+
+	return typ
 }
 
 func (m *TypeMaker) loadFieldType2(objectType intmod.IObjectType, fieldName, descriptor string) intmod.IType {
-	// TODO
-	return nil
+	internalTypeName := objectType.InternalName()
+	typeArguments := objectType.TypeArguments()
+	typ := m.loadFieldType(internalTypeName, fieldName, descriptor)
+
+	if (typ != nil) && (typeArguments != nil) {
+		typeTypes := m.MakeTypeTypes(internalTypeName)
+
+		if (typeTypes != nil) && (typeTypes.TypeParameters != nil) {
+			bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
+			bindings := make(map[string]intmod.ITypeArgument)
+
+			if typeTypes.TypeParameters.IsList() && typeArguments.IsTypeArgumentList() {
+				iteratorTypeParameter := typeTypes.TypeParameters.ToSlice()
+				iteratorTypeArgument := typeArguments.TypeArgumentList()
+
+				for i := 0; i < len(iteratorTypeParameter); i++ {
+					bindings[iteratorTypeParameter[i].Identifier()] = iteratorTypeArgument[i]
+				}
+			} else {
+				bindings[typeTypes.TypeParameters.First().Identifier()] = typeArguments.TypeArgumentFirst()
+			}
+
+			bindTypesToTypesVisitor.SetBindings(bindings)
+			bindTypesToTypesVisitor.Init()
+
+			typ.AcceptTypeVisitor(bindTypesToTypesVisitor)
+			typ = bindTypesToTypesVisitor.Type()
+		}
+	}
+
+	return typ
 }
 
 func (m *TypeMaker) SetMethodReturnedType(internalTypeName, methodName, descriptor string, typ intmod.IType) {
-	// TODO
+	m.MakeMethodTypes2(internalTypeName, methodName, descriptor).ReturnedType = typ
 }
 
 func (m *TypeMaker) MakeMethodTypes(descriptor string) *MethodTypes {
-	// TODO
-	return nil
+	return m.parseMethodSignature2(descriptor, nil)
 }
 
 func (m *TypeMaker) MakeMethodTypes2(internalTypeName, methodName, descriptor string) *MethodTypes {
-	// TODO
-	return nil
+	methodTypes := m.loadMethodTypes(internalTypeName, methodName, descriptor)
+
+	if methodTypes == nil {
+		key := internalTypeName + ":" + methodName + descriptor
+		methodTypes = m.parseMethodSignature2(descriptor, nil)
+		m.internalTypeNameMethodNameDescriptorToMethodTypes[key] = methodTypes
+	}
+
+	return methodTypes
 }
 
 func (m *TypeMaker) loadMethodTypes(internalTypeName, methodName, descriptor string) *MethodTypes {
-	// TODO
-	return nil
+	key := internalTypeName + ":" + methodName + descriptor
+	methodTypes := m.internalTypeNameMethodNameDescriptorToMethodTypes[key]
+
+	if methodTypes == nil {
+		// Load method
+		if m.loadFieldsAndMethods(internalTypeName) {
+			methodTypes = m.internalTypeNameMethodNameDescriptorToMethodTypes[key]
+
+			if methodTypes == nil {
+				typeTypes := m.MakeTypeTypes(internalTypeName)
+
+				if typeTypes != nil {
+					if typeTypes.SuperType != nil {
+						methodTypes = m.loadMethodTypes2(typeTypes.SuperType, methodName, descriptor)
+					}
+
+					if (methodTypes == nil) && (typeTypes.Interfaces != nil) {
+						if typeTypes.Interfaces.IsList() {
+							for _, interfaze := range typeTypes.Interfaces.ToSlice() {
+								methodTypes = m.loadMethodTypes2(interfaze.(intmod.IObjectType), methodName, descriptor)
+								if methodTypes != nil {
+									break
+								}
+							}
+						} else {
+							methodTypes = m.loadMethodTypes2(typeTypes.Interfaces.First().(intmod.IObjectType), methodName, descriptor)
+						}
+					}
+				}
+			}
+
+			if methodTypes != nil {
+				m.internalTypeNameMethodNameDescriptorToMethodTypes[key] = methodTypes
+			}
+		}
+	}
+
+	return methodTypes
 }
 
 func (m *TypeMaker) loadMethodTypes2(objectType intmod.IObjectType, methodName, descriptor string) *MethodTypes {
-	// TODO
-	return nil
+	internalTypeName := objectType.InternalName()
+	typeArguments := objectType.TypeArguments()
+	methodTypes := m.loadMethodTypes(internalTypeName, methodName, descriptor)
+
+	if (methodTypes != nil) && (typeArguments != nil) {
+		typeTypes := m.MakeTypeTypes(internalTypeName)
+
+		if (typeTypes != nil) && (typeTypes.TypeParameters != nil) {
+			bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
+			bindings := make(map[string]intmod.ITypeArgument)
+			newMethodTypes := &MethodTypes{}
+
+			if typeTypes.TypeParameters.IsList() && typeArguments.IsTypeArgumentList() {
+				iteratorTypeParameter := typeTypes.TypeParameters.ToSlice()
+				iteratorTypeArgument := typeArguments.TypeArgumentList()
+
+				for i := 0; i < len(iteratorTypeParameter); i++ {
+					bindings[iteratorTypeParameter[i].Identifier()] = iteratorTypeArgument[i]
+				}
+			} else {
+				bindings[typeTypes.TypeParameters.First().Identifier()] = typeArguments.TypeArgumentFirst()
+			}
+
+			bindTypesToTypesVisitor.SetBindings(bindings)
+
+			if methodTypes.ParameterTypes == nil {
+				newMethodTypes.ParameterTypes = nil
+			} else {
+				bindTypesToTypesVisitor.Init()
+				methodTypes.ParameterTypes.AcceptTypeVisitor(bindTypesToTypesVisitor)
+				baseType := bindTypesToTypesVisitor.Type()
+
+				if baseType.IsList() && baseType.IsTypes() {
+					baseType = _type.NewUnmodifiableTypes(baseType.ToSlice()...)
+				}
+
+				newMethodTypes.ParameterTypes = baseType
+			}
+
+			bindTypesToTypesVisitor.Init()
+			methodTypes.ReturnedType.AcceptTypeVisitor(bindTypesToTypesVisitor)
+			newMethodTypes.ReturnedType = bindTypesToTypesVisitor.Type()
+
+			newMethodTypes.TypeParameters = nil
+			newMethodTypes.ExceptionTypes = methodTypes.ExceptionTypes
+
+			methodTypes = newMethodTypes
+		}
+	}
+
+	return methodTypes
 }
 
 func (m *TypeMaker) loadType(internalTypeName string) intmod.IObjectType {
@@ -1020,13 +1385,121 @@ func (m *TypeMaker) loadFieldsAndMethods(internalTypeName string) bool {
 }
 
 func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) bool {
-	// TODO
 	if data != nil {
 		reader := deserializer.NewClassFileReader(data)
-		_, _ = m.loadClassFile(internalTypeName, reader)
+		constants, err := m.loadClassFile(internalTypeName, reader)
+		if err != nil {
+			return false
+		}
+
+		count := reader.ReadUnsignedShort()
+		for i := 0; i < count; i++ {
+			// skip 'accessFlags'
+			reader.Skip(2)
+
+			nameIndex := reader.ReadUnsignedShort()
+			descriptorIndex := reader.ReadUnsignedShort()
+
+			// Load attributes
+			signature := ""
+			attributeCount := reader.ReadUnsignedShort()
+
+			for j := 0; j < attributeCount; j++ {
+				attributeNameIndex := reader.ReadUnsignedShort()
+				attributeLength := reader.ReadInt()
+
+				if value, ok := constants[attributeNameIndex].(string); ok && value == "Signature" {
+					signature = constants[reader.ReadUnsignedShort()].(string)
+				} else {
+					reader.Skip(attributeLength)
+				}
+			}
+
+			name := constants[nameIndex].(string)
+			descriptor := constants[descriptorIndex].(string)
+			key := internalTypeName + ":" + name
+
+			if signature == "" {
+				m.internalTypeNameFieldNameToType[key] = m.MakeFromSignature(descriptor)
+			} else {
+				m.internalTypeNameFieldNameToType[key] = m.MakeFromSignature(signature)
+			}
+		}
+
+		// Load methods
+		count = reader.ReadUnsignedShort()
+		for i := 0; i < count; i++ {
+			// skip 'accessFlags'
+			reader.Skip(2)
+
+			nameIndex := reader.ReadUnsignedShort()
+			descriptorIndex := reader.ReadUnsignedShort()
+
+			// Load attributes
+			signature := ""
+			var exceptionTypeNames []string
+			attributeCount := reader.ReadUnsignedShort()
+
+			for j := 0; j < attributeCount; j++ {
+				attributeNameIndex := reader.ReadUnsignedShort()
+				attributeLength := reader.ReadInt()
+				name := constants[attributeNameIndex].(string)
+
+				switch name {
+				case "Signature":
+					signature = constants[reader.ReadUnsignedShort()].(string)
+				case "Exceptions":
+					exceptionCount := reader.ReadUnsignedShort()
+					if exceptionCount > 0 {
+						exceptionTypeNames = make([]string, 0, exceptionCount)
+
+						for k := 0; k < exceptionCount; k++ {
+							exceptionClassIndex := reader.ReadUnsignedShort()
+							cc := constants[exceptionClassIndex].(int)
+							exceptionTypeNames[k] = constants[cc].(string)
+						}
+					}
+					break
+				default:
+					reader.Skip(attributeLength)
+					break
+				}
+			}
+
+			name := constants[nameIndex].(string)
+			descriptor := constants[descriptorIndex].(string)
+			key := internalTypeName + ":" + name + descriptor
+			var methodTypes *MethodTypes
+
+			if signature == "" {
+				methodTypes = m.parseMethodSignature2(descriptor, exceptionTypeNames)
+			} else {
+				methodTypes = m.parseMethodSignature3(descriptor, signature, exceptionTypeNames)
+			}
+
+			m.internalTypeNameMethodNameDescriptorToMethodTypes[key] = methodTypes
+
+			parameterCount := 0
+			if methodTypes.ParameterTypes != nil {
+				parameterCount = methodTypes.ParameterTypes.Size()
+			}
+
+			key = fmt.Sprintf("%s:%s:%d", internalTypeName, name, parameterCount)
+			set := m.internalTypeNameMethodNameParameterCountToDeclaredParameterTypes[key]
+
+			if parameterCount > 0 {
+				if set == nil {
+					set = make([]intmod.IType, 0)
+					m.internalTypeNameMethodNameParameterCountToDeclaredParameterTypes[key] = set
+				}
+				set = append(set, methodTypes.ParameterTypes)
+			} else if set == nil {
+				m.internalTypeNameMethodNameParameterCountToDeclaredParameterTypes[key] = make([]intmod.IType, 0)
+			}
+		}
 	}
 
-	return false
+	return true
 }
 
 func (m *TypeMaker) loadClassFile(internalTypeName string, reader *deserializer.ClassFileReader) ([]interface{}, error) {

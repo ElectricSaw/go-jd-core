@@ -3,26 +3,28 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewBooleanExpression(value bool) intmod.IBooleanExpression {
-	return &BooleanExpression{
-		value: value,
-	}
+	return NewBooleanExpressionWithLineNumber(0, value)
 }
 
 func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intmod.IBooleanExpression {
-	return &BooleanExpression{
+	e := &BooleanExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
 		},
 		value: value,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type BooleanExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.IBooleanExpression]
 
 	value bool
 }

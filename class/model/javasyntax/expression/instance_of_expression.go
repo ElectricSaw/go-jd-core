@@ -3,30 +3,30 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewInstanceOfExpression(expression intmod.IExpression, instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
-	return &InstanceOfExpression{
-		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: intmod.UnknownLineNumber,
-		},
-		expression:     expression,
-		instanceOfType: instanceOfType.(intmod.IType),
-	}
+func NewInstanceOfExpression(expression intmod.IExpression,
+	instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
+	return NewInstanceOfExpressionWithAll(0, expression, instanceOfType)
 }
 
-func NewInstanceOfExpressionWithAll(lineNumber int, expression intmod.IExpression, instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
-	return &InstanceOfExpression{
+func NewInstanceOfExpressionWithAll(lineNumber int, expression intmod.IExpression,
+	instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
+	e := &InstanceOfExpression{
 		AbstractLineNumberExpression: AbstractLineNumberExpression{
 			lineNumber: lineNumber,
 		},
 		expression:     expression,
 		instanceOfType: instanceOfType.(intmod.IType),
 	}
+	e.SetValue(e)
+	return e
 }
 
 type InstanceOfExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.IInstanceOfExpression]
 
 	expression     intmod.IExpression
 	instanceOfType intmod.IType

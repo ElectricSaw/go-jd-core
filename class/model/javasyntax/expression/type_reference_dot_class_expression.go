@@ -3,26 +3,27 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewTypeReferenceDotClassExpression(typeDotClass intmod.IType) intmod.ITypeReferenceDotClassExpression {
-	return &TypeReferenceDotClassExpression{
-		typeDotClass: typeDotClass,
-		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass).(intmod.IType),
-	}
+	return NewTypeReferenceDotClassExpressionWithAll(0, typeDotClass)
 }
 
 func NewTypeReferenceDotClassExpressionWithAll(lineNumber int, typeDotClass intmod.IType) intmod.ITypeReferenceDotClassExpression {
-	return &TypeReferenceDotClassExpression{
+	e := &TypeReferenceDotClassExpression{
 		lineNumber:   lineNumber,
 		typeDotClass: typeDotClass,
 		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass).(intmod.IType),
 	}
+	e.SetValue(e)
+	return e
 }
 
 type TypeReferenceDotClassExpression struct {
 	AbstractExpression
+	util.DefaultBase[intmod.ITypeReferenceDotClassExpression]
 
 	lineNumber   int
 	typeDotClass intmod.IType

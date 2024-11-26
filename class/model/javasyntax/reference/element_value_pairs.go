@@ -8,7 +8,7 @@ import (
 
 func NewElementValuePairs() intmod.IElementValuePairs {
 	return &ElementValuePairs{
-		DefaultList: *util.NewDefaultList[intmod.IElementValuePair](0),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.IElementValuePair](0),
 	}
 }
 

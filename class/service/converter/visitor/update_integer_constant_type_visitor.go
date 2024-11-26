@@ -266,8 +266,8 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitExpressionVariableInitializer(de
 
 func (v *UpdateIntegerConstantTypeVisitor) updateExpressions(types intmod.IType, expressions intmod.IExpression) intmod.IExpression {
 	if expressions.IsList() {
-		typ := sliceToDefaultList[intmod.IType](types.List())
-		e := sliceToDefaultList[intmod.IExpression](expressions.List())
+		typ := sliceToDefaultList[intmod.IType](types.ToSlice())
+		e := sliceToDefaultList[intmod.IExpression](expressions.ToSlice())
 
 		for i := e.Size() - 1; i >= 0; i-- {
 			t := typ.Get(i)

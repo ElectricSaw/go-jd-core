@@ -2,28 +2,28 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewNewExpression(lineNumber int, typ intmod.IObjectType, descriptor string) intmod.INewExpression {
-	return &NewExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		typ:                          typ,
-		descriptor:                   descriptor,
-	}
+	return NewNewExpressionWithAll(lineNumber, typ, descriptor, nil)
 }
 
 func NewNewExpressionWithAll(lineNumber int, typ intmod.IObjectType, descriptor string, bodyDeclaration intmod.IBodyDeclaration) intmod.INewExpression {
-	return &NewExpression{
+	e := &NewExpression{
 		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
 		typ:                          typ,
 		descriptor:                   descriptor,
 		bodyDeclaration:              bodyDeclaration,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type NewExpression struct {
 	AbstractLineNumberExpression
+	util.DefaultBase[intmod.INewExpression]
 
 	typ             intmod.IObjectType
 	descriptor      string

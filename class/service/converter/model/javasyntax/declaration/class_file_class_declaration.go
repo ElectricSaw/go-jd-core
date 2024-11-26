@@ -9,9 +9,18 @@ import (
 
 func NewClassFileClassDeclaration(annotationReferences intmod.IAnnotationReference,
 	flags int, internalName string, name string, typeParameters intmod.ITypeParameter,
-	superType intmod.IType, interfaces intmod.IType, bodyDeclaration intsrv.IClassFileBodyDeclaration,
+	superType intmod.IObjectType, interfaces intmod.IType, bodyDeclaration intsrv.IClassFileBodyDeclaration,
 ) intsrv.IClassFileClassDeclaration {
-	return &ClassFileClassDeclaration{}
+	d := &ClassFileClassDeclaration{
+		ClassDeclaration: *declaration.NewClassDeclarationWithAll(annotationReferences,
+			flags, internalName, name, bodyDeclaration, typeParameters, interfaces, superType).(*declaration.ClassDeclaration),
+	}
+
+	if bodyDeclaration != nil {
+		d.firstLineNumber = bodyDeclaration.FirstLineNumber()
+	}
+
+	return d
 }
 
 type ClassFileClassDeclaration struct {

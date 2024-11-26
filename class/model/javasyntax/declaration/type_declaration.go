@@ -2,21 +2,25 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewTypeDeclaration(annotationReferences intmod.IAnnotationReference, flags int,
 	internalTypeName string, name string, bodyDeclaration intmod.IDeclaration) intmod.ITypeDeclaration {
-	return &TypeDeclaration{
+	d := &TypeDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
 		internalTypeName:     internalTypeName,
 		name:                 name,
 		bodyDeclaration:      bodyDeclaration,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type TypeDeclaration struct {
 	AbstractTypeDeclaration
+	util.DefaultBase[intmod.ITypeDeclaration]
 
 	annotationReferences intmod.IAnnotationReference
 	flags                int

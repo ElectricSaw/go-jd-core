@@ -115,9 +115,9 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 				switch mie1Parameters.Size() {
 				case 0, 1:
 				case 2:
-					newParameters = mie1Parameters.List()[1]
+					newParameters = mie1Parameters.ToSlice()[1]
 				default:
-					p := mie1Parameters.List()
+					p := mie1Parameters.ToSlice()
 					newParameters = expression.NewExpressions()
 					newParameters.(intmod.IExpressions).AddAll(p[1 : 1+len(p)])
 				}
@@ -136,7 +136,7 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 				expression.NewFieldReferenceExpression(fre.Type(), fre.Expression(), fre.InternalTypeName(),
 					fre.Name(), fre.Descriptor()), exp.Operator(), mie1.Parameters().First(), exp.Priority())
 		} else if parameterTypesCount == 2 {
-			parameters := mie1.Parameters().List()
+			parameters := mie1.Parameters().ToSlice()
 
 			return expression.NewBinaryOperatorExpression(
 				mie1.LineNumber(), mie1.Type(),

@@ -5,22 +5,22 @@ import (
 	"fmt"
 )
 
-func NewClassDeclaration(flags int, internalTypeName string, name string,
+func NewClassDeclaration(flags int, internalTypeName, name string,
 	bodyDeclaration intmod.IBodyDeclaration) intmod.IClassDeclaration {
-	return &ClassDeclaration{
-		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(nil, flags,
-			internalTypeName, name, bodyDeclaration, nil, nil).(*InterfaceDeclaration),
-	}
+	return NewClassDeclarationWithAll(nil, flags, internalTypeName, name,
+		bodyDeclaration, nil, nil, nil)
 }
 
 func NewClassDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
-	internalTypeName string, name string, bodyDeclaration intmod.IBodyDeclaration,
+	internalTypeName, name string, bodyDeclaration intmod.IBodyDeclaration,
 	typeParameters intmod.ITypeParameter, interfaces intmod.IType, superType intmod.IObjectType) intmod.IClassDeclaration {
-	return &ClassDeclaration{
+	d := &ClassDeclaration{
 		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(annotationReferences, flags,
 			internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*InterfaceDeclaration),
 		superType: superType,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ClassDeclaration struct {

@@ -6,6 +6,12 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
+func NewAbstractStatement() *AbstractStatement {
+	s := &AbstractStatement{}
+	s.SetValue(s)
+	return s
+}
+
 type AbstractStatement struct {
 	util.DefaultBase[intmod.IStatement]
 }

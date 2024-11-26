@@ -30,6 +30,15 @@ func (v *SearchUndeclaredLocalVariableVisitor) Variables() []intsrv.ILocalVariab
 	return v.variables
 }
 
+func (v *SearchUndeclaredLocalVariableVisitor) RemoveAll(removal []intsrv.ILocalVariable) {
+	variables := make([]intsrv.ILocalVariable, len(v.variables))
+	copy(variables, v.variables)
+
+	for _, item := range removal {
+		v.variables = SliceInItemRemove(variables, item)
+	}
+}
+
 func (v *SearchUndeclaredLocalVariableVisitor) VisitBinaryOperatorExpression(expression intmod.IBinaryOperatorExpression) {
 	if expression.LeftExpression().IsLocalVariableReferenceExpression() && expression.Operator() == "=" {
 		lv := expression.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression).
@@ -83,4 +92,16 @@ func (v *SearchUndeclaredLocalVariableVisitor) VisitTryStatement(statement intmo
 
 func (v *SearchUndeclaredLocalVariableVisitor) VisitWhileStatement(statement intmod.IWhileStatement) {
 	statement.Condition().Accept(v)
+}
+
+func SliceInItemRemove(list []intsrv.ILocalVariable, item intsrv.ILocalVariable) []intsrv.ILocalVariable {
+	for i := 0; i < len(list); i++ {
+		if list[i] == item {
+			newList := make([]intsrv.ILocalVariable, 0, len(list)-1)
+			newList = append(newList, list[:i]...)
+			newList = append(newList, list[i+1:]...)
+			return newList
+		}
+	}
+	return list
 }

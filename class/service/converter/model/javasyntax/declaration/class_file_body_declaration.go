@@ -141,12 +141,20 @@ func (d *ClassFileBodyDeclaration) OuterTypeFieldName() string {
 	return d.outerTypeFieldName
 }
 
+func (d *ClassFileBodyDeclaration) SetOuterBodyDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration) {
+	d.outerBodyDeclaration = bodyDeclaration
+}
+
 func (d *ClassFileBodyDeclaration) SetOuterTypeFieldName(outerTypeFieldName string) {
 	d.outerTypeFieldName = outerTypeFieldName
 }
 
 func (d *ClassFileBodyDeclaration) SyntheticInnerFieldNames() []string {
 	return d.syntheticInnerFieldNames
+}
+
+func (d *ClassFileBodyDeclaration) SetSyntheticInnerFieldNames(names []string) {
+	d.syntheticInnerFieldNames = names
 }
 
 func (d *ClassFileBodyDeclaration) OuterBodyDeclaration() intsrv.IClassFileBodyDeclaration {

@@ -2,18 +2,22 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewNewArray(lineNumber int, typ intmod.IType, dimensionExpressionList intmod.IExpression) intmod.INewArray {
-	return &NewArray{
+	e := &NewArray{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		dimensionExpressionList:          dimensionExpressionList,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type NewArray struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.INewArray]
 
 	dimensionExpressionList intmod.IExpression
 }

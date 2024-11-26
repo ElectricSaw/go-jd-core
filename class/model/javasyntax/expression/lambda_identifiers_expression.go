@@ -2,29 +2,29 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewLambdaIdentifiersExpression(typ intmod.IType, returnedType intmod.IType,
 	paramNames []string, statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
-	return &LambdaIdentifiersExpression{
-		AbstractLambdaExpression: *NewAbstractLambdaExpression(typ, statements),
-		returnedType:             returnedType,
-		parameterNames:           paramNames,
-	}
+	return NewLambdaIdentifiersExpressionWithAll(0, typ, returnedType, paramNames, statements)
 }
 
 func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intmod.IType,
 	returnedType intmod.IType, paramNames []string, statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
-	return &LambdaIdentifiersExpression{
+	e := &LambdaIdentifiersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpressionWithAll(lineNumber, typ, statements),
 		returnedType:             returnedType,
 		parameterNames:           paramNames,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type LambdaIdentifiersExpression struct {
 	AbstractLambdaExpression
+	util.DefaultBase[intmod.ILambdaIdentifiersExpression]
 
 	returnedType   intmod.IType
 	parameterNames []string

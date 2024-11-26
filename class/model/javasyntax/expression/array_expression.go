@@ -2,6 +2,7 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -17,23 +18,22 @@ func CreateItemType(expression intmod.IExpression) intmod.IType {
 }
 
 func NewArrayExpression(expression intmod.IExpression, index intmod.IExpression) intmod.IArrayExpression {
-	return &ArrayExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(CreateItemType(expression)),
-		expression:                       expression,
-		index:                            index,
-	}
+	return NewArrayExpressionWithAll(0, expression, index)
 }
 
-func NewArrayExpressionWithLineNumber(lineNumber int, expression intmod.IExpression, index intmod.IExpression) intmod.IArrayExpression {
-	return &ArrayExpression{
+func NewArrayExpressionWithAll(lineNumber int, expression intmod.IExpression, index intmod.IExpression) intmod.IArrayExpression {
+	e := &ArrayExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, CreateItemType(expression)),
 		expression:                       expression,
 		index:                            index,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ArrayExpression struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.IArrayExpression]
 
 	expression intmod.IExpression
 	index      intmod.IExpression

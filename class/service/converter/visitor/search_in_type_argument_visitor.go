@@ -21,15 +21,21 @@ type SearchInTypeArgumentVisitor struct {
 	genericFound                    bool
 }
 
-func (v *SearchInTypeArgumentVisitor) containsWildcard() bool {
+func (v *SearchInTypeArgumentVisitor) Init() {
+	v.wildcardFound = false
+	v.wildcardSuperOrExtendsTypeFound = false
+	v.genericFound = false
+}
+
+func (v *SearchInTypeArgumentVisitor) ContainsWildcard() bool {
 	return v.wildcardFound
 }
 
-func (v *SearchInTypeArgumentVisitor) containsWildcardSuperOrExtendsType() bool {
+func (v *SearchInTypeArgumentVisitor) ContainsWildcardSuperOrExtendsType() bool {
 	return v.wildcardSuperOrExtendsTypeFound
 }
 
-func (v *SearchInTypeArgumentVisitor) containsGeneric() bool {
+func (v *SearchInTypeArgumentVisitor) ContainsGeneric() bool {
 	return v.genericFound
 }
 

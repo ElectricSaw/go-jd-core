@@ -8,8 +8,8 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
-func NewCreateLocalVariableVisitor(typeMaker *utils.TypeMaker) *CreateParameterVisitor {
-	return &CreateParameterVisitor{
+func NewCreateLocalVariableVisitor(typeMaker *utils.TypeMaker) *CreateLocalVariableVisitor {
+	return &CreateLocalVariableVisitor{
 		typeMaker: typeMaker,
 	}
 }

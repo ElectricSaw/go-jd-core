@@ -2,18 +2,22 @@ package reference
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewAnnotationElementValue(reference intmod.IAnnotationReference) intmod.IAnnotationElementValue {
-	return &AnnotationElementValue{
+	v := &AnnotationElementValue{
 		AnnotationReference: *NewAnnotationReferenceWithAll(reference.Type(),
 			reference.ElementValue(), reference.ElementValuePairs()).(*AnnotationReference),
 	}
+	v.SetValue(v)
+	return v
 }
 
 type AnnotationElementValue struct {
 	AnnotationReference
+	util.DefaultBase[intmod.IAnnotationElementValue]
 }
 
 func (r *AnnotationElementValue) Accept(visitor intmod.IReferenceVisitor) {

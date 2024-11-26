@@ -19,6 +19,6 @@ type UnmodifiableTypes struct {
 	Types
 }
 
-func (t *UnmodifiableTypes) ListIterator(i int) []intmod.IType {
-	return t.Elements()
+func (t *UnmodifiableTypes) IsUnmodifiableTypes() bool {
+	return true
 }

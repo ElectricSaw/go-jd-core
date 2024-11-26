@@ -1,14 +1,20 @@
 package _type
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
+)
 
 func NewTypeParameter(identifier string) intmod.ITypeParameter {
-	return &TypeParameter{identifier: identifier}
+	p := &TypeParameter{identifier: identifier}
+	p.SetValue(p)
+	return p
 }
 
 type TypeParameter struct {
 	AbstractType
 	AbstractTypeParameter
+	util.DefaultBase[intmod.ITypeParameter]
 
 	identifier string
 }

@@ -2,22 +2,26 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewBinaryOperatorExpression(lineNumber int, typ intmod.IType, leftExpression intmod.IExpression,
 	operator string, rightExpression intmod.IExpression, priority int) intmod.IBinaryOperatorExpression {
-	return &BinaryOperatorExpression{
+	e := &BinaryOperatorExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		leftExpression:                   leftExpression,
 		operator:                         operator,
 		rightExpression:                  rightExpression,
 		priority:                         priority,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type BinaryOperatorExpression struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.IBinaryOperatorExpression]
 
 	leftExpression  intmod.IExpression
 	operator        string

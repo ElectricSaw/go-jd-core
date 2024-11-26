@@ -179,7 +179,7 @@ type IStatements interface {
 }
 
 type IStatement interface {
-	util.Base[IStatement]
+	util.IBase[IStatement]
 
 	Accept(visitor IStatementVisitor)
 
@@ -332,11 +332,12 @@ type IExpressionLabel interface {
 }
 
 type IBlock interface {
+	IStatement
+
 	Statements() IStatement
 }
 
 type ILabelBlock interface {
-	Statements() IStatement
 	Label() ILabel
 	IsSwitchStatementLabelBlock() bool
 	Accept(visitor IStatementVisitor)
@@ -363,13 +364,45 @@ type IResource interface {
 }
 
 type ICatchClause interface {
-	IStatement
+	util.IBase[IStatement]
 
+	Accept(visitor IStatementVisitor)
+
+	IsBreakStatement() bool
+	IsContinueStatement() bool
+	IsExpressionStatement() bool
+	IsForStatement() bool
+	IsIfStatement() bool
+	IsIfElseStatement() bool
+	IsLabelStatement() bool
+	IsLambdaExpressionStatement() bool
+	IsLocalVariableDeclarationStatement() bool
+	IsMonitorEnterStatement() bool
+	IsMonitorExitStatement() bool
+	IsReturnStatement() bool
+	IsReturnExpressionStatement() bool
+	IsStatements() bool
+	IsSwitchStatement() bool
+	IsSwitchStatementLabelBlock() bool
+	IsSwitchStatementMultiLabelsBlock() bool
+	IsThrowStatement() bool
+	IsTryStatement() bool
+	IsWhileStatement() bool
+
+	Condition() IExpression
+	Expression() IExpression
+	Monitor() IExpression
+	ElseStatements() IStatement
+	FinallyStatements() IStatement
+	Statements() IStatement
+	TryStatements() IStatement
+	Init() IExpression
+	Update() IExpression
+	CatchClauses() []ICatchClause
 	LineNumber() int
+
 	Type() IObjectType
 	OtherType() []IObjectType
 	Name() string
-	Statements() IStatement
 	AddType(typ IObjectType)
-	Accept(visitor IStatementVisitor)
 }

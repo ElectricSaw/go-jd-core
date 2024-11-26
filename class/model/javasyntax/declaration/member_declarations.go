@@ -6,14 +6,12 @@ import (
 )
 
 func NewMemberDeclarations() intmod.IMemberDeclarations {
-	return &MemberDeclarations{
-		DefaultList: *util.NewDefaultList[intmod.IMemberDeclaration](0),
-	}
+	return NewMemberDeclarationsWithCapacity(0)
 }
 
-func NewMemberDeclarationsWithSize(size int) intmod.IMemberDeclarations {
+func NewMemberDeclarationsWithCapacity(capacity int) intmod.IMemberDeclarations {
 	return &MemberDeclarations{
-		DefaultList: *util.NewDefaultList[intmod.IMemberDeclaration](size),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.IMemberDeclaration](capacity),
 	}
 }
 

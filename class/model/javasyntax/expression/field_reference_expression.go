@@ -2,33 +2,31 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewFieldReferenceExpression(typ intmod.IType, expression intmod.IExpression,
 	internalTypeName string, name string, descriptor string) intmod.IFieldReferenceExpression {
-	return &FieldReferenceExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
-		expression:                       expression,
-		internalTypeName:                 internalTypeName,
-		name:                             name,
-		descriptor:                       descriptor,
-	}
+	return NewFieldReferenceExpressionWithAll(0, typ, expression, internalTypeName, name, descriptor)
 }
 
 func NewFieldReferenceExpressionWithAll(lineNumber int, typ intmod.IType, expression intmod.IExpression,
 	internalTypeName string, name string, descriptor string) intmod.IFieldReferenceExpression {
-	return &FieldReferenceExpression{
+	e := &FieldReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		expression:                       expression,
 		internalTypeName:                 internalTypeName,
 		name:                             name,
 		descriptor:                       descriptor,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type FieldReferenceExpression struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.IFieldReferenceExpression]
 
 	expression       intmod.IExpression
 	internalTypeName string

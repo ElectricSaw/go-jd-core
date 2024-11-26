@@ -1,6 +1,9 @@
 package _type
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
+)
 
 var PtTypeBoolean = NewPrimitiveType("boolean", intmod.FlagBoolean, intmod.FlagBoolean, intmod.FlagBoolean)
 var PtTypeByte = NewPrimitiveType("byte", intmod.FlagByte, intmod.FlagByte, intmod.FlagByte|intmod.FlagInt|intmod.FlagShort)
@@ -65,6 +68,7 @@ func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intmod.IPri
 	}
 
 	t.descriptor = sb
+	t.SetValue(t)
 
 	return t
 }
@@ -72,6 +76,7 @@ func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intmod.IPri
 type PrimitiveType struct {
 	AbstractType
 	AbstractTypeArgument
+	util.DefaultBase[intmod.IPrimitiveType]
 
 	name       string
 	flags      int

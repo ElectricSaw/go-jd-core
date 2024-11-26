@@ -6,7 +6,13 @@ import (
 )
 
 func NewTypeDeclarations() intmod.ITypeDeclarations {
-	return &TypeDeclarations{}
+	return NewTypeDeclarationsWithCapacity(0)
+}
+
+func NewTypeDeclarationsWithCapacity(capacity int) intmod.ITypeDeclarations {
+	return &TypeDeclarations{
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.ITypeDeclaration](capacity),
+	}
 }
 
 type TypeDeclarations struct {

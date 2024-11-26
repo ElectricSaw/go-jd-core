@@ -45,7 +45,7 @@ func (v *CreateInstructionsVisitor) VisitBodyDeclaration( decl intmod.IBodyDecla
 				}
 			} else if method.ParameterTypes() != nil {
 				if method.ParameterTypes().IsList() {
-					for _, item  := range method.ParameterTypes().List() {
+					for _, item  := range method.ParameterTypes().ToSlice() {
 						if item.IsObjectType() && (item.Name() == "") {
 						// Synthetic type in parameters -> synthetic method
 						method.SetFlags(method.Flags() | intmod.FlagSynthetic);

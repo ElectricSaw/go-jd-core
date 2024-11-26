@@ -2,28 +2,28 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewFieldDeclaration(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intmod.IFieldDeclaration {
-	return &FieldDeclaration{
-		flags:            flags,
-		typ:              typ,
-		fieldDeclarators: fieldDeclaration,
-	}
+	return NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration)
 }
 
 func NewFieldDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
 	typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intmod.IFieldDeclaration {
-	return &FieldDeclaration{
+	d := &FieldDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
 		typ:                  typ,
 		fieldDeclarators:     fieldDeclaration,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type FieldDeclaration struct {
 	AbstractMemberDeclaration
+	util.DefaultBase[intmod.IFieldDeclaration]
 
 	annotationReferences intmod.IAnnotationReference
 	flags                int

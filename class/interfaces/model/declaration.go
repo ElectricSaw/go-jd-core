@@ -56,6 +56,8 @@ type IArrayVariableInitializer interface {
 
 type IBodyDeclaration interface {
 	IDeclaration
+	util.IBase[IDeclaration]
+
 	InternalTypeName() string
 	MemberDeclarations() IMemberDeclaration
 	SetMemberDeclarations(memberDeclaration IMemberDeclaration)
@@ -137,7 +139,7 @@ type IFieldDeclaration interface {
 
 type IFieldDeclarator interface {
 	IDeclaration
-	util.Base[IFieldDeclarator]
+	util.IBase[IDeclaration]
 
 	SetFieldDeclaration(fieldDeclaration IFieldDeclaration)
 	FieldDeclaration() IFieldDeclaration
@@ -151,15 +153,21 @@ type IFieldDeclarator interface {
 
 type IFieldDeclarators interface {
 	IFieldDeclarator
-	util.IList[IFieldDeclarator]
+	util.IList[IDeclaration]
 
 	SetFieldDeclaration(fieldDeclaration IFieldDeclaration)
+	FieldDeclaration() IFieldDeclaration
+	Name() string
+	Dimension() int
+	VariableInitializer() IVariableInitializer
+	SetVariableInitializer(variableInitializer IVariableInitializer)
 	Accept(visitor IDeclarationVisitor)
+	String() string
 }
 
 type IFormalParameter interface {
 	IDeclaration
-	util.Base[IFormalParameter]
+	util.IBase[IDeclaration]
 
 	AnnotationReferences() IAnnotationReference
 	IsFinal() bool
@@ -174,13 +182,14 @@ type IFormalParameter interface {
 
 type IFormalParameters interface {
 	IFormalParameter
-	util.IList[IFormalParameter]
+	util.IList[IDeclaration]
 
 	Accept(visitor IDeclarationVisitor)
 }
 
 type IMemberDeclaration interface {
 	IDeclaration
+	util.IBase[IDeclaration]
 
 	IsClassDeclaration() bool
 }
@@ -270,7 +279,7 @@ type ILocalVariableDeclaration interface {
 
 type ILocalVariableDeclarator interface {
 	IDeclaration
-	util.Base[ILocalVariableDeclarator]
+	util.IBase[IDeclaration]
 
 	Name() string
 	SetName(name string)
@@ -284,7 +293,7 @@ type ILocalVariableDeclarator interface {
 
 type ILocalVariableDeclarators interface {
 	ILocalVariableDeclarator
-	util.IList[ILocalVariableDeclarator]
+	util.IList[IDeclaration]
 
 	LineNumber() int
 	VariableInitializer() IVariableInitializer
@@ -294,7 +303,7 @@ type ILocalVariableDeclarators interface {
 
 type IMemberDeclarations interface {
 	IMemberDeclaration
-	util.IList[IMemberDeclaration]
+	util.IList[IDeclaration]
 
 	Accept(visitor IDeclarationVisitor)
 }
@@ -365,7 +374,6 @@ type IStaticInitializerDeclaration interface {
 
 type ITypeDeclarations interface {
 	ITypeDeclaration
-	util.IList[ITypeDeclaration]
 
 	Accept(visitor IDeclarationVisitor)
 }

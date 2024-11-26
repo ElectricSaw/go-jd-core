@@ -1,15 +1,22 @@
 package declaration
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
+)
 
 func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMemberDeclaration) intmod.IBodyDeclaration {
-	return &BodyDeclaration{
+	d := &BodyDeclaration{
 		internalTypeName:   internalTypeName,
 		memberDeclarations: memberDeclaration,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type BodyDeclaration struct {
+	util.DefaultBase[intmod.IDeclaration]
+
 	internalTypeName   string
 	memberDeclarations intmod.IMemberDeclaration
 }

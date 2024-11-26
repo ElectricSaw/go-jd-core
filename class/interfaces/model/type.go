@@ -15,7 +15,6 @@ const (
 )
 
 type IDiamondTypeArgument interface {
-	IType
 	ITypeArgument
 
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
@@ -56,15 +55,13 @@ type IInnerObjectType interface {
 }
 
 type IType interface {
-	ITypeArgument
 	ITypeVisitable
-	util.Base[IType]
+	ITypeArgumentVisitable
 
 	Name() string
 	Descriptor() string
 	Dimension() int
 	CreateType(dimension int) IType
-	Size() int
 
 	IsGenericType() bool
 	IsInnerObjectType() bool
@@ -168,7 +165,7 @@ type ITypeArgumentVisitor interface {
 
 type ITypeParameter interface {
 	ITypeParameterVisitable
-	util.Base[ITypeParameter]
+	util.IBase[ITypeParameter]
 
 	Identifier() string
 	AcceptTypeParameterVisitor(visitor ITypeParameterVisitor)
@@ -188,6 +185,7 @@ type ITypeParameterVisitor interface {
 type IPrimitiveType interface {
 	IType
 	ITypeArgument
+	util.IBase[IPrimitiveType]
 
 	HashCode() int
 	Name() string
@@ -245,7 +243,7 @@ type ITypes interface {
 type IUnmodifiableTypes interface {
 	ITypes
 
-	ListIterator(i int) []IType
+	IsUnmodifiableTypes() bool
 }
 
 type IWildcardExtendsTypeArgument interface {

@@ -2,17 +2,21 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewInstanceInitializerDeclaration(description string, statements intmod.IStatement) intmod.IInstanceInitializerDeclaration {
-	return &InstanceInitializerDeclaration{
+	d := &InstanceInitializerDeclaration{
 		description: description,
 		statements:  statements,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type InstanceInitializerDeclaration struct {
 	AbstractMemberDeclaration
+	util.DefaultBase[intmod.IInstanceInitializerDeclaration]
 
 	description string
 	statements  intmod.IStatement

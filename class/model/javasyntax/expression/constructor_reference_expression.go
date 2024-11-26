@@ -2,28 +2,28 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewConstructorReferenceExpression(typ intmod.IType, objectType intmod.IObjectType,
 	descriptor string) intmod.IConstructorReferenceExpression {
-	return &ConstructorReferenceExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
-		objectType:                       objectType,
-		descriptor:                       descriptor,
-	}
+	return NewConstructorReferenceExpressionWithAll(0, typ, objectType, descriptor)
 }
 
 func NewConstructorReferenceExpressionWithAll(lineNumber int, typ intmod.IType,
 	objectType intmod.IObjectType, descriptor string) intmod.IConstructorReferenceExpression {
-	return &ConstructorReferenceExpression{
+	e := &ConstructorReferenceExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		objectType:                       objectType,
 		descriptor:                       descriptor,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ConstructorReferenceExpression struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.IConstructorReferenceExpression]
 
 	objectType intmod.IObjectType
 	descriptor string

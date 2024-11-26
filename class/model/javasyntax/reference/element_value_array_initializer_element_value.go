@@ -2,26 +2,37 @@ package reference
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer intmod.IElementValue) intmod.IElementValueArrayInitializerElementValue {
-	return &ElementValueArrayInitializerElementValue{
+	v := &ElementValueArrayInitializerElementValue{
 		elementValueArrayInitializer: elementValueArrayInitializer,
 	}
+	v.SetValue(v)
+	return v
 }
 
 func NewElementValueArrayInitializerElementValues(elementValueArrayInitializer intmod.IElementValues) intmod.IElementValueArrayInitializerElementValue {
-	return &ElementValueArrayInitializerElementValue{
+	v := &ElementValueArrayInitializerElementValue{
 		elementValueArrayInitializer: elementValueArrayInitializer,
 	}
+	v.SetValue(v)
+	return v
 }
 
 func NewElementValueArrayInitializerElementValueEmpty() intmod.IElementValueArrayInitializerElementValue {
-	return &ElementValueArrayInitializerElementValue{elementValueArrayInitializer: nil}
+	v := &ElementValueArrayInitializerElementValue{
+		elementValueArrayInitializer: nil,
+	}
+	v.SetValue(v)
+	return v
 }
 
 type ElementValueArrayInitializerElementValue struct {
+	util.DefaultBase[intmod.IElementValueArrayInitializerElementValue]
+
 	elementValueArrayInitializer intmod.IElementValue
 }
 

@@ -2,35 +2,31 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewCastExpression(typ intmod.IType, expression intmod.IExpression) intmod.ICastExpression {
-	return &CastExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(typ),
-		expression:                       expression,
-		explicit:                         true,
-	}
+	return NewCastExpressionWithAll(0, typ, expression, true)
 }
 
 func NewCastExpressionWithLineNumber(lineNumber int, typ intmod.IType, expression intmod.IExpression) intmod.ICastExpression {
-	return &CastExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
-		expression:                       expression,
-		explicit:                         true,
-	}
+	return NewCastExpressionWithAll(lineNumber, typ, expression, true)
 }
 
 func NewCastExpressionWithAll(lineNumber int, typ intmod.IType, expression intmod.IExpression, explicit bool) intmod.ICastExpression {
-	return &CastExpression{
+	e := &CastExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, typ),
 		expression:                       expression,
 		explicit:                         explicit,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type CastExpression struct {
 	AbstractLineNumberTypeExpression
+	util.DefaultBase[intmod.ICastExpression]
 
 	expression intmod.IExpression
 	explicit   bool

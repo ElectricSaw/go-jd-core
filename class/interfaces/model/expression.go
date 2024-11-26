@@ -8,7 +8,7 @@ import (
 var UnknownLineNumber = api.UnknownLineNumber
 
 type IExpression interface {
-	util.Base[IExpression]
+	util.IBase[IExpression]
 
 	LineNumber() int
 	Type() IType
@@ -104,7 +104,7 @@ type IExpressionVisitor interface {
 
 type ILineNumberExpression interface {
 	IExpression
-	
+
 	LineNumber() int
 	Priority() int
 }

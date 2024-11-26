@@ -3,17 +3,21 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewCommentExpression(text string) intmod.ICommentExpression {
-	return &CommentExpression{
+	e := &CommentExpression{
 		text: text,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type CommentExpression struct {
 	AbstractExpression
+	util.DefaultBase[intmod.ICommentExpression]
 
 	text string
 }

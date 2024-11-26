@@ -2,16 +2,21 @@ package reference
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewExpressionElementValue(expression intmod.IExpression) intmod.IExpressionElementValue {
-	return &ExpressionElementValue{
+	v := &ExpressionElementValue{
 		expression: expression,
 	}
+	v.SetValue(v)
+	return v
 }
 
 type ExpressionElementValue struct {
+	util.DefaultBase[intmod.IExpressionElementValue]
+	
 	expression intmod.IExpression
 }
 

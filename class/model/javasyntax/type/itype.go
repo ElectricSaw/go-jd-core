@@ -2,7 +2,6 @@ package _type
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"bytes"
 	"encoding/gob"
 	"hash/fnv"
@@ -10,7 +9,6 @@ import (
 
 type AbstractType struct {
 	AbstractTypeArgument
-	util.DefaultBase[intmod.IType]
 }
 
 func (t *AbstractType) Name() string {
@@ -27,10 +25,6 @@ func (t *AbstractType) Dimension() int {
 
 func (t *AbstractType) CreateType(dimension int) intmod.IType {
 	return nil
-}
-
-func (t *AbstractType) Size() int {
-	return 1
 }
 
 func (t *AbstractType) IsGenericType() bool {

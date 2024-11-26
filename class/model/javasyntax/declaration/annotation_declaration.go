@@ -2,22 +2,22 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewAnnotationDeclaration(annotationDeclarators intmod.IFieldDeclarator,
 	annotationReferences intmod.IAnnotationReference, flags int,
 	internalTypeName string, name string, bodyDeclaration intmod.IDeclaration) intmod.IAnnotationDeclaration {
-	return &AnnotationDeclaration{
+	d := &AnnotationDeclaration{
 		TypeDeclaration:        *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		annotationDeclaratiors: annotationDeclarators,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type AnnotationDeclaration struct {
 	TypeDeclaration
-	util.DefaultBase[intmod.IMemberDeclaration]
 
 	annotationDeclaratiors intmod.IFieldDeclarator
 }

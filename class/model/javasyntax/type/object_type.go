@@ -2,6 +2,7 @@ package _type
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -70,7 +71,7 @@ func NewObjectTypeWithArgs(internalName, qualifiedName, name string, typeArgumen
 }
 
 func NewObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments intmod.ITypeArgument, dimension int) intmod.IObjectType {
-	return &ObjectType{
+	t := &ObjectType{
 		internalName:  internalName,
 		qualifiedName: qualifiedName,
 		name:          name,
@@ -78,6 +79,8 @@ func NewObjectTypeWithAll(internalName, qualifiedName, name string, typeArgument
 		dimension:     dimension,
 		descriptor:    createDescriptor(fmt.Sprintf("L%s;", internalName), dimension),
 	}
+	t.SetValue(t)
+	return t
 }
 
 func NewObjectTypeWithDesc(primitiveDescriptor string) intmod.IObjectType {
@@ -85,17 +88,20 @@ func NewObjectTypeWithDesc(primitiveDescriptor string) intmod.IObjectType {
 }
 
 func NewObjectTypeWithDescAndDim(primitiveDescriptor string, dimension int) intmod.IObjectType {
-	return &ObjectType{
+	t := &ObjectType{
 		internalName:  primitiveDescriptor,
 		qualifiedName: GetPrimitiveType(int(primitiveDescriptor[0])).Name(),
 		dimension:     dimension,
 		descriptor:    createDescriptor(fmt.Sprintf("L%s;", primitiveDescriptor), dimension),
 	}
+	t.SetValue(t)
+	return t
 }
 
 type ObjectType struct {
 	AbstractType
 	AbstractTypeArgument
+	util.DefaultBase[intmod.IType]
 
 	internalName  string
 	qualifiedName string
