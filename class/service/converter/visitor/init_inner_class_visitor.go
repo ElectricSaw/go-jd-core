@@ -3,15 +3,20 @@ package visitor
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
+	_ "bitbucket.org/coontec/go-jd-core/class/model/classfile"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
+	_ "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"strings"
+	"unicode"
 )
 
 func NewInitInnerClassVisitor() *InitInnerClassVisitor {
-	return &InitInnerClassVisitor{}
+	v := &InitInnerClassVisitor{}
+	v.updateFieldDeclarationsAndReferencesVisitor.parent = v
+	return v
 }
 
 type InitInnerClassVisitor struct {
@@ -22,103 +27,96 @@ type InitInnerClassVisitor struct {
 	outerTypeFieldName                          string
 }
 
-
-func (v *InitInnerClassVisitor) VisitAnnotationDeclaration( decl intmod.IAnnotationDeclaration) {
-	v.SafeAcceptDeclaration(decl.BodyDeclaration());
+func (v *InitInnerClassVisitor) VisitAnnotationDeclaration(decl intmod.IAnnotationDeclaration) {
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-
-func (v *InitInnerClassVisitor) VisitClassDeclaration( decl intmod.IClassDeclaration) {
-	v.SafeAcceptDeclaration(decl.BodyDeclaration());
+func (v *InitInnerClassVisitor) VisitClassDeclaration(decl intmod.IClassDeclaration) {
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-
-func (v *InitInnerClassVisitor) VisitEnumDeclaration( decl intmod.IEnumDeclaration) {
-	v.SafeAcceptDeclaration(decl.BodyDeclaration());
+func (v *InitInnerClassVisitor) VisitEnumDeclaration(decl intmod.IEnumDeclaration) {
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-
-func (v *InitInnerClassVisitor) VisitInterfaceDeclaration( decl intmod.IInterfaceDeclaration) {
-	v.SafeAcceptDeclaration(decl.BodyDeclaration());
+func (v *InitInnerClassVisitor) VisitInterfaceDeclaration(decl intmod.IInterfaceDeclaration) {
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-
-func (v *InitInnerClassVisitor) VisitBodyDeclaration( decl intmod.IBodyDeclaration) {
-	bodyDeclaration := decl.(intsrv.IClassFileBodyDeclaration);
+func (v *InitInnerClassVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {
+	bodyDeclaration := decl.(intsrv.IClassFileBodyDeclaration)
 
 	// Init attributes
-	v.outerTypeFieldName = "";
-	v.syntheticInnerFieldNames.Clear();
+	v.outerTypeFieldName = ""
+	v.syntheticInnerFieldNames.Clear()
 	// Visit methods
-	v.SafeAcceptListDeclaration(ConvertMethodDeclarations(bodyDeclaration.MethodDeclarations()));
+	v.SafeAcceptListDeclaration(ConvertMethodDeclarations(bodyDeclaration.MethodDeclarations()))
 	// Init values
-	bodyDeclaration.SetOuterTypeFieldName(v.outerTypeFieldName);
+	bodyDeclaration.SetOuterTypeFieldName(v.outerTypeFieldName)
 
 	if !v.syntheticInnerFieldNames.IsEmpty() {
-		bodyDeclaration.SetSyntheticInnerFieldNames(v.syntheticInnerFieldNames.ToSlice());
+		bodyDeclaration.SetSyntheticInnerFieldNames(v.syntheticInnerFieldNames.ToSlice())
 	}
 
 	if v.outerTypeFieldName != "" || !v.syntheticInnerFieldNames.IsEmpty() {
-		v.updateFieldDeclarationsAndReferencesVisitor.VisitBodyDeclaration(bodyDeclaration);
+		v.updateFieldDeclarationsAndReferencesVisitor.VisitBodyDeclaration(bodyDeclaration)
 	}
 }
 
+func (v *InitInnerClassVisitor) VisitConstructorDeclaration(decl intmod.IConstructorDeclaration) {
+	cfcd := decl.(intsrv.IClassFileConstructorDeclaration)
+	classFile := cfcd.ClassFile()
+	outerClassFile := classFile.OuterClassFile()
+	removeFirstParameter := false
 
-
-func (v *InitInnerClassVisitor) VisitConstructorDeclaration( decl intmod.IConstructorDeclaration) {
-	cfcd := decl.(intsrv.IClassFileConstructorDeclaration);
-	classFile := cfcd.ClassFile();
-	outerClassFile := classFile.OuterClassFile();
-	removeFirstParameter := false;
-
-	v.syntheticInnerFieldNames.Clear();
+	v.syntheticInnerFieldNames.Clear()
 
 	// Search synthetic field initialization
 	if cfcd.Statements().IsList() {
-		iterator := cfcd.Statements().Iterator();
+		iterator := cfcd.Statements().Iterator()
 
 		for iterator.HasNext() {
-			statement := iterator.Next();
+			state := iterator.Next()
 
-			if statement.IsExpressionStatement() {
-				expression := statement.Expression();
+			if state.IsExpressionStatement() {
+				expr := state.Expression()
 
-				if expression.IsSuperConstructorInvocationExpression() {
+				if expr.IsSuperConstructorInvocationExpression() {
 					// 'super(...)'
-					break;
+					break
 				}
 
-				if expression.IsConstructorInvocationExpression() {
+				if expr.IsConstructorInvocationExpression() {
 					// 'this(...)'
 					if (outerClassFile != nil) && !classFile.IsStatic() {
 						// Inner non-static class --> First parameter is the synthetic outer reference
-						removeFirstParameter = true;
+						removeFirstParameter = true
 					}
-					break;
+					break
 				}
 
-				if expression.IsBinaryOperatorExpression() {
-					e := expression.LeftExpression();
+				if expr.IsBinaryOperatorExpression() {
+					e := expr.LeftExpression()
 
 					if e.IsFieldReferenceExpression() {
-						name := e.Name();
+						name := e.Name()
 
 						if strings.HasPrefix(name, "this$") {
-							v.outerTypeFieldName = name;
-							removeFirstParameter = true;
+							v.outerTypeFieldName = name
+							removeFirstParameter = true
 						} else if strings.HasPrefix(name, "val$") {
-							v.syntheticInnerFieldNames.Add(name);
+							v.syntheticInnerFieldNames.Add(name)
 						}
 					}
 				}
 			}
 
-			iterator.Remove();
+			_ = iterator.Remove()
 		}
 	}
 
 	// Remove synthetic parameters
-	parameters := cfcd.FormalParameters();
+	parameters := cfcd.FormalParameters()
 
 	if parameters != nil {
 		if parameters.IsList() {
@@ -126,159 +124,181 @@ func (v *InitInnerClassVisitor) VisitConstructorDeclaration( decl intmod.IConstr
 
 			if removeFirstParameter {
 				// Remove outer this
-				list.RemoveAt(0);
+				list.RemoveAt(0)
 			}
 
-			count := v.syntheticInnerFieldNames.Size();
+			count := v.syntheticInnerFieldNames.Size()
 
 			if count > 0 {
 				// Remove outer local variable reference
-				size := list.Size();
-				list.SubList(size - count, size).clear();
+				size := list.Size()
+				list = list.SubList(size-count, size)
+				list.Clear()
 			}
-		} else if (removeFirstParameter || !syntheticInnerFieldNames.isEmpty()) {
+		} else if removeFirstParameter || !v.syntheticInnerFieldNames.IsEmpty() {
 			// Remove outer this and outer local variable reference
-			cfcd.setFormalParameters(null);
+			cfcd.SetFormalParameters(nil)
 		}
 	}
 
 	// Anonymous class constructor ?
-	if (outerClassFile != null) {
-		String outerTypeName = outerClassFile.getInternalTypeName();
-		String internalTypeName = cfcd.getClassFile().getInternalTypeName();
-		int min;
+	if outerClassFile != nil {
+		outerTypeName := outerClassFile.InternalTypeName()
+		internalTypeName := cfcd.ClassFile().InternalTypeName()
+		var minmum int
 
-		if (internalTypeName.startsWith(outerTypeName + '$')) {
-			min = outerTypeName.length() + 1;
+		if strings.HasPrefix(internalTypeName, outerTypeName+"$") {
+			minmum = len(outerTypeName) + 1
 		} else {
-			min = internalTypeName.lastIndexOf('$') + 1;
+			minmum = strings.LastIndex(internalTypeName, "$") + 1
 		}
 
-		if (Character.isDigit(internalTypeName.charAt(min))) {
-			int i = internalTypeName.length();
-			boolean anonymousFlag = true;
+		if unicode.IsDigit(rune(internalTypeName[minmum])) {
+			i := len(internalTypeName)
+			anonymousFlag := true
 
-			while (--i > min) {
-				if (!Character.isDigit(internalTypeName.charAt(i))) {
-					anonymousFlag = false;
-					break;
+			for i--; i > minmum; {
+				if unicode.IsDigit(rune(internalTypeName[i])) {
+					anonymousFlag = false
+					break
 				}
 			}
 
-			if (anonymousFlag) {
+			if anonymousFlag {
 				// Mark anonymous class constructor
-				cfcd.setFlags(cfcd.getFlags() | Declaration.FLAG_ANONYMOUS);
+				cfcd.SetFlags(cfcd.Flags() | intmod.FlagAnonymous)
 			}
 		}
 	}
 }
 
-func (v *InitInnerClassVisitor) VisitMethodDeclaration( declaration intmod.IMethodDeclaration) {}
-func (v *InitInnerClassVisitor) VisitStaticInitializerDeclaration( declaration intmod.IStaticInitializerDeclaration) {}
+func (v *InitInnerClassVisitor) VisitMethodDeclaration(_ intmod.IMethodDeclaration) {
+}
+
+func (v *InitInnerClassVisitor) VisitStaticInitializerDeclaration(_ intmod.IStaticInitializerDeclaration) {
+}
+
+func NewUpdateFieldDeclarationsAndReferencesVisitor(parent *InitInnerClassVisitor) *UpdateFieldDeclarationsAndReferencesVisitor {
+	return &UpdateFieldDeclarationsAndReferencesVisitor{
+		parent: parent,
+	}
+}
 
 type UpdateFieldDeclarationsAndReferencesVisitor struct {
 	AbstractUpdateExpressionVisitor
 
+	parent          *InitInnerClassVisitor
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	syntheticField bool
+	syntheticField  bool
 }
 
-
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitBodyDeclaration( decl intmod.IBodyDeclaration) {
-	bodyDeclaration = (ClassFileBodyDeclaration)decl;
-	safeAcceptListDeclaration(bodyDeclaration.getFieldDeclarations());
-	safeAcceptListDeclaration(bodyDeclaration.getMethodDeclarations());
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {
+	bodyDeclaration := decl.(intsrv.IClassFileBodyDeclaration)
+	v.SafeAcceptListDeclaration(ConvertFieldDeclarations(bodyDeclaration.FieldDeclarations()))
+	v.SafeAcceptListDeclaration(ConvertMethodDeclarations(bodyDeclaration.MethodDeclarations()))
 }
 
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldDeclaration(decl intmod.IFieldDeclaration) {
+	v.syntheticField = false
+	decl.FieldDeclarators().Accept(v)
 
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldDeclaration( decl intmod.IFieldDeclaration) {
-	syntheticField = false;
-	decl.getFieldDeclarators().accept(this);
-
-	if (syntheticField) {
-		decl.setFlags(declaration.getFlags()|FLAG_SYNTHETIC);
+	if v.syntheticField {
+		decl.SetFlags(decl.Flags() | intmod.FlagSynthetic)
 	}
 }
 
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldDeclarator(decl intmod.IFieldDeclarator) {
+	name := decl.Name()
 
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldDeclarator( declarator intmod.IFieldDeclarator) {
-	String name = declarator.getName();
-
-	if (name.equals(outerTypeFieldName) || syntheticInnerFieldNames.contains(name)) {
-		syntheticField = true;
+	if name == v.parent.outerTypeFieldName || v.parent.syntheticInnerFieldNames.Contains(name) {
+		v.syntheticField = true
 	}
 }
 
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitStaticInitializerDeclaration( declaration intmod.IStaticInitializerDeclaration) {}
-
-
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitMethodDeclaration( declaration intmod.IMethodDeclaration) {
-	safeAccept(declaration.getStatements());
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitStaticInitializerDeclaration(decl intmod.IStaticInitializerDeclaration) {
 }
 
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitMethodDeclaration(decl intmod.IMethodDeclaration) {
+	v.SafeAcceptStatement(decl.Statements())
+}
 
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitNewExpression( expression intmod.INewExpression) {
-	if (expression.getParameters() != null) {
-		expression.setParameters(updateBaseExpression(expression.getParameters()));
-		expression.getParameters().accept(this);
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitNewExpression(expr intmod.INewExpression) {
+	if expr.Parameters() != nil {
+		expr.SetParameters(v.UpdateBaseExpression(expr.Parameters()))
+		expr.Parameters().Accept(v)
 	}
-	safeAccept(expression.getBodyDeclaration());
+	v.SafeAcceptDeclaration(expr.BodyDeclaration())
 }
 
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldReferenceExpression(expr intmod.IFieldReferenceExpression) {
+	if strings.HasPrefix(expr.Name(), "this$") {
+		if expr.InternalTypeName() == v.bodyDeclaration.InternalTypeName() {
+			if expr.Name() == v.parent.outerTypeFieldName {
+				objectType := expr.Type().(intmod.IObjectType)
+				var exp intmod.IExpression
+				if expr.Expression() == nil {
+					exp = expr
+				} else {
+					exp = expr.Expression()
+				}
 
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldReferenceExpression( expression intmod.IFieldReferenceExpression) {
-	if (expression.getName().startsWith("this$")) {
-		if (expression.getInternalTypeName().equals(bodyDeclaration.getInternalTypeName())) {
-			if (expression.getName().equals(outerTypeFieldName)) {
-				ObjectType objectType = (ObjectType)expression.getType();
-				Expression exp = (expression.getExpression() == null) ? expression : expression.getExpression();
-				expression.setExpression(new ObjectTypeReferenceExpression(exp.getLineNumber(), objectType.createType(null)));
-				expression.setName("this");
+				expr.SetExpression(expression.NewObjectTypeReferenceExpressionWithLineNumber(
+					exp.LineNumber(), objectType.CreateTypeWithArgs(nil)))
+				expr.SetName("this")
 			}
 		} else {
-			ClassFileTypeDeclaration typeDeclaration = bodyDeclaration.getInnerTypeDeclaration(expression.getInternalTypeName());
+			typeDeclaration := v.bodyDeclaration.InnerTypeDeclaration(expr.InternalTypeName())
 
-			if ((typeDeclaration != null) && typeDeclaration.isClassDeclaration()) {
-				ClassFileBodyDeclaration cfbd = (ClassFileBodyDeclaration) typeDeclaration.getBodyDeclaration();
-				String outerInternalTypeName = cfbd.getOuterBodyDeclaration().getInternalTypeName();
-				ObjectType objectType = (ObjectType)expression.getType();
+			if typeDeclaration != nil && typeDeclaration.IsClassDeclaration() {
+				cfbd := typeDeclaration.BodyDeclaration().(intsrv.IClassFileBodyDeclaration)
+				outerInternalTypeName := cfbd.OuterBodyDeclaration().InternalTypeName()
+				objectType := expr.Type().(intmod.IObjectType)
 
-				if (outerInternalTypeName.equals(objectType.getInternalName())) {
-					Expression exp = (expression.getExpression() == null) ? expression : expression.getExpression();
-					expression.setExpression(new ObjectTypeReferenceExpression(exp.getLineNumber(), objectType.createType(null)));
-					expression.setName("this");
+				if outerInternalTypeName == objectType.InternalName() {
+					var exp intmod.IExpression
+
+					if expr.Expression() == nil {
+						exp = expr
+					} else {
+						exp = expr.Expression()
+					}
+
+					expr.SetExpression(expression.NewObjectTypeReferenceExpressionWithLineNumber(
+						exp.LineNumber(), objectType.CreateTypeWithArgs(nil)))
+					expr.SetName("this")
 				}
 			}
 		}
-	} else if (expression.getName().startsWith("val$")) {
-		expression.setName(expression.getName().substring(4));
-		expression.setExpression(null);
+	} else if strings.HasPrefix(expr.Name(), "val$") {
+		expr.SetName(expr.Name()[4:])
+		expr.SetExpression(nil)
 	} else {
-		super.Visit(expression);
+		v.AbstractUpdateExpressionVisitor.VisitFieldReferenceExpression(expr)
 	}
 }
 
-
-func (v *UpdateFieldDeclarationsAndReferencesVisitor) updateExpression(expression intmod.IExpression) intmod.IExpression {
-	if (expression.isLocalVariableReferenceExpression()) {
-		if ((expression.getName() != null) && expression.getName().equals(outerTypeFieldName) && expression.getType().isObjectType()) {
-			ObjectType objectType = (ObjectType)expression.getType();
-			if (bodyDeclaration.getOuterBodyDeclaration().getInternalTypeName().equals(objectType.getInternalName())) {
-				return new FieldReferenceExpression(objectType, new ObjectTypeReferenceExpression(expression.getLineNumber(), objectType.createType(null)), objectType.getInternalName(), "this", objectType.getDescriptor());
+func (v *UpdateFieldDeclarationsAndReferencesVisitor) updateExpression(expr intmod.IExpression) intmod.IExpression {
+	if expr.IsLocalVariableReferenceExpression() {
+		if expr.Name() != "" && expr.Name() == v.parent.outerTypeFieldName && expr.Type().IsObjectType() {
+			objectType := expr.Type().(intmod.IObjectType)
+			if v.bodyDeclaration.OuterBodyDeclaration().InternalTypeName() == objectType.InternalName() {
+				return expression.NewFieldReferenceExpression(objectType.(intmod.IType),
+					expression.NewObjectTypeReferenceExpressionWithLineNumber(
+						expr.LineNumber(), objectType.CreateTypeWithArgs(nil)),
+					objectType.InternalName(), "this", objectType.Descriptor())
 			}
 		}
 	}
 
-	return expression;
-}
+	return expr
 }
 
-func NewUpdateNewExpressionVisitor(typeMaker *utils.TypeMaker) *UpdateNewExpressionVisitor {
-	return &UpdateNewExpressionVisitor {
-		typeMaker: typeMaker,
+func NewUpdateNewExpressionVisitor(typeMaker intsrv.ITypeMaker) *UpdateNewExpressionVisitor {
+	return &UpdateNewExpressionVisitor{
+		typeMaker:                 typeMaker,
 		finalLocalVariableNameMap: make(map[string]string),
-		localClassDeclarations: util.NewDefaultList[intsrv.IClassFileClassDeclaration](),
-		newExpressions: util.NewSet[intmod.INewExpression],
+		localClassDeclarations:    util.NewDefaultList[intsrv.IClassFileClassDeclaration](),
+		newExpressions:            util.NewSet[intmod.INewExpression](),
 	}
 
 }
@@ -286,224 +306,228 @@ func NewUpdateNewExpressionVisitor(typeMaker *utils.TypeMaker) *UpdateNewExpress
 type UpdateNewExpressionVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	typeMaker *utils.TypeMaker
-	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	classFile *classfile.ClassFile
+	typeMaker                 intsrv.ITypeMaker
+	bodyDeclaration           intsrv.IClassFileBodyDeclaration
+	classFile                 intmod.IClassFile
 	finalLocalVariableNameMap map[string]string
-	localClassDeclarations *util.DefaultList[intsrv.IClassFileClassDeclaration]
-	newExpressions util.ISet[intmod.INewExpression]
-	lineNumber int
+	localClassDeclarations    util.IList[intsrv.IClassFileClassDeclaration]
+	newExpressions            util.ISet[intmod.INewExpression]
+	lineNumber                int
 }
 
-func (v *UpdateNewExpressionVisitor) VisitBodyDeclaration(declaration intmod.IBodyDeclaration) {
-	bodyDeclaration = (ClassFileBodyDeclaration)declaration;
-	safeAcceptListDeclaration(bodyDeclaration.getMethodDeclarations());
+func (v *UpdateNewExpressionVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {
+	bodyDeclaration := decl.(intsrv.IClassFileBodyDeclaration)
+	v.SafeAcceptListDeclaration(ConvertMethodDeclarations(bodyDeclaration.MethodDeclarations()))
 }
 
+func (v *UpdateNewExpressionVisitor) VisitConstructorDeclaration(decl intmod.IConstructorDeclaration) {
+	v.classFile = decl.(intsrv.IClassFileConstructorDeclaration).ClassFile()
+	v.finalLocalVariableNameMap = make(map[string]string)
+	v.localClassDeclarations.Clear()
 
-func (v *UpdateNewExpressionVisitor) VisitConstructorDeclaration( declaration intmod.IConstructorDeclaration) {
-	classFile = ((ClassFileConstructorDeclaration)declaration).getClassFile();
-	finalLocalVariableNameMap.clear();
-	localClassDeclarations.clear();
+	v.SafeAcceptStatement(decl.Statements())
 
-	safeAccept(declaration.getStatements());
+	if len(v.finalLocalVariableNameMap) != 0 {
+		visitor := NewUpdateParametersAndLocalVariablesVisitor(v)
 
-	if (! finalLocalVariableNameMap.isEmpty()) {
-		UpdateParametersAndLocalVariablesVisitor Visitor = new UpdateParametersAndLocalVariablesVisitor();
+		decl.Statements().Accept(visitor)
 
-		declaration.getStatements().accept(Visitor);
-
-		if (declaration.getFormalParameters() != null) {
-			declaration.getFormalParameters().accept(Visitor);
+		if decl.FormalParameters() != nil {
+			decl.FormalParameters().Accept(visitor)
 		}
 	}
 
-	if (! localClassDeclarations.isEmpty()) {
-		localClassDeclarations.sort(new MemberDeclarationComparator());
-		declaration.accept(new AddLocalClassDeclarationVisitor());
+	if !v.localClassDeclarations.IsEmpty() {
+		v.localClassDeclarations.Sort(func(i, j int) bool {
+			return v.localClassDeclarations.Get(i).FirstLineNumber() <
+				v.localClassDeclarations.Get(j).FirstLineNumber()
+		})
+		decl.Accept(NewAddLocalClassDeclarationVisitor(v))
 	}
 }
 
+func (v *UpdateNewExpressionVisitor) VisitMethodDeclaration(decl intmod.IMethodDeclaration) {
+	v.finalLocalVariableNameMap = make(map[string]string)
+	v.localClassDeclarations.Clear()
+	v.SafeAcceptStatement(decl.Statements())
 
-func (v *UpdateNewExpressionVisitor) Visit(MethodDeclaration declaration) {
-	finalLocalVariableNameMap.clear();
-	localClassDeclarations.clear();
-	safeAccept(declaration.getStatements());
+	if len(v.finalLocalVariableNameMap) != 0 {
+		visitor := NewUpdateParametersAndLocalVariablesVisitor(v)
+		decl.Statements().Accept(visitor)
 
-	if (! finalLocalVariableNameMap.isEmpty()) {
-		UpdateParametersAndLocalVariablesVisitor Visitor = new UpdateParametersAndLocalVariablesVisitor();
-
-		declaration.getStatements().accept(Visitor);
-
-		if (declaration.getFormalParameters() != null) {
-			declaration.getFormalParameters().accept(Visitor);
+		if decl.FormalParameters() != nil {
+			decl.FormalParameters().Accept(visitor)
 		}
 	}
 
-	if (! localClassDeclarations.isEmpty()) {
-		localClassDeclarations.sort(new MemberDeclarationComparator());
-		declaration.accept(new AddLocalClassDeclarationVisitor());
+	if !v.localClassDeclarations.IsEmpty() {
+		v.localClassDeclarations.Sort(func(i, j int) bool {
+			return v.localClassDeclarations.Get(i).FirstLineNumber() <
+				v.localClassDeclarations.Get(j).FirstLineNumber()
+		})
+		decl.Accept(NewAddLocalClassDeclarationVisitor(v))
 	}
 }
 
+func (v *UpdateNewExpressionVisitor) VisitStaticInitializerDeclaration(decl intmod.IStaticInitializerDeclaration) {
+	v.finalLocalVariableNameMap = make(map[string]string)
+	v.localClassDeclarations.Clear()
+	v.SafeAcceptStatement(decl.Statements())
 
-func (v *UpdateNewExpressionVisitor) Visit(StaticInitializerDeclaration declaration) {
-	finalLocalVariableNameMap.clear();
-	localClassDeclarations.clear();
-	safeAccept(declaration.getStatements());
-
-	if (! finalLocalVariableNameMap.isEmpty()) {
-		declaration.getStatements().accept(new UpdateParametersAndLocalVariablesVisitor());
+	if len(v.finalLocalVariableNameMap) != 0 {
+		decl.Statements().Accept(NewUpdateParametersAndLocalVariablesVisitor(v))
 	}
 
-	if (! localClassDeclarations.isEmpty()) {
-		localClassDeclarations.sort(new MemberDeclarationComparator());
-		declaration.accept(new AddLocalClassDeclarationVisitor());
+	if !v.localClassDeclarations.IsEmpty() {
+		v.localClassDeclarations.Sort(func(i, j int) bool {
+			return v.localClassDeclarations.Get(i).FirstLineNumber() <
+				v.localClassDeclarations.Get(j).FirstLineNumber()
+		})
+		decl.Accept(NewAddLocalClassDeclarationVisitor(v))
 	}
 }
 
+func (v *UpdateNewExpressionVisitor) VisitStatements(list intmod.IStatements) {
+	if !list.IsEmpty() {
+		iterator := list.ListIterator()
 
+		for iterator.HasNext() {
+			//iterator.next().accept(v);
+			s := iterator.Next()
+			s.Accept(v)
 
-func (v *UpdateNewExpressionVisitor) Visit(Statements list) {
-	if (!list.isEmpty()) {
-		ListIterator<Statement> iterator = list.listIterator();
+			if v.lineNumber == intmod.UnknownLineNumber && !v.localClassDeclarations.IsEmpty() {
+				iterator.Previous()
 
-		while (iterator.hasNext()) {
-			//iterator.next().accept(this);
-			Statement s = iterator.next();
-			s.accept(this);
-
-			if ((lineNumber == Expression.UNKNOWN_LINE_NUMBER) && !localClassDeclarations.isEmpty()) {
-				iterator.previous();
-
-				for (TypeDeclaration typeDeclaration : localClassDeclarations) {
-					iterator.add(new TypeDeclarationStatement(typeDeclaration));
+				for _, typeDeclaration := range v.localClassDeclarations.ToSlice() {
+					_ = iterator.Add(statement.NewTypeDeclarationStatement(typeDeclaration))
 				}
 
-				localClassDeclarations.clear();
-				iterator.next();
+				v.localClassDeclarations.Clear()
+				iterator.Next()
 			}
 		}
 	}
 }
 
+func (v *UpdateNewExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
+	if !v.newExpressions.Contains(expr) {
+		v.newExpressions.Add(expr)
 
+		ne := expr.(intsrv.IClassFileNewExpression)
+		var cfbd intsrv.IClassFileBodyDeclaration
 
-func (v *UpdateNewExpressionVisitor) Visit(NewExpression expression) {
-	if (!newExpressions.contains(expression)) {
-		newExpressions.add(expression);
+		if ne.BodyDeclaration() == nil {
+			typ := ne.ObjectType()
+			internalName := typ.InternalName()
+			typeDeclaration := v.bodyDeclaration.InnerTypeDeclaration(internalName).(intsrv.IClassFileTypeDeclaration)
 
-		ClassFileNewExpression ne = (ClassFileNewExpression)expression;
-		ClassFileBodyDeclaration cfbd = null;
-
-		if (ne.getBodyDeclaration() == null) {
-			ObjectType type = ne.getObjectType();
-			String internalName = type.getInternalName();
-			ClassFileTypeDeclaration typeDeclaration = bodyDeclaration.getInnerTypeDeclaration(internalName);
-
-			if (typeDeclaration == null) {
-				for (ClassFileBodyDeclaration bd = bodyDeclaration; bd != null; bd = bd.getOuterBodyDeclaration()) {
-					if (bd.getInternalTypeName().equals(internalName)) {
-						cfbd = bd;
-						break;
+			if typeDeclaration == nil {
+				for bd := v.bodyDeclaration; bd != nil; bd = bd.OuterBodyDeclaration() {
+					if bd.InternalTypeName() == internalName {
+						cfbd = bd
+						break
 					}
 				}
-			} else if (typeDeclaration.isClassDeclaration()) {
-				ClassFileClassDeclaration cfcd = (ClassFileClassDeclaration) typeDeclaration;
-				cfbd = (ClassFileBodyDeclaration) cfcd.getBodyDeclaration();
+			} else if typeDeclaration.IsClassDeclaration() {
+				cfcd := typeDeclaration.(intsrv.IClassFileClassDeclaration)
+				cfbd = cfcd.BodyDeclaration().(intsrv.IClassFileBodyDeclaration)
 
-				if ((type.getQualifiedName() == null) && (type.getName() != null)) {
-				// Local class
-				cfcd.setFlags(cfcd.getFlags() & (~FLAG_SYNTHETIC));
-				localClassDeclarations.add(cfcd);
-				bodyDeclaration.removeInnerType(internalName);
-				lineNumber = ne.getLineNumber();
+				if typ.QualifiedName() == "" && typ.Name() != "" {
+					// Local class
+					cfcd.SetFlags(cfcd.Flags() & ^intmod.FlagSynthetic)
+					v.localClassDeclarations.Add(cfcd)
+					v.bodyDeclaration.RemoveInnerTypeDeclaration(internalName)
+					v.lineNumber = ne.LineNumber()
 				}
 			}
 		} else {
 			// Anonymous class
-			cfbd = (ClassFileBodyDeclaration) ne.getBodyDeclaration();
+			cfbd = ne.BodyDeclaration().(intsrv.IClassFileBodyDeclaration)
 		}
 
-		if (cfbd != null) {
-			BaseExpression parameters = ne.getParameters();
-			BaseType parameterTypes = ne.getParameterTypes();
+		if cfbd != nil {
+			parameters := ne.Parameters()
+			parameterTypes := ne.ParameterTypes()
 
-			if (parameters != null) {
+			if parameters != nil {
 				// Remove synthetic parameters
-				DefaultList<String> syntheticInnerFieldNames = cfbd.getSyntheticInnerFieldNames();
+				syntheticInnerFieldNames := util.NewDefaultListWithSlice[string](cfbd.SyntheticInnerFieldNames())
 
-				if (parameters.isList()) {
-					DefaultList<Expression> list = parameters.getList();
-					DefaultList<Type> types = parameterTypes.getList();
+				if parameters.IsList() {
+					list := util.NewDefaultListWithSlice[intmod.IExpression](parameters.ToSlice())
+					types := util.NewDefaultListWithSlice[intmod.IType](parameterTypes.ToSlice())
 
-					if (cfbd.getOuterTypeFieldName() != null) {
+					if cfbd.OuterTypeFieldName() != "" {
 						// Remove outer this
-						list.removeFirst();
-						types.removeFirst();
+						list.RemoveFirst()
+						types.RemoveFirst()
 					}
 
-					if (syntheticInnerFieldNames != null) {
+					if syntheticInnerFieldNames != nil {
 						// Remove outer local variable reference
-						int size = list.size();
-						int count = syntheticInnerFieldNames.size();
-						List<Expression> lastParameters = list.subList(size - count, size);
-						Iterator<Expression> parameterIterator = lastParameters.iterator();
-						Iterator<String> syntheticInnerFieldNameIterator = syntheticInnerFieldNames.iterator();
+						size := list.Size()
+						count := syntheticInnerFieldNames.Size()
+						lastParameters := list.SubList(size-count, size)
+						parameterIterator := lastParameters.Iterator()
+						syntheticInnerFieldNameIterator := syntheticInnerFieldNames.Iterator()
 
-						while (parameterIterator.hasNext()) {
-							Expression param = parameterIterator.next();
-							String syntheticInnerFieldName = syntheticInnerFieldNameIterator.next();
+						for parameterIterator.HasNext() {
+							param := parameterIterator.Next()
+							syntheticInnerFieldName := syntheticInnerFieldNameIterator.Next()
 
-							if (param.isCastExpression()) {
-								param = param.getExpression();
+							if param.IsCastExpression() {
+								param = param.Expression()
 							}
 
-							if (param.isLocalVariableReferenceExpression()) {
-								AbstractLocalVariable lv = ((ClassFileLocalVariableReferenceExpression) param).getLocalVariable();
-								String localVariableName = syntheticInnerFieldName.substring(4);
-								finalLocalVariableNameMap.put(lv.getName(), localVariableName);
+							if param.IsLocalVariableReferenceExpression() {
+								lv := param.(intsrv.IClassFileLocalVariableReferenceExpression).
+									LocalVariable().(intsrv.ILocalVariable)
+								localVariableName := syntheticInnerFieldName[4:]
+								v.finalLocalVariableNameMap[lv.Name()] = localVariableName
 							}
 						}
 
-						lastParameters.clear();
-						types.subList(size - count, size).clear();
+						lastParameters.Clear()
+						removal := types.SubList(size-count, size)
+						types.RemoveAll(removal.ToSlice())
 					}
-				} else if (cfbd.getOuterTypeFieldName() != null) {
+				} else if cfbd.OuterTypeFieldName() != "" {
 					// Remove outer this
-					ne.setParameters(null);
-					ne.setParameterTypes(null);
-				} else if (syntheticInnerFieldNames != null) {
+					ne.SetParameters(nil)
+					ne.SetParameterTypes(nil)
+				} else if syntheticInnerFieldNames != nil {
 					// Remove outer local variable reference
-					Expression param = parameters.getFirst();
+					param := parameters.First()
 
-					if (param.isCastExpression()) {
-						param = param.getExpression();
+					if param.IsCastExpression() {
+						param = param.Expression()
 					}
 
-					if (param.isLocalVariableReferenceExpression()) {
-						AbstractLocalVariable lv = ((ClassFileLocalVariableReferenceExpression) param).getLocalVariable();
-						String localVariableName = syntheticInnerFieldNames.getFirst().substring(4);
-						finalLocalVariableNameMap.put(lv.getName(), localVariableName);
-						ne.setParameters(null);
-						ne.setParameterTypes(null);
+					if param.IsLocalVariableReferenceExpression() {
+						lv := param.(intsrv.IClassFileLocalVariableReferenceExpression).
+							LocalVariable().(intsrv.ILocalVariable)
+						localVariableName := syntheticInnerFieldNames.First()[4:]
+						v.finalLocalVariableNameMap[lv.Name()] = localVariableName
+						ne.SetParameters(nil)
+						ne.SetParameterTypes(nil)
 					}
 				}
 
 				// Is the last parameter synthetic ?
-				parameters = ne.getParameters();
+				parameters = ne.Parameters()
 
-				if ((parameters != null) && (parameters.size() > 0) && parameters.getLast().isNullExpression()) {
-					parameterTypes = ne.getParameterTypes();
+				if (parameters != nil) && (parameters.Size() > 0) && parameters.Last().IsNullExpression() {
+					parameterTypes = ne.ParameterTypes()
 
-					if (parameterTypes.getLast().getName() == null) {
+					if parameterTypes.Last().Name() == "" {
 						// Yes. Remove it.
-						if (parameters.isList()) {
-							parameters.getList().removeLast();
-							parameterTypes.getList().removeLast();
+						if parameters.IsList() {
+							parameters.ToList().RemoveLast()
+							parameterTypes.ToList().RemoveLast()
 						} else {
-							ne.setParameters(null);
-							ne.setParameterTypes(null);
+							ne.SetParameters(nil)
+							ne.SetParameterTypes(nil)
 						}
 					}
 				}
@@ -511,229 +535,235 @@ func (v *UpdateNewExpressionVisitor) Visit(NewExpression expression) {
 		}
 	}
 
-	safeAccept(expression.getParameters());
+	v.SafeAcceptExpression(expr.Parameters())
 }
 
+func (v *UpdateNewExpressionVisitor) VisitSuperConstructorInvocationExpression(expr intmod.ISuperConstructorInvocationExpression) {
+	scie := expr.(intsrv.IClassFileSuperConstructorInvocationExpression)
+	parameters := scie.Parameters()
 
-func (v *UpdateNewExpressionVisitor) Visit(SuperConstructorInvocationExpression expression) {
-	ClassFileSuperConstructorInvocationExpression scie = (ClassFileSuperConstructorInvocationExpression)expression;
-	BaseExpression parameters = scie.getParameters();
-
-	if ((parameters != null) && (parameters.size() > 0)) {
+	if (parameters != nil) && (parameters.Size() > 0) {
 		// Remove outer 'this' reference parameter
-		Type firstParameterType = parameters.getFirst().getType();
+		firstParameterType := parameters.First().Type()
 
-		if (firstParameterType.isObjectType() && !classFile.isStatic() && (bodyDeclaration.getOuterTypeFieldName() != null)) {
-			TypeMaker.TypeTypes superTypeTypes = typeMaker.makeTypeTypes(classFile.getSuperTypeName());
+		if firstParameterType.IsObjectType() && !v.classFile.IsStatic() && (v.bodyDeclaration.OuterTypeFieldName() != "") {
+			superTypeTypes := v.typeMaker.MakeTypeTypes(v.classFile.SuperTypeName())
 
-			if ((superTypeTypes != null) && superTypeTypes.thisType.isInnerObjectType()) {
-				if (typeMaker.isRawTypeAssignable(superTypeTypes.thisType.getOuterType(), (ObjectType)firstParameterType)) {
-				scie.setParameters(removeFirstItem(parameters));
-				scie.setParameterTypes(removeFirstItem(scie.getParameterTypes()));
+			if (superTypeTypes != nil) && superTypeTypes.ThisType().IsInnerObjectType() {
+				if v.typeMaker.IsRawTypeAssignable(superTypeTypes.ThisType().OuterType(), firstParameterType.(intmod.IObjectType)) {
+					scie.SetParameters(v.removeFirstItemExpression(parameters))
+					scie.SetParameterTypes(v.removeFirstItemType(scie.ParameterTypes()))
 				}
 			}
 		}
 
 		// Remove last synthetic parameter
-		expression.setParameters(removeLastSyntheticParameter(scie.getParameters(), scie.getParameterTypes()));
+		expr.SetParameters(v.removeLastSyntheticParameter(scie.Parameters(), scie.ParameterTypes()))
 	}
 }
 
+func (v *UpdateNewExpressionVisitor) VisitConstructorInvocationExpression(expr intmod.IConstructorInvocationExpression) {
+	cie := expr.(intsrv.IClassFileConstructorInvocationExpression)
+	parameters := cie.Parameters()
 
-func (v *UpdateNewExpressionVisitor) Visit(ConstructorInvocationExpression expression) {
-	ClassFileConstructorInvocationExpression cie = (ClassFileConstructorInvocationExpression)expression;
-	BaseExpression parameters = cie.getParameters();
-
-	if ((parameters != null) && (parameters.size() > 0)) {
+	if (parameters != nil) && (parameters.Size() > 0) {
 		// Remove outer this reference parameter
-		if (bodyDeclaration.getOuterTypeFieldName() != null) {
-			cie.setParameters(removeFirstItem(parameters));
-			cie.setParameterTypes(removeFirstItem(cie.getParameterTypes()));
+		if v.bodyDeclaration.OuterTypeFieldName() != "" {
+			cie.SetParameters(v.removeFirstItemExpression(parameters))
+			cie.SetParameterTypes(v.removeFirstItemType(cie.ParameterTypes()))
 		}
 
 		// Remove last synthetic parameter
-		cie.setParameters(removeLastSyntheticParameter(cie.getParameters(), cie.getParameterTypes()));
+		cie.SetParameters(v.removeLastSyntheticParameter(cie.Parameters(), cie.ParameterTypes()))
 	}
 }
 
-func (v *UpdateNewExpressionVisitor) removeFirstItem(parameters intmod.IExpression) intmod.IExpression {
-	if (parameters.isList()) {
-		parameters.getList().removeFirst();
+func (v *UpdateNewExpressionVisitor) removeFirstItemExpression(parameters intmod.IExpression) intmod.IExpression {
+	if parameters.IsList() {
+		parameters.ToList().RemoveFirst()
 	} else {
-		parameters = null;
+		parameters = nil
 	}
 
-	return parameters;
+	return parameters
 }
 
-func (v *UpdateNewExpressionVisitor) removeFirstItem(types intmod.IType)intmod.IType {
-	if (types.isList()) {
-		types.getList().removeFirst();
+func (v *UpdateNewExpressionVisitor) removeFirstItemType(types intmod.IType) intmod.IType {
+	if types.IsList() {
+		types.ToList().RemoveFirst()
 	} else {
-		types = null;
+		types = nil
 	}
 
-	return types;
+	return types
 }
 
-func (v *UpdateNewExpressionVisitor)  removeLastSyntheticParameter(parameters intmod.IExpression, parameterTypes intmod.IType) intmod.IExpression {
+func (v *UpdateNewExpressionVisitor) removeLastSyntheticParameter(parameters intmod.IExpression, parameterTypes intmod.IType) intmod.IExpression {
 	// Is the last parameter synthetic ?
-	if ((parameters != null) && (parameters.size() > 0) && parameters.getLast().isNullExpression()) {
-		if (parameterTypes.getLast().getName() == null) {
+	if (parameters != nil) && (parameters.Size() > 0) && parameters.Last().IsNullExpression() {
+		if parameterTypes.Last().Name() == "" {
 			// Yes. Remove it.
-			if (parameters.isList()) {
-				parameters.getList().removeLast();
+			if parameters.IsList() {
+				parameters.ToList().RemoveFirst()
 			} else {
-				parameters = null;
+				parameters = nil
 			}
 		}
 	}
 
-	return parameters;
+	return parameters
+}
+
+func NewUpdateParametersAndLocalVariablesVisitor(parent *UpdateNewExpressionVisitor) *UpdateParametersAndLocalVariablesVisitor {
+	return &UpdateParametersAndLocalVariablesVisitor{
+		parent: parent,
+	}
 }
 
 type UpdateParametersAndLocalVariablesVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	final bool
+	parent *UpdateNewExpressionVisitor
+	final  bool
 }
 
-
-func (v *InitInnerClassVisitor) Visit(FormalParameter declaration) {
-	if (finalLocalVariableNameMap.containsKey(declaration.getName())) {
-		declaration.setFinal(true);
-		declaration.setName(finalLocalVariableNameMap.get(declaration.getName()));
+func (v *UpdateParametersAndLocalVariablesVisitor) VisitFormalParameter(decl intmod.IFormalParameter) {
+	if value, ok := v.parent.finalLocalVariableNameMap[decl.Name()]; ok {
+		decl.SetFinal(true)
+		decl.SetName(value)
 	}
 }
 
-
-func (v *InitInnerClassVisitor) Visit(LocalVariableDeclarationStatement statement) {
-	fina1 = false;
-	statement.getLocalVariableDeclarators().accept(this);
-	statement.setFinal(fina1);
+func (v *UpdateParametersAndLocalVariablesVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
+	v.final = false
+	stat.LocalVariableDeclarators().Accept(v)
+	stat.SetFinal(v.final)
 }
 
-
-func (v *InitInnerClassVisitor) Visit(LocalVariableDeclaration declaration) {
-	fina1 = false;
-	declaration.getLocalVariableDeclarators().accept(this);
-	declaration.setFinal(fina1);
+func (v *UpdateParametersAndLocalVariablesVisitor) VisitLocalVariableDeclaration(decl intmod.ILocalVariableDeclaration) {
+	v.final = false
+	decl.LocalVariableDeclarators().Accept(v)
+	decl.SetFinal(v.final)
 }
 
-
-func (v *InitInnerClassVisitor) Visit(LocalVariableDeclarator declarator) {
-	if (finalLocalVariableNameMap.containsKey(declarator.getName())) {
-		fina1 = true;
-		declarator.setName(finalLocalVariableNameMap.get(declarator.getName()));
+func (v *UpdateParametersAndLocalVariablesVisitor) VisitLocalVariableDeclarator(declarator intmod.ILocalVariableDeclarator) {
+	if value, ok := v.parent.finalLocalVariableNameMap[declarator.Name()]; ok {
+		v.final = true
+		declarator.SetName(value)
 	}
 }
-}
 
-func NewAddLocalClassDeclarationVisitor() *AddLocalClassDeclarationVisitor {
+func NewAddLocalClassDeclarationVisitor(parent *UpdateNewExpressionVisitor) *AddLocalClassDeclarationVisitor {
 	return &AddLocalClassDeclarationVisitor{
-		searchFirstLineNumberVisitor: *NewSearchFirstLineNumberVisitor(),
-		lineNumber: intmod.UnknownLineNumber
+		parent:                       parent,
+		searchFirstLineNumberVisitor: NewSearchFirstLineNumberVisitor(),
+		lineNumber:                   intmod.UnknownLineNumber,
 	}
 }
 
 type AddLocalClassDeclarationVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	searchFirstLineNumberVisitor SearchFirstLineNumberVisitor
-	lineNumber int
+	parent                       *UpdateNewExpressionVisitor
+	searchFirstLineNumberVisitor *SearchFirstLineNumberVisitor
+	lineNumber                   int
 }
 
-
-func (v *AddLocalClassDeclarationVisitor) VisitConstructorDeclaration( declaration intmod.IConstructorDeclaration) {
-	ClassFileConstructorDeclaration cfcd = (ClassFileConstructorDeclaration)declaration;
-	cfcd.setStatements(addLocalClassDeclarations(cfcd.getStatements()));
+func (v *AddLocalClassDeclarationVisitor) VisitConstructorDeclaration(decl intmod.IConstructorDeclaration) {
+	cfcd := decl.(intsrv.IClassFileConstructorDeclaration)
+	cfcd.SetStatements(v.addLocalClassDeclarations(cfcd.Statements()))
 }
 
-
-func (v *AddLocalClassDeclarationVisitor) VisitMethodDeclaration( declaration intmod.IMethodDeclaration) {
-	ClassFileMethodDeclaration cfmd = (ClassFileMethodDeclaration)declaration;
-	cfmd.setStatements(addLocalClassDeclarations(cfmd.getStatements()));
+func (v *AddLocalClassDeclarationVisitor) VisitMethodDeclaration(decl intmod.IMethodDeclaration) {
+	cfmd := decl.(intsrv.IClassFileMethodDeclaration)
+	cfmd.SetStatements(v.addLocalClassDeclarations(cfmd.Statements()))
 }
 
-func (v *AddLocalClassDeclarationVisitor) VisitStaticInitializerDeclaration( declaration intmod.IStaticInitializerDeclaration) {
-	ClassFileStaticInitializerDeclaration cfsid = (ClassFileStaticInitializerDeclaration)declaration;
-	cfsid.setStatements(addLocalClassDeclarations(cfsid.getStatements()));
+func (v *AddLocalClassDeclarationVisitor) VisitStaticInitializerDeclaration(decl intmod.IStaticInitializerDeclaration) {
+	cfsid := decl.(intsrv.IClassFileStaticInitializerDeclaration)
+	cfsid.SetStatements(v.addLocalClassDeclarations(cfsid.Statements()))
 }
 
-func (v *AddLocalClassDeclarationVisitor) addLocalClassDeclarations(statements intmod.IStatement) intmod.IStatement {
-	if (!localClassDeclarations.isEmpty()) {
-		if (statements.isStatements()) {
-			statements.accept(this);
+func (v *AddLocalClassDeclarationVisitor) addLocalClassDeclarations(stat intmod.IStatement) intmod.IStatement {
+	if !v.parent.localClassDeclarations.IsEmpty() {
+		if stat.IsStatements() {
+			stat.Accept(v)
 		} else {
-			ClassFileClassDeclaration declaration = localClassDeclarations.get(0);
+			decl := v.parent.localClassDeclarations.Get(0)
 
-			searchFirstLineNumberVisitor.init();
-			statements.accept(searchFirstLineNumberVisitor);
+			v.searchFirstLineNumberVisitor.Init()
+			stat.Accept(v.searchFirstLineNumberVisitor)
 
-			if (searchFirstLineNumberVisitor.getLineNumber() != -1) {
-				lineNumber = searchFirstLineNumberVisitor.getLineNumber();
+			if v.searchFirstLineNumberVisitor.LineNumber() != -1 {
+				v.lineNumber = v.searchFirstLineNumberVisitor.LineNumber()
 			}
 
-			if (declaration.getFirstLineNumber() <= lineNumber) {
-				Statements list = new Statements();
-				Iterator<ClassFileClassDeclaration> declarationIterator = localClassDeclarations.iterator();
+			if decl.FirstLineNumber() <= v.lineNumber {
+				list := statement.NewStatements()
+				declarationIterator := v.parent.localClassDeclarations.Iterator()
 
-				list.add(new TypeDeclarationStatement(declaration));
-				declarationIterator.next();
-				declarationIterator.remove();
+				list.Add(statement.NewTypeDeclarationStatement(decl))
+				declarationIterator.Next()
+				_ = declarationIterator.Remove()
 
-				while (declarationIterator.hasNext() && ((declaration = declarationIterator.next()).getFirstLineNumber() <= lineNumber)) {
-				list.add(new TypeDeclarationStatement(declaration));
-				declarationIterator.remove();
+				for declarationIterator.HasNext() {
+					decl = declarationIterator.Next()
+					if decl.FirstLineNumber() <= v.lineNumber {
+						list.Add(statement.NewTypeDeclarationStatement(decl))
+						_ = declarationIterator.Remove()
+					}
 				}
 
-				if (statements.isList()) {
-					list.addAll(statements.getList());
+				if stat.IsList() {
+					list.AddAll(stat.ToSlice())
 				} else {
-					list.add(statements.getFirst());
+					list.Add(stat.First())
 				}
-				statements = list;
+				stat = list
 			} else {
-				statements.accept(this);
+				stat.Accept(v)
 			}
 		}
 	}
 
-	return statements;
+	return stat
 }
 
-func (v *AddLocalClassDeclarationVisitor)  VisitStatements( list intmod.IStatements) {
-	if (!localClassDeclarations.isEmpty() && !list.isEmpty()) {
-		ListIterator<Statement> statementIterator = list.listIterator();
-		Iterator<ClassFileClassDeclaration> declarationIterator = localClassDeclarations.iterator();
-		ClassFileClassDeclaration declaration = declarationIterator.next();
+func (v *AddLocalClassDeclarationVisitor) VisitStatements(list intmod.IStatements) {
+	if !v.parent.localClassDeclarations.IsEmpty() && !list.IsEmpty() {
+		statementIterator := list.ListIterator()
+		declarationIterator := v.parent.localClassDeclarations.Iterator()
+		decl := declarationIterator.Next()
 
-		while (statementIterator.hasNext()) {
-			Statement statement = statementIterator.next();
+		for statementIterator.HasNext() {
+			state := statementIterator.Next()
 
-			searchFirstLineNumberVisitor.init();
-			statement.accept(searchFirstLineNumberVisitor);
+			v.searchFirstLineNumberVisitor.Init()
+			state.Accept(v.searchFirstLineNumberVisitor)
 
-			if (searchFirstLineNumberVisitor.getLineNumber() != -1) {
-				lineNumber = searchFirstLineNumberVisitor.getLineNumber();
+			if v.searchFirstLineNumberVisitor.LineNumber() != -1 {
+				v.lineNumber = v.searchFirstLineNumberVisitor.LineNumber()
 			}
 
-			while (declaration.getFirstLineNumber() <= lineNumber) {
-				statementIterator.previous();
-				statementIterator.add(new TypeDeclarationStatement(declaration));
-				statementIterator.next();
-				declarationIterator.remove();
+			for decl.FirstLineNumber() <= v.lineNumber {
+				statementIterator.Previous()
+				_ = statementIterator.Add(statement.NewTypeDeclarationStatement(decl))
+				statementIterator.Next()
+				_ = declarationIterator.Remove()
 
-				if (!declarationIterator.hasNext()) {
-					return;
+				if !declarationIterator.HasNext() {
+					return
 				}
 
-				declaration = declarationIterator.next();
+				decl = declarationIterator.Next()
 			}
+		}
+	}
+}
 
-			type MemberDeclarationComparator struct{
-			}
+type MemberDeclarationComparator struct {
+}
 
-			func (c *MemberDeclarationComparator) Compare(md1, md2 intsrv.IClassFileMemberDeclaration) int {
-				return md1.FirstLineNumber() - md2.FirstLineNumber();
-			}
+func (c *MemberDeclarationComparator) Compare(md1, md2 intsrv.IClassFileMemberDeclaration) int {
+	return md1.FirstLineNumber() - md2.FirstLineNumber()
+}

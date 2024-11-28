@@ -6,6 +6,7 @@ import (
 )
 
 var ConvertClassFileProcessor = processor.NewConvertClassFileProcessor()
+var UpdateJavaSyntaxTreeProcessor = processor.NewUpdateJavaSyntaxTreeProcessor()
 
 func NewClassFileToJavaSyntaxProcessor() *ClassFileToJavaSyntaxProcessor {
 	return &ClassFileToJavaSyntaxProcessor{}

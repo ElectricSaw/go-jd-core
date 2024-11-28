@@ -7,6 +7,10 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 )
 
+func NewUpdateJavaSyntaxTreeProcessor() *UpdateJavaSyntaxTreeProcessor {
+	return &UpdateJavaSyntaxTreeProcessor{}
+}
+
 type UpdateJavaSyntaxTreeProcessor struct {
 }
 
