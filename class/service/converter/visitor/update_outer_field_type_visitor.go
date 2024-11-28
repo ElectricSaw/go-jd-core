@@ -7,10 +7,9 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
-func NewUpdateOuterFieldTypeVisitor(typeMaker *utils.TypeMaker) *UpdateOuterFieldTypeVisitor {
+func NewUpdateOuterFieldTypeVisitor(typeMaker intsrv.ITypeMaker) *UpdateOuterFieldTypeVisitor {
 	return &UpdateOuterFieldTypeVisitor{
 		typeMaker: typeMaker,
 	}
@@ -19,7 +18,7 @@ func NewUpdateOuterFieldTypeVisitor(typeMaker *utils.TypeMaker) *UpdateOuterFiel
 type UpdateOuterFieldTypeVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	typeMaker          *utils.TypeMaker
+	typeMaker          intsrv.ITypeMaker
 	searchFieldVisitor SearchFieldVisitor
 }
 
@@ -28,7 +27,7 @@ func (v *UpdateOuterFieldTypeVisitor) VisitBodyDeclaration(decl intmod.IBodyDecl
 	if !bodyDeclaration.ClassFile().IsStatic() {
 		v.SafeAcceptListDeclaration(ConvertMethodDeclarations(bodyDeclaration.MethodDeclarations()))
 	}
-	v.SafeAcceptListDeclaration(ConvertInnerTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
+	v.SafeAcceptListDeclaration(ConvertTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
 }
 
 func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IConstructorDeclaration) {
@@ -71,7 +70,7 @@ func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IC
 			descriptor, _ := constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			typeTypes := v.typeMaker.MakeTypeTypes(descriptor[1:])
 
-			if (typeTypes != nil) && (typeTypes.TypeParameters != nil) {
+			if (typeTypes != nil) && (typeTypes.TypeParameters() != nil) {
 				name, _ := constants.ConstantUtf8(constantNameAndType.NameIndex())
 				v.searchFieldVisitor.Init(name)
 
@@ -80,18 +79,18 @@ func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IC
 					if v.searchFieldVisitor.Found() {
 						var typeArguments intmod.ITypeArgument
 
-						if typeTypes.TypeParameters.IsList() {
-							tas := _type.NewTypeArgumentsWithSize(typeTypes.TypeParameters.Size())
-							for _, typeParameter := range typeTypes.TypeParameters.ToSlice() {
+						if typeTypes.TypeParameters().IsList() {
+							tas := _type.NewTypeArgumentsWithSize(typeTypes.TypeParameters().Size())
+							for _, typeParameter := range typeTypes.TypeParameters().ToSlice() {
 								tas.Add(_type.NewGenericType(typeParameter.Identifier()))
 							}
 							typeArguments = tas
 						} else {
-							typeArguments = _type.NewGenericType(typeTypes.TypeParameters.First().Identifier())
+							typeArguments = _type.NewGenericType(typeTypes.TypeParameters().First().Identifier())
 						}
 
 						// Update generic type of outer field reference
-						v.typeMaker.SetFieldType(typeName, name, typeTypes.ThisType.CreateTypeWithArgs(typeArguments).(intmod.IType))
+						v.typeMaker.SetFieldType(typeName, name, typeTypes.ThisType().CreateTypeWithArgs(typeArguments).(intmod.IType))
 						break
 					}
 				}

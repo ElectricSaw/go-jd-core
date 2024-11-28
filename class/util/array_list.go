@@ -3,6 +3,7 @@ package util
 import (
 	"errors"
 	"fmt"
+	"sort"
 )
 
 // NewArrayList 생성자
@@ -34,7 +35,18 @@ type IList[T comparable] interface {
 	AddAt(index int, element T) error
 	RemoveAt(index int) T
 	IndexOf(element T) int
+	ToList() IList[T]
 	ListIterator() IListIterator[T]
+
+	// First 첫 번째 요소 반환
+	First() T
+	Last() T
+	RemoveFirst() T
+	RemoveLast() T
+
+	// SubList 마지막 요소 제거
+	SubList(start, end int) IList[T]
+	Sort(action func(i, j int) bool)
 }
 
 // ArrayList 구조체 정의
@@ -151,6 +163,59 @@ func (list *ArrayList[T]) ToSlice() []T {
 	return list.data
 }
 
+// First 첫 번째 요소 반환
+func (list *ArrayList[T]) First() T {
+	if list.IsEmpty() {
+		var zero T
+		return zero
+	}
+	v := list.Get(0)
+	return v
+}
+
+// Last 마지막 요소 반환
+func (list *ArrayList[T]) Last() T {
+	if list.IsEmpty() {
+		var zero T
+		return zero
+	}
+	v := list.Get(list.Size() - 1)
+	return v
+}
+
+// RemoveFirst 첫 번째 요소 제거
+func (list *ArrayList[T]) RemoveFirst() T {
+	if list.IsEmpty() {
+		var zero T
+		return zero
+	}
+	first := list.RemoveAt(0)
+	return first
+}
+
+// RemoveLast 마지막 요소 제거
+func (list *ArrayList[T]) RemoveLast() T {
+	if list.IsEmpty() {
+		var zero T
+		return zero
+	}
+	last := list.RemoveAt(list.Size() - 1)
+	return last
+}
+
+func (list *ArrayList[T]) ToList() IList[T] {
+	return list
+}
+
+// SubList 마지막 요소 제거
+func (list *ArrayList[T]) SubList(start, end int) IList[T] {
+	return NewArrayListWithData[T](list.data[start:end])
+}
+
+func (list *ArrayList[T]) Sort(action func(i, j int) bool) {
+	sort.SliceIsSorted(list.data, action)
+}
+
 // ContainsAll 여러 요소가 포함되어 있는지 확인
 func (list *ArrayList[T]) ContainsAll(elements []T) bool {
 	for _, element := range elements {
@@ -194,7 +259,7 @@ func (list *ArrayList[T]) Iterator() IIterator[T] {
 	return &Iterator[T]{data: elements, index: 0}
 }
 
-// Iterator 컬렉션의 Iterator 반환
+// ListIterator 컬렉션의 ListIterator 반환
 func (list *ArrayList[T]) ListIterator() IListIterator[T] {
 	elements := list.ToSlice()
 	return &ListIterator[T]{data: elements, cursor: 0, lastIndex: -1}

@@ -2,6 +2,7 @@ package utils
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
@@ -9,14 +10,14 @@ import (
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewAnnotationConverter(typeMaker *TypeMaker) *AnnotationConverter {
+func NewAnnotationConverter(typeMaker intsrv.ITypeMaker) *AnnotationConverter {
 	return &AnnotationConverter{
 		TypeMaker: typeMaker,
 	}
 }
 
 type AnnotationConverter struct {
-	TypeMaker    *TypeMaker
+	TypeMaker    intsrv.ITypeMaker
 	ElementValue intmod.IElementValue
 }
 

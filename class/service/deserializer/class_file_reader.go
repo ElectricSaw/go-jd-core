@@ -1,16 +1,13 @@
 package deserializer
 
 import (
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bytes"
 	"encoding/binary"
 	"io"
 )
 
-type Magic uint32
-
-const JavaMagicNumber Magic = 0xCAFEBABE
-
-func NewClassFileReader(data []byte) *ClassFileReader {
+func NewClassFileReader(data []byte) intsrv.IClassFileReader {
 	return &ClassFileReader{
 		reader: bytes.NewReader(data),
 		data:   data,
@@ -48,10 +45,10 @@ func (r *ClassFileReader) ReadUnsignedShort() int {
 	return int(b)
 }
 
-func (r *ClassFileReader) ReadMagic() Magic {
+func (r *ClassFileReader) ReadMagic() intsrv.Magic {
 	var b uint32
 	_ = binary.Read(r.reader, binary.BigEndian, &b)
-	return Magic(b)
+	return intsrv.Magic(b)
 }
 
 func (r *ClassFileReader) ReadInt() int {

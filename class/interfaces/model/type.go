@@ -57,6 +57,7 @@ type IInnerObjectType interface {
 type IType interface {
 	ITypeVisitable
 	ITypeArgumentVisitable
+	util.IBase[IType]
 
 	Name() string
 	Descriptor() string
@@ -108,6 +109,9 @@ type ITypeVisitable interface {
 
 type IObjectType interface {
 	ITypeArgument
+	ITypeVisitable
+	ITypeArgumentVisitable
+	util.IBase[IType]
 
 	QualifiedName() string
 	HashCode() int
@@ -115,7 +119,14 @@ type IObjectType interface {
 	Descriptor() string
 	Dimension() int
 	CreateType(dimension int) IType
+
 	IsObjectType() bool
+	IsGenericType() bool
+	IsInnerObjectType() bool
+	IsPrimitiveType() bool
+	IsTypes() bool
+
+	OuterType() IObjectType
 	InternalName() string
 	AcceptTypeVisitor(visitor ITypeVisitor)
 	IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool
@@ -185,7 +196,6 @@ type ITypeParameterVisitor interface {
 type IPrimitiveType interface {
 	IType
 	ITypeArgument
-	util.IBase[IPrimitiveType]
 
 	HashCode() int
 	Name() string

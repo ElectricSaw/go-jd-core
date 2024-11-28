@@ -4,7 +4,6 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/localvariable"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
@@ -12,7 +11,7 @@ import (
 	"fmt"
 )
 
-func NewLocalVariableMaker(typeMaker *TypeMaker, comd intsrv.IClassFileConstructorOrMethodDeclaration, constructor bool) *LocalVariableMaker {
+func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker, comd intsrv.IClassFileConstructorOrMethodDeclaration, constructor bool) *LocalVariableMaker {
 	m := &LocalVariableMaker{
 		typeMaker: typeMaker,
 	}
@@ -26,9 +25,9 @@ type LocalVariableMaker struct {
 	blackListNames                []string
 	currentFrame                  intsrv.IRootFrame
 	localVariableCache            []intsrv.ILocalVariable
-	typeMaker                     *TypeMaker
+	typeMaker                     intsrv.ITypeMaker
 	typeBounds                    map[string]intmod.IType
-	formalParameters              declaration.FormalParameter
+	formalParameters              intmod.IFormalParameter
 	populateBlackListNamesVisitor *visitor.PopulateBlackListNamesVisitor
 	searchInTypeArgumentVisitor   *visitor.SearchInTypeArgumentVisitor
 	createParameterVisitor        *visitor.CreateParameterVisitor
@@ -91,7 +90,7 @@ func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intmod.IMet
 func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intmod.IClassFile,
 	parameterTypes intmod.IType, varargs bool, firstVariableIndex, lastParameterIndex int) {
 	typeMap := make(map[intmod.IType]bool)
-	t := sliceToDefaultList[intmod.IType](parameterTypes.ToSlice())
+	t := util.NewDefaultListWithSlice[intmod.IType](parameterTypes.ToSlice())
 
 	for parameterIndex := 0; parameterIndex <= lastParameterIndex; parameterIndex++ {
 		y := t.Get(parameterIndex)
@@ -175,15 +174,15 @@ func (m *LocalVariableMaker) LocalVariable(index, offset int) intsrv.ILocalVaria
 	lv := m.localVariableCache[index]
 
 	if lv == nil {
-		lv = m.currentFrame.LocalVariable(index)
+		lv = m.currentFrame.LocalVariable(index).(intsrv.ILocalVariable)
 		//            assert lv != nil : "getLocalVariable : local variable not found";
 		if lv == nil {
 			lv = localvariable.NewObjectLocalVariable2(m.typeMaker, index, offset, _type.OtTypeObject.(intmod.IType),
 				fmt.Sprintf("SYNTHETIC_LOCAL_VARIABLE_%d", index), true)
 		}
 	} else if lv.Frame() != m.currentFrame {
-		frame := searchCommonParentFrame(lv.Frame(), currentFrame)
-		frame.MergeLocalVariable(typeBounds, this, lv)
+		frame := searchCommonParentFrame(lv.Frame(), m.currentFrame)
+		frame.MergeLocalVariable(m.typeBounds, m, lv)
 
 		if lv.Frame() != frame {
 			lv.Frame().RemoveLocalVariable(lv)
@@ -200,12 +199,12 @@ func (m *LocalVariableMaker) searchLocalVariable(index, offset int) intsrv.ILoca
 	lv := m.localVariableSet.Get(index, offset)
 
 	if lv == nil {
-		lv = m.currentFrame.LocalVariable(index)
+		lv = m.currentFrame.LocalVariable(index).(intsrv.ILocalVariable)
 	} else {
-		lv2 := m.currentFrame.LocalVariable(index)
+		lv2 := m.currentFrame.LocalVariable(index).(intsrv.ILocalVariable)
 
 		if lv2 != nil && lv.Type() == lv2.Type() {
-			if lv.Name() == "" && lv2.Name() == nil || lv.Name() == lv2.Name() {
+			if lv.Name() == "" && lv2.Name() == "" || lv.Name() == lv2.Name() {
 				lv = lv2
 			}
 		}
@@ -334,7 +333,7 @@ func (m *LocalVariableMaker) ExceptionLocalVariable(index, offset int, t intmod.
 		lv = m.localVariableSet.Remove(index, offset)
 
 		if lv == nil {
-			lv = localvariable.NewObjectLocalVariable2(m.typeMaker, index, offset, t.(intmod.IType), nil, true)
+			lv = localvariable.NewObjectLocalVariable2(m.typeMaker, index, offset, t.(intmod.IType), "", true)
 		} else {
 			lv.SetDeclared(true)
 		}
@@ -373,7 +372,7 @@ func (m *LocalVariableMaker) store(lv intsrv.ILocalVariable) {
 
 	// Store to current frame
 	if lv.Frame() == nil {
-		m.currentFrame.addLocalVariable(lv)
+		m.currentFrame.AddLocalVariable(lv)
 	}
 }
 
@@ -387,10 +386,10 @@ func (m *LocalVariableMaker) ContainsName(name string) bool {
 	return false
 }
 
-func (m *LocalVariableMaker) Make(containsLineNumber bool, typeMaker *TypeMaker) {
-	m.currentFrame.updateLocalVariableInForStatements(typeMaker)
-	m.currentFrame.createNames(m.blackListNames)
-	m.currentFrame.createDeclarations(containsLineNumber)
+func (m *LocalVariableMaker) Make(containsLineNumber bool, typeMaker intsrv.ITypeMaker) {
+	m.currentFrame.UpdateLocalVariableInForStatements(typeMaker)
+	m.currentFrame.CreateNames(m.blackListNames)
+	m.currentFrame.CreateDeclarations(containsLineNumber)
 }
 
 func (m *LocalVariableMaker) FormalParameters() intmod.IFormalParameter {
@@ -417,7 +416,7 @@ func (m *LocalVariableMaker) ChangeFrame(localVariable intsrv.ILocalVariable) {
 	}
 }
 
-func searchCommonParentFrame(frame1, frame2 localvariable.IFrame) localvariable.IFrame {
+func searchCommonParentFrame(frame1, frame2 intsrv.IFrame) intsrv.IFrame {
 	if frame1 == frame2 {
 		return frame1
 	}
@@ -430,36 +429,19 @@ func searchCommonParentFrame(frame1, frame2 localvariable.IFrame) localvariable.
 		return frame2
 	}
 
-	set := make([]localvariable.IFrame, 0)
+	set := util.NewDefaultList[intsrv.IFrame]()
 
 	for frame1 != nil {
-		set = append(set, frame1)
+		set.Add(frame1)
 		frame1 = frame1.Parent()
 	}
 
 	for frame2 != nil {
-		if ContainsFrame(set, frame2) {
+		if set.Contains(frame2) {
 			return frame2
 		}
 		frame2 = frame2.Parent()
 	}
 
 	return nil
-}
-
-func sliceToDefaultList[T any](slice []T) util.DefaultList[T] {
-	ret := util.DefaultList[T]{}
-	for _, item := range slice {
-		ret.Add(item)
-	}
-	return ret
-}
-
-func ContainsFrame(slice []localvariable.IFrame, item localvariable.IFrame) bool {
-	for _, i := range slice {
-		if i == item {
-			return true
-		}
-	}
-	return false
 }

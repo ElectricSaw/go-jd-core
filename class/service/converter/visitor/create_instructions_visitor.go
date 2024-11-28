@@ -5,12 +5,11 @@ import (
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/localvariable"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"strings"
 )
 
-func NewCreateInstructionsVisitor(typeMaker *utils.TypeMaker) *CreateInstructionsVisitor {
+func NewCreateInstructionsVisitor(typeMaker intsrv.ITypeMaker) *CreateInstructionsVisitor {
 	return &CreateInstructionsVisitor{
 		typeMaker: typeMaker,
 	}
@@ -19,7 +18,7 @@ func NewCreateInstructionsVisitor(typeMaker *utils.TypeMaker) *CreateInstruction
 type CreateInstructionsVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	typeMaker *utils.TypeMaker
+	typeMaker intsrv.ITypeMaker
 }
 
 
@@ -55,7 +54,7 @@ func (v *CreateInstructionsVisitor) VisitBodyDeclaration( decl intmod.IBodyDecla
 					}
 				} else {
 					typ := method.ParameterTypes().First();
-					if typ.IsObjectType() && (typ.Name() == nil) {
+					if typ.IsObjectType() && (typ.Name() == "") {
 					// Synthetic type in parameters -> synthetic method
 					method.SetFlags(method.Flags() | intmod.FlagSynthetic);
 					method.Accept(v);
@@ -105,13 +104,12 @@ method := comd.Method();
 attributeCode := method.Attribute("Code").(*attribute.AttributeCode)
 localVariableMaker := utils.NewLocalVariableMaker(v.typeMaker, comd, constructor);
 
-if (attributeCode == nil) {
-localVariableMaker.make(false, typeMaker);
+if attributeCode == nil {
+localVariableMaker.Make(false, v.typeMaker);
 } else {
-StatementMaker statementMaker = new StatementMaker(typeMaker, localVariableMaker, comd);
-boolean containsLineNumber = (attributeCode.Attribute("LineNumberTable") != nil);
+statementMaker := new StatementMaker(typeMaker, localVariableMaker, comd);
+containsLineNumber := attributeCode.Attribute("LineNumberTable") != nil;
 
-try {
 ControlFlowGraph cfg = ControlFlowGraphMaker.make(method);
 
 if (cfg != nil) {

@@ -56,7 +56,7 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitIfStatement(statement intmo
 	v.SafeAccept(statement.Statements())
 }
 func (v *MergeTryWithResourcesStatementVisitor) VisitStatements(list intmod.IStatements) {
-	v.AcceptListStatement(list.Elements())
+	v.AcceptListStatement(list.ToSlice())
 }
 func (v *MergeTryWithResourcesStatementVisitor) VisitSynchronizedStatement(statement intmod.ISynchronizedStatement) {
 	v.SafeAccept(statement.Statements())

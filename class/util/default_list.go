@@ -1,6 +1,8 @@
 package util
 
-import "fmt"
+import (
+	"fmt"
+)
 
 var EmptyList = NewDefaultList[interface{}]()
 
@@ -9,66 +11,26 @@ type DefaultList[T comparable] struct {
 	ArrayList[T]
 }
 
-func NewDefaultList[T comparable]() *DefaultList[T] {
+func NewDefaultList[T comparable]() IList[T] {
 	return &DefaultList[T]{
 		ArrayList: *NewArrayList[T]().(*ArrayList[T]),
 	}
 }
 
-func NewDefaultListWithCapacity[T comparable](capacity int) *DefaultList[T] {
+func NewDefaultListWithCapacity[T comparable](capacity int) IList[T] {
 	return &DefaultList[T]{
 		ArrayList: *NewArrayListWithCapacity[T](capacity).(*ArrayList[T]),
 	}
 }
 
-func NewDefaultListWithSlice[T comparable](elements []T) *DefaultList[T] {
+func NewDefaultListWithSlice[T comparable](elements []T) IList[T] {
 	return NewDefaultListWithElements[T](elements...)
 }
 
-func NewDefaultListWithElements[T comparable](elements ...T) *DefaultList[T] {
+func NewDefaultListWithElements[T comparable](elements ...T) IList[T] {
 	list := NewDefaultListWithCapacity[T](len(elements))
 	_ = list.AddAll(elements)
 	return list
-}
-
-// First 첫 번째 요소 반환
-func (d *DefaultList[T]) First() T {
-	if d.IsEmpty() {
-		var zero T
-		return zero
-	}
-	v := d.Get(0)
-	return v
-}
-
-// Last 마지막 요소 반환
-func (d *DefaultList[T]) Last() T {
-	if d.IsEmpty() {
-		var zero T
-		return zero
-	}
-	v := d.Get(d.Size() - 1)
-	return v
-}
-
-// RemoveFirst 첫 번째 요소 제거
-func (d *DefaultList[T]) RemoveFirst() T {
-	if d.IsEmpty() {
-		var zero T
-		return zero
-	}
-	first := d.RemoveAt(0)
-	return first
-}
-
-// RemoveLast 마지막 요소 제거
-func (d *DefaultList[T]) RemoveLast() T {
-	if d.IsEmpty() {
-		var zero T
-		return zero
-	}
-	last := d.RemoveAt(d.Size() - 1)
-	return last
 }
 
 func (d *DefaultList[T]) IsList() bool {

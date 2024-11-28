@@ -3,12 +3,14 @@ package utils
 import (
 	"bitbucket.org/coontec/go-jd-core/class/api"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
 	"errors"
 	"fmt"
+	"hash/fnv"
 	"os"
 	"strings"
 	"unicode"
@@ -26,8 +28,21 @@ var InternalNameToObjectPrimitiveType = map[string]intmod.IObjectType{
 	_type.OtTypePrimitiveVoid.InternalName():    _type.OtTypePrimitiveVoid,
 }
 
-func NewTypeMake() *TypeMaker {
-	t := &TypeMaker{}
+func NewTypeMaker() intsrv.ITypeMaker {
+	t := &TypeMaker{
+		signatureToType:                 make(map[string]intmod.IType),
+		internalTypeNameFieldNameToType: make(map[string]intmod.IType),
+		descriptorToObjectType:          make(map[string]intmod.IObjectType),
+		internalTypeNameToObjectType:    make(map[string]intmod.IObjectType),
+		internalTypeNameToTypeTypes:     make(map[string]intsrv.ITypeTypes),
+		internalTypeNameMethodNameParameterCountToDeclaredParameterTypes: make(map[string][]intmod.IType),
+		internalTypeNameMethodNameParameterCountToParameterTypes:         make(map[string][]intmod.IType),
+		internalTypeNameMethodNameDescriptorToMethodTypes:                make(map[string]intsrv.IMethodTypes),
+		signatureToMethodTypes:        make(map[string]intsrv.IMethodTypes),
+		assignableRawTypes:            make(map[int64]bool),
+		superParameterizedObjectTypes: make(map[int64]intmod.IObjectType),
+		hierarchy:                     make(map[string][]string),
+	}
 
 	t.signatureToType["B"] = _type.PtTypeByte.(intmod.IType)
 	t.signatureToType["C"] = _type.PtTypeChar.(intmod.IType)
@@ -68,23 +83,23 @@ type TypeMaker struct {
 	internalTypeNameFieldNameToType                                  map[string]intmod.IType
 	descriptorToObjectType                                           map[string]intmod.IObjectType
 	internalTypeNameToObjectType                                     map[string]intmod.IObjectType
-	internalTypeNameToTypeTypes                                      map[string]*TypeTypes
+	internalTypeNameToTypeTypes                                      map[string]intsrv.ITypeTypes
 	internalTypeNameMethodNameParameterCountToDeclaredParameterTypes map[string][]intmod.IType
 	internalTypeNameMethodNameParameterCountToParameterTypes         map[string][]intmod.IType
-	internalTypeNameMethodNameDescriptorToMethodTypes                map[string]*MethodTypes
-	signatureToMethodTypes                                           map[string]*MethodTypes
+	internalTypeNameMethodNameDescriptorToMethodTypes                map[string]intsrv.IMethodTypes
+	signatureToMethodTypes                                           map[string]intsrv.IMethodTypes
 	assignableRawTypes                                               map[int64]bool
 	superParameterizedObjectTypes                                    map[int64]intmod.IObjectType
 	hierarchy                                                        map[string][]string
-	classPathLoader                                                  ClassPathLoader
+	classPathLoader                                                  intsrv.IClassPathLoader
 	loader                                                           api.Loader
 }
 
-func (m *TypeMaker) ParseClassFileSignature(classFile intmod.IClassFile) TypeTypes {
-	typeTypes := TypeTypes{}
+func (m *TypeMaker) ParseClassFileSignature(classFile intmod.IClassFile) intsrv.ITypeTypes {
+	typeTypes := NewTypeTypes()
 	internalTypeName := classFile.InternalTypeName()
 
-	typeTypes.ThisType = m.MakeFromInternalTypeName(internalTypeName)
+	typeTypes.SetThisType(m.MakeFromInternalTypeName(internalTypeName))
 	attributeSignature := classFile.Attributes()["Signature"].(*attribute.AttributeSignature)
 
 	if attributeSignature == nil {
@@ -92,42 +107,42 @@ func (m *TypeMaker) ParseClassFileSignature(classFile intmod.IClassFile) TypeTyp
 		interfaceTypeNames := classFile.InterfaceTypeNames()
 
 		if superTypeName != "class/lang/Object" {
-			typeTypes.SuperType = m.MakeFromInternalTypeName(superTypeName)
+			typeTypes.SetSuperType(m.MakeFromInternalTypeName(superTypeName))
 		}
 
 		if interfaceTypeNames != nil {
 			length := len(interfaceTypeNames)
 
 			if length == 1 {
-				typeTypes.Interfaces = m.MakeFromInternalTypeName(interfaceTypeNames[0]).(intmod.IType)
+				typeTypes.SetInterfaces(m.MakeFromInternalTypeName(interfaceTypeNames[0]).(intmod.IType))
 			} else {
 				list := _type.NewUnmodifiableTypes()
 				for _, interfaceTypeName := range interfaceTypeNames {
 					list.Add(m.MakeFromInternalTypeName(interfaceTypeName).(intmod.IType))
 				}
-				typeTypes.Interfaces = list.(intmod.IType)
+				typeTypes.SetInterfaces(list.(intmod.IType))
 			}
 		}
 	} else {
 		reader := NewSignatureReader(attributeSignature.Signature())
 
-		typeTypes.TypeParameters = m.parseTypeParameters(reader)
-		typeTypes.SuperType = m.parseClassTypeSignature(reader, 0)
+		typeTypes.SetTypeParameters(m.parseTypeParameters(reader))
+		typeTypes.SetSuperType(m.parseClassTypeSignature(reader, 0))
 
 	}
 
 	return typeTypes
 }
 
-func (m *TypeMaker) ParseMethodSignature(classFile intmod.IClassFile, method intmod.IMethod) *MethodTypes {
+func (m *TypeMaker) ParseMethodSignature(classFile intmod.IClassFile, method intmod.IMethod) intsrv.IMethodTypes {
 	key := classFile.InternalTypeName() + ":" + method.Name() + method.Descriptor()
 	return m.parseMethodSignature(method, key)
 }
 
-func (m *TypeMaker) parseMethodSignature(method intmod.IMethod, key string) *MethodTypes {
+func (m *TypeMaker) parseMethodSignature(method intmod.IMethod, key string) intsrv.IMethodTypes {
 	attributeSignature := method.Attributes()["Signature"].(*attribute.AttributeSignature)
 	exceptionTypeNames := getExceptionTypeNames(method)
-	var methodTypes *MethodTypes
+	var methodTypes intsrv.IMethodTypes
 
 	if attributeSignature == nil {
 		methodTypes = m.parseMethodSignature2(method.Descriptor(), exceptionTypeNames)
@@ -169,7 +184,7 @@ func (m *TypeMaker) MakeFromSignature(signature string) intmod.IType {
 	return typ
 }
 
-func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames []string) *MethodTypes {
+func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames []string) intsrv.IMethodTypes {
 	cacheKey := signature
 	containsThrowsSignature := strings.Index(signature, "^") != -1
 
@@ -187,9 +202,8 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 
 	if methodTypes == nil {
 		reader := NewSignatureReader(signature)
-		methodTypes = &MethodTypes{
-			TypeParameters: m.parseTypeParameters(reader),
-		}
+		methodTypes = NewMethodTypes2(m.parseTypeParameters(reader),
+			nil, nil, nil)
 
 		if reader.Read() != '(' {
 			return nil
@@ -198,7 +212,7 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 		firstParameterType := m.parseReferenceTypeSignature(reader)
 
 		if firstParameterType == nil {
-			methodTypes.ParameterTypes = nil
+			methodTypes.SetParameterTypes(nil)
 		} else {
 			nextParameterType := m.parseReferenceTypeSignature(reader)
 			types := &_type.UnmodifiableTypes{}
@@ -209,20 +223,20 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 				nextParameterType = m.parseReferenceTypeSignature(reader)
 			}
 
-			methodTypes.ParameterTypes = types
+			methodTypes.SetParameterTypes(types)
 		}
 
 		if reader.Read() != ')' {
 			return nil
 		}
 
-		methodTypes.ReturnedType = m.parseReferenceTypeSignature(reader)
+		methodTypes.SetReturnedType(m.parseReferenceTypeSignature(reader))
 		firstException := m.parseExceptionSignature(reader)
 
 		if firstException == nil {
 			if exceptionTypeNames != nil {
 				if len(exceptionTypeNames) == 1 {
-					methodTypes.ExceptionTypes = m.MakeFromInternalTypeName(exceptionTypeNames[0]).(intmod.IType)
+					methodTypes.SetExceptionTypes(m.MakeFromInternalTypeName(exceptionTypeNames[0]).(intmod.IType))
 				} else {
 					list := &_type.UnmodifiableTypes{}
 
@@ -230,14 +244,14 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 						list.Add(m.MakeFromInternalTypeName(exceptionTypeName).(intmod.IType))
 					}
 
-					methodTypes.ExceptionTypes = list
+					methodTypes.SetExceptionTypes(list)
 				}
 			}
 		} else {
 			nextException := m.parseExceptionSignature(reader)
 
 			if nextException == nil {
-				methodTypes.ExceptionTypes = firstException
+				methodTypes.SetExceptionTypes(firstException)
 			} else {
 				list := &_type.UnmodifiableTypes{}
 				list.Add(firstException)
@@ -247,7 +261,7 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 					nextException = m.parseExceptionSignature(reader)
 				}
 
-				methodTypes.ExceptionTypes = list
+				methodTypes.SetExceptionTypes(list)
 			}
 		}
 
@@ -257,43 +271,37 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 	return methodTypes
 }
 
-func (m *TypeMaker) parseMethodSignature3(descriptor, signature string, exceptionTypeNames []string) *MethodTypes {
+func (m *TypeMaker) parseMethodSignature3(descriptor, signature string, exceptionTypeNames []string) intsrv.IMethodTypes {
 	if signature == "" {
 		return m.parseMethodSignature2(descriptor, exceptionTypeNames)
 	} else {
 		mtDescriptor := m.parseMethodSignature2(descriptor, exceptionTypeNames)
 		mtSignature := m.parseMethodSignature2(signature, exceptionTypeNames)
 
-		if mtDescriptor.ParameterTypes == nil {
+		if mtDescriptor.ParameterTypes() == nil {
 			return mtSignature
-		} else if mtSignature.ParameterTypes == nil {
-			mt := &MethodTypes{}
-			mt.TypeParameters = mtSignature.TypeParameters
-			mt.ParameterTypes = mtDescriptor.ParameterTypes
-			mt.ReturnedType = mtSignature.ReturnedType
-			mt.ExceptionTypes = mtSignature.ExceptionTypes
-			return mt
-		} else if mtDescriptor.ParameterTypes.Size() == mtSignature.ParameterTypes.Size() {
+		} else if mtSignature.ParameterTypes() == nil {
+			return NewMethodTypes2(mtSignature.TypeParameters(),
+				mtDescriptor.ParameterTypes(),
+				mtSignature.ReturnedType(),
+				mtSignature.ExceptionTypes())
+		} else if mtDescriptor.ParameterTypes().Size() == mtSignature.ParameterTypes().Size() {
 			return mtSignature
 		} else {
 			// TODO: 테스트 필요.
 			parameterTypes := _type.NewUnmodifiableTypes()
-			parameterTypes.Add(mtSignature.ParameterTypes)
+			parameterTypes.Add(mtSignature.ParameterTypes())
 
-			mt := &MethodTypes{}
-			mt.TypeParameters = mtSignature.TypeParameters
-			mt.ParameterTypes = parameterTypes
-			mt.ReturnedType = mtSignature.ReturnedType
-			mt.ExceptionTypes = mtSignature.ExceptionTypes
-
-			return mt
+			return NewMethodTypes2(mtSignature.TypeParameters(),
+				parameterTypes, mtSignature.ReturnedType(),
+				mtSignature.ExceptionTypes())
 		}
 	}
 }
 
-func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) intmod.ITypeParameter {
+func (m *TypeMaker) parseTypeParameters(reader intsrv.ISignatureReader) intmod.ITypeParameter {
 	if reader.NextEqualsTo('<') {
-		reader.index++
+		reader.Inc()
 
 		firstTypeParameter := m.parseTypeParameter(reader)
 
@@ -329,8 +337,8 @@ func (m *TypeMaker) parseTypeParameters(reader *SignatureReader) intmod.ITypePar
 	return nil
 }
 
-func (m *TypeMaker) parseTypeParameter(reader *SignatureReader) intmod.ITypeParameter {
-	firstIndex := reader.index
+func (m *TypeMaker) parseTypeParameter(reader intsrv.ISignatureReader) intmod.ITypeParameter {
+	firstIndex := reader.Index()
 
 	if reader.Search(':') {
 		identifier := reader.Substring(firstIndex)
@@ -338,7 +346,7 @@ func (m *TypeMaker) parseTypeParameter(reader *SignatureReader) intmod.ITypePara
 		var types intmod.IUnmodifiableTypes
 
 		for reader.NextEqualsTo(':') {
-			reader.index++
+			reader.Inc()
 
 			bound := m.parseReferenceTypeSignature(reader)
 
@@ -367,18 +375,18 @@ func (m *TypeMaker) parseTypeParameter(reader *SignatureReader) intmod.ITypePara
 	return nil
 }
 
-func (m *TypeMaker) parseExceptionSignature(reader *SignatureReader) intmod.IType {
+func (m *TypeMaker) parseExceptionSignature(reader intsrv.ISignatureReader) intmod.IType {
 	if reader.NextEqualsTo('^') {
-		reader.index++
+		reader.Inc()
 		return m.parseReferenceTypeSignature(reader)
 	}
 	return nil
 }
 
-func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension int) intmod.IObjectType {
+func (m *TypeMaker) parseClassTypeSignature(reader intsrv.ISignatureReader, dimension int) intmod.IObjectType {
 	if reader.NextEqualsTo('L') {
-		reader.index++
-		index := reader.index
+		reader.Inc()
+		index := reader.Index()
 		endMarker := reader.SearchEndMarker()
 
 		if endMarker == 0 {
@@ -389,7 +397,7 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 		ot := m.MakeFromInternalTypeName(internalTypeName)
 
 		if endMarker == '<' {
-			reader.index++
+			reader.Inc()
 			ot = ot.CreateTypeWithArgs(m.parseTypeArguments(reader))
 			if reader.Read() != '>' {
 				return nil
@@ -397,8 +405,8 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 		}
 
 		for reader.NextEqualsTo('.') {
-			reader.index++
-			index = reader.index
+			reader.Inc()
+			index = reader.Index()
 			endMarker = reader.SearchEndMarker()
 
 			if endMarker == 0 {
@@ -417,7 +425,7 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 			}
 
 			if endMarker == '<' {
-				reader.index++
+				reader.Inc()
 
 				typeArguments := m.parseTypeArguments(reader)
 				if reader.Read() != '>' {
@@ -430,7 +438,7 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 			}
 		}
 
-		reader.index++
+		reader.Inc()
 
 		if dimension == 0 {
 			return ot
@@ -442,7 +450,7 @@ func (m *TypeMaker) parseClassTypeSignature(reader *SignatureReader, dimension i
 	return nil
 }
 
-func (m *TypeMaker) parseTypeArguments(reader *SignatureReader) intmod.ITypeArgument {
+func (m *TypeMaker) parseTypeArguments(reader intsrv.ISignatureReader) intmod.ITypeArgument {
 	firstTypeArgument := m.parseTypeArgument(reader)
 	if firstTypeArgument == nil {
 		return nil
@@ -465,7 +473,7 @@ func (m *TypeMaker) parseTypeArguments(reader *SignatureReader) intmod.ITypeArgu
 	}
 }
 
-func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) intmod.IType {
+func (m *TypeMaker) parseReferenceTypeSignature(reader intsrv.ISignatureReader) intmod.IType {
 	if reader.Available() {
 		dimension := 0
 		c := reader.Read()
@@ -507,7 +515,7 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) intmod.
 			}
 			return _type.PtTypeLong.CreateType(dimension)
 		case 'L':
-			reader.index--
+			reader.Dec()
 			return m.parseClassTypeSignature(reader, dimension).(intmod.IType)
 		case 'S':
 			if dimension == 0 {
@@ -515,14 +523,14 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) intmod.
 			}
 			return _type.PtTypeShort.CreateType(dimension)
 		case 'T':
-			index := reader.index
+			index := reader.Index()
 
 			if reader.Search(';') == false {
 				return nil
 			}
 
 			identifier := reader.Substring(index)
-			reader.index++
+			reader.Inc()
 
 			return _type.NewGenericTypeWithAll(identifier, dimension).(intmod.IType)
 		case 'V':
@@ -536,14 +544,14 @@ func (m *TypeMaker) parseReferenceTypeSignature(reader *SignatureReader) intmod.
 			}
 			return _type.PtTypeBoolean.CreateType(dimension)
 		default:
-			reader.index--
+			reader.Dec()
 			return nil
 		}
 	}
 	return nil
 }
 
-func (m *TypeMaker) parseTypeArgument(reader *SignatureReader) intmod.ITypeArgument {
+func (m *TypeMaker) parseTypeArgument(reader intsrv.ISignatureReader) intmod.ITypeArgument {
 	switch reader.Read() {
 	case '+':
 		return _type.NewWildcardExtendsTypeArgument(m.parseReferenceTypeSignature(reader)).(intmod.ITypeArgument)
@@ -552,7 +560,7 @@ func (m *TypeMaker) parseTypeArgument(reader *SignatureReader) intmod.ITypeArgum
 	case '*':
 		return _type.WildcardTypeArgumentEmpty.(intmod.ITypeArgument)
 	default:
-		reader.index--
+		reader.Dec()
 		return m.parseReferenceTypeSignature(reader)
 	}
 }
@@ -697,28 +705,28 @@ func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalT
 		bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
 		bindings := make(map[string]intmod.ITypeArgument)
 
-		if (rightTypeTypes.TypeParameters == nil) || (right.TypeArguments() == nil) {
+		if (rightTypeTypes.TypeParameters() == nil) || (right.TypeArguments() == nil) {
 			bindings = make(map[string]intmod.ITypeArgument)
 		} else {
 			bindings = make(map[string]intmod.ITypeArgument)
 
-			if rightTypeTypes.TypeParameters.IsList() && right.TypeArguments().IsTypeArgumentList() {
-				iteratorTypeParameter := rightTypeTypes.TypeParameters.ToSlice()
+			if rightTypeTypes.TypeParameters().IsList() && right.TypeArguments().IsTypeArgumentList() {
+				iteratorTypeParameter := rightTypeTypes.TypeParameters().ToSlice()
 				iteratorTypeArgument := right.TypeArguments().TypeArgumentList()
 
 				for i := 0; i < len(iteratorTypeParameter); i++ {
 					bindings[iteratorTypeParameter[i].Identifier()] = iteratorTypeArgument[i]
 				}
 			} else {
-				bindings[rightTypeTypes.TypeParameters.First().Identifier()] = right.TypeArguments().TypeArgumentFirst()
+				bindings[rightTypeTypes.TypeParameters().First().Identifier()] = right.TypeArguments().TypeArgumentFirst()
 			}
 		}
 
 		bindTypesToTypesVisitor.SetBindings(bindings)
 
-		if rightTypeTypes.SuperType != nil {
+		if rightTypeTypes.SuperType() != nil {
 			bindTypesToTypesVisitor.Init()
-			rightTypeTypes.SuperType.AcceptTypeVisitor(bindTypesToTypesVisitor)
+			rightTypeTypes.SuperType().AcceptTypeVisitor(bindTypesToTypesVisitor)
 			ot := bindTypesToTypesVisitor.Type().(intmod.IObjectType)
 			ot = m.searchSuperParameterizedType(leftHashCode, leftInternalTypeName, ot)
 
@@ -728,8 +736,8 @@ func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalT
 			}
 		}
 
-		if rightTypeTypes.Interfaces != nil {
-			for _, interfaze := range rightTypeTypes.Interfaces.ToSlice() {
+		if rightTypeTypes.Interfaces() != nil {
+			for _, interfaze := range rightTypeTypes.Interfaces().ToSlice() {
 				bindTypesToTypesVisitor.Init()
 				interfaze.AcceptTypeVisitor(bindTypesToTypesVisitor)
 				ot := bindTypesToTypesVisitor.Type().(intmod.IObjectType)
@@ -802,12 +810,12 @@ func (m *TypeMaker) isRawTypeAssignable(leftHashCode int, leftInternalName, righ
 	return false
 }
 
-func (m *TypeMaker) MakeTypeTypes(internalTypeName string) *TypeTypes {
+func (m *TypeMaker) MakeTypeTypes(internalTypeName string) intsrv.ITypeTypes {
 	if value, ok := m.internalTypeNameToTypeTypes[internalTypeName]; ok {
 		return value
 	}
 
-	var typeTypes *TypeTypes
+	var typeTypes intsrv.ITypeTypes
 
 	if m.loader.CanLoad(internalTypeName) {
 		data, err := m.loader.Load(internalTypeName)
@@ -828,7 +836,7 @@ func (m *TypeMaker) MakeTypeTypes(internalTypeName string) *TypeTypes {
 	return typeTypes
 }
 
-func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) *TypeTypes {
+func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) intsrv.ITypeTypes {
 	if data == nil {
 		return nil
 	}
@@ -864,36 +872,36 @@ func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) *TypeTyp
 	superClassAndInterfaceNames := m.hierarchy[internalTypeName]
 	typeTypes := &TypeTypes{}
 
-	typeTypes.ThisType = m.MakeFromInternalTypeName(internalTypeName)
+	typeTypes.SetThisType(m.MakeFromInternalTypeName(internalTypeName))
 
 	if signature == "" {
 		superTypeName := superClassAndInterfaceNames[0]
 
 		if superTypeName == "" {
-			typeTypes.SuperType = nil
+			typeTypes.SetSuperType(nil)
 		} else {
-			typeTypes.SuperType = m.MakeFromInternalTypeName(superTypeName)
+			typeTypes.SetSuperType(m.MakeFromInternalTypeName(superTypeName))
 		}
 
 		switch len(superClassAndInterfaceNames) {
 		case 0, 1:
 		case 2:
-			typeTypes.Interfaces = m.MakeFromInternalTypeName(superClassAndInterfaceNames[1]).(intmod.IType)
+			typeTypes.SetInterfaces(m.MakeFromInternalTypeName(superClassAndInterfaceNames[1]).(intmod.IType))
 		default:
 			length := len(superClassAndInterfaceNames)
 			list := _type.NewUnmodifiableTypes()
 			for i := 1; i < length; i++ {
 				list.Add(m.MakeFromInternalTypeName(superClassAndInterfaceNames[i]).(intmod.IType))
 			}
-			typeTypes.Interfaces = list
+			typeTypes.SetInterfaces(list)
 			break
 		}
 	} else {
 		// Parse 'signature' attribute
 		signatureReader := &SignatureReader{signature: signature}
 
-		typeTypes.TypeParameters = m.parseTypeParameters(signatureReader)
-		typeTypes.SuperType = m.parseClassTypeSignature(signatureReader, 0)
+		typeTypes.SetTypeParameters(m.parseTypeParameters(signatureReader))
+		typeTypes.SetSuperType(m.parseClassTypeSignature(signatureReader, 0))
 
 		firstInterface := m.parseClassTypeSignature(signatureReader, 0)
 
@@ -901,7 +909,7 @@ func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) *TypeTyp
 			nextInterface := m.parseClassTypeSignature(signatureReader, 0)
 
 			if nextInterface == nil {
-				typeTypes.Interfaces = firstInterface.(intmod.IType)
+				typeTypes.SetInterfaces(firstInterface.(intmod.IType))
 			} else {
 				// length := len(superClassAndInterfaceNames)
 				list := _type.NewUnmodifiableTypes()
@@ -912,7 +920,7 @@ func (m *TypeMaker) makeTypeTypes(internalTypeName string, data []byte) *TypeTyp
 					nextInterface = m.parseClassTypeSignature(signatureReader, 0)
 				}
 
-				typeTypes.Interfaces = list
+				typeTypes.SetInterfaces(list)
 			}
 		}
 	}
@@ -950,20 +958,21 @@ func (m *TypeMaker) loadFieldType(internalTypeName, fieldName, descriptor string
 				typeTypes := m.MakeTypeTypes(internalTypeName)
 
 				if typeTypes != nil {
-					if typeTypes.SuperType != nil {
-						typ = m.loadFieldType2(typeTypes.SuperType, fieldName, descriptor)
+					if typeTypes.SuperType() != nil {
+						typ = m.loadFieldType2(typeTypes.SuperType(), fieldName, descriptor)
 					}
 
-					if (typ == nil) && (typeTypes.Interfaces != nil) {
-						if typeTypes.Interfaces.IsList() {
-							for _, interfaze := range typeTypes.Interfaces.ToSlice() {
-								typ = m.loadFieldType2(interfaze.(intmod.IObjectType), fieldName, descriptor)
+					if (typ == nil) && (typeTypes.Interfaces() != nil) {
+						if typeTypes.Interfaces().IsList() {
+							for _, interfaze := range typeTypes.Interfaces().ToSlice() {
+								typ = m.loadFieldType2(interfaze.(intmod.IObjectType),
+									fieldName, descriptor)
 								if typ != nil {
 									break
 								}
 							}
 						} else {
-							typ = m.loadFieldType2(typeTypes.Interfaces.First().(intmod.IObjectType), fieldName, descriptor)
+							typ = m.loadFieldType2(typeTypes.Interfaces().First().(intmod.IObjectType), fieldName, descriptor)
 						}
 					}
 				}
@@ -986,19 +995,19 @@ func (m *TypeMaker) loadFieldType2(objectType intmod.IObjectType, fieldName, des
 	if (typ != nil) && (typeArguments != nil) {
 		typeTypes := m.MakeTypeTypes(internalTypeName)
 
-		if (typeTypes != nil) && (typeTypes.TypeParameters != nil) {
+		if (typeTypes != nil) && (typeTypes.TypeParameters() != nil) {
 			bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
 			bindings := make(map[string]intmod.ITypeArgument)
 
-			if typeTypes.TypeParameters.IsList() && typeArguments.IsTypeArgumentList() {
-				iteratorTypeParameter := typeTypes.TypeParameters.ToSlice()
+			if typeTypes.TypeParameters().IsList() && typeArguments.IsTypeArgumentList() {
+				iteratorTypeParameter := typeTypes.TypeParameters().ToSlice()
 				iteratorTypeArgument := typeArguments.TypeArgumentList()
 
 				for i := 0; i < len(iteratorTypeParameter); i++ {
 					bindings[iteratorTypeParameter[i].Identifier()] = iteratorTypeArgument[i]
 				}
 			} else {
-				bindings[typeTypes.TypeParameters.First().Identifier()] = typeArguments.TypeArgumentFirst()
+				bindings[typeTypes.TypeParameters().First().Identifier()] = typeArguments.TypeArgumentFirst()
 			}
 
 			bindTypesToTypesVisitor.SetBindings(bindings)
@@ -1013,14 +1022,14 @@ func (m *TypeMaker) loadFieldType2(objectType intmod.IObjectType, fieldName, des
 }
 
 func (m *TypeMaker) SetMethodReturnedType(internalTypeName, methodName, descriptor string, typ intmod.IType) {
-	m.MakeMethodTypes2(internalTypeName, methodName, descriptor).ReturnedType = typ
+	m.MakeMethodTypes2(internalTypeName, methodName, descriptor).SetReturnedType(typ)
 }
 
-func (m *TypeMaker) MakeMethodTypes(descriptor string) *MethodTypes {
+func (m *TypeMaker) MakeMethodTypes(descriptor string) intsrv.IMethodTypes {
 	return m.parseMethodSignature2(descriptor, nil)
 }
 
-func (m *TypeMaker) MakeMethodTypes2(internalTypeName, methodName, descriptor string) *MethodTypes {
+func (m *TypeMaker) MakeMethodTypes2(internalTypeName, methodName, descriptor string) intsrv.IMethodTypes {
 	methodTypes := m.loadMethodTypes(internalTypeName, methodName, descriptor)
 
 	if methodTypes == nil {
@@ -1032,7 +1041,7 @@ func (m *TypeMaker) MakeMethodTypes2(internalTypeName, methodName, descriptor st
 	return methodTypes
 }
 
-func (m *TypeMaker) loadMethodTypes(internalTypeName, methodName, descriptor string) *MethodTypes {
+func (m *TypeMaker) loadMethodTypes(internalTypeName, methodName, descriptor string) intsrv.IMethodTypes {
 	key := internalTypeName + ":" + methodName + descriptor
 	methodTypes := m.internalTypeNameMethodNameDescriptorToMethodTypes[key]
 
@@ -1045,20 +1054,20 @@ func (m *TypeMaker) loadMethodTypes(internalTypeName, methodName, descriptor str
 				typeTypes := m.MakeTypeTypes(internalTypeName)
 
 				if typeTypes != nil {
-					if typeTypes.SuperType != nil {
-						methodTypes = m.loadMethodTypes2(typeTypes.SuperType, methodName, descriptor)
+					if typeTypes.SuperType() != nil {
+						methodTypes = m.loadMethodTypes2(typeTypes.SuperType(), methodName, descriptor)
 					}
 
-					if (methodTypes == nil) && (typeTypes.Interfaces != nil) {
-						if typeTypes.Interfaces.IsList() {
-							for _, interfaze := range typeTypes.Interfaces.ToSlice() {
+					if (methodTypes == nil) && (typeTypes.Interfaces() != nil) {
+						if typeTypes.Interfaces().IsList() {
+							for _, interfaze := range typeTypes.Interfaces().ToSlice() {
 								methodTypes = m.loadMethodTypes2(interfaze.(intmod.IObjectType), methodName, descriptor)
 								if methodTypes != nil {
 									break
 								}
 							}
 						} else {
-							methodTypes = m.loadMethodTypes2(typeTypes.Interfaces.First().(intmod.IObjectType), methodName, descriptor)
+							methodTypes = m.loadMethodTypes2(typeTypes.Interfaces().First().(intmod.IObjectType), methodName, descriptor)
 						}
 					}
 				}
@@ -1073,7 +1082,7 @@ func (m *TypeMaker) loadMethodTypes(internalTypeName, methodName, descriptor str
 	return methodTypes
 }
 
-func (m *TypeMaker) loadMethodTypes2(objectType intmod.IObjectType, methodName, descriptor string) *MethodTypes {
+func (m *TypeMaker) loadMethodTypes2(objectType intmod.IObjectType, methodName, descriptor string) intsrv.IMethodTypes {
 	internalTypeName := objectType.InternalName()
 	typeArguments := objectType.TypeArguments()
 	methodTypes := m.loadMethodTypes(internalTypeName, methodName, descriptor)
@@ -1081,44 +1090,44 @@ func (m *TypeMaker) loadMethodTypes2(objectType intmod.IObjectType, methodName, 
 	if (methodTypes != nil) && (typeArguments != nil) {
 		typeTypes := m.MakeTypeTypes(internalTypeName)
 
-		if (typeTypes != nil) && (typeTypes.TypeParameters != nil) {
+		if (typeTypes != nil) && (typeTypes.TypeParameters() != nil) {
 			bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
 			bindings := make(map[string]intmod.ITypeArgument)
 			newMethodTypes := &MethodTypes{}
 
-			if typeTypes.TypeParameters.IsList() && typeArguments.IsTypeArgumentList() {
-				iteratorTypeParameter := typeTypes.TypeParameters.ToSlice()
+			if typeTypes.TypeParameters().IsList() && typeArguments.IsTypeArgumentList() {
+				iteratorTypeParameter := typeTypes.TypeParameters().ToSlice()
 				iteratorTypeArgument := typeArguments.TypeArgumentList()
 
 				for i := 0; i < len(iteratorTypeParameter); i++ {
 					bindings[iteratorTypeParameter[i].Identifier()] = iteratorTypeArgument[i]
 				}
 			} else {
-				bindings[typeTypes.TypeParameters.First().Identifier()] = typeArguments.TypeArgumentFirst()
+				bindings[typeTypes.TypeParameters().First().Identifier()] = typeArguments.TypeArgumentFirst()
 			}
 
 			bindTypesToTypesVisitor.SetBindings(bindings)
 
-			if methodTypes.ParameterTypes == nil {
-				newMethodTypes.ParameterTypes = nil
+			if methodTypes.ParameterTypes() == nil {
+				newMethodTypes.SetParameterTypes(nil)
 			} else {
 				bindTypesToTypesVisitor.Init()
-				methodTypes.ParameterTypes.AcceptTypeVisitor(bindTypesToTypesVisitor)
+				methodTypes.ParameterTypes().AcceptTypeVisitor(bindTypesToTypesVisitor)
 				baseType := bindTypesToTypesVisitor.Type()
 
 				if baseType.IsList() && baseType.IsTypes() {
 					baseType = _type.NewUnmodifiableTypes(baseType.ToSlice()...)
 				}
 
-				newMethodTypes.ParameterTypes = baseType
+				newMethodTypes.SetParameterTypes(baseType)
 			}
 
 			bindTypesToTypesVisitor.Init()
-			methodTypes.ReturnedType.AcceptTypeVisitor(bindTypesToTypesVisitor)
-			newMethodTypes.ReturnedType = bindTypesToTypesVisitor.Type()
+			methodTypes.ReturnedType().AcceptTypeVisitor(bindTypesToTypesVisitor)
+			newMethodTypes.SetReturnedType(bindTypesToTypesVisitor.Type())
 
-			newMethodTypes.TypeParameters = nil
-			newMethodTypes.ExceptionTypes = methodTypes.ExceptionTypes
+			newMethodTypes.SetTypeParameters(nil)
+			newMethodTypes.SetExceptionTypes(methodTypes.ExceptionTypes())
 
 			methodTypes = newMethodTypes
 		}
@@ -1228,143 +1237,6 @@ func (m *TypeMaker) loadType2(internalTypeName string, data []byte) intmod.IObje
 	}
 }
 
-func CountDimension(descriptor string) int {
-	count := 0
-	length := len(descriptor)
-
-	for i := 0; i < length && descriptor[i] == '['; i++ {
-		count++
-	}
-	return count
-}
-
-func getExceptionTypeNames(method intmod.IMethod) []string {
-	if method != nil {
-		attributeExceptions := method.Attributes()["Exceptions"].(*attribute.AttributeExceptions)
-
-		if attributeExceptions != nil {
-			return attributeExceptions.ExceptionTypeNames()
-		}
-	}
-
-	return nil
-}
-
-func isAReferenceTypeSignature(reader *SignatureReader) bool {
-	if reader.Available() {
-		c := reader.Read()
-
-		for c == '[' {
-			c = reader.Read()
-		}
-
-		switch c {
-		case 'B', 'C', 'D', 'F', 'I', 'J':
-			return true
-		case 'L':
-			// Unread 'L'
-			reader.index--
-			return isAClassTypeSignature(reader)
-		case 'S':
-			return true
-		case 'T':
-			reader.SearchEndMarker()
-			return true
-		case 'V', 'Z':
-			return true
-		default:
-			// Unread 'c'
-			reader.index--
-			return false
-		}
-	}
-	return false
-}
-
-func isAClassTypeSignature(reader *SignatureReader) bool {
-	if reader.NextEqualsTo('L') {
-		reader.index++
-		endMarker := reader.SearchEndMarker()
-
-		if endMarker == 0 {
-			return false
-		}
-
-		if endMarker == '<' {
-			reader.index++
-			isATypeArguments(reader)
-			if reader.Read() != '>' {
-				return false
-			}
-		}
-
-		for reader.NextEqualsTo('.') {
-			reader.index++
-			endMarker = reader.SearchEndMarker()
-
-			if endMarker == 0 {
-				return false
-			}
-
-			if endMarker == '<' {
-				reader.index++
-				isATypeArguments(reader)
-				if reader.Read() != '>' {
-					return false
-				}
-			}
-		}
-
-		reader.index++
-
-		return true
-	}
-
-	return false
-}
-
-func isATypeArguments(reader *SignatureReader) bool {
-	if !isATypeArgument(reader) {
-		return false
-	}
-
-	for isATypeArgument(reader) {
-	}
-
-	return false
-}
-
-func isATypeArgument(reader *SignatureReader) bool {
-	switch reader.Read() {
-	case '+', '-':
-		return isAReferenceTypeSignature(reader)
-	case '*':
-		return true
-	default:
-		reader.index--
-		return false
-	}
-}
-
-func extractLocalClassName(name string) string {
-	if unicode.IsDigit(rune(name[0])) {
-		i := 0
-		length := len(name)
-
-		for i < length && unicode.IsDigit(rune(name[i])) {
-			i++
-		}
-
-		if i == length {
-			return ""
-		}
-
-		return name[i:]
-	}
-
-	return name
-}
-
 func (m *TypeMaker) loadFieldsAndMethods(internalTypeName string) bool {
 	if m.loader.CanLoad(internalTypeName) {
 		data, err := m.loader.Load(internalTypeName)
@@ -1469,7 +1341,7 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 			name := constants[nameIndex].(string)
 			descriptor := constants[descriptorIndex].(string)
 			key := internalTypeName + ":" + name + descriptor
-			var methodTypes *MethodTypes
+			var methodTypes intsrv.IMethodTypes
 
 			if signature == "" {
 				methodTypes = m.parseMethodSignature2(descriptor, exceptionTypeNames)
@@ -1480,8 +1352,8 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 			m.internalTypeNameMethodNameDescriptorToMethodTypes[key] = methodTypes
 
 			parameterCount := 0
-			if methodTypes.ParameterTypes != nil {
-				parameterCount = methodTypes.ParameterTypes.Size()
+			if methodTypes.ParameterTypes() != nil {
+				parameterCount = methodTypes.ParameterTypes().Size()
 			}
 
 			key = fmt.Sprintf("%s:%s:%d", internalTypeName, name, parameterCount)
@@ -1492,7 +1364,7 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 					set = make([]intmod.IType, 0)
 					m.internalTypeNameMethodNameParameterCountToDeclaredParameterTypes[key] = set
 				}
-				set = append(set, methodTypes.ParameterTypes)
+				set = append(set, methodTypes.ParameterTypes())
 			} else if set == nil {
 				m.internalTypeNameMethodNameParameterCountToDeclaredParameterTypes[key] = make([]intmod.IType, 0)
 			}
@@ -1502,10 +1374,10 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 	return true
 }
 
-func (m *TypeMaker) loadClassFile(internalTypeName string, reader *deserializer.ClassFileReader) ([]interface{}, error) {
+func (m *TypeMaker) loadClassFile(internalTypeName string, reader intsrv.IClassFileReader) ([]interface{}, error) {
 	magic := reader.ReadMagic()
 
-	if magic != deserializer.JavaMagicNumber {
+	if magic != intsrv.JavaMagicNumber {
 		return nil, errors.New("invalid CLASS file")
 	}
 
@@ -1547,7 +1419,7 @@ func (m *TypeMaker) loadClassFile(internalTypeName string, reader *deserializer.
 	return constants, nil
 }
 
-func (m *TypeMaker) loadConstants(reader *deserializer.ClassFileReader) ([]interface{}, error) {
+func (m *TypeMaker) loadConstants(reader intsrv.IClassFileReader) ([]interface{}, error) {
 	count := reader.ReadUnsignedShort()
 
 	if count == 0 {
@@ -1620,9 +1492,9 @@ func (m *TypeMaker) getSetOfParameterTypes(internalTypeName, suffixKey string, c
 		if !constructor {
 			typeTypes := m.MakeTypeTypes(internalTypeName)
 
-			if typeTypes != nil && typeTypes.SuperType != nil {
+			if typeTypes != nil && typeTypes.SuperType() != nil {
 				setOfParameterTypes = append(setOfParameterTypes,
-					m.getSetOfParameterTypes(typeTypes.SuperType.InternalName(), suffixKey, constructor)...)
+					m.getSetOfParameterTypes(typeTypes.SuperType().InternalName(), suffixKey, constructor)...)
 			}
 		}
 
@@ -1666,17 +1538,21 @@ func (m *TypeMaker) match2(typeBounds map[string]intmod.IType, leftType intmod.I
 	}
 
 	if leftType.IsPrimitiveType() && rightType.IsPrimitiveType() {
-		flags := leftType.(*_type.PrimitiveType).Flags() | rightType.(*_type.PrimitiveType).Flags()
+		flags := leftType.(intmod.IPrimitiveType).Flags() | rightType.(intmod.IPrimitiveType).Flags()
 		return flags != 0
 	}
 
 	if leftType.IsObjectType() && rightType.IsObjectType() {
-		ot1 := leftType.(*_type.ObjectType)
-		ot2 := rightType.(*_type.ObjectType)
-		return m.IsAssignable(typeBounds, ot1, ot2)
+		return m.IsAssignable(typeBounds, leftType.(intmod.IObjectType), rightType.(intmod.IObjectType))
 	}
 
 	return false
+}
+
+func NewClassPathLoader(buffer []byte) intsrv.IClassPathLoader {
+	return &ClassPathLoader{
+		buffer: buffer,
+	}
 }
 
 type ClassPathLoader struct {
@@ -1699,11 +1575,11 @@ func (l *ClassPathLoader) CanLoad(internalName string) bool {
 	return true
 }
 
-func NewSignatureReader(signature string) *SignatureReader {
+func NewSignatureReader(signature string) intsrv.ISignatureReader {
 	return NewSignatureReaderWithAll(signature, 0)
 }
 
-func NewSignatureReaderWithAll(signature string, index int) *SignatureReader {
+func NewSignatureReaderWithAll(signature string, index int) intsrv.ISignatureReader {
 	array := []byte(signature)
 	return &SignatureReader{
 		signature: signature,
@@ -1718,6 +1594,30 @@ type SignatureReader struct {
 	array     []byte
 	length    int
 	index     int
+}
+
+func (r *SignatureReader) Signature() string {
+	return r.signature
+}
+
+func (r *SignatureReader) Array() []byte {
+	return r.array
+}
+
+func (r *SignatureReader) Length() int {
+	return r.length
+}
+
+func (r *SignatureReader) Index() int {
+	return r.index
+}
+
+func (r *SignatureReader) Inc() {
+	r.index++
+}
+
+func (r *SignatureReader) Dec() {
+	r.index--
 }
 
 func (r *SignatureReader) Read() byte {
@@ -1755,7 +1655,7 @@ func (r *SignatureReader) SearchEndMarker() byte {
 	return 0
 }
 
-func skipMembers(reader *deserializer.ClassFileReader) {
+func skipMembers(reader intsrv.IClassFileReader) {
 	count := reader.ReadUnsignedShort()
 	for i := 0; i < count; i++ {
 		reader.Skip(3 * 2)
@@ -1763,7 +1663,7 @@ func skipMembers(reader *deserializer.ClassFileReader) {
 	}
 }
 
-func skipAttributes(reader *deserializer.ClassFileReader) {
+func skipAttributes(reader intsrv.IClassFileReader) {
 	count := reader.ReadUnsignedShort()
 	for i := 0; i < count; i++ {
 		reader.Skip(2)
@@ -1784,16 +1684,253 @@ func (r *SignatureReader) String() string {
 	return fmt.Sprintf("SignatureReader{index=%d, nextChars=%s", r.index, string(r.array[r.index:r.length-r.index]))
 }
 
+func NewTypeTypes() intsrv.ITypeTypes {
+	return NewTypeTypes2(nil, nil, nil, nil)
+}
+
+func NewTypeTypes2(thisType intmod.IObjectType, typeParameters intmod.ITypeParameter,
+	superType intmod.IObjectType, interfaces intmod.IType) intsrv.ITypeTypes {
+	return &TypeTypes{
+		thisType:       thisType,
+		typeParameters: typeParameters,
+		superType:      superType,
+		interfaces:     interfaces,
+	}
+}
+
 type TypeTypes struct {
-	ThisType       intmod.IObjectType
-	TypeParameters intmod.ITypeParameter
-	SuperType      intmod.IObjectType
-	Interfaces     intmod.IType
+	thisType       intmod.IObjectType
+	typeParameters intmod.ITypeParameter
+	superType      intmod.IObjectType
+	interfaces     intmod.IType
+}
+
+func (t *TypeTypes) ThisType() intmod.IObjectType {
+	return t.thisType
+}
+
+func (t *TypeTypes) SetThisType(thisType intmod.IObjectType) {
+	t.thisType = thisType
+}
+
+func (t *TypeTypes) TypeParameters() intmod.ITypeParameter {
+	return t.typeParameters
+}
+
+func (t *TypeTypes) SetTypeParameters(typeParameters intmod.ITypeParameter) {
+	t.typeParameters = typeParameters
+}
+
+func (t *TypeTypes) SuperType() intmod.IObjectType {
+	return t.superType
+}
+
+func (t *TypeTypes) SetSuperType(superType intmod.IObjectType) {
+	t.superType = superType
+}
+
+func (t *TypeTypes) Interfaces() intmod.IType {
+	return t.interfaces
+}
+
+func (t *TypeTypes) SetInterfaces(interfaces intmod.IType) {
+	t.interfaces = interfaces
+}
+
+func NewMethodTypes() intsrv.IMethodTypes {
+	return NewMethodTypes2(nil, nil, nil, nil)
+}
+
+func NewMethodTypes2(typeParameters intmod.ITypeParameter, parameterTypes intmod.IType,
+	returnedType intmod.IType, exceptionTypes intmod.IType) intsrv.IMethodTypes {
+	return &MethodTypes{
+		typeParameters: typeParameters,
+		parameterTypes: parameterTypes,
+		returnedType:   returnedType,
+		exceptionTypes: exceptionTypes,
+	}
 }
 
 type MethodTypes struct {
-	TypeParameters intmod.ITypeParameter
-	ParameterTypes intmod.IType
-	ReturnedType   intmod.IType
-	ExceptionTypes intmod.IType
+	typeParameters intmod.ITypeParameter
+	parameterTypes intmod.IType
+	returnedType   intmod.IType
+	exceptionTypes intmod.IType
+}
+
+func (t *MethodTypes) TypeParameters() intmod.ITypeParameter {
+	return t.typeParameters
+}
+
+func (t *MethodTypes) SetTypeParameters(typeParameters intmod.ITypeParameter) {
+	t.typeParameters = typeParameters
+}
+
+func (t *MethodTypes) ParameterTypes() intmod.IType {
+	return t.parameterTypes
+}
+
+func (t *MethodTypes) SetParameterTypes(parameterTypes intmod.IType) {
+	t.parameterTypes = parameterTypes
+}
+
+func (t *MethodTypes) ReturnedType() intmod.IType {
+	return t.returnedType
+}
+func (t *MethodTypes) SetReturnedType(returnedType intmod.IType) {
+	t.returnedType = returnedType
+}
+
+func (t *MethodTypes) ExceptionTypes() intmod.IType {
+	return t.exceptionTypes
+}
+
+func (t *MethodTypes) SetExceptionTypes(exceptionTypes intmod.IType) {
+	t.exceptionTypes = exceptionTypes
+}
+
+func CountDimension(descriptor string) int {
+	count := 0
+	length := len(descriptor)
+
+	for i := 0; i < length && descriptor[i] == '['; i++ {
+		count++
+	}
+	return count
+}
+
+func getExceptionTypeNames(method intmod.IMethod) []string {
+	if method != nil {
+		attributeExceptions := method.Attributes()["Exceptions"].(*attribute.AttributeExceptions)
+
+		if attributeExceptions != nil {
+			return attributeExceptions.ExceptionTypeNames()
+		}
+	}
+
+	return nil
+}
+
+func isAReferenceTypeSignature(reader intsrv.ISignatureReader) bool {
+	if reader.Available() {
+		c := reader.Read()
+
+		for c == '[' {
+			c = reader.Read()
+		}
+
+		switch c {
+		case 'B', 'C', 'D', 'F', 'I', 'J':
+			return true
+		case 'L':
+			// Unread 'L'
+			reader.Dec()
+			return isAClassTypeSignature(reader)
+		case 'S':
+			return true
+		case 'T':
+			reader.SearchEndMarker()
+			return true
+		case 'V', 'Z':
+			return true
+		default:
+			// Unread 'c'
+			reader.Dec()
+			return false
+		}
+	}
+	return false
+}
+
+func isAClassTypeSignature(reader intsrv.ISignatureReader) bool {
+	if reader.NextEqualsTo('L') {
+		reader.Inc()
+		endMarker := reader.SearchEndMarker()
+
+		if endMarker == 0 {
+			return false
+		}
+
+		if endMarker == '<' {
+			reader.Inc()
+			isATypeArguments(reader)
+			if reader.Read() != '>' {
+				return false
+			}
+		}
+
+		for reader.NextEqualsTo('.') {
+			reader.Inc()
+			endMarker = reader.SearchEndMarker()
+
+			if endMarker == 0 {
+				return false
+			}
+
+			if endMarker == '<' {
+				reader.Inc()
+				isATypeArguments(reader)
+				if reader.Read() != '>' {
+					return false
+				}
+			}
+		}
+
+		reader.Inc()
+
+		return true
+	}
+
+	return false
+}
+
+func isATypeArguments(reader intsrv.ISignatureReader) bool {
+	if !isATypeArgument(reader) {
+		return false
+	}
+
+	for isATypeArgument(reader) {
+	}
+
+	return false
+}
+
+func isATypeArgument(reader intsrv.ISignatureReader) bool {
+	switch reader.Read() {
+	case '+', '-':
+		return isAReferenceTypeSignature(reader)
+	case '*':
+		return true
+	default:
+		reader.Dec()
+		return false
+	}
+}
+
+func extractLocalClassName(name string) string {
+	if unicode.IsDigit(rune(name[0])) {
+		i := 0
+		length := len(name)
+
+		for i < length && unicode.IsDigit(rune(name[i])) {
+			i++
+		}
+
+		if i == length {
+			return ""
+		}
+
+		return name[i:]
+	}
+
+	return name
+}
+
+func hashCodeWithString(str string) int {
+	h := fnv.New32a()
+	_, err := h.Write([]byte(str))
+	if err != nil {
+		return -1
+	}
+	return int(h.Sum32())
 }

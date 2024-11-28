@@ -116,7 +116,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitTypeArguments(arguments intmod.IT
 			v.result = arguments
 		} else {
 			newTypes := _type.NewTypeArgumentsWithSize(size)
-			newTypes.AddAll(arguments.Elements()[0:i])
+			newTypes.AddAll(arguments.ToSlice()[:i])
 			newTypes.Add(v.result.(intmod.ITypeArgument))
 
 			for i++; i < size; i++ {

@@ -10,18 +10,52 @@ func NewTypes() intmod.ITypes {
 }
 
 type Types struct {
-	AbstractType
+	AbstractTypeArgument
 	util.DefaultList[intmod.IType]
 }
 
-func (t *Types) ForEach(action func(intmod.IType)) {
-	for _, item := range t.ToSlice() {
-		action(item.(intmod.IType))
-	}
+func (t *Types) Name() string {
+	return ""
+}
+
+func (t *Types) Descriptor() string {
+	return ""
+}
+
+func (t *Types) Dimension() int {
+	return -1
+}
+
+func (t *Types) CreateType(dimension int) intmod.IType {
+	return nil
+}
+
+func (t *Types) IsGenericType() bool {
+	return false
+}
+
+func (t *Types) IsInnerObjectType() bool {
+	return false
+}
+
+func (t *Types) IsObjectType() bool {
+	return false
+}
+
+func (t *Types) IsPrimitiveType() bool {
+	return false
 }
 
 func (t *Types) IsTypes() bool {
 	return true
+}
+
+func (t *Types) OuterType() intmod.IObjectType {
+	return OtTypeUndefinedObject
+}
+
+func (t *Types) InternalName() string {
+	return ""
 }
 
 func (t *Types) AcceptTypeVisitor(visitor intmod.ITypeVisitor) {

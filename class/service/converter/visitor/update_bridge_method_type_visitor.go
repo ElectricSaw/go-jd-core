@@ -6,11 +6,10 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"strings"
 )
 
-func NewUpdateBridgeMethodTypeVisitor(typeMaker *utils.TypeMaker) *UpdateBridgeMethodTypeVisitor {
+func NewUpdateBridgeMethodTypeVisitor(typeMaker intsrv.ITypeMaker) *UpdateBridgeMethodTypeVisitor {
 	return &UpdateBridgeMethodTypeVisitor{
 		typeMaker: typeMaker,
 	}
@@ -19,30 +18,14 @@ func NewUpdateBridgeMethodTypeVisitor(typeMaker *utils.TypeMaker) *UpdateBridgeM
 type UpdateBridgeMethodTypeVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	typeMaker *utils.TypeMaker
+	typeMaker intsrv.ITypeMaker
 }
 
 func (v *UpdateBridgeMethodTypeVisitor) VisitBodyDeclaration(declaration intmod.IBodyDeclaration) {
 	bodyDeclaration := declaration.(intsrv.IClassFileBodyDeclaration)
 
 	v.SafeAcceptListDeclaration(ConvertMethodDeclarations(bodyDeclaration.MethodDeclarations()))
-	v.SafeAcceptListDeclaration(ConvertInnerTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
-}
-
-func ConvertMethodDeclarations(list []intsrv.IClassFileConstructorOrMethodDeclaration) []intmod.IDeclaration {
-	ret := make([]intmod.IDeclaration, 0, len(list))
-	for _, item := range list {
-		ret = append(ret, item)
-	}
-	return ret
-}
-
-func ConvertInnerTypeDeclarations(list []intsrv.IClassFileTypeDeclaration) []intmod.IDeclaration {
-	ret := make([]intmod.IDeclaration, 0, len(list))
-	for _, item := range list {
-		ret = append(ret, item)
-	}
-	return ret
+	v.SafeAcceptListDeclaration(ConvertTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
 }
 
 func (v *UpdateBridgeMethodTypeVisitor) VisitMethodDeclaration(declaration intmod.IMethodDeclaration) {
@@ -95,7 +78,7 @@ func (v *UpdateBridgeMethodTypeVisitor) VisitMethodDeclaration(declaration intmo
 				methodTypes := v.typeMaker.MakeMethodTypes2(typeName, name, descriptor)
 
 				// Update returned generic type of bridge method
-				v.typeMaker.SetMethodReturnedType(typeName, cfmd.Name(), cfmd.Descriptor(), methodTypes.ReturnedType)
+				v.typeMaker.SetMethodReturnedType(typeName, cfmd.Name(), cfmd.Descriptor(), methodTypes.ReturnedType())
 			}
 		}
 	}
@@ -117,3 +100,35 @@ func (v *UpdateBridgeMethodTypeVisitor) VisitInterfaceDeclaration(declaration in
 func (v *UpdateBridgeMethodTypeVisitor) VisitAnnotationDeclaration(declaration intmod.IAnnotationDeclaration) {
 }
 func (v *UpdateBridgeMethodTypeVisitor) VisitEnumDeclaration(declaration intmod.IEnumDeclaration) {}
+
+func ConvertMethodDeclarations(list []intsrv.IClassFileConstructorOrMethodDeclaration) []intmod.IDeclaration {
+	ret := make([]intmod.IDeclaration, 0, len(list))
+	for _, item := range list {
+		ret = append(ret, item)
+	}
+	return ret
+}
+
+func ConvertFieldDeclarations(list []intsrv.IClassFileFieldDeclaration) []intmod.IDeclaration {
+	ret := make([]intmod.IDeclaration, 0, len(list))
+	for _, item := range list {
+		ret = append(ret, item)
+	}
+	return ret
+}
+
+func ConvertTypeDeclarations(list []intsrv.IClassFileTypeDeclaration) []intmod.IDeclaration {
+	ret := make([]intmod.IDeclaration, 0, len(list))
+	for _, item := range list {
+		ret = append(ret, item)
+	}
+	return ret
+}
+
+func ConvertMemberDeclaration(list []intsrv.IClassFileMemberDeclaration) []intmod.IDeclaration {
+	ret := make([]intmod.IDeclaration, 0, len(list))
+	for _, item := range list {
+		ret = append(ret, item)
+	}
+	return ret
+}

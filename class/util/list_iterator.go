@@ -14,8 +14,8 @@ type IListIterator[T comparable] interface {
 	NextIndex() int      // 다음 요소의 인덱스 반환
 	PreviousIndex() int  // 이전 요소의 인덱스 반환
 	Remove() error       // 마지막 반환된 요소 제거
-	Set(element T) error // 마지막 반환된 요소를 대체
 	Add(element T) error // 현재 위치에 요소 추가
+	Set(element T) error // 마지막 반환된 요소를 대체
 	ToSlice() []T
 }
 

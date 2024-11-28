@@ -20,10 +20,10 @@ func (v *AbstractUpdateExpressionVisitor) UpdateBaseExpression(baseExpression in
 	}
 
 	if baseExpression.IsList() {
-		iterator := baseExpression.Iterator()
+		iterator := baseExpression.ToList().ListIterator()
 
 		for iterator.HasNext() {
-			value, _ := iterator.Next()
+			value := iterator.Next()
 			_ = iterator.Set(v.UpdateExpression(value))
 		}
 

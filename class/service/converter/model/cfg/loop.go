@@ -1,28 +1,46 @@
 package cfg
 
-import "fmt"
+import (
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/util"
+	"fmt"
+)
 
-func NewLoop(Start IBasicBlock, Members []IBasicBlock, End IBasicBlock) *Loop {
+func NewLoop(start intsrv.IBasicBlock,
+	members util.ISet[intsrv.IBasicBlock],
+	end intsrv.IBasicBlock) intsrv.ILoop {
 	return &Loop{
-		Start:   Start,
-		Members: Members,
-		End:     End,
+		start:   start,
+		members: members,
+		end:     end,
 	}
 }
 
 type Loop struct {
-	Start   IBasicBlock
-	Members []IBasicBlock
-	End     IBasicBlock
+	start   intsrv.IBasicBlock
+	members util.ISet[intsrv.IBasicBlock]
+	end     intsrv.IBasicBlock
+}
+
+func (l *Loop) Start() intsrv.IBasicBlock {
+	return l.start
+}
+
+func (l *Loop) Members() util.ISet[intsrv.IBasicBlock] {
+	return l.members
+}
+
+func (l *Loop) End() intsrv.IBasicBlock {
+	return l.end
 }
 
 func (l *Loop) String() string {
-	str := fmt.Sprintf("Loop{start=%d, members=[", l.Start.GetIndex())
+	str := fmt.Sprintf("Loop{start=%d, members=[", l.start.Index())
 
-	length := len(l.Members)
-	if l.Members != nil && length > 0 {
+	if l.members != nil && l.members.Size() > 0 {
+		length := l.members.Size()
 		for i := 0; i < length; i++ {
-			str += fmt.Sprintf("%d", l.Members[i].GetIndex())
+			str += fmt.Sprintf("%d", l.members.Get(i).Index())
 			if i < length-1 {
 				str += ", "
 			}
@@ -30,8 +48,8 @@ func (l *Loop) String() string {
 	}
 
 	str += "], end="
-	if l.End != nil {
-		str += fmt.Sprintf("%d", l.End.GetIndex())
+	if l.end != nil {
+		str += fmt.Sprintf("%d", l.end.Index())
 	}
 	str += "}"
 

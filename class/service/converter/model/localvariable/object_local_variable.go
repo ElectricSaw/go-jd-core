@@ -4,11 +4,10 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"fmt"
 )
 
-func NewObjectLocalVariable(typeMaker *utils.TypeMaker, index, offset int, typ intmod.IType, name string) intsrv.IObjectLocalVariable {
+func NewObjectLocalVariable(typeMaker intsrv.ITypeMaker, index, offset int, typ intmod.IType, name string) intsrv.IObjectLocalVariable {
 	return &ObjectLocalVariable{
 		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name).(*AbstractLocalVariable),
 		typeMaker:             typeMaker,
@@ -16,13 +15,13 @@ func NewObjectLocalVariable(typeMaker *utils.TypeMaker, index, offset int, typ i
 	}
 }
 
-func NewObjectLocalVariable2(typeMaker *utils.TypeMaker, index, offset int, typ intmod.IType, name string, declared bool) intsrv.IObjectLocalVariable {
+func NewObjectLocalVariable2(typeMaker intsrv.ITypeMaker, index, offset int, typ intmod.IType, name string, declared bool) intsrv.IObjectLocalVariable {
 	v := NewObjectLocalVariable(typeMaker, index, offset, typ, name)
 	v.SetDeclared(declared)
 	return v
 }
 
-func NewObjectLocalVariable3(typeMaker *utils.TypeMaker, index, offset int, objectLocalVariable intsrv.IObjectLocalVariable) intsrv.IObjectLocalVariable {
+func NewObjectLocalVariable3(typeMaker intsrv.ITypeMaker, index, offset int, objectLocalVariable intsrv.IObjectLocalVariable) intsrv.IObjectLocalVariable {
 	return &ObjectLocalVariable{
 		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, "").(*AbstractLocalVariable),
 		typeMaker:             typeMaker,
@@ -33,7 +32,7 @@ func NewObjectLocalVariable3(typeMaker *utils.TypeMaker, index, offset int, obje
 type ObjectLocalVariable struct {
 	AbstractLocalVariable
 
-	typeMaker *utils.TypeMaker
+	typeMaker intsrv.ITypeMaker
 	typ       intmod.IType
 }
 

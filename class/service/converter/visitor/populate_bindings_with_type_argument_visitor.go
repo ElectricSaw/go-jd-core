@@ -2,12 +2,12 @@ package visitor
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"math"
 )
 
-func NewPopulateBindingsWithTypeArgumentVisitor(typeMaker *utils.TypeMaker) *PopulateBindingsWithTypeArgumentVisitor {
+func NewPopulateBindingsWithTypeArgumentVisitor(typeMaker intsrv.ITypeMaker) *PopulateBindingsWithTypeArgumentVisitor {
 	return &PopulateBindingsWithTypeArgumentVisitor{
 		typeArgumentToTypeVisitor: NewTypeArgumentToTypeVisitor(),
 		typeMaker:                 typeMaker,
@@ -17,7 +17,7 @@ func NewPopulateBindingsWithTypeArgumentVisitor(typeMaker *utils.TypeMaker) *Pop
 
 type PopulateBindingsWithTypeArgumentVisitor struct {
 	typeArgumentToTypeVisitor *TypeArgumentToTypeVisitor
-	typeMaker                 *utils.TypeMaker
+	typeMaker                 intsrv.ITypeMaker
 	contextualTypeBounds      map[string]intmod.IType
 	bindings                  map[string]intmod.ITypeArgument
 	typeBounds                map[string]intmod.IType
@@ -37,7 +37,7 @@ func (v *PopulateBindingsWithTypeArgumentVisitor) Init(
 
 func (v *PopulateBindingsWithTypeArgumentVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {
 	if (v.current != nil) && v.current.IsTypeArgumentList() {
-		typeArgumentIterator := arguments.Elements()
+		typeArgumentIterator := arguments.ToSlice()
 		typeGenericArgumentIterator := v.current.TypeArgumentList()
 		MaxLength := int(math.Min(float64(len(typeArgumentIterator)), float64(len(typeGenericArgumentIterator))))
 

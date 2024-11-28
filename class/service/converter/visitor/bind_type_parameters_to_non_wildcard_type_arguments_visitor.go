@@ -39,7 +39,7 @@ func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitTypeParameter
 	size := parameters.Size()
 	arguments := _type.NewTypeArgumentsWithSize(size)
 
-	for _, parameter := range parameters.Elements() {
+	for _, parameter := range parameters.ToSlice() {
 		parameter.AcceptTypeParameterVisitor(v)
 
 		if v.result == nil {

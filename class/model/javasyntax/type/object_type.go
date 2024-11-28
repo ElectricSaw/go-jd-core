@@ -2,7 +2,6 @@ package _type
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -101,7 +100,6 @@ func NewObjectTypeWithDescAndDim(primitiveDescriptor string, dimension int) intm
 type ObjectType struct {
 	AbstractType
 	AbstractTypeArgument
-	util.DefaultBase[intmod.IType]
 
 	internalName  string
 	qualifiedName string

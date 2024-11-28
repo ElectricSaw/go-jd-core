@@ -4,6 +4,25 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
+type Magic uint32
+
+const JavaMagicNumber Magic = 0xCAFEBABE
+
+type IClassFileReader interface {
+	Offset() int
+	Skip(length int)
+	Read() byte
+	ReadUnsignedByte() int
+	ReadUnsignedShort() int
+	ReadMagic() Magic
+	ReadInt() int
+	ReadFloat() float32
+	ReadLong() int64
+	ReadDouble() float64
+	ReadFully(length int) []byte
+	ReadUTF8() string
+}
+
 type IClassFileAnnotationDeclaration interface {
 	IClassFileTypeDeclaration
 	intmod.IAnnotationDeclaration

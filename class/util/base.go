@@ -12,6 +12,7 @@ type IBase[T comparable] interface {
 	First() T
 	Last() T
 	ToSlice() []T
+	ToList() IList[T]
 	Size() int
 }
 
@@ -51,6 +52,12 @@ func (b *DefaultBase[T]) Last() T {
 // ToSlice 메서드 (기본적으로 지원하지 않음을 나타내는 에러 반환)
 func (b *DefaultBase[T]) ToSlice() []T {
 	return nil
+}
+
+func (b *DefaultBase[T]) ToList() IList[T] {
+	list := make([]T, 0, b.Size())
+	list = append(list, b.value)
+	return NewDefaultListWithSlice[T](list)
 }
 
 // Size 메서드

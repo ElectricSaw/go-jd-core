@@ -238,7 +238,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitArrayVariableInitializer(decl in
 	t := v.arrayVariableInitializerType
 	v.arrayVariableInitializerType = decl.Type()
 	// v.acceptListDeclaration(decl);
-	for _, item := range decl.Elements() {
+	for _, item := range decl.ToSlice() {
 		item.Accept(v)
 	}
 	v.arrayVariableInitializerType = t
@@ -266,8 +266,8 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitExpressionVariableInitializer(de
 
 func (v *UpdateIntegerConstantTypeVisitor) updateExpressions(types intmod.IType, expressions intmod.IExpression) intmod.IExpression {
 	if expressions.IsList() {
-		typ := sliceToDefaultList[intmod.IType](types.ToSlice())
-		e := sliceToDefaultList[intmod.IExpression](expressions.ToSlice())
+		typ := util.NewDefaultListWithSlice[intmod.IType](types.ToSlice())
+		e := util.NewDefaultListWithSlice[intmod.IExpression](expressions.ToSlice())
 
 		for i := e.Size() - 1; i >= 0; i-- {
 			t := typ.Get(i)
@@ -280,6 +280,7 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpressions(types intmod.IType,
 					switch t.(intmod.IPrimitiveType).JavaPrimitiveFlags() {
 					case intmod.FlagByte, intmod.FlagShort:
 						updatedParameter = expression.NewCastExpression(t, updatedParameter)
+					default:
 					}
 				}
 
@@ -296,6 +297,7 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpressions(types intmod.IType,
 				switch t.(intmod.IPrimitiveType).JavaPrimitiveFlags() {
 				case intmod.FlagByte, intmod.FlagShort:
 					updatedParameter = expression.NewCastExpression(t, updatedParameter)
+				default:
 				}
 			}
 
@@ -387,6 +389,7 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 				break
 			case intmod.FlagLong:
 				return expression.NewLongConstantExpressionWithAll(ice.LineNumber(), int64(ice.IntegerValue()))
+			default:
 			}
 
 			return expr
@@ -580,12 +583,4 @@ func GetPrimitiveTypeFromTag(tag int) intmod.IType {
 	default:
 		return nil
 	}
-}
-
-func sliceToDefaultList[T any](slice []T) util.DefaultList[T] {
-	ret := util.DefaultList[T]{}
-	for _, item := range slice {
-		ret.Add(item)
-	}
-	return ret
 }

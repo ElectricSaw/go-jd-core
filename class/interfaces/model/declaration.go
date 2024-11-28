@@ -318,7 +318,7 @@ type IMethodDeclaration interface {
 	Name() string
 	TypeParameters() ITypeParameter
 	ReturnedType() IType
-	FormalParameter() IFormalParameter
+	FormalParameters() IFormalParameter
 	SetFormalParameters(formalParameter IFormalParameter)
 	ExceptionTypes() IType
 	Descriptor() string

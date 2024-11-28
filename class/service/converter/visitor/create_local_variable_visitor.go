@@ -5,10 +5,9 @@ import (
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/localvariable"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
-func NewCreateLocalVariableVisitor(typeMaker *utils.TypeMaker) *CreateLocalVariableVisitor {
+func NewCreateLocalVariableVisitor(typeMaker intsrv.ITypeMaker) *CreateLocalVariableVisitor {
 	return &CreateLocalVariableVisitor{
 		typeMaker: typeMaker,
 	}
@@ -17,7 +16,7 @@ func NewCreateLocalVariableVisitor(typeMaker *utils.TypeMaker) *CreateLocalVaria
 type CreateLocalVariableVisitor struct {
 	_type.AbstractNopTypeArgumentVisitor
 
-	typeMaker     *utils.TypeMaker
+	typeMaker     intsrv.ITypeMaker
 	index         int
 	offset        int
 	localVariable intsrv.ILocalVariable

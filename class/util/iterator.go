@@ -25,7 +25,7 @@ func NewIterator[T comparable]() IIterator[T] {
 	return NewIteratorWithSlice(make([]T, 0))
 }
 
-// NewIterator 슬라이스를 기반으로 한 Iterator 생성자
+// NewIteratorWithSlice 슬라이스를 기반으로 한 Iterator 생성자
 func NewIteratorWithSlice[T comparable](data []T) IIterator[T] {
 	return &Iterator[T]{data: data, index: 0, removed: false}
 }

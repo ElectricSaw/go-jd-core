@@ -59,11 +59,11 @@ func Merge(fields, methods, innerTypes []intsrv.IClassFileMemberDeclaration) int
 		size += len(innerTypes)
 	}
 
-	result := declaration.NewMemberDeclarationsWithSize(size)
+	result := declaration.NewMemberDeclarationsWithCapacity(size)
 
-	merge(result.Elements(), fields)
-	merge(result.Elements(), methods)
-	merge(result.Elements(), innerTypes)
+	result.AddAll(ConvertMemberDeclaration(fields))
+	result.AddAll(ConvertMemberDeclaration(methods))
+	result.AddAll(ConvertMemberDeclaration(innerTypes))
 
 	return result
 }

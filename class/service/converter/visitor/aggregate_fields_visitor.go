@@ -86,7 +86,7 @@ func aggregate(fields []intsrv.IClassFileFieldDeclaration, firstField intsrv.ICl
 		sublist := fields[firstIndex+1 : lastIndex+1]
 
 		length := lastIndex - firstIndex
-		declarators := declaration.NewFieldDeclarators(length)
+		declarators := declaration.NewFieldDeclaratorsWithCapacity(length)
 		bfd := firstField.FieldDeclarators()
 
 		if bfd.IsList() {

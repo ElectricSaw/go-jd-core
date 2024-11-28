@@ -7,9 +7,10 @@ import (
 
 // ISet 인터페이스: Java Set 인터페이스에 해당
 type ISet[T comparable] interface {
-	Size() int                     // Set의 크기 반환
-	IsEmpty() bool                 // Set이 비어 있는지 확인
-	Contains(element T) bool       // 요소 포함 여부 확인
+	Size() int               // Set의 크기 반환
+	IsEmpty() bool           // Set이 비어 있는지 확인
+	Contains(element T) bool // 요소 포함 여부 확인
+	Get(index int) T
 	Add(element T) bool            // 요소 추가
 	Remove(element T) bool         // 요소 제거
 	Clear()                        // 모든 요소 제거
@@ -22,16 +23,21 @@ type ISet[T comparable] interface {
 
 // Set 인터페이스의 기본 구현체
 type Set[T comparable] struct {
-	data map[T]struct{}
+	data map[T]Store[T]
+}
+
+type Store[T comparable] struct {
+	index int
+	data  T
 }
 
 // NewSet AbstractSet 생성자
 func NewSet[T comparable]() ISet[T] {
-	return &Set[T]{data: make(map[T]struct{})}
+	return &Set[T]{data: make(map[T]Store[T])}
 }
 
 func NewSetWithSlice[T comparable](data []T) ISet[T] {
-	s := &Set[T]{data: make(map[T]struct{})}
+	s := &Set[T]{data: make(map[T]Store[T])}
 	for _, v := range data {
 		s.Add(v)
 	}
@@ -54,12 +60,22 @@ func (s *Set[T]) Contains(element T) bool {
 	return exists
 }
 
+func (s *Set[T]) Get(index int) T {
+	for k, v := range s.data {
+		if v.index == index {
+			return k
+		}
+	}
+	var zero T
+	return zero
+}
+
 // Add Set에 요소 추가
 func (s *Set[T]) Add(element T) bool {
 	if _, exists := s.data[element]; exists {
 		return false
 	}
-	s.data[element] = struct{}{}
+	s.data[element] = Store[T]{index: len(s.data), data: element}
 	return true
 }
 
@@ -74,7 +90,7 @@ func (s *Set[T]) Remove(element T) bool {
 
 // Clear 모든 요소 제거
 func (s *Set[T]) Clear() {
-	s.data = make(map[T]struct{})
+	s.data = make(map[T]Store[T])
 }
 
 // ContainsAll 여러 요소 포함 여부 확인

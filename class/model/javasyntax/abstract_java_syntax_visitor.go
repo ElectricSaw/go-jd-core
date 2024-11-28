@@ -135,7 +135,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(decl intmod.IMethodDe
 	t.AcceptTypeVisitor(v)
 
 	v.SafeAcceptReference(decl.AnnotationReferences())
-	v.SafeAcceptDeclaration(decl.FormalParameter())
+	v.SafeAcceptDeclaration(decl.FormalParameters())
 	v.SafeAcceptType(decl.ExceptionTypes())
 	v.SafeAcceptStatement(decl.Statements())
 }

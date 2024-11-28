@@ -44,7 +44,7 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitTypeArguments(arguments i
 		} else {
 			newTypes := _type.NewTypeArguments()
 
-			newTypes.AddAll(arguments.Elements()[:i])
+			newTypes.AddAll(arguments.ToSlice()[:i])
 			newTypes.Add(v.result)
 
 			for i++; i < size; i++ {

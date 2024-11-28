@@ -2,10 +2,9 @@ package localvariable
 
 import (
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
-func NewRootFrame() *RootFrame {
+func NewRootFrame() intsrv.IRootFrame {
 	return &RootFrame{
 		Frame: *NewFrame(nil, nil).(*Frame),
 	}
@@ -22,7 +21,7 @@ func (f *RootFrame) LocalVariable(index int) intsrv.ILocalVariableReference {
 	return nil
 }
 
-func (f *RootFrame) UpdateLocalVariableInForStatements(typeMarker *utils.TypeMaker) {
+func (f *RootFrame) UpdateLocalVariableInForStatements(typeMarker intsrv.ITypeMaker) {
 	if f.children != nil {
 		for _, child := range f.children {
 			child.UpdateLocalVariableInForStatements(typeMarker)

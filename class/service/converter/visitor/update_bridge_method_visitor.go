@@ -7,12 +7,11 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	srvexp "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/expression"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"fmt"
 	"strings"
 )
 
-func NewUpdateBridgeMethodVisitor(typeMaker *utils.TypeMaker) *UpdateBridgeMethodVisitor {
+func NewUpdateBridgeMethodVisitor(typeMaker intsrv.ITypeMaker) *UpdateBridgeMethodVisitor {
 	v := &UpdateBridgeMethodVisitor{
 		bodyDeclarationsVisitor: &BodyDeclarationsVisitor{
 			mapped: make(map[string]intsrv.IClassFileMethodDeclaration),
@@ -31,7 +30,7 @@ type UpdateBridgeMethodVisitor struct {
 
 	bodyDeclarationsVisitor  *BodyDeclarationsVisitor
 	bridgeMethodDeclarations map[string]map[string]intsrv.IClassFileMethodDeclaration
-	typeMaker                *utils.TypeMaker
+	typeMaker                intsrv.ITypeMaker
 }
 
 func (v *UpdateBridgeMethodVisitor) Init(bodyDeclaration intsrv.IClassFileBodyDeclaration) bool {
@@ -106,8 +105,8 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 			if mie2.Expression().IsObjectTypeReferenceExpression() {
 				// Static method invocation
 				return srvexp.NewClassFileMethodInvocationExpression(mie1.LineNumber(), nil,
-					methodTypes.ReturnedType, mie2.Expression(), mie2.InternalTypeName(),
-					mie2.Name(), mie2.Descriptor(), methodTypes.ParameterTypes, mie1.Parameters())
+					methodTypes.ReturnedType(), mie2.Expression(), mie2.InternalTypeName(),
+					mie2.Name(), mie2.Descriptor(), methodTypes.ParameterTypes(), mie1.Parameters())
 			} else {
 				mie1Parameters := mie1.Parameters()
 				var newParameters intmod.IExpression
@@ -123,8 +122,8 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 				}
 
 				return srvexp.NewClassFileMethodInvocationExpression(mie1.LineNumber(), nil,
-					methodTypes.ReturnedType, mie1Parameters.First(), mie2.InternalTypeName(),
-					mie2.Name(), mie2.Descriptor(), methodTypes.ParameterTypes, newParameters)
+					methodTypes.ReturnedType(), mie1Parameters.First(), mie2.InternalTypeName(),
+					mie2.Name(), mie2.Descriptor(), methodTypes.ParameterTypes(), newParameters)
 			}
 		}
 	} else if exp.IsBinaryOperatorExpression() {
@@ -212,7 +211,7 @@ func (v *BodyDeclarationsVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclarat
 		v.mapped = backup
 	}
 
-	v.SafeAcceptListDeclaration(ConvertInnerTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
+	v.SafeAcceptListDeclaration(ConvertTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
 }
 
 func (v *BodyDeclarationsVisitor) VisitStaticInitializerDeclaration(decl intmod.IStaticInitializerDeclaration) {
@@ -283,7 +282,7 @@ func (v *BodyDeclarationsVisitor) checkBridgeMethodDeclaration(bridgeMethodDecla
 
 			if mie2Parameters.IsList() {
 				i := 0
-				for _, parameter := range mie2Parameters.Iterator().List() {
+				for _, parameter := range mie2Parameters.ToSlice() {
 					if v.checkLocalVariableReference(parameter, i) {
 						i++
 						return false
@@ -307,7 +306,7 @@ func (v *BodyDeclarationsVisitor) checkBridgeMethodDeclaration(bridgeMethodDecla
 
 			if mie2Parameters.IsList() {
 				i := 0
-				for _, parameter := range mie2Parameters.Iterator().List() {
+				for _, parameter := range mie2Parameters.ToSlice() {
 					if !v.checkLocalVariableReference(parameter, i) {
 						i++
 						return false

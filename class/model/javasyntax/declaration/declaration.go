@@ -3,9 +3,11 @@ package declaration
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 type AbstractMemberDeclaration struct {
+	util.DefaultBase[intmod.IDeclaration]
 }
 
 func (d *AbstractMemberDeclaration) IsClassDeclaration() bool {

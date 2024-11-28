@@ -4,10 +4,9 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
-func NewUpdateJavaSyntaxTreeStep0Visitor(typeMaker *utils.TypeMaker) *UpdateJavaSyntaxTreeStep0Visitor {
+func NewUpdateJavaSyntaxTreeStep0Visitor(typeMaker intsrv.ITypeMaker) *UpdateJavaSyntaxTreeStep0Visitor {
 	return &UpdateJavaSyntaxTreeStep0Visitor{
 		updateOuterFieldTypeVisitor:   *NewUpdateOuterFieldTypeVisitor(typeMaker),
 		updateBridgeMethodTypeVisitor: *NewUpdateBridgeMethodTypeVisitor(typeMaker),
@@ -27,7 +26,7 @@ func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitBodyDeclaration(decl intmod.IBod
 
 	if genericTypesSupported {
 		v.updateOuterFieldTypeVisitor.SafeAcceptListDeclaration(
-			ConvertInnerTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
+			ConvertTypeDeclarations(bodyDeclaration.InnerTypeDeclarations()))
 		v.updateBridgeMethodTypeVisitor.VisitBodyDeclaration(decl)
 	}
 }

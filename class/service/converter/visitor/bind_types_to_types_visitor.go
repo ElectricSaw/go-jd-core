@@ -118,7 +118,7 @@ func (v *BindTypesToTypesVisitor) VisitTypes(types intmod.ITypes) {
 		v.result = types
 	} else {
 		newTypes := _type.NewTypes()
-		newTypes.AddAll(types.Elements()[:i])
+		newTypes.AddAll(types.ToSlice()[:i])
 		newTypes.Add(v.result)
 
 		for i++; i < size; i++ {

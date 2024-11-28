@@ -28,7 +28,7 @@ func (v *SearchFirstLineNumberVisitor) LineNumber() int {
 func (v *SearchFirstLineNumberVisitor) VisitStatements(statements intmod.IStatements) {
 	if v.lineNumber == -1 {
 
-		for _, value := range statements.Elements() {
+		for _, value := range statements.ToSlice() {
 			value.Accept(v)
 			if v.lineNumber != -1 {
 				break

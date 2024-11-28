@@ -2,7 +2,6 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -60,7 +59,6 @@ func NewMethodDeclaration6(annotationReferences intmod.IAnnotationReference,
 
 type MethodDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IMethodDeclaration]
 
 	annotationReferences   intmod.IAnnotationReference
 	flags                  int
@@ -102,7 +100,7 @@ func (d *MethodDeclaration) ReturnedType() intmod.IType {
 	return d.returnedType
 }
 
-func (d *MethodDeclaration) FormalParameter() intmod.IFormalParameter {
+func (d *MethodDeclaration) FormalParameters() intmod.IFormalParameter {
 	return d.formalParameter
 }
 

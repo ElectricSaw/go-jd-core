@@ -2,21 +2,20 @@ package service
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
 type IFrame interface {
 	Statements() intmod.IStatements
 	AddLocalVariable(lv ILocalVariable)
-	LocalVariable(index int) ILocalVariable
+	LocalVariable(index int) ILocalVariableReference
 	Parent() IFrame
 	SetExceptionLocalVariable(e ILocalVariable)
-	MergeLocalVariable(typeBounds map[string]intmod.IType, localVariableMaker utils.LocalVariableMaker, lv ILocalVariable)
+	MergeLocalVariable(typeBounds map[string]intmod.IType, localVariableMaker ILocalVariableMaker, lv ILocalVariable)
 	RemoveLocalVariable(lv ILocalVariable)
 	AddChild(child IFrame)
 	Close()
 	CreateNames(parentNames []string)
-	UpdateLocalVariableInForStatements(typeMaker *utils.TypeMaker)
+	UpdateLocalVariableInForStatements(typeMaker ITypeMaker)
 	CreateDeclarations(containsLineNumber bool)
 	AddIndex() int
 }

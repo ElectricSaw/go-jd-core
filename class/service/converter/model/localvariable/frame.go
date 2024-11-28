@@ -8,7 +8,6 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	srvdecl "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
@@ -75,7 +74,7 @@ func (f *Frame) AddLocalVariable(lv intsrv.ILocalVariable) {
 	}
 }
 
-func (f *Frame) LocalVariable(index int) intsrv.ILocalVariable {
+func (f *Frame) LocalVariable(index int) intsrv.ILocalVariableReference {
 	if index < len(f.localVariableArray) {
 		lv := f.localVariableArray[index]
 		if lv != nil {
@@ -93,7 +92,7 @@ func (f *Frame) SetExceptionLocalVariable(e intsrv.ILocalVariable) {
 	f.exceptionLocalVariable = e
 }
 
-func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVariableMaker utils.LocalVariableMaker, lv intsrv.ILocalVariable) {
+func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVariableMaker intsrv.ILocalVariableMaker, lv intsrv.ILocalVariable) {
 	index := lv.Index()
 	var alvToMerge intsrv.ILocalVariable
 
@@ -274,7 +273,7 @@ func (f *Frame) CreateNames(parentNames []string) {
 	}
 }
 
-func (f *Frame) UpdateLocalVariableInForStatements(typeMaker *utils.TypeMaker) {
+func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) {
 	// Recursive call first
 	if f.children != nil {
 		for _, child := range f.children {
@@ -727,7 +726,7 @@ func (f *Frame) updateForStatement2(
 	forStatement.SetInit(nil)
 }
 
-func (f *Frame) createDeclarators1(boes *util.DefaultList[intmod.IExpression], setDimension bool) intmod.ILocalVariableDeclarators {
+func (f *Frame) createDeclarators1(boes util.IList[intmod.IExpression], setDimension bool) intmod.ILocalVariableDeclarators {
 	declarators := declaration.NewLocalVariableDeclarators()
 
 	for _, boe := range boes.ToSlice() {
@@ -894,7 +893,7 @@ func (f *Frame) mergeDeclarations() {
 	}
 }
 
-func (f *Frame) createDeclarators2(declarations *util.DefaultList[intmod.ILocalVariableDeclarationStatement],
+func (f *Frame) createDeclarators2(declarations util.IList[intmod.ILocalVariableDeclarationStatement],
 	setDimension bool) intmod.ILocalVariableDeclarators {
 	declarators := declaration.NewLocalVariableDeclarators()
 

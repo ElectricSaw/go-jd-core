@@ -1,55 +1,61 @@
 package cfg
 
-func NewControlFlowGraph(method intmod.IMethod) *ControlFlowGraph {
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	"bitbucket.org/coontec/go-jd-core/class/util"
+)
+
+func NewControlFlowGraph(method intmod.IMethod) intsrv.IControlFlowGraph {
 	return &ControlFlowGraph{
-		Method:              method,
-		List:                make([]IBasicBlock, 0),
-		OffsetToLineNumbers: make([]int, 0),
+		method:              method,
+		list:                util.NewDefaultList[intsrv.IBasicBlock](),
+		offsetToLineNumbers: make([]int, 0),
 	}
 }
 
 type ControlFlowGraph struct {
-	Method              intmod.IMethod
-	List                []IBasicBlock
-	OffsetToLineNumbers []int
-}
-
-func (g *ControlFlowGraph) NewBasicBlock1(original BasicBlock) *BasicBlock {
-	basicBlock := NewBasicBlock(g, len(g.List), original)
-	g.List = append(g.List, basicBlock)
-	return basicBlock
-}
-
-func (g *ControlFlowGraph) NewBasicBlock2(fromOffset, toOffset int) *BasicBlock {
-	return g.NewBasicBlock3(0, fromOffset, toOffset)
-}
-
-func (g *ControlFlowGraph) NewBasicBlock3(typ, fromOffset, toOffset int) *BasicBlock {
-	basicBlock := NewBasicBlockWithRaw(g, len(g.List), typ, fromOffset, toOffset, true)
-	g.List = append(g.List, basicBlock)
-	return basicBlock
-}
-
-func (g *ControlFlowGraph) NewBasicBlock4(typ, fromOffset, toOffset int, inverseCondition bool) *BasicBlock {
-	basicBlock := NewBasicBlockWithRaw(g, len(g.List), typ, fromOffset, toOffset, inverseCondition)
-	g.List = append(g.List, basicBlock)
-	return basicBlock
-}
-
-func (g *ControlFlowGraph) NewBasicBlock5(typ, fromOffset, toOffset int, predecessors []IBasicBlock) *BasicBlock {
-	basicBlock := NewBasicBlockWithRawBasicBlock(g, len(g.List), typ, fromOffset, toOffset, true, predecessors)
-	g.List = append(g.List, basicBlock)
-	return basicBlock
+	method              intmod.IMethod
+	list                util.IList[intsrv.IBasicBlock]
+	offsetToLineNumbers []int
 }
 
 func (g *ControlFlowGraph) SetOffsetToLineNumbers(offsetToLineNumbers []int) {
-	g.OffsetToLineNumbers = offsetToLineNumbers
+	g.offsetToLineNumbers = offsetToLineNumbers
 }
 
 func (g *ControlFlowGraph) LineNumber(offset int) int {
-	if g.OffsetToLineNumbers == nil {
+	if g.offsetToLineNumbers == nil {
 		return 0
 	}
 
-	return g.OffsetToLineNumbers[offset]
+	return g.offsetToLineNumbers[offset]
+}
+
+func (g *ControlFlowGraph) NewBasicBlock1(original intsrv.IBasicBlock) intsrv.IBasicBlock {
+	basicBlock := NewBasicBlock(g, g.list.Size(), original)
+	g.list.Add(basicBlock)
+	return basicBlock
+}
+
+func (g *ControlFlowGraph) NewBasicBlock2(fromOffset, toOffset int) intsrv.IBasicBlock {
+	return g.NewBasicBlock3(0, fromOffset, toOffset)
+}
+
+func (g *ControlFlowGraph) NewBasicBlock3(typ, fromOffset, toOffset int) intsrv.IBasicBlock {
+	basicBlock := NewBasicBlockWithRaw(g, g.list.Size(), typ, fromOffset, toOffset, true)
+	g.list.Add(basicBlock)
+	return basicBlock
+}
+
+func (g *ControlFlowGraph) NewBasicBlock4(typ, fromOffset, toOffset int, inverseCondition bool) intsrv.IBasicBlock {
+	basicBlock := NewBasicBlockWithRaw(g, g.list.Size(), typ, fromOffset, toOffset, inverseCondition)
+	g.list.Add(basicBlock)
+	return basicBlock
+}
+
+func (g *ControlFlowGraph) NewBasicBlock5(typ, fromOffset, toOffset int, predecessors util.ISet[intsrv.IBasicBlock]) intsrv.IBasicBlock {
+	basicBlock := NewBasicBlockWithRawBasicBlock(g, g.list.Size(), typ, fromOffset, toOffset, true, predecessors)
+	g.list.Add(basicBlock)
+	return basicBlock
 }

@@ -6,10 +6,10 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewAddCastExpressionVisitor(typeMaker *utils.TypeMaker) *AddCastExpressionVisitor {
+func NewAddCastExpressionVisitor(typeMaker intsrv.ITypeMaker) *AddCastExpressionVisitor {
 	return &AddCastExpressionVisitor{
 		searchFirstLineNumberVisitor: NewSearchFirstLineNumberVisitor(),
 		typeMaker:                    typeMaker,
@@ -20,7 +20,7 @@ type AddCastExpressionVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
 	searchFirstLineNumberVisitor *SearchFirstLineNumberVisitor
-	typeMaker                    *utils.TypeMaker
+	typeMaker                    intsrv.ITypeMaker
 	typeBounds                   map[string]intmod.IType
 	returnedType                 intmod.IType
 	exceptionType                intmod.IType
@@ -180,12 +180,12 @@ func ConvertArrayVariable(list []intmod.IVariableInitializer) []intmod.IDeclarat
 
 func (v *AddCastExpressionVisitor) VisitArrayVariableInitializer(decl intmod.IArrayVariableInitializer) {
 	if v.typ.Dimension() == 0 {
-		v.AcceptListDeclaration(ConvertArrayVariable(decl.Elements()))
+		v.AcceptListDeclaration(ConvertArrayVariable(decl.ToSlice()))
 	} else {
 		t := v.typ
 
 		v.typ = v.typ.CreateType(v.typ.Dimension() - 1)
-		v.AcceptListDeclaration(ConvertArrayVariable(decl.Elements()))
+		v.AcceptListDeclaration(ConvertArrayVariable(decl.ToSlice()))
 		v.typ = t
 	}
 }
@@ -307,8 +307,8 @@ func (v *AddCastExpressionVisitor) VisitTernaryOperatorExpression(expression int
 func (v *AddCastExpressionVisitor) updateParameters(types intmod.IType, expression intmod.IExpression, forceCast bool, unique bool) intmod.IExpression {
 	if expression != nil {
 		if expression.IsList() {
-			typeList := sliceToDefaultList[intmod.IType](types.ToSlice())
-			expressionList := sliceToDefaultList[intmod.IExpression](expression.ToSlice())
+			typeList := util.NewDefaultListWithSlice[intmod.IType](types.ToSlice())
+			expressionList := util.NewDefaultListWithSlice[intmod.IExpression](expression.ToSlice())
 
 			for i := expressionList.Size() - 1; i >= 0; i-- {
 				expressionList.Set(i, v.updateParameter(typeList.Get(i), expressionList.Get(i), forceCast, unique))

@@ -338,6 +338,8 @@ type IBlock interface {
 }
 
 type ILabelBlock interface {
+	IBlock
+
 	Label() ILabel
 	IsSwitchStatementLabelBlock() bool
 	Accept(visitor IStatementVisitor)
@@ -345,8 +347,8 @@ type ILabelBlock interface {
 }
 
 type IMultiLabelsBlock interface {
-	Statements() IStatement
-	List() []IStatement
+	IBlock
+	
 	Labels() []ILabel
 	IsSwitchStatementMultiLabelsBlock() bool
 	Accept(visitor IStatementVisitor)

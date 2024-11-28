@@ -1,11 +1,11 @@
 package visitor
 
 import (
+	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 )
 
-func NewUpdateJavaSyntaxTreeStep1Visitor(typeMaker *utils.TypeMaker) *UpdateJavaSyntaxTreeStep1Visitor {
+func NewUpdateJavaSyntaxTreeStep1Visitor(typeMaker intsrv.ITypeMaker) *UpdateJavaSyntaxTreeStep1Visitor {
 	return &UpdateJavaSyntaxTreeStep1Visitor{
 		updateOuterFieldTypeVisitor:   *NewUpdateOuterFieldTypeVisitor(typeMaker),
 		updateBridgeMethodTypeVisitor: *NewUpdateBridgeMethodTypeVisitor(typeMaker),

@@ -28,7 +28,7 @@ func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBou
 }
 
 func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
-	for _, parameter := range parameters.Elements() {
+	for _, parameter := range parameters.ToSlice() {
 		parameter.AcceptTypeParameterVisitor(v)
 	}
 }
