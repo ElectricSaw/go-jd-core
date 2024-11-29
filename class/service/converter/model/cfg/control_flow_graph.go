@@ -20,6 +20,14 @@ type ControlFlowGraph struct {
 	offsetToLineNumbers []int
 }
 
+func (g *ControlFlowGraph) BasicBlocks() util.IList[intsrv.IBasicBlock] {
+	return g.list
+}
+
+func (g *ControlFlowGraph) Method() intmod.IMethod {
+	return g.method
+}
+
 func (g *ControlFlowGraph) SetOffsetToLineNumbers(offsetToLineNumbers []int) {
 	g.offsetToLineNumbers = offsetToLineNumbers
 }

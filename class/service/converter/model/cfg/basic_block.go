@@ -6,47 +6,6 @@ import (
 	"fmt"
 )
 
-const (
-	TypeDeleted                  = 0
-	TypeStart                    = 1 << 0
-	TypeEnd                      = 1 << 1
-	TypeStatements               = 1 << 2
-	TypeThrow                    = 1 << 3
-	TypeReturn                   = 1 << 4
-	TypeReturnValue              = 1 << 5
-	TypeSwitchDeclaration        = 1 << 6
-	TypeSwitch                   = 1 << 7
-	TypeSwitchBreak              = 1 << 8
-	TypeTryDeclaration           = 1 << 9
-	TypeTry                      = 1 << 10
-	TypeTryJsr                   = 1 << 11
-	TypeTryEclipse               = 1 << 12
-	TypeJsr                      = 1 << 13
-	TypeRet                      = 1 << 14
-	TypeConditionalBranch        = 1 << 15
-	TypeIf                       = 1 << 16
-	TypeIfElse                   = 1 << 17
-	TypeCondition                = 1 << 18
-	TypeConditionOr              = 1 << 19
-	TypeConditionAnd             = 1 << 20
-	TypeConditionTernaryOperator = 1 << 21
-	TypeLoop                     = 1 << 22
-	TypeLoopStart                = 1 << 23
-	TypeLoopContinue             = 1 << 24
-	TypeLoopEnd                  = 1 << 25
-	TypeGoto                     = 1 << 26
-	TypeInfiniteGoto             = 1 << 27
-	TypeGotoInTernaryOperator    = 1 << 28
-	TypeTernaryOperator          = 1 << 29
-	TypeJump                     = 1 << 30
-
-	GroupSingleSuccessor = TypeStart | TypeStatements | TypeTryDeclaration | TypeJsr | TypeLoop | TypeIf | TypeIfElse | TypeSwitch | TypeTry | TypeTryJsr | TypeTryEclipse | TypeGoto | TypeGotoInTernaryOperator | TypeTernaryOperator
-	GroupSynthetic       = TypeStart | TypeEnd | TypeConditionalBranch | TypeSwitchDeclaration | TypeTryDeclaration | TypeRet | TypeGoto | TypeJump
-	GroupCode            = TypeStatements | TypeThrow | TypeReturn | TypeReturnValue | TypeSwitchDeclaration | TypeConditionalBranch | TypeJsr | TypeRet | TypeSwitch | TypeGoto | TypeInfiniteGoto | TypeGotoInTernaryOperator | TypeCondition | TypeConditionTernaryOperator
-	GroupEnd             = TypeEnd | TypeThrow | TypeReturn | TypeReturnValue | TypeRet | TypeSwitchBreak | TypeLoopStart | TypeLoopContinue | TypeLoopEnd | TypeInfiniteGoto | TypeJump
-	GroupCondition       = TypeCondition | TypeConditionOr | TypeConditionAnd | TypeConditionTernaryOperator
-)
-
 var TypeNames = []string{"DELETED", "START", "END", "STATEMENTS", "THROW", "RETURN", "RETURN_VALUE", "SWITCH_DECLARATION", "SWITCH",
 	"SWITCH_BREAK", "TRY_DECLARATION", "TRY", "TRY_JSR", "TYPE_TRY_ECLIPSE", "JSR", "RET", "CONDITIONAL_BRANCH",
 	"IF", "IF_ELSE", "CONDITION", "CONDITION_OR", "CONDITION_AND", "CONDITION_TERNARY_OPERATOR", "LOOP",
@@ -55,12 +14,12 @@ var TypeNames = []string{"DELETED", "START", "END", "STATEMENTS", "THROW", "RETU
 var EmptyExceptionHandlers = util.NewDefaultList[intsrv.IExceptionHandler]()
 var EmptySwitchCases = make([]SwitchCase, 0)
 
-var SwitchBreak = NewImmutableBasicBlock(TypeSwitchBreak)
-var LoopStart = NewImmutableBasicBlock(TypeLoopStart)
-var LoopContinue = NewImmutableBasicBlock(TypeLoopContinue)
-var LoopEnd = NewImmutableBasicBlock(TypeLoopEnd)
-var End = NewImmutableBasicBlock(TypeEnd)
-var Return = NewImmutableBasicBlock(TypeReturn)
+var SwitchBreak = NewImmutableBasicBlock(intsrv.TypeSwitchBreak).(intsrv.IBasicBlock)
+var LoopStart = NewImmutableBasicBlock(intsrv.TypeLoopStart).(intsrv.IBasicBlock)
+var LoopContinue = NewImmutableBasicBlock(intsrv.TypeLoopContinue).(intsrv.IBasicBlock)
+var LoopEnd = NewImmutableBasicBlock(intsrv.TypeLoopEnd).(intsrv.IBasicBlock)
+var End = NewImmutableBasicBlock(intsrv.TypeEnd).(intsrv.IBasicBlock)
+var Return = NewImmutableBasicBlock(intsrv.TypeReturn).(intsrv.IBasicBlock)
 
 func NewBasicBlock(controlFlowGraph *ControlFlowGraph, index int, original intsrv.IBasicBlock) intsrv.IBasicBlock {
 	return NewBasicBlockWithBasicBlocks(controlFlowGraph, index, original, util.NewSet[intsrv.IBasicBlock]())
@@ -135,20 +94,40 @@ func (b *BasicBlock) Type() int {
 	return b.typ
 }
 
+func (b *BasicBlock) SetType(flags int) {
+	b.typ = flags
+}
+
 func (b *BasicBlock) FromOffset() int {
 	return b.fromOffset
+}
+
+func (b *BasicBlock) SetFromOffset(offset int) {
+	b.fromOffset = offset
 }
 
 func (b *BasicBlock) ToOffset() int {
 	return b.toOffset
 }
 
+func (b *BasicBlock) SetToOffset(offset int) {
+	b.toOffset = offset
+}
+
 func (b *BasicBlock) Next() intsrv.IBasicBlock {
 	return b.next
 }
 
+func (b *BasicBlock) SetNext(next intsrv.IBasicBlock) {
+	b.next = next
+}
+
 func (b *BasicBlock) Branch() intsrv.IBasicBlock {
 	return b.branch
+}
+
+func (b *BasicBlock) SetBranch(branch intsrv.IBasicBlock) {
+	b.branch = branch
 }
 
 func (b *BasicBlock) Condition() intsrv.IBasicBlock {
@@ -163,8 +142,16 @@ func (b *BasicBlock) Sub1() intsrv.IBasicBlock {
 	return b.sub1
 }
 
+func (b *BasicBlock) SetSub1(sub intsrv.IBasicBlock) {
+	b.sub1 = sub
+}
+
 func (b *BasicBlock) Sub2() intsrv.IBasicBlock {
 	return b.sub2
+}
+
+func (b *BasicBlock) SetSub2(sub intsrv.IBasicBlock) {
+	b.sub2 = sub
 }
 
 func (b *BasicBlock) ExceptionHandlers() util.IList[intsrv.IExceptionHandler] {
@@ -177,6 +164,14 @@ func (b *BasicBlock) SwitchCases() util.IList[intsrv.ISwitchCase] {
 
 func (b *BasicBlock) Predecessors() util.ISet[intsrv.IBasicBlock] {
 	return b.predecessors
+}
+
+func (b *BasicBlock) FirstLineNumber() int {
+	return b.controlFlowGraph.LineNumber(b.fromOffset)
+}
+
+func (b *BasicBlock) LastLineNumber() int {
+	return b.controlFlowGraph.LineNumber(b.toOffset - 1)
 }
 
 func (b *BasicBlock) Contains(basicBlock intsrv.IBasicBlock) bool {
@@ -292,14 +287,14 @@ func (b *BasicBlock) AddExceptionHandler(internalThrowableName string, basicBloc
 
 func (b *BasicBlock) InverseCondition() {
 	switch b.typ {
-	case TypeCondition, TypeConditionTernaryOperator, TypeGotoInTernaryOperator:
+	case intsrv.TypeCondition, intsrv.TypeConditionTernaryOperator, intsrv.TypeGotoInTernaryOperator:
 		b.inverseCondition = true
-	case TypeConditionAnd:
-		b.typ = TypeConditionOr
+	case intsrv.TypeConditionAnd:
+		b.typ = intsrv.TypeConditionOr
 		b.sub1.InverseCondition()
 		b.sub2.InverseCondition()
-	case TypeConditionOr:
-		b.typ = TypeConditionAnd
+	case intsrv.TypeConditionOr:
+		b.typ = intsrv.TypeConditionAnd
 		b.sub1.InverseCondition()
 		b.sub2.InverseCondition()
 	default:
@@ -443,6 +438,10 @@ func (c *SwitchCase) Offset() int {
 
 func (c *SwitchCase) BasicBlock() intsrv.IBasicBlock {
 	return c.basicBlock
+}
+
+func (c *SwitchCase) SetBasicBlock(basicBlock intsrv.IBasicBlock) {
+	c.basicBlock = basicBlock
 }
 
 func (c *SwitchCase) IsDefaultCase() bool {

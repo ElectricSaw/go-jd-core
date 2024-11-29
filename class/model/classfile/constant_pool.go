@@ -5,17 +5,17 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 )
 
-func NewConstantPool(constants []constant.Constant) intmod.IConstantPool {
+func NewConstantPool(constants []constant.IConstant) intmod.IConstantPool {
 	return &ConstantPool{
 		constants: constants,
 	}
 }
 
 type ConstantPool struct {
-	constants []constant.Constant
+	constants []constant.IConstant
 }
 
-func (p *ConstantPool) Constant(index int) constant.Constant {
+func (p *ConstantPool) Constant(index int) constant.IConstant {
 	return p.constants[index]
 }
 

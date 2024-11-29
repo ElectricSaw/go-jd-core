@@ -26,12 +26,24 @@ func (l *Loop) Start() intsrv.IBasicBlock {
 	return l.start
 }
 
+func (l *Loop) SetStart(start intsrv.IBasicBlock) {
+	l.start = start
+}
+
 func (l *Loop) Members() util.ISet[intsrv.IBasicBlock] {
 	return l.members
 }
 
+func (l *Loop) SetMembers(members util.ISet[intsrv.IBasicBlock]) {
+	l.members = members
+}
+
 func (l *Loop) End() intsrv.IBasicBlock {
 	return l.end
+}
+
+func (l *Loop) SetEnd(end intsrv.IBasicBlock) {
+	l.end = end
 }
 
 func (l *Loop) String() string {

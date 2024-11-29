@@ -6,7 +6,13 @@ import (
 )
 
 func NewTypes() intmod.ITypes {
-	return &Types{}
+	return NewTypesWithSlice(make([]intmod.IType, 0))
+}
+
+func NewTypesWithSlice(types []intmod.IType) intmod.ITypes {
+	return &Types{
+		DefaultList: *util.NewDefaultListWithSlice[intmod.IType](types).(*util.DefaultList[intmod.IType]),
+	}
 }
 
 type Types struct {

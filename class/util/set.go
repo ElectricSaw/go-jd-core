@@ -12,6 +12,7 @@ type ISet[T comparable] interface {
 	Contains(element T) bool // 요소 포함 여부 확인
 	Get(index int) T
 	Add(element T) bool            // 요소 추가
+	AddAll(element []T) bool       // 모든 요소 추가
 	Remove(element T) bool         // 요소 제거
 	Clear()                        // 모든 요소 제거
 	ContainsAll(elements []T) bool // 여러 요소 포함 여부 확인
@@ -68,6 +69,15 @@ func (s *Set[T]) Get(index int) T {
 	}
 	var zero T
 	return zero
+}
+
+// AddAll 모든 요소 추가
+func (s *Set[T]) AddAll(element []T) bool {
+	ret := true
+	for _, v := range element {
+		ret = ret && s.Add(v)
+	}
+	return ret
 }
 
 // Add Set에 요소 추가

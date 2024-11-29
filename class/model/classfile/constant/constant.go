@@ -21,6 +21,6 @@ const (
 	ConstTagMemberRef              = 19
 )
 
-type Constant interface {
+type IConstant interface {
 	Tag() TAG
 }

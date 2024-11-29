@@ -158,13 +158,13 @@ func (d *ClassFileDeserializer) LoadClassFile(reader *ClassFileReader) (intmod.I
 	return classfile.NewClassFile(majorVersion, minorVersion, accessFlags, internalTypeName, superTypeName, interfaceTypeNames, fields, methods, attributes), nil
 }
 
-func (d *ClassFileDeserializer) LoadConstants(reader *ClassFileReader) ([]constant.Constant, error) {
+func (d *ClassFileDeserializer) LoadConstants(reader *ClassFileReader) ([]constant.IConstant, error) {
 	count := reader.ReadUnsignedShort()
 	if count == 0 {
 		return nil, nil
 	}
 
-	constants := make([]constant.Constant, count)
+	constants := make([]constant.IConstant, count)
 
 	for i := 1; i < count; i++ {
 		tag := reader.Read()

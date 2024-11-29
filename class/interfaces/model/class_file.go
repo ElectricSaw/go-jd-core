@@ -72,7 +72,7 @@ type IMethod interface {
 }
 
 type IConstantPool interface {
-	Constant(index int) constant.Constant
+	Constant(index int) constant.IConstant
 	ConstantTypeName(index int) (string, bool)
 	ConstantString(index int) (string, bool)
 	ConstantUtf8(index int) (string, bool)
