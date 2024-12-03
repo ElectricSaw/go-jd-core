@@ -1,19 +1,19 @@
 package attribute
 
-import (
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
-)
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 
-func NewAttributeConstantValue(constantValue constant.ConstantValue) *AttributeConstantValue {
+func NewAttributeConstantValue(constantValue intcls.IConstantValue) intcls.IAttributeConstantValue {
 	return &AttributeConstantValue{constantValue}
 }
 
 type AttributeConstantValue struct {
-	constantValue constant.ConstantValue
+	constantValue intcls.IConstantValue
 }
 
-func (a AttributeConstantValue) ConstantValue() constant.ConstantValue {
+func (a AttributeConstantValue) ConstantValue() intcls.IConstantValue {
 	return a.constantValue
 }
 
-func (a AttributeConstantValue) attributeIgnoreFunc() {}
+func (a AttributeConstantValue) IsAttribute() bool {
+	return true
+}

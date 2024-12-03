@@ -1,6 +1,8 @@
 package attribute
 
-func NewElementValueClassInfo(classInfo string) *ElementValueClassInfo {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewElementValueClassInfo(classInfo string) intcls.IElementValueClassInfo {
 	return &ElementValueClassInfo{
 		classInfo: classInfo,
 	}
@@ -14,6 +16,6 @@ func (e *ElementValueClassInfo) ClassInfo() string {
 	return e.classInfo
 }
 
-func (e *ElementValueClassInfo) Accept(visitor ElementValueVisitor) {
+func (e *ElementValueClassInfo) Accept(visitor intcls.IElementValueVisitor) {
 	visitor.VisitClassInfo(e)
 }

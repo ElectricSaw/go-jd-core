@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -22,7 +21,6 @@ func NewPreOperatorExpressionWithAll(lineNumber int, operator string, expression
 
 type PreOperatorExpression struct {
 	AbstractLineNumberExpression
-	util.DefaultBase[intmod.IPreOperatorExpression]
 
 	operator   string
 	expression intmod.IExpression

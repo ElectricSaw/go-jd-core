@@ -1,7 +1,7 @@
 package service
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 

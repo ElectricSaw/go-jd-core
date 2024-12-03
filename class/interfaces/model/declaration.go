@@ -56,7 +56,7 @@ type IArrayVariableInitializer interface {
 
 type IBodyDeclaration interface {
 	IDeclaration
-	util.IBase[IDeclaration]
+	util.IBase[IMemberDeclaration]
 
 	InternalTypeName() string
 	MemberDeclarations() IMemberDeclaration
@@ -139,7 +139,7 @@ type IFieldDeclaration interface {
 
 type IFieldDeclarator interface {
 	IDeclaration
-	util.IBase[IDeclaration]
+	util.IBase[IFieldDeclarator]
 
 	SetFieldDeclaration(fieldDeclaration IFieldDeclaration)
 	FieldDeclaration() IFieldDeclaration
@@ -153,7 +153,7 @@ type IFieldDeclarator interface {
 
 type IFieldDeclarators interface {
 	IFieldDeclarator
-	util.IList[IDeclaration]
+	util.IList[IFieldDeclarator]
 
 	SetFieldDeclaration(fieldDeclaration IFieldDeclaration)
 	FieldDeclaration() IFieldDeclaration
@@ -167,7 +167,7 @@ type IFieldDeclarators interface {
 
 type IFormalParameter interface {
 	IDeclaration
-	util.IBase[IDeclaration]
+	util.IBase[IFormalParameter]
 
 	AnnotationReferences() IAnnotationReference
 	IsFinal() bool
@@ -182,14 +182,14 @@ type IFormalParameter interface {
 
 type IFormalParameters interface {
 	IFormalParameter
-	util.IList[IDeclaration]
+	util.IList[IFormalParameter]
 
 	Accept(visitor IDeclarationVisitor)
 }
 
 type IMemberDeclaration interface {
 	IDeclaration
-	util.IBase[IDeclaration]
+	util.IBase[IMemberDeclaration]
 
 	IsClassDeclaration() bool
 }
@@ -279,7 +279,7 @@ type ILocalVariableDeclaration interface {
 
 type ILocalVariableDeclarator interface {
 	IDeclaration
-	util.IBase[IDeclaration]
+	util.IBase[ILocalVariableDeclarator]
 
 	Name() string
 	SetName(name string)
@@ -293,7 +293,7 @@ type ILocalVariableDeclarator interface {
 
 type ILocalVariableDeclarators interface {
 	ILocalVariableDeclarator
-	util.IList[IDeclaration]
+	util.IList[ILocalVariableDeclarator]
 
 	LineNumber() int
 	VariableInitializer() IVariableInitializer
@@ -303,7 +303,7 @@ type ILocalVariableDeclarators interface {
 
 type IMemberDeclarations interface {
 	IMemberDeclaration
-	util.IList[IDeclaration]
+	util.IList[IMemberDeclaration]
 
 	Accept(visitor IDeclarationVisitor)
 }

@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -21,7 +20,6 @@ func NewBinaryOperatorExpression(lineNumber int, typ intmod.IType, leftExpressio
 
 type BinaryOperatorExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.IBinaryOperatorExpression]
 
 	leftExpression  intmod.IExpression
 	operator        string

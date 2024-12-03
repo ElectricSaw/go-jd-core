@@ -1,6 +1,8 @@
 package attribute
 
-func NewLocalVariable(startPc int, length int, name string, descriptor string, index int) *LocalVariable {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewLocalVariable(startPc int, length int, name string, descriptor string, index int) intcls.ILocalVariable {
 	return &LocalVariable{startPc, length, name, descriptor, index}
 }
 

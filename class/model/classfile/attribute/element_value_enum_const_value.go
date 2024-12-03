@@ -1,6 +1,8 @@
 package attribute
 
-func NewElementValueEnumConstValue(descriptor string, constName string) *ElementValueEnumConstValue {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewElementValueEnumConstValue(descriptor string, constName string) intcls.IElementValueEnumConstValue {
 	return &ElementValueEnumConstValue{
 		descriptor: descriptor,
 		constName:  constName,
@@ -20,6 +22,6 @@ func (e *ElementValueEnumConstValue) ConstName() string {
 	return e.constName
 }
 
-func (e *ElementValueEnumConstValue) Accept(visitor ElementValueVisitor) {
+func (e *ElementValueEnumConstValue) Accept(visitor intcls.IElementValueVisitor) {
 	visitor.VisitEnumConstValue(e)
 }

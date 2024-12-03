@@ -3,9 +3,11 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 type AbstractExpression struct {
+	util.DefaultBase[intmod.IExpression]
 }
 
 func (e *AbstractExpression) LineNumber() int    { return intmod.UnknownLineNumber }

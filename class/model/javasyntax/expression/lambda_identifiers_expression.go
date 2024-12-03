@@ -7,12 +7,12 @@ import (
 )
 
 func NewLambdaIdentifiersExpression(typ intmod.IType, returnedType intmod.IType,
-	paramNames []string, statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
+	paramNames util.IList[string], statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
 	return NewLambdaIdentifiersExpressionWithAll(0, typ, returnedType, paramNames, statements)
 }
 
 func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intmod.IType,
-	returnedType intmod.IType, paramNames []string, statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
+	returnedType intmod.IType, paramNames util.IList[string], statements intmod.IStatement) intmod.ILambdaIdentifiersExpression {
 	e := &LambdaIdentifiersExpression{
 		AbstractLambdaExpression: *NewAbstractLambdaExpressionWithAll(lineNumber, typ, statements),
 		returnedType:             returnedType,
@@ -24,10 +24,9 @@ func NewLambdaIdentifiersExpressionWithAll(lineNumber int, typ intmod.IType,
 
 type LambdaIdentifiersExpression struct {
 	AbstractLambdaExpression
-	util.DefaultBase[intmod.ILambdaIdentifiersExpression]
 
 	returnedType   intmod.IType
-	parameterNames []string
+	parameterNames util.IList[string]
 }
 
 func (e *LambdaIdentifiersExpression) ReturnedType() intmod.IType {
@@ -35,7 +34,7 @@ func (e *LambdaIdentifiersExpression) ReturnedType() intmod.IType {
 }
 
 func (e *LambdaIdentifiersExpression) ParameterNames() []string {
-	return e.parameterNames
+	return e.parameterNames.ToSlice()
 }
 
 func (e *LambdaIdentifiersExpression) Accept(visitor intmod.IExpressionVisitor) {

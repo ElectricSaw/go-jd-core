@@ -1,6 +1,9 @@
 package attribute
 
-func NewAttributeCode(maxStack int, maxLocals int, code []byte, exceptionTable []CodeException, attribute map[string]Attribute) *AttributeCode {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeCode(maxStack int, maxLocals int, code []byte,
+	exceptionTable []intcls.ICodeException, attribute map[string]intcls.IAttribute) intcls.IAttributeCode {
 	return &AttributeCode{maxStack, maxLocals, code, exceptionTable, attribute}
 }
 
@@ -8,8 +11,8 @@ type AttributeCode struct {
 	maxStack       int
 	maxLocals      int
 	code           []byte
-	exceptionTable []CodeException
-	attribute      map[string]Attribute
+	exceptionTable []intcls.ICodeException
+	attribute      map[string]intcls.IAttribute
 }
 
 func (a AttributeCode) MaxStack() int {
@@ -24,11 +27,11 @@ func (a AttributeCode) Code() []byte {
 	return a.code
 }
 
-func (a AttributeCode) ExceptionTable() []CodeException {
+func (a AttributeCode) ExceptionTable() []intcls.ICodeException {
 	return a.exceptionTable
 }
 
-func (a AttributeCode) Attribute(name string) Attribute {
+func (a AttributeCode) Attribute(name string) intcls.IAttribute {
 	if a.attribute == nil {
 		return nil
 	}
@@ -36,4 +39,6 @@ func (a AttributeCode) Attribute(name string) Attribute {
 	return a.attribute[name]
 }
 
-func (a AttributeCode) attributeIgnoreFunc() {}
+func (a AttributeCode) IsAttribute() bool {
+	return true
+}

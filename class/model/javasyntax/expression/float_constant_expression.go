@@ -3,7 +3,6 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -22,7 +21,6 @@ func NewFloatConstantExpressionWithAll(lineNumber int, value float32) intmod.IFl
 
 type FloatConstantExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.IFloatConstantExpression]
 
 	value float32
 }

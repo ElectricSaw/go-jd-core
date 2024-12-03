@@ -1,18 +1,20 @@
 package constant
 
-func NewConstantUtf8(value string) *ConstantUtf8 {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantUtf8(value string) intcls.IConstantUtf8 {
 	return &ConstantUtf8{
-		tag:   ConstTagUtf8,
+		tag:   intcls.ConstTagUtf8,
 		value: value,
 	}
 }
 
 type ConstantUtf8 struct {
-	tag   TAG
+	tag   intcls.TAG
 	value string
 }
 
-func (c ConstantUtf8) Tag() TAG {
+func (c ConstantUtf8) Tag() intcls.TAG {
 	return c.tag
 }
 
@@ -20,4 +22,6 @@ func (c ConstantUtf8) Value() string {
 	return c.value
 }
 
-func (c ConstantUtf8) constantValueIgnoreFunc() {}
+func (c ConstantUtf8) IsConstantValue() bool {
+	return true
+}

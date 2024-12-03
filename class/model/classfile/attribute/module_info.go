@@ -1,6 +1,8 @@
 package attribute
 
-func NewModuleInfo(name string, flags int, version string) *ModuleInfo {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewModuleInfo(name string, flags int, version string) intcls.IModuleInfo {
 	return &ModuleInfo{name: name, flags: flags, version: version}
 }
 

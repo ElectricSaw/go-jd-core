@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -23,7 +22,6 @@ func NewNewExpressionWithAll(lineNumber int, typ intmod.IObjectType, descriptor 
 
 type NewExpression struct {
 	AbstractLineNumberExpression
-	util.DefaultBase[intmod.INewExpression]
 
 	typ             intmod.IObjectType
 	descriptor      string

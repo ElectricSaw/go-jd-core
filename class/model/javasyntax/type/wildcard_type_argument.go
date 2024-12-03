@@ -12,7 +12,7 @@ type WildcardTypeArgument struct {
 	AbstractTypeArgument
 }
 
-func (t *WildcardTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {
+func (t *WildcardTypeArgument) IsTypeArgumentAssignableFrom(_ map[string]intmod.IType, _ intmod.ITypeArgument) bool {
 	return true
 }
 

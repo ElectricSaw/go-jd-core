@@ -1,19 +1,21 @@
 package attribute
 
-func NewElementValueAnnotationValue(annotationValue Annotation) *ElementValueAnnotationValue {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewElementValueAnnotationValue(annotationValue intcls.IAnnotation) intcls.IElementValueAnnotationValue {
 	return &ElementValueAnnotationValue{
 		annotationValue: annotationValue,
 	}
 }
 
 type ElementValueAnnotationValue struct {
-	annotationValue Annotation
+	annotationValue intcls.IAnnotation
 }
 
-func (e *ElementValueAnnotationValue) AnnotationValue() Annotation {
+func (e *ElementValueAnnotationValue) AnnotationValue() intcls.IAnnotation {
 	return e.annotationValue
 }
 
-func (e *ElementValueAnnotationValue) Accept(visitor ElementValueVisitor) {
+func (e *ElementValueAnnotationValue) Accept(visitor intcls.IElementValueVisitor) {
 	visitor.VisitAnnotationValue(e)
 }

@@ -1,6 +1,8 @@
 package attribute
 
-func NewAttributeExceptions(exceptionTypeNames []string) *AttributeExceptions {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeExceptions(exceptionTypeNames []string) intcls.IAttributeExceptions {
 	return &AttributeExceptions{exceptionTypeNames}
 }
 
@@ -12,4 +14,6 @@ func (a AttributeExceptions) ExceptionTypeNames() []string {
 	return a.exceptionTypeNames
 }
 
-func (a AttributeExceptions) attributeIgnoreFunc() {}
+func (a AttributeExceptions) IsAttribute() bool {
+	return true
+}

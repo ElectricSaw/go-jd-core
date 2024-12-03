@@ -1,6 +1,8 @@
 package attribute
 
-func NewBootstrapMethod(bootstrapMethodRef int, bootstrapArguments []int) *BootstrapMethod {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewBootstrapMethod(bootstrapMethodRef int, bootstrapArguments []int) intcls.IBootstrapMethod {
 	return &BootstrapMethod{
 		bootstrapMethodRef: bootstrapMethodRef,
 		bootstrapArguments: bootstrapArguments,

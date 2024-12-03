@@ -1,13 +1,12 @@
 package classfile
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 )
 
 func NewClassFile(majorVersion int, minorVersion int, accessFlags int,
 	internalTypeName string, superTypeName string, interfaceTypeNames []string,
-	field []intmod.IField, method []intmod.IMethod, attributes map[string]attribute.Attribute) intmod.IClassFile {
+	field []intcls.IField, method []intcls.IMethod, attributes map[string]intcls.IAttribute) intcls.IClassFile {
 	return &ClassFile{
 		majorVersion:       majorVersion,
 		minorVersion:       minorVersion,
@@ -28,11 +27,11 @@ type ClassFile struct {
 	internalTypeName   string
 	superTypeName      string
 	interfaceTypeNames []string
-	field              []intmod.IField
-	method             []intmod.IMethod
-	attributes         map[string]attribute.Attribute
-	outerClassFile     intmod.IClassFile
-	innerClassFiles    []intmod.IClassFile
+	field              []intcls.IField
+	method             []intcls.IMethod
+	attributes         map[string]intcls.IAttribute
+	outerClassFile     intcls.IClassFile
+	innerClassFiles    []intcls.IClassFile
 }
 
 func (cf ClassFile) MajorVersion() int {
@@ -44,23 +43,23 @@ func (cf ClassFile) MinorVersion() int {
 }
 
 func (cf ClassFile) IsEnum() bool {
-	return (cf.accessFlags & intmod.AccEnum) != 0
+	return (cf.accessFlags & intcls.AccEnum) != 0
 }
 
 func (cf ClassFile) IsAnnotation() bool {
-	return (cf.accessFlags & intmod.AccAnnotation) != 0
+	return (cf.accessFlags & intcls.AccAnnotation) != 0
 }
 
 func (cf ClassFile) IsInterface() bool {
-	return (cf.accessFlags & intmod.AccInterface) != 0
+	return (cf.accessFlags & intcls.AccInterface) != 0
 }
 
 func (cf ClassFile) IsModule() bool {
-	return (cf.accessFlags & intmod.AccModule) != 0
+	return (cf.accessFlags & intcls.AccModule) != 0
 }
 
 func (cf ClassFile) IsStatic() bool {
-	return (cf.accessFlags & intmod.AccStatic) != 0
+	return (cf.accessFlags & intcls.AccStatic) != 0
 }
 
 func (cf ClassFile) AccessFlags() int {
@@ -83,27 +82,27 @@ func (cf ClassFile) InterfaceTypeNames() []string {
 	return cf.interfaceTypeNames
 }
 
-func (cf ClassFile) Fields() []intmod.IField {
+func (cf ClassFile) Fields() []intcls.IField {
 	return cf.field
 }
 
-func (cf ClassFile) Methods() []intmod.IMethod {
+func (cf ClassFile) Methods() []intcls.IMethod {
 	return cf.method
 }
 
-func (cf ClassFile) Attributes() map[string]attribute.Attribute {
+func (cf ClassFile) Attributes() map[string]intcls.IAttribute {
 	return cf.attributes
 }
 
-func (cf ClassFile) Attribute(name string) attribute.Attribute {
+func (cf ClassFile) Attribute(name string) intcls.IAttribute {
 	return cf.attributes[name]
 }
 
-func (cf ClassFile) OuterClassFile() intmod.IClassFile {
+func (cf ClassFile) OuterClassFile() intcls.IClassFile {
 	return cf.outerClassFile
 }
 
-func (cf ClassFile) InnerClassFiles() []intmod.IClassFile {
+func (cf ClassFile) InnerClassFiles() []intcls.IClassFile {
 	return cf.innerClassFiles
 }
 

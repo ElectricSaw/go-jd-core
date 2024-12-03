@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -21,7 +20,6 @@ func NewLocalVariableReferenceExpressionWithAll(lineNumber int, typ intmod.IType
 
 type LocalVariableReferenceExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.ILocalVariableReferenceExpression]
 
 	name string
 }

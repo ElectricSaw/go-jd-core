@@ -7,7 +7,7 @@ import (
 
 func NewAnnotationReferences() intmod.IAnnotationReferences {
 	return &AnnotationReferences{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.IAnnotationReference](0),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.IAnnotationReference](0).(*util.DefaultList[intmod.IAnnotationReference]),
 	}
 }
 

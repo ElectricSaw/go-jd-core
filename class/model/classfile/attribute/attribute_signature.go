@@ -1,6 +1,8 @@
 package attribute
 
-func NewAttributeSignature(signature string) *AttributeSignature {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeSignature(signature string) intcls.IAttributeSignature {
 	return &AttributeSignature{signature: signature}
 }
 
@@ -12,4 +14,6 @@ func (a AttributeSignature) Signature() string {
 	return a.signature
 }
 
-func (a AttributeSignature) attributeIgnoreFunc() {}
+func (a AttributeSignature) IsAttribute() bool {
+	return true
+}

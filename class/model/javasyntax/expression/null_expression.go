@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -20,7 +19,6 @@ func NewNullExpressionWithAll(lineNumber int, typ intmod.IType) intmod.INullExpr
 
 type NullExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.INullExpression]
 }
 
 func (e *NullExpression) IsNullExpression() bool {

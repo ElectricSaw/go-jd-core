@@ -1,15 +1,19 @@
 package attribute
 
-func NewAttributeMethodParameters(parameters []MethodParameter) *AttributeMethodParameters {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeMethodParameters(parameters []intcls.IMethodParameter) intcls.IAttributeMethodParameters {
 	return &AttributeMethodParameters{parameters}
 }
 
 type AttributeMethodParameters struct {
-	parameters []MethodParameter
+	parameters []intcls.IMethodParameter
 }
 
-func (a AttributeMethodParameters) Parameters() []MethodParameter {
+func (a AttributeMethodParameters) Parameters() []intcls.IMethodParameter {
 	return a.parameters
 }
 
-func (a AttributeMethodParameters) attributeIgnoreFunc() {}
+func (a AttributeMethodParameters) IsAttribute() bool {
+	return true
+}

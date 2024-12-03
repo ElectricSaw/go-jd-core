@@ -1,18 +1,20 @@
 package constant
 
-func NewConstantDouble(value float64) *ConstantDouble {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantDouble(value float64) intcls.IConstantDouble {
 	return &ConstantDouble{
-		tag:   ConstTagDouble,
+		tag:   intcls.ConstTagDouble,
 		value: value,
 	}
 }
 
 type ConstantDouble struct {
-	tag   TAG
+	tag   intcls.TAG
 	value float64
 }
 
-func (c ConstantDouble) Tag() TAG {
+func (c ConstantDouble) Tag() intcls.TAG {
 	return c.tag
 }
 
@@ -20,4 +22,6 @@ func (c ConstantDouble) Value() float64 {
 	return c.value
 }
 
-func (c ConstantDouble) constantValueIgnoreFunc() {}
+func (c ConstantDouble) IsConstantValue() bool {
+	return true
+}

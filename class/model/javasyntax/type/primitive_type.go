@@ -2,7 +2,6 @@ package _type
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 var PtTypeBoolean = NewPrimitiveType("boolean", intmod.FlagBoolean, intmod.FlagBoolean, intmod.FlagBoolean)
@@ -76,7 +75,6 @@ func NewPrimitiveType(name string, flags, leftFlags, rightFlags int) intmod.IPri
 type PrimitiveType struct {
 	AbstractType
 	AbstractTypeArgument
-	util.DefaultBase[intmod.IPrimitiveType]
 
 	name       string
 	flags      int

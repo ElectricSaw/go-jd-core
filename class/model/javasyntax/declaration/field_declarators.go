@@ -11,7 +11,7 @@ func NewFieldDeclarators() intmod.IFieldDeclarators {
 
 func NewFieldDeclaratorsWithCapacity(capacity int) intmod.IFieldDeclarators {
 	return &FieldDeclarators{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.IFieldDeclarator](capacity),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.IFieldDeclarator](capacity).(*util.DefaultList[intmod.IFieldDeclarator]),
 	}
 }
 
@@ -39,7 +39,9 @@ func (d *FieldDeclarators) SetVariableInitializer(_ intmod.IVariableInitializer)
 
 func (d *FieldDeclarators) SetFieldDeclaration(fieldDeclaration intmod.IFieldDeclaration) {
 	for _, fieldDeclarator := range d.ToSlice() {
-		fieldDeclarator.SetFieldDeclaration(fieldDeclaration)
+		if meta, ok := fieldDeclarator.(intmod.IFieldDeclarator); ok {
+			meta.SetFieldDeclaration(fieldDeclaration)
+		}
 	}
 }
 

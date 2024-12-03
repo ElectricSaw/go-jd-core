@@ -1,6 +1,8 @@
 package attribute
 
-func NewMethodParameter(name string, access int) *MethodParameter {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewMethodParameter(name string, access int) intcls.IMethodParameter {
 	return &MethodParameter{name: name, access: access}
 }
 

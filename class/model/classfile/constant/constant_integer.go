@@ -1,18 +1,20 @@
 package constant
 
-func NewConstantInteger(value int) *ConstantInteger {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantInteger(value int) intcls.IConstantInteger {
 	return &ConstantInteger{
-		tag:   ConstTagInteger,
+		tag:   intcls.ConstTagInteger,
 		value: value,
 	}
 }
 
 type ConstantInteger struct {
-	tag   TAG
+	tag   intcls.TAG
 	value int
 }
 
-func (c ConstantInteger) Tag() TAG {
+func (c ConstantInteger) Tag() intcls.TAG {
 	return c.tag
 }
 
@@ -20,4 +22,6 @@ func (c ConstantInteger) Value() int {
 	return c.value
 }
 
-func (c ConstantInteger) constantValueIgnoreFunc() {}
+func (c ConstantInteger) IsConstantValue() bool {
+	return true
+}

@@ -2,7 +2,6 @@ package _type
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewDiamondTypeArgument() intmod.IDiamondTypeArgument {
@@ -11,7 +10,6 @@ func NewDiamondTypeArgument() intmod.IDiamondTypeArgument {
 
 type DiamondTypeArgument struct {
 	AbstractTypeArgument
-	util.DefaultBase[intmod.IType]
 }
 
 func (a *DiamondTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]intmod.IType, typeArgument intmod.ITypeArgument) bool {

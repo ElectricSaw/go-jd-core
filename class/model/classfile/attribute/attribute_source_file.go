@@ -1,6 +1,8 @@
 package attribute
 
-func NewAttributeSourceFile(sourceFile string) *AttributeSourceFile {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeSourceFile(sourceFile string) intcls.IAttributeSourceFile {
 	return &AttributeSourceFile{sourceFile}
 }
 
@@ -12,4 +14,6 @@ func (a AttributeSourceFile) SourceFile() string {
 	return a.sourceFile
 }
 
-func (a AttributeSourceFile) attributeIgnoreFunc() {}
+func (a AttributeSourceFile) IsAttribute() bool {
+	return true
+}

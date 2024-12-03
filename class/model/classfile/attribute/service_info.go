@@ -1,6 +1,8 @@
 package attribute
 
-func NewServiceInfo(interfaceTypeName string, implementationTypeNames []string) *ServiceInfo {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewServiceInfo(interfaceTypeName string, implementationTypeNames []string) intcls.IServiceInfo {
 	return &ServiceInfo{interfaceTypeName, implementationTypeNames}
 }
 

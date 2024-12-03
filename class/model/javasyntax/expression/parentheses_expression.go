@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewParenthesesExpression(expression intmod.IExpression) intmod.IParenthesesExpression {
@@ -16,7 +15,6 @@ func NewParenthesesExpression(expression intmod.IExpression) intmod.IParentheses
 
 type ParenthesesExpression struct {
 	AbstractLineNumberExpression
-	util.DefaultBase[intmod.IParenthesesExpression]
 
 	expression intmod.IExpression
 }

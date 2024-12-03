@@ -79,7 +79,7 @@ func (s *TryStatement) FinallyStatements() intmod.IStatement {
 	return s.finallyStatement
 }
 
-func (s *TryStatement) SetFinallyStatement(finallyStatement intmod.IStatement) {
+func (s *TryStatement) SetFinallyStatements(finallyStatement intmod.IStatement) {
 	s.finallyStatement = finallyStatement
 }
 

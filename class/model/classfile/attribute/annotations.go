@@ -1,17 +1,21 @@
 package attribute
 
-func NewAnnotations(annotations []Annotation) *Annotations {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAnnotations(annotations []intcls.IAnnotation) intcls.IAnnotations {
 	return &Annotations{
 		annotations: annotations,
 	}
 }
 
 type Annotations struct {
-	annotations []Annotation
+	annotations []intcls.IAnnotation
 }
 
-func (a Annotations) Annotations() []Annotation {
+func (a Annotations) Annotations() []intcls.IAnnotation {
 	return a.annotations
 }
 
-func (a *Annotations) attributeIgnoreFunc() {}
+func (a *Annotations) IsAttribute() bool {
+	return true
+}

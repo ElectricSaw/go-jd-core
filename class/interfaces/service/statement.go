@@ -52,8 +52,8 @@ type IClassFileMonitorExitStatement interface {
 type IClassFileTryStatement interface {
 	intmod.ITryStatement
 
-	isJsr() bool
-	isEclipse() bool
+	IsJsr() bool
+	IsEclipse() bool
 }
 
 type ICatchClause interface {

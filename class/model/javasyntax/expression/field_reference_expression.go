@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -26,7 +25,6 @@ func NewFieldReferenceExpressionWithAll(lineNumber int, typ intmod.IType, expres
 
 type FieldReferenceExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.IFieldReferenceExpression]
 
 	expression       intmod.IExpression
 	internalTypeName string

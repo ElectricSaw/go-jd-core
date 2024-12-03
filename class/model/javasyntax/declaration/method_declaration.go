@@ -1,6 +1,7 @@
 package declaration
 
 import (
+	"bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 )
@@ -85,7 +86,7 @@ func (d *MethodDeclaration) AnnotationReferences() intmod.IAnnotationReference {
 }
 
 func (d *MethodDeclaration) IsStatic() bool {
-	return d.flags&intmod.AccStatic != 0
+	return d.flags&classpath.AccStatic != 0
 }
 
 func (d *MethodDeclaration) Name() string {

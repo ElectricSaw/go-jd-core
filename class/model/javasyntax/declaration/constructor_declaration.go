@@ -1,6 +1,7 @@
 package declaration
 
 import (
+	"bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
@@ -30,7 +31,7 @@ func NewConstructorDeclarationWithAll(annotationReferences intmod.IReference, fl
 
 type ConstructorDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IConstructorDeclaration]
+	util.DefaultBase[intmod.IMemberDeclaration]
 
 	annotationReferences intmod.IReference
 	flags                int
@@ -50,7 +51,7 @@ func (d *ConstructorDeclaration) SetFlags(flags int) {
 }
 
 func (d *ConstructorDeclaration) IsStatic() bool {
-	return d.flags&intmod.AccStatic != 0
+	return d.flags&classpath.AccStatic != 0
 }
 
 func (d *ConstructorDeclaration) AnnotationReferences() intmod.IReference {

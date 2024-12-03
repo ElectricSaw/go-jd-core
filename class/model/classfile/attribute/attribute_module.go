@@ -1,8 +1,10 @@
 package attribute
 
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
 func NewAttributeModule(name string, flags int, version string,
-	requires []ModuleInfo, exports []PackageInfo, opens []PackageInfo,
-	uses []string, provides []ServiceInfo) *AttributeModule {
+	requires []intcls.IModuleInfo, exports []intcls.IPackageInfo, opens []intcls.IPackageInfo,
+	uses []string, provides []intcls.IServiceInfo) intcls.IAttributeModule {
 	return &AttributeModule{name, flags, version, requires, exports, opens, uses, provides}
 }
 
@@ -11,11 +13,11 @@ type AttributeModule struct {
 	flags   int
 	version string
 
-	requires []ModuleInfo
-	exports  []PackageInfo
-	opens    []PackageInfo
+	requires []intcls.IModuleInfo
+	exports  []intcls.IPackageInfo
+	opens    []intcls.IPackageInfo
 	uses     []string
-	provides []ServiceInfo
+	provides []intcls.IServiceInfo
 }
 
 func (a AttributeModule) Name() string {
@@ -30,15 +32,15 @@ func (a AttributeModule) Version() string {
 	return a.version
 }
 
-func (a AttributeModule) Requires() []ModuleInfo {
+func (a AttributeModule) Requires() []intcls.IModuleInfo {
 	return a.requires
 }
 
-func (a AttributeModule) Exports() []PackageInfo {
+func (a AttributeModule) Exports() []intcls.IPackageInfo {
 	return a.exports
 }
 
-func (a AttributeModule) Opens() []PackageInfo {
+func (a AttributeModule) Opens() []intcls.IPackageInfo {
 	return a.opens
 }
 
@@ -46,8 +48,10 @@ func (a AttributeModule) Uses() []string {
 	return a.uses
 }
 
-func (a AttributeModule) Provides() []ServiceInfo {
+func (a AttributeModule) Provides() []intcls.IServiceInfo {
 	return a.provides
 }
 
-func (a AttributeModule) attributeIgnoreFunc() {}
+func (a AttributeModule) IsAttribute() bool {
+	return true
+}

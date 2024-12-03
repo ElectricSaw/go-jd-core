@@ -11,7 +11,7 @@ func NewLocalVariableDeclarators() intmod.ILocalVariableDeclarators {
 
 func NewLocalVariableDeclaratorsWithCapacity(capacity int) intmod.ILocalVariableDeclarators {
 	return &LocalVariableDeclarators{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.ILocalVariableDeclarator](capacity),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.ILocalVariableDeclarator](capacity).(*util.DefaultList[intmod.ILocalVariableDeclarator]),
 	}
 }
 

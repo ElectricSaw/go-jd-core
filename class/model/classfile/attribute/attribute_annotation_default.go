@@ -1,15 +1,19 @@
 package attribute
 
-func NewAttributeAnnotationDefault(defaultValue ElementValue) *AttributeAnnotationDefault {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeAnnotationDefault(defaultValue intcls.IElementValue) intcls.IAttributeAnnotationDefault {
 	return &AttributeAnnotationDefault{defaultValue: defaultValue}
 }
 
 type AttributeAnnotationDefault struct {
-	defaultValue ElementValue
+	defaultValue intcls.IElementValue
 }
 
-func (a AttributeAnnotationDefault) DefaultValue() ElementValue {
+func (a AttributeAnnotationDefault) DefaultValue() intcls.IElementValue {
 	return a.defaultValue
 }
 
-func (a AttributeAnnotationDefault) attributeIgnoreFunc() {}
+func (a AttributeAnnotationDefault) IsAttribute() bool {
+	return true
+}

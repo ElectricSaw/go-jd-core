@@ -1,15 +1,19 @@
 package attribute
 
-func NewAttributeParameterAnnotations(parameterAnnotations []Annotations) *AttributeParameterAnnotations {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeParameterAnnotations(parameterAnnotations []intcls.IAnnotations) intcls.IAttributeParameterAnnotations {
 	return &AttributeParameterAnnotations{parameterAnnotations: parameterAnnotations}
 }
 
 type AttributeParameterAnnotations struct {
-	parameterAnnotations []Annotations
+	parameterAnnotations []intcls.IAnnotations
 }
 
-func (a AttributeParameterAnnotations) ParameterAnnotations() []Annotations {
+func (a AttributeParameterAnnotations) ParameterAnnotations() []intcls.IAnnotations {
 	return a.parameterAnnotations
 }
 
-func (a AttributeParameterAnnotations) attributeIgnoreFunc() {}
+func (a AttributeParameterAnnotations) IsAttribute() bool {
+	return true
+}

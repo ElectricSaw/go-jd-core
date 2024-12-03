@@ -293,7 +293,7 @@ type ITryStatement interface {
 	CatchClauseList() []IStatement
 	CatchClauses() []ICatchClause
 	FinallyStatements() IStatement
-	SetFinallyStatement(finallyStatement IStatement)
+	SetFinallyStatements(finallyStatement IStatement)
 	IsTryStatement() bool
 	Accept(visitor IStatementVisitor)
 }
@@ -348,7 +348,7 @@ type ILabelBlock interface {
 
 type IMultiLabelsBlock interface {
 	IBlock
-	
+
 	Labels() []ILabel
 	IsSwitchStatementMultiLabelsBlock() bool
 	Accept(visitor IStatementVisitor)

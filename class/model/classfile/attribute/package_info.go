@@ -1,6 +1,8 @@
 package attribute
 
-func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) *PackageInfo {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) intcls.IPackageInfo {
 	return &PackageInfo{internalName, flags, moduleInfoNames}
 }
 

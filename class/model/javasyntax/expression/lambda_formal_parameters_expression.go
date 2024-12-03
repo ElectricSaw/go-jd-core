@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -23,7 +22,6 @@ func NewLambdaFormalParametersExpressionWithAll(lineNumber int, typ intmod.IType
 
 type LambdaFormalParametersExpression struct {
 	AbstractLambdaExpression
-	util.DefaultBase[intmod.ILambdaFormalParametersExpression]
 
 	formalParameters intmod.IFormalParameter
 }

@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -22,7 +21,6 @@ func NewNewInitializedArrayWithAll(lineNumber int, typ intmod.IType,
 
 type NewInitializedArray struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.INewInitializedArray]
 
 	arrayInitializer intmod.IArrayVariableInitializer
 }

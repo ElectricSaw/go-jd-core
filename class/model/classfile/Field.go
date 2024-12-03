@@ -1,11 +1,10 @@
 package classfile
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 )
 
-func NewField(accessFlags int, name string, descriptor string, attributes map[string]attribute.Attribute) intmod.IField {
+func NewField(accessFlags int, name string, descriptor string, attributes map[string]intcls.IAttribute) intcls.IField {
 	return &Field{accessFlags: accessFlags, name: name, descriptor: descriptor, attributes: attributes}
 }
 
@@ -13,7 +12,7 @@ type Field struct {
 	accessFlags int
 	name        string
 	descriptor  string
-	attributes  map[string]attribute.Attribute
+	attributes  map[string]intcls.IAttribute
 }
 
 func (f Field) AccessFlags() int {
@@ -28,11 +27,11 @@ func (f Field) Descriptor() string {
 	return f.descriptor
 }
 
-func (f Field) Attributes() map[string]attribute.Attribute {
+func (f Field) Attributes() map[string]intcls.IAttribute {
 	return f.attributes
 }
 
-func (cf Field) Attribute(name string) attribute.Attribute {
+func (cf Field) Attribute(name string) intcls.IAttribute {
 	return cf.attributes[name]
 }
 

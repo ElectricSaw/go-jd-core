@@ -12,7 +12,6 @@ func NewTypeParameter(identifier string) intmod.ITypeParameter {
 }
 
 type TypeParameter struct {
-	AbstractType
 	AbstractTypeParameter
 	util.DefaultBase[intmod.ITypeParameter]
 

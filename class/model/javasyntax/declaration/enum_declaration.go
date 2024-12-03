@@ -50,53 +50,38 @@ func (d *EnumDeclaration) String() string {
 	return fmt.Sprintf("EnumDeclaration{%s}", d.internalTypeName)
 }
 
-func NewConstant(name string) *Constant {
-	return &Constant{
-		name: name,
-	}
+func NewConstant(name string) intmod.IConstant {
+	return NewConstant6(-1, nil, name, nil, nil)
 }
 
-func NewConstant2(lineNumber int, name string) *Constant {
-	return &Constant{
-		lineNumber: lineNumber,
-		name:       name,
-	}
+func NewConstant2(lineNumber int, name string) intmod.IConstant {
+	return NewConstant6(lineNumber, nil, name, nil, nil)
 }
 
-func NewConstant3(name string, arguments intmod.IExpression) *Constant {
-	return &Constant{
-		name:      name,
-		arguments: arguments,
-	}
+func NewConstant3(name string, arguments intmod.IExpression) intmod.IConstant {
+	return NewConstant6(-1, nil, name, arguments, nil)
 }
 
-func NewConstant4(lineNumber int, name string, arguments intmod.IExpression) *Constant {
-	return &Constant{
-		lineNumber: lineNumber,
-		name:       name,
-		arguments:  arguments,
-	}
+func NewConstant4(lineNumber int, name string, arguments intmod.IExpression) intmod.IConstant {
+	return NewConstant6(lineNumber, nil, name, arguments, nil)
 }
 
 func NewConstant5(lineNumber int, name string, arguments intmod.IExpression,
 	bodyDeclaration intmod.IBodyDeclaration) intmod.IConstant {
-	return &Constant{
-		lineNumber:      lineNumber,
-		name:            name,
-		arguments:       arguments,
-		bodyDeclaration: bodyDeclaration,
-	}
+	return NewConstant6(lineNumber, nil, name, arguments, bodyDeclaration)
 }
 
 func NewConstant6(lineNumber int, annotationReferences intmod.IAnnotationReference, name string,
 	arguments intmod.IExpression, bodyDeclaration intmod.IBodyDeclaration) intmod.IConstant {
-	return &Constant{
+	c := &Constant{
 		lineNumber:           lineNumber,
 		annotationReferences: annotationReferences,
 		name:                 name,
 		arguments:            arguments,
 		bodyDeclaration:      bodyDeclaration,
 	}
+	c.SetValue(c)
+	return c
 }
 
 type Constant struct {

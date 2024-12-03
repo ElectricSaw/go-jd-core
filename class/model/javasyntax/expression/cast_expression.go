@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -26,7 +25,6 @@ func NewCastExpressionWithAll(lineNumber int, typ intmod.IType, expression intmo
 
 type CastExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.ICastExpression]
 
 	expression intmod.IExpression
 	explicit   bool

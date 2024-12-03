@@ -3,7 +3,6 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewInstanceOfExpression(expression intmod.IExpression,
@@ -26,7 +25,6 @@ func NewInstanceOfExpressionWithAll(lineNumber int, expression intmod.IExpressio
 
 type InstanceOfExpression struct {
 	AbstractLineNumberExpression
-	util.DefaultBase[intmod.IInstanceOfExpression]
 
 	expression     intmod.IExpression
 	instanceOfType intmod.IType

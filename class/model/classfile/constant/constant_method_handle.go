@@ -1,20 +1,22 @@
 package constant
 
-func NewConstantMethodHandle(referenceKind int, referenceIndex int) *ConstantMethodHandle {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantMethodHandle(referenceKind int, referenceIndex int) intcls.IConstantMethodHandle {
 	return &ConstantMethodHandle{
-		tag:            ConstTagMethodHandle,
+		tag:            intcls.ConstTagMethodHandle,
 		referenceKind:  referenceKind,
 		referenceIndex: referenceIndex,
 	}
 }
 
 type ConstantMethodHandle struct {
-	tag            TAG
+	tag            intcls.TAG
 	referenceKind  int
 	referenceIndex int
 }
 
-func (c ConstantMethodHandle) Tag() TAG {
+func (c ConstantMethodHandle) Tag() intcls.TAG {
 	return c.tag
 }
 

@@ -3,7 +3,6 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -24,7 +23,6 @@ func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intmod.IBool
 
 type BooleanExpression struct {
 	AbstractLineNumberExpression
-	util.DefaultBase[intmod.IBooleanExpression]
 
 	value bool
 }

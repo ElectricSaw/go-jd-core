@@ -2,7 +2,6 @@ package _type
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -22,7 +21,6 @@ func NewGenericTypeWithAll(name string, dimension int) intmod.IGenericType {
 type GenericType struct {
 	AbstractType
 	AbstractTypeArgument
-	util.DefaultBase[intmod.IGenericType]
 
 	name      string
 	dimension int

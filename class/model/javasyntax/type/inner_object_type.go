@@ -18,7 +18,7 @@ func NewInnerObjectTypeWithArgs(internalName, qualifiedName, name string, typeAr
 }
 
 func NewInnerObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments intmod.ITypeArgument, dimension int, outerType intmod.IObjectType) intmod.IInnerObjectType {
-	return &InnerObjectType{
+	t := &InnerObjectType{
 		ObjectType: ObjectType{
 			internalName:  internalName,
 			qualifiedName: qualifiedName,
@@ -29,6 +29,8 @@ func NewInnerObjectTypeWithAll(internalName, qualifiedName, name string, typeArg
 		},
 		outerType: outerType,
 	}
+	t.SetValue(t)
+	return t
 }
 
 type InnerObjectType struct {

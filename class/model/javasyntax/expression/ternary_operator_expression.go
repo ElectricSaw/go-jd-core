@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -25,7 +24,6 @@ func NewTernaryOperatorExpressionWithAll(lineNumber int, typ intmod.IType, condi
 
 type TernaryOperatorExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.ITernaryOperatorExpression]
 
 	condition       intmod.IExpression
 	trueExpression  intmod.IExpression

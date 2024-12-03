@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -30,7 +29,6 @@ func NewObjectTypeReferenceExpressionWithAll(lineNumber int, typ intmod.IObjectT
 
 type ObjectTypeReferenceExpression struct {
 	AbstractExpression
-	util.DefaultBase[intmod.IObjectTypeReferenceExpression]
 
 	lineNumber int
 	typ        intmod.IObjectType

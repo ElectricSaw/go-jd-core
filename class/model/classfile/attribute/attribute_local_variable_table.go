@@ -1,15 +1,19 @@
 package attribute
 
-func NewAttributeLocalVariableTable(localVariableTable []LocalVariable) *AttributeLocalVariableTable {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeLocalVariableTable(localVariableTable []intcls.ILocalVariable) intcls.IAttributeLocalVariableTable {
 	return &AttributeLocalVariableTable{localVariableTable}
 }
 
 type AttributeLocalVariableTable struct {
-	localVariableTable []LocalVariable
+	localVariableTable []intcls.ILocalVariable
 }
 
-func (a AttributeLocalVariableTable) LocalVariableTable() []LocalVariable {
+func (a AttributeLocalVariableTable) LocalVariableTable() []intcls.ILocalVariable {
 	return a.localVariableTable
 }
 
-func (a AttributeLocalVariableTable) attributeIgnoreFunc() {}
+func (a AttributeLocalVariableTable) IsAttribute() bool {
+	return true
+}

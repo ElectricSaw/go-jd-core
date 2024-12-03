@@ -1,20 +1,22 @@
 package constant
 
-func NewConstantMemberRef(classIndex int, nameAndTypeIndex int) *ConstantMemberRef {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantMemberRef(classIndex int, nameAndTypeIndex int) intcls.IConstantMemberRef {
 	return &ConstantMemberRef{
-		tag:              ConstTagMemberRef,
+		tag:              intcls.ConstTagMemberRef,
 		classIndex:       classIndex,
 		nameAndTypeIndex: nameAndTypeIndex,
 	}
 }
 
 type ConstantMemberRef struct {
-	tag              TAG
+	tag              intcls.TAG
 	classIndex       int
 	nameAndTypeIndex int
 }
 
-func (c ConstantMemberRef) Tag() TAG {
+func (c ConstantMemberRef) Tag() intcls.TAG {
 	return c.tag
 }
 

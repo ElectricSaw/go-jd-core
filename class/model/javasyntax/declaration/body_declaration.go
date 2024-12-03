@@ -15,7 +15,7 @@ func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMembe
 }
 
 type BodyDeclaration struct {
-	util.DefaultBase[intmod.IDeclaration]
+	util.DefaultBase[intmod.IMemberDeclaration]
 
 	internalTypeName   string
 	memberDeclarations intmod.IMemberDeclaration

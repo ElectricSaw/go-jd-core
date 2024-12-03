@@ -3,9 +3,10 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
+
+var EmptyString = NewStringConstantExpression("")
 
 func NewStringConstantExpression(str string) intmod.IStringConstantExpression {
 	return NewStringConstantExpressionWithAll(0, str)
@@ -22,7 +23,6 @@ func NewStringConstantExpressionWithAll(lineNumber int, str string) intmod.IStri
 
 type StringConstantExpression struct {
 	AbstractLineNumberExpression
-	util.DefaultBase[intmod.IStringConstantExpression]
 
 	str string
 }

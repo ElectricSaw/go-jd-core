@@ -11,7 +11,7 @@ func NewFormalParameters() intmod.IFormalParameters {
 
 func NewFormalParametersWithCapacity(capacity int) intmod.IFormalParameters {
 	return &FormalParameters{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.IFormalParameter](capacity),
+		DefaultList: *util.NewDefaultListWithCapacity[intmod.IFormalParameter](capacity).(*util.DefaultList[intmod.IFormalParameter]),
 	}
 }
 

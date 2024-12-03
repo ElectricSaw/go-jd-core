@@ -1,15 +1,19 @@
 package attribute
 
-func NewAttributeLineNumberTable(lineNumberTable []LineNumber) *AttributeLineNumberTable {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeLineNumberTable(lineNumberTable []intcls.ILineNumber) intcls.IAttributeLineNumberTable {
 	return &AttributeLineNumberTable{lineNumberTable}
 }
 
 type AttributeLineNumberTable struct {
-	lineNumberTable []LineNumber
+	lineNumberTable []intcls.ILineNumber
 }
 
-func (a AttributeLineNumberTable) LineNumberTable() []LineNumber {
+func (a AttributeLineNumberTable) LineNumberTable() []intcls.ILineNumber {
 	return a.lineNumberTable
 }
 
-func (a AttributeLineNumberTable) attributeIgnoreFunc() {}
+func (a AttributeLineNumberTable) IsAttribute() bool {
+	return true
+}

@@ -3,7 +3,6 @@ package expression
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -23,7 +22,6 @@ func NewTypeReferenceDotClassExpressionWithAll(lineNumber int, typeDotClass intm
 
 type TypeReferenceDotClassExpression struct {
 	AbstractExpression
-	util.DefaultBase[intmod.ITypeReferenceDotClassExpression]
 
 	lineNumber   int
 	typeDotClass intmod.IType

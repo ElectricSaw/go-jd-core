@@ -23,7 +23,7 @@ func NewFieldDeclarationWithAll(annotationReferences intmod.IAnnotationReference
 
 type FieldDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IFieldDeclaration]
+	util.DefaultBase[intmod.IMemberDeclaration]
 
 	annotationReferences intmod.IAnnotationReference
 	flags                int

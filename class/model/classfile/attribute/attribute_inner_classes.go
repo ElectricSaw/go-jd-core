@@ -1,15 +1,19 @@
 package attribute
 
-func NewAttributeInnerClasses(classes []InnerClass) *AttributeInnerClasses {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeInnerClasses(classes []intcls.IInnerClass) intcls.IAttributeInnerClasses {
 	return &AttributeInnerClasses{classes}
 }
 
 type AttributeInnerClasses struct {
-	classes []InnerClass
+	classes []intcls.IInnerClass
 }
 
-func (a AttributeInnerClasses) InnerClasses() []InnerClass {
+func (a AttributeInnerClasses) InnerClasses() []intcls.IInnerClass {
 	return a.classes
 }
 
-func (a AttributeInnerClasses) attributeIgnoreFunc() {}
+func (a AttributeInnerClasses) IsAttribute() bool {
+	return true
+}

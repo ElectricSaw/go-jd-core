@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func NewMethodReferenceExpression(typ intmod.IType, expression intmod.IExpression,
@@ -25,7 +24,6 @@ func NewMethodReferenceExpressionWithAll(lineNumber int, typ intmod.IType, expre
 
 type MethodReferenceExpression struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.IMethodReferenceExpression]
 
 	expression       intmod.IExpression
 	internalTypeName string

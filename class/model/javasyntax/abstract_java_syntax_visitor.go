@@ -24,7 +24,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(decl intmod.IAnno
 
 func (v *AbstractJavaSyntaxVisitor) VisitArrayVariableInitializer(decl intmod.IArrayVariableInitializer) {
 	list := make([]intmod.IDeclaration, 0, decl.Size())
-	for _, element := range decl.Elements() {
+	for _, element := range decl.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListDeclaration(list)
@@ -84,7 +84,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarator(decl intmod.IFieldDecla
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarators(decl intmod.IFieldDeclarators) {
 	list := make([]intmod.IDeclaration, 0, decl.Size())
-	for _, element := range decl.Elements() {
+	for _, element := range decl.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListDeclaration(list)
@@ -98,7 +98,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitFormalParameter(decl intmod.IFormalPara
 
 func (v *AbstractJavaSyntaxVisitor) VisitFormalParameters(decl intmod.IFormalParameters) {
 	list := make([]intmod.IDeclaration, 0, decl.Size())
-	for _, element := range decl.Elements() {
+	for _, element := range decl.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListDeclaration(list)
@@ -124,7 +124,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarator(decl intmod.ILo
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarators(decl intmod.ILocalVariableDeclarators) {
 	list := make([]intmod.IDeclaration, 0, decl.Size())
-	for _, element := range decl.Elements() {
+	for _, element := range decl.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListDeclaration(list)
@@ -142,7 +142,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(decl intmod.IMethodDe
 
 func (v *AbstractJavaSyntaxVisitor) VisitMemberDeclarations(decl intmod.IMemberDeclarations) {
 	list := make([]intmod.IDeclaration, 0, decl.Size())
-	for _, element := range decl.Elements() {
+	for _, element := range decl.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListDeclaration(list)
@@ -158,7 +158,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitStaticInitializerDeclaration(decl intmo
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarations(decl intmod.ITypeDeclarations) {
 	list := make([]intmod.IDeclaration, 0, decl.Size())
-	for _, element := range decl.Elements() {
+	for _, element := range decl.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListDeclaration(list)
@@ -215,7 +215,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitEnumConstantReferenceExpression(expr in
 
 func (v *AbstractJavaSyntaxVisitor) VisitExpressions(expr intmod.IExpressions) {
 	list := make([]intmod.IExpression, 0, expr.Size())
-	for _, element := range expr.Elements() {
+	for _, element := range expr.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListExpression(list)
@@ -366,7 +366,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitAnnotationReference(ref intmod.IAnnotat
 
 func (v *AbstractJavaSyntaxVisitor) VisitAnnotationReferences(ref intmod.IAnnotationReferences) {
 	list := make([]intmod.IReference, 0, ref.Size())
-	for _, element := range ref.Elements() {
+	for _, element := range ref.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListReference(list)
@@ -378,7 +378,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitElementValueArrayInitializerElementValu
 
 func (v *AbstractJavaSyntaxVisitor) VisitElementValues(ref intmod.IElementValues) {
 	list := make([]intmod.IReference, 0, ref.Size())
-	for _, element := range ref.Elements() {
+	for _, element := range ref.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListReference(list)
@@ -390,7 +390,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitElementValuePair(ref intmod.IElementVal
 
 func (v *AbstractJavaSyntaxVisitor) VisitElementValuePairs(ref intmod.IElementValuePairs) {
 	list := make([]intmod.IReference, 0, ref.Size())
-	for _, element := range ref.Elements() {
+	for _, element := range ref.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListReference(list)
@@ -492,7 +492,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitReturnStatement(stat intmod.IReturnStat
 
 func (v *AbstractJavaSyntaxVisitor) VisitStatements(stat intmod.IStatements) {
 	list := make([]intmod.IStatement, 0, stat.Size())
-	for _, element := range stat.Elements() {
+	for _, element := range stat.ToSlice() {
 		list = append(list, element)
 	}
 	v.AcceptListStatement(list)
@@ -517,7 +517,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementLabelBlock(stat intmod.I
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementMultiLabelsBlock(stat intmod.IMultiLabelsBlock) {
-	v.SafeAcceptListStatement(stat.List())
+	v.SafeAcceptListStatement(stat.ToSlice())
 	stat.Statements().Accept(v)
 }
 
@@ -564,7 +564,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitWhileStatement(stat intmod.IWhileStatem
 // func (v *AbstractJavaSyntaxVisitor) VisitInnerObjectType(y *InnerObjectType) {}
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypes(types intmod.ITypes) {
-	for _, value := range types.Elements() {
+	for _, value := range types.ToSlice() {
 		value.AcceptTypeVisitor(v)
 	}
 }
@@ -582,7 +582,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeParameterWithTypeBounds(parameter i
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
-	for _, param := range parameters.Elements() {
+	for _, param := range parameters.ToSlice() {
 		param.AcceptTypeParameterVisitor(v)
 	}
 }

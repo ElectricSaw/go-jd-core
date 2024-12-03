@@ -2,12 +2,13 @@ package statement
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 var DefaultLabe1 = NewDefaultLabel()
 
-func NewSwitchStatement(condition intmod.IExpression, blocks []intmod.IBlock) intmod.ISwitchStatement {
+func NewSwitchStatement(condition intmod.IExpression, blocks util.IList[intmod.IBlock]) intmod.ISwitchStatement {
 	return &SwitchStatement{
 		condition: condition,
 		blocks:    blocks,
@@ -18,7 +19,7 @@ type SwitchStatement struct {
 	AbstractStatement
 
 	condition intmod.IExpression
-	blocks    []intmod.IBlock
+	blocks    util.IList[intmod.IBlock]
 }
 
 func (s *SwitchStatement) Condition() intmod.IExpression {
@@ -30,15 +31,15 @@ func (s *SwitchStatement) SetCondition(condition intmod.IExpression) {
 }
 
 func (s *SwitchStatement) List() []intmod.IStatement {
-	ret := make([]intmod.IStatement, 0, len(s.blocks))
-	for _, block := range s.blocks {
+	ret := make([]intmod.IStatement, 0, s.blocks.Size())
+	for _, block := range s.blocks.ToSlice() {
 		ret = append(ret, block.(intmod.IStatement))
 	}
 	return ret
 }
 
 func (s *SwitchStatement) Blocks() []intmod.IBlock {
-	return s.blocks
+	return s.blocks.ToSlice()
 }
 
 func (s *SwitchStatement) IsSwitchStatement() bool {

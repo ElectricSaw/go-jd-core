@@ -1,18 +1,20 @@
 package constant
 
-func NewConstantString(stringIndex int) *ConstantString {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantString(stringIndex int) intcls.IConstantString {
 	return &ConstantString{
-		tag:         ConstTagString,
+		tag:         intcls.ConstTagString,
 		stringIndex: stringIndex,
 	}
 }
 
 type ConstantString struct {
-	tag         TAG
+	tag         intcls.TAG
 	stringIndex int
 }
 
-func (c ConstantString) Tag() TAG {
+func (c ConstantString) Tag() intcls.TAG {
 	return c.tag
 }
 

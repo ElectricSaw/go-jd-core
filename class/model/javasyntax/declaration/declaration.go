@@ -7,7 +7,7 @@ import (
 )
 
 type AbstractMemberDeclaration struct {
-	util.DefaultBase[intmod.IDeclaration]
+	util.DefaultBase[intmod.IMemberDeclaration]
 }
 
 func (d *AbstractMemberDeclaration) IsClassDeclaration() bool {

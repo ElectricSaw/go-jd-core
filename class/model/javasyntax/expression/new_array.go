@@ -2,7 +2,6 @@ package expression
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
@@ -17,7 +16,6 @@ func NewNewArray(lineNumber int, typ intmod.IType, dimensionExpressionList intmo
 
 type NewArray struct {
 	AbstractLineNumberTypeExpression
-	util.DefaultBase[intmod.INewArray]
 
 	dimensionExpressionList intmod.IExpression
 }

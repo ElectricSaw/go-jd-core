@@ -1,18 +1,20 @@
 package constant
 
-func NewConstantMethodType(descriptorIndex int) *ConstantMethodType {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantMethodType(descriptorIndex int) intcls.IConstantMethodType {
 	return &ConstantMethodType{
-		tag:             ConstTagMethodType,
+		tag:             intcls.ConstTagMethodType,
 		descriptorIndex: descriptorIndex,
 	}
 }
 
 type ConstantMethodType struct {
-	tag             TAG
+	tag             intcls.TAG
 	descriptorIndex int
 }
 
-func (c ConstantMethodType) Tag() TAG {
+func (c ConstantMethodType) Tag() intcls.TAG {
 	return c.tag
 }
 

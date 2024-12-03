@@ -1,6 +1,7 @@
 package service
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
@@ -44,7 +45,7 @@ type IClassFileBodyDeclaration interface {
 	InnerTypeDeclaration(internalName string) IClassFileTypeDeclaration
 	RemoveInnerTypeDeclaration(internalName string) IClassFileTypeDeclaration
 	UpdateFirstLineNumber(members []IClassFileMemberDeclaration)
-	ClassFile() intmod.IClassFile
+	ClassFile() intcls.IClassFile
 	FirstLineNumber() int
 	OuterTypeFieldName() string
 	SetOuterTypeFieldName(outerTypeFieldName string)
@@ -70,8 +71,8 @@ type IClassFileConstructorDeclaration interface {
 	IClassFileConstructorOrMethodDeclaration
 	intmod.IConstructorDeclaration
 
-	ClassFile() intmod.IClassFile
-	Method() intmod.IMethod
+	ClassFile() intcls.IClassFile
+	Method() intcls.IMethod
 	ParameterTypes() intmod.IType
 	ReturnedType() intmod.IType
 	BodyDeclaration() IClassFileBodyDeclaration
@@ -84,8 +85,8 @@ type IClassFileConstructorOrMethodDeclaration interface {
 	IClassFileMemberDeclaration
 
 	Flags() int
-	ClassFile() intmod.IClassFile
-	Method() intmod.IMethod
+	ClassFile() intcls.IClassFile
+	Method() intcls.IMethod
 	TypeParameters() intmod.ITypeParameter
 	ParameterTypes() intmod.IType
 	ReturnedType() intmod.IType
@@ -162,8 +163,8 @@ type IClassFileMethodDeclaration interface {
 	IClassFileConstructorOrMethodDeclaration
 	intmod.IMethodDeclaration
 
-	ClassFile() intmod.IClassFile
-	Method() intmod.IMethod
+	ClassFile() intcls.IClassFile
+	Method() intcls.IMethod
 	ParameterTypes() intmod.IType
 	BodyDeclaration() IClassFileBodyDeclaration
 	Bindings() map[string]intmod.ITypeArgument
@@ -177,8 +178,8 @@ type IClassFileStaticInitializerDeclaration interface {
 	intmod.IStaticInitializerDeclaration
 
 	Flags() int
-	ClassFile() intmod.IClassFile
-	Method() intmod.IMethod
+	ClassFile() intcls.IClassFile
+	Method() intcls.IMethod
 	TypeParameters() intmod.ITypeParameter
 	ParameterTypes() intmod.IType
 	ReturnedType() intmod.IType

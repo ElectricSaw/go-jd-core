@@ -16,7 +16,7 @@ func NewInstanceInitializerDeclaration(description string, statements intmod.ISt
 
 type InstanceInitializerDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IInstanceInitializerDeclaration]
+	util.DefaultBase[intmod.IMemberDeclaration]
 
 	description string
 	statements  intmod.IStatement

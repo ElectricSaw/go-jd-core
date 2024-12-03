@@ -1,26 +1,50 @@
 package service
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
+
+type IByteCodeParser interface {
+	Parse(basicBlock IBasicBlock, statements intmod.IStatements, stack util.IStack[intmod.IExpression])
+}
+
+type ITypeParametersToTypeArgumentsBinder interface {
+	NewConstructorInvocationExpression(lineNumber int, objectType intmod.IObjectType, descriptor string,
+		methodTypes IMethodTypes, parameters intmod.IExpression) IClassFileConstructorInvocationExpression
+	NewSuperConstructorInvocationExpression(lineNumber int, objectType intmod.IObjectType, descriptor string,
+		methodTypes IMethodTypes, parameters intmod.IExpression) IClassFileSuperConstructorInvocationExpression
+	NewMethodInvocationExpression(lineNumber int, expression intmod.IExpression, objectType intmod.IObjectType, name, descriptor string,
+		methodTypes IMethodTypes, parameters intmod.IExpression) IClassFileMethodInvocationExpression
+	NewFieldReferenceExpression(lineNumber int, typ intmod.IType, expression intmod.IExpression,
+		objectType intmod.IObjectType, name, descriptor string) intmod.IFieldReferenceExpression
+	BindParameterTypesWithArgumentTypes(typ intmod.IType, expression intmod.IExpression)
+	UpdateNewExpression(ne IClassFileNewExpression, descriptor string, methodTypes IMethodTypes, parameters intmod.IExpression)
+}
 
 type ILocalVariableMaker interface {
 	LocalVariable(index, offset int) ILocalVariable
 	IsCompatible(lv ILocalVariable, valueType intmod.IType) bool
-	LocalVariableInAssignment(typeBounds map[string]intmod.IType, index, offset int, valueType intmod.IType) ILocalVariable
+	LocalVariableInAssignment(typeBounds map[string]intmod.IType,
+		index, offset int, valueType intmod.IType) ILocalVariable
 	LocalVariableInNullAssignment(index, offset int, valueType intmod.IType) ILocalVariable
-	LocalVariableInAssignmentWithLocalVariable(typeBounds map[string]intmod.IType, index, offset int, valueLocalVariable ILocalVariable) ILocalVariable
+	LocalVariableInAssignmentWithLocalVariable(typeBounds map[string]intmod.IType,
+		index, offset int, valueLocalVariable ILocalVariable) ILocalVariable
 	ExceptionLocalVariable(index, offset int, t intmod.IObjectType) ILocalVariable
 	RemoveLocalVariable(lv ILocalVariable)
 	ContainsName(name string) bool
 	Make(containsLineNumber bool, typeMaker ITypeMaker)
+	FormalParameters() intmod.IFormalParameter
+	PushFrame(statements intmod.IStatements)
+	PopFrame()
 	ChangeFrame(localVariable ILocalVariable)
 }
 
 type ITypeMaker interface {
-	ParseClassFileSignature(classFile intmod.IClassFile) ITypeTypes
-	ParseMethodSignature(classFile intmod.IClassFile, method intmod.IMethod) IMethodTypes
-	ParseFieldSignature(classFile intmod.IClassFile, field intmod.IField) intmod.IType
+	ParseClassFileSignature(classFile intcls.IClassFile) ITypeTypes
+	ParseMethodSignature(classFile intcls.IClassFile, method intcls.IMethod) IMethodTypes
+	ParseFieldSignature(classFile intcls.IClassFile, field intcls.IField) intmod.IType
 	MakeFromSignature(signature string) intmod.IType
 	MakeFromDescriptorOrInternalTypeName(descriptorOrInternalTypeName string) intmod.IObjectType
 	MakeFromDescriptor(descriptor string) intmod.IObjectType

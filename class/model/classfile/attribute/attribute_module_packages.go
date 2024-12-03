@@ -1,6 +1,8 @@
 package attribute
 
-func NewAttributeModulePackages(packageNames []string) *AttributeModulePackages {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewAttributeModulePackages(packageNames []string) intcls.IAttributeModulePackages {
 	return &AttributeModulePackages{packageNames: packageNames}
 }
 
@@ -12,4 +14,6 @@ func (a AttributeModulePackages) PackageNames() []string {
 	return a.packageNames
 }
 
-func (a AttributeModulePackages) attributeIgnoreFunc() {}
+func (a AttributeModulePackages) IsAttribute() bool {
+	return true
+}

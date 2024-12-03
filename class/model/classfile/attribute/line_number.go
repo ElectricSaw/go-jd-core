@@ -1,6 +1,8 @@
 package attribute
 
-func NewLineNumber(startPc int, lineNumber int) *LineNumber {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewLineNumber(startPc int, lineNumber int) intcls.ILineNumber {
 	return &LineNumber{startPc, lineNumber}
 }
 

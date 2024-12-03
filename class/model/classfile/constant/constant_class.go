@@ -1,18 +1,20 @@
 package constant
 
-func NewConstantClass(nameIndex int) *ConstantClass {
+import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+
+func NewConstantClass(nameIndex int) intcls.IConstantClass {
 	return &ConstantClass{
-		tag:       ConstTagClass,
+		tag:       intcls.ConstTagClass,
 		nameIndex: nameIndex,
 	}
 }
 
 type ConstantClass struct {
-	tag       TAG
+	tag       intcls.TAG
 	nameIndex int
 }
 
-func (c ConstantClass) Tag() TAG {
+func (c ConstantClass) Tag() intcls.TAG {
 	return c.tag
 }
 
