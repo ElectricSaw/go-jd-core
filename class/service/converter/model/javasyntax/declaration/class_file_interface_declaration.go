@@ -16,11 +16,13 @@ func NewClassFileInterfaceDeclaration(
 	interfaces intmod.IType,
 	bodyDeclaration intsrv.IClassFileBodyDeclaration,
 ) intsrv.IClassFileInterfaceDeclaration {
-	return &ClassFileInterfaceDeclaration{
+	d := &ClassFileInterfaceDeclaration{
 		InterfaceDeclaration: *declaration.NewInterfaceDeclarationWithAll(annotationReferences,
 			flags, internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*declaration.InterfaceDeclaration),
 		firstLineNumber: bodyDeclaration.FirstLineNumber(),
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ClassFileInterfaceDeclaration struct {

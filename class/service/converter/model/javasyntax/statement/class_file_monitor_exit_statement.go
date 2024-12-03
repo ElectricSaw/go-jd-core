@@ -7,8 +7,13 @@ import (
 	"fmt"
 )
 
-func NewClassFileMonitorExitStatement() intsrv.IClassFileMonitorExitStatement {
-	return &ClassFileMonitorExitStatement{}
+func NewClassFileMonitorExitStatement(monitor intmod.IExpression) intsrv.IClassFileMonitorExitStatement {
+	s := &ClassFileMonitorExitStatement{
+		CommentStatement: *statement.NewCommentStatement(fmt.Sprintf("/* monitor exit %s */", monitor)).(*statement.CommentStatement),
+		monitor:          monitor,
+	}
+	s.SetValue(s)
+	return s
 }
 
 type ClassFileMonitorExitStatement struct {

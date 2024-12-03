@@ -107,7 +107,7 @@ localVariableMaker := utils.NewLocalVariableMaker(v.typeMaker, comd, constructor
 if attributeCode == nil {
 localVariableMaker.Make(false, v.typeMaker);
 } else {
-statementMaker := new StatementMaker(typeMaker, localVariableMaker, comd);
+statementMaker := utils.NewStatementMaker(v.typeMaker, localVariableMaker, comd);
 containsLineNumber := attributeCode.Attribute("LineNumberTable") != nil;
 
 ControlFlowGraph cfg = ControlFlowGraphMaker.make(method);

@@ -3,14 +3,13 @@ package visitor
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
 type AbstractUpdateExpressionVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 }
 
-func (v *AbstractUpdateExpressionVisitor) UpdateExpression(expression intmod.IExpression) intmod.IExpression {
+func (v *AbstractUpdateExpressionVisitor) UpdateExpression(_ intmod.IExpression) intmod.IExpression {
 	return nil
 }
 
@@ -80,7 +79,7 @@ func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclarator(declaration intmo
 	v.SafeAcceptDeclaration(declaration.VariableInitializer())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitFormalParameter(declaration intmod.IFormalParameter) {
+func (v *AbstractUpdateExpressionVisitor) VisitFormalParameter(_ intmod.IFormalParameter) {
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitInterfaceDeclaration(declaration intmod.IInterfaceDeclaration) {
@@ -311,59 +310,59 @@ func (v *AbstractUpdateExpressionVisitor) VisitWhileStatement(statement intmod.I
 	v.SafeAcceptStatement(statement.Statements())
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitConstructorReferenceExpression(expression intmod.IConstructorReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitConstructorReferenceExpression(_ intmod.IConstructorReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitDoubleConstantExpression(expression intmod.IDoubleConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitDoubleConstantExpression(_ intmod.IDoubleConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitEnumConstantReferenceExpression(expression intmod.IEnumConstantReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitEnumConstantReferenceExpression(_ intmod.IEnumConstantReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitFloatConstantExpression(expression intmod.IFloatConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitFloatConstantExpression(_ intmod.IFloatConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitIntegerConstantExpression(_ intmod.IIntegerConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableReferenceExpression(expression intmod.ILocalVariableReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableReferenceExpression(_ intmod.ILocalVariableReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitLongConstantExpression(expression intmod.ILongConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitLongConstantExpression(_ intmod.ILongConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitNullExpression(expression intmod.INullExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitNullExpression(_ intmod.INullExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitTypeReferenceDotClassExpression(expression intmod.ITypeReferenceDotClassExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitTypeReferenceDotClassExpression(_ intmod.ITypeReferenceDotClassExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitObjectTypeReferenceExpression(expression intmod.IObjectTypeReferenceExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitObjectTypeReferenceExpression(_ intmod.IObjectTypeReferenceExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitStringConstantExpression(expression intmod.IStringConstantExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitStringConstantExpression(_ intmod.IStringConstantExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitSuperExpression(expression intmod.ISuperExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitSuperExpression(_ intmod.ISuperExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitThisExpression(expression intmod.IThisExpression) {
+func (v *AbstractUpdateExpressionVisitor) VisitThisExpression(_ intmod.IThisExpression) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitAnnotationReference(reference intmod.IAnnotationReference) {
+func (v *AbstractUpdateExpressionVisitor) VisitAnnotationReference(_ intmod.IAnnotationReference) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitElementValueArrayInitializerElementValue(reference intmod.IElementValueArrayInitializerElementValue) {
+func (v *AbstractUpdateExpressionVisitor) VisitElementValueArrayInitializerElementValue(_ intmod.IElementValueArrayInitializerElementValue) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitAnnotationElementValue(reference intmod.IAnnotationElementValue) {
+func (v *AbstractUpdateExpressionVisitor) VisitAnnotationElementValue(_ intmod.IAnnotationElementValue) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitObjectReference(reference intmod.IObjectReference) {
+func (v *AbstractUpdateExpressionVisitor) VisitObjectReference(_ intmod.IObjectReference) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitBreakStatement(statement intmod.IBreakStatement) {}
-func (v *AbstractUpdateExpressionVisitor) VisitByteCodeStatement(statement intmod.IByteCodeStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitBreakStatement(_ intmod.IBreakStatement) {}
+func (v *AbstractUpdateExpressionVisitor) VisitByteCodeStatement(_ intmod.IByteCodeStatement) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitContinueStatement(statement intmod.IContinueStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitContinueStatement(_ intmod.IContinueStatement) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitReturnStatement(statement intmod.IReturnStatement) {
+func (v *AbstractUpdateExpressionVisitor) VisitReturnStatement(_ intmod.IReturnStatement) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatementDefaultLabel(statement intmod.IDefaultLabel) {
+func (v *AbstractUpdateExpressionVisitor) VisitSwitchStatementDefaultLabel(_ intmod.IDefaultLabel) {
 }
 
-func (v *AbstractUpdateExpressionVisitor) VisitInnerObjectReference(reference intmod.IInnerObjectReference) {
+func (v *AbstractUpdateExpressionVisitor) VisitInnerObjectReference(_ intmod.IInnerObjectReference) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitTypeArguments(typ *_type.TypeArguments) {}
-func (v *AbstractUpdateExpressionVisitor) VisitWildcardExtendsTypeArgument(typ *_type.WildcardExtendsTypeArgument) {
+func (v *AbstractUpdateExpressionVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {}
+func (v *AbstractUpdateExpressionVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitObjectType(typ *_type.ObjectType)           {}
-func (v *AbstractUpdateExpressionVisitor) VisitInnerObjectType(typ *_type.InnerObjectType) {}
-func (v *AbstractUpdateExpressionVisitor) VisitWildcardSuperTypeArgument(typ *_type.WildcardSuperTypeArgument) {
+func (v *AbstractUpdateExpressionVisitor) VisitObjectType(_ intmod.IObjectType)           {}
+func (v *AbstractUpdateExpressionVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType) {}
+func (v *AbstractUpdateExpressionVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
 }
-func (v *AbstractUpdateExpressionVisitor) VisitTypes(list *_type.Types) {}
-func (v *AbstractUpdateExpressionVisitor) VisitTypeParameterWithTypeBounds(typ *_type.TypeParameterWithTypeBounds) {
+func (v *AbstractUpdateExpressionVisitor) VisitTypes(_ intmod.ITypes) {}
+func (v *AbstractUpdateExpressionVisitor) VisitTypeParameterWithTypeBounds(_ intmod.ITypeParameterWithTypeBounds) {
 }

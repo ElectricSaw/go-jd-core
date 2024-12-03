@@ -1,6 +1,7 @@
 package declaration
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
@@ -8,8 +9,8 @@ import (
 
 func NewClassFileConstructorDeclaration(
 	bodyDeclaration intsrv.IClassFileBodyDeclaration,
-	classFile intmod.IClassFile,
-	method intmod.IMethod,
+	classFile intcls.IClassFile,
+	method intcls.IMethod,
 	annotationReferences intmod.IAnnotationReference,
 	typeParameters intmod.ITypeParameter,
 	parameterTypes intmod.IType,
@@ -17,7 +18,7 @@ func NewClassFileConstructorDeclaration(
 	bindings map[string]intmod.ITypeArgument,
 	typeBounds map[string]intmod.IType,
 	firstLineNumber int) intsrv.IClassFileConstructorDeclaration {
-	return &ClassFileConstructorDeclaration{
+	d := &ClassFileConstructorDeclaration{
 		ConstructorDeclaration: *declaration.NewConstructorDeclarationWithAll(
 			annotationReferences, method.AccessFlags(), typeParameters,
 			nil, exceptionTypes, method.Descriptor(), nil).(*declaration.ConstructorDeclaration),
@@ -29,25 +30,27 @@ func NewClassFileConstructorDeclaration(
 		typeBounds:      typeBounds,
 		firstLineNumber: firstLineNumber,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ClassFileConstructorDeclaration struct {
 	declaration.ConstructorDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	classFile       intmod.IClassFile
-	method          intmod.IMethod
+	classFile       intcls.IClassFile
+	method          intcls.IMethod
 	parameterTypes  intmod.IType
 	bindings        map[string]intmod.ITypeArgument
 	typeBounds      map[string]intmod.IType
 	firstLineNumber int
 }
 
-func (d *ClassFileConstructorDeclaration) ClassFile() intmod.IClassFile {
+func (d *ClassFileConstructorDeclaration) ClassFile() intcls.IClassFile {
 	return d.classFile
 }
 
-func (d *ClassFileConstructorDeclaration) Method() intmod.IMethod {
+func (d *ClassFileConstructorDeclaration) Method() intcls.IMethod {
 	return d.method
 }
 

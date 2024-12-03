@@ -1,45 +1,189 @@
 package utils
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/localvariable"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
-func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker, comd intsrv.IClassFileConstructorOrMethodDeclaration, constructor bool) *LocalVariableMaker {
+func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker, comd intsrv.IClassFileConstructorOrMethodDeclaration, constructor bool) intsrv.ILocalVariableMaker {
+	classFile := comd.ClassFile()
+	method := comd.Method()
+	parameterTypes := comd.ParameterTypes()
+
 	m := &LocalVariableMaker{
-		typeMaker: typeMaker,
+		localVariableSet:           localvariable.NewLocalVariableSet(),
+		names:                      util.NewSet[string](),
+		blackListNames:             util.NewSet[string](),
+		currentFrame:               localvariable.NewRootFrame(),
+		typeMaker:                  typeMaker,
+		typeBounds:                 comd.TypeBounds(),
+		createParameterVisitor:     visitor.NewCreateParameterVisitor(typeMaker),
+		createLocalVariableVisitor: visitor.NewCreateLocalVariableVisitor(typeMaker),
 	}
+
+	m.populateBlackListNamesVisitor = visitor.NewPopulateBlackListNamesVisitor(m.blackListNames)
+	m.searchInTypeArgumentVisitor = visitor.NewSearchInTypeArgumentVisitor()
+
+	if classFile.Fields() != nil {
+		for _, field := range classFile.Fields() {
+			descriptor := field.Descriptor()
+			if descriptor[len(descriptor)-1] == ';' {
+				m.typeMaker.MakeFromDescriptor(descriptor).AcceptTypeArgumentVisitor(m.populateBlackListNamesVisitor)
+			}
+		}
+	}
+
+	m.typeMaker.MakeFromInternalTypeName(classFile.InternalTypeName()).AcceptTypeArgumentVisitor(m.populateBlackListNamesVisitor)
+
+	if classFile.SuperTypeName() != "" {
+		m.typeMaker.MakeFromInternalTypeName(classFile.SuperTypeName()).AcceptTypeArgumentVisitor(m.populateBlackListNamesVisitor)
+	}
+
+	if classFile.InterfaceTypeNames() != nil {
+		for _, name := range classFile.InterfaceTypeNames() {
+			m.typeMaker.MakeFromInternalTypeName(name).AcceptTypeArgumentVisitor(m.populateBlackListNamesVisitor)
+		}
+	}
+
+	if parameterTypes != nil {
+		if parameterTypes.IsList() {
+			for _, t := range parameterTypes.ToSlice() {
+				t.AcceptTypeArgumentVisitor(m.populateBlackListNamesVisitor)
+			}
+		} else {
+			parameterTypes.First().AcceptTypeArgumentVisitor(m.populateBlackListNamesVisitor)
+		}
+	}
+
+	m.initLocalVariablesFromAttributes(method)
+
+	firstVariableIndex := 0
+
+	if method.AccessFlags()&intmod.FlagStatic == 0 {
+		if m.localVariableSet.Root(0) == nil {
+			m.localVariableSet.Add(0, localvariable.NewObjectLocalVariable(
+				m.typeMaker, 0, 0, m.typeMaker.MakeFromInternalTypeName(
+					classFile.InternalTypeName()), "this"))
+		}
+		firstVariableIndex = 1
+	}
+
+	if constructor {
+		if classFile.IsEnum() {
+			if m.localVariableSet.Root(1) == nil {
+				m.localVariableSet.Add(1, localvariable.NewObjectLocalVariable(m.typeMaker, 1, 0,
+					_type.OtTypeString, "this$enum$name"))
+			}
+			if m.localVariableSet.Root(2) == nil {
+				m.localVariableSet.Add(2, localvariable.NewPrimitiveLocalVariable(2, 0,
+					_type.PtTypeInt, "this$enum$index"))
+			}
+		} else if classFile.OuterClassFile() != nil && !classFile.IsStatic() {
+			if m.localVariableSet.Root(1) == nil {
+				m.localVariableSet.Add(1, localvariable.NewObjectLocalVariable(m.typeMaker, 1, 0,
+					m.typeMaker.MakeFromInternalTypeName(classFile.InternalTypeName()), "this$0"))
+			}
+		}
+	}
+
+	if parameterTypes != nil {
+		lastParameterIndex := parameterTypes.Size() - 1
+		varargs := method.AccessFlags()&intmod.FlagVarArgs != 0
+
+		m.initLocalVariablesFromParameterTypes(classFile, parameterTypes, varargs, firstVariableIndex, lastParameterIndex)
+
+		rvpa := method.Attribute("RuntimeVisibleParameterAnnotations").(intcls.IAttributeParameterAnnotations)
+		ripa := method.Attribute("RuntimeInvisibleParameterAnnotations").(intcls.IAttributeParameterAnnotations)
+
+		if rvpa == nil && ripa == nil {
+			variableIndex := firstVariableIndex
+			for parameterIndex := 0; parameterIndex <= lastParameterIndex; parameterIndex++ {
+				lv := m.localVariableSet.Root(variableIndex)
+				m.formalParameters.Add(declaration.NewClassFileFormalParameter2(lv,
+					varargs && parameterIndex == lastParameterIndex))
+
+				if _type.PtTypeLong == lv.Type() || _type.PtTypeDouble == lv.Type() {
+					variableIndex++
+				}
+
+				variableIndex++
+			}
+		} else {
+			var visiblesArray []intcls.IAnnotations = nil
+			var invisiblesArray []intcls.IAnnotations = nil
+			annotationConverter := NewAnnotationConverter(m.typeMaker)
+
+			if rvpa != nil {
+				visiblesArray = rvpa.ParameterAnnotations()
+			}
+			if ripa != nil {
+				invisiblesArray = ripa.ParameterAnnotations()
+			}
+
+			variableIndex := firstVariableIndex
+			for parameterIndex := 0; parameterIndex <= lastParameterIndex; parameterIndex++ {
+				lv := m.localVariableSet.Root(variableIndex)
+
+				var visibles intcls.IAnnotations
+				var invisibles intcls.IAnnotations
+
+				if visiblesArray == nil || len(visiblesArray) <= parameterIndex {
+					visibles = nil
+				} else {
+					visibles = visiblesArray[parameterIndex]
+				}
+
+				if invisiblesArray == nil || len(invisiblesArray) <= parameterIndex {
+					invisibles = nil
+				} else {
+					invisibles = invisiblesArray[parameterIndex]
+				}
+				annotationReferences := annotationConverter.ConvertWithAnnotations2(visibles, invisibles)
+
+				m.formalParameters.Add(declaration.NewClassFileFormalParameter3(annotationReferences, lv, varargs && (parameterIndex == lastParameterIndex)))
+
+				if _type.PtTypeLong == lv.Type() || _type.PtTypeDouble == lv.Type() {
+					variableIndex++
+				}
+
+				variableIndex++
+			}
+		}
+	}
+
+	m.localVariableCache = m.localVariableSet.Initialize(m.currentFrame)
 
 	return m
 }
 
 type LocalVariableMaker struct {
 	localVariableSet              intsrv.ILocalVariableSet
-	names                         []string
-	blackListNames                []string
+	names                         util.ISet[string]
+	blackListNames                util.ISet[string]
 	currentFrame                  intsrv.IRootFrame
 	localVariableCache            []intsrv.ILocalVariable
 	typeMaker                     intsrv.ITypeMaker
 	typeBounds                    map[string]intmod.IType
-	formalParameters              intmod.IFormalParameter
+	formalParameters              intmod.IFormalParameters
 	populateBlackListNamesVisitor *visitor.PopulateBlackListNamesVisitor
 	searchInTypeArgumentVisitor   *visitor.SearchInTypeArgumentVisitor
 	createParameterVisitor        *visitor.CreateParameterVisitor
 	createLocalVariableVisitor    *visitor.CreateLocalVariableVisitor
 }
 
-func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intmod.IMethod) {
-	code := method.Attribute("Code").(*attribute.AttributeCode)
+func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intcls.IMethod) {
+	code := method.Attribute("Code").(intcls.IAttributeCode)
 
 	// Init local variables from attributes
 	if code != nil {
-		localVariableTable := code.Attribute("LocalVariableTable").(*attribute.AttributeLocalVariableTable)
+		localVariableTable := code.Attribute("LocalVariableTable").(intcls.IAttributeLocalVariableTable)
 
 		if localVariableTable != nil {
 			staticFlag := (method.AccessFlags() & intmod.FlagStatic) != 0
@@ -70,11 +214,11 @@ func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intmod.IMet
 				}
 
 				m.localVariableSet.Add(index, lv)
-				m.names = append(m.names, name)
+				m.names.Add(name)
 			}
 		}
 
-		localVariableTypeTable := code.Attribute("LocalVariableTypeTable").(*attribute.AttributeLocalVariableTypeTable)
+		localVariableTypeTable := code.Attribute("LocalVariableTypeTable").(intcls.IAttributeLocalVariableTypeTable)
 
 		if localVariableTypeTable != nil {
 			updateTypeVisitor := visitor.NewUpdateTypeVisitor(m.localVariableSet)
@@ -87,7 +231,7 @@ func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intmod.IMet
 	}
 }
 
-func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intmod.IClassFile,
+func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intcls.IClassFile,
 	parameterTypes intmod.IType, varargs bool, firstVariableIndex, lastParameterIndex int) {
 	typeMap := make(map[intmod.IType]bool)
 	t := util.NewDefaultListWithSlice[intmod.IType](parameterTypes.ToSlice())
@@ -146,7 +290,7 @@ func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intm
 
 			name := sb
 
-			for _, value := range m.names {
+			for _, value := range m.names.ToSlice() {
 				if value == name {
 					sb = sb[:length]
 					sb += fmt.Sprintf("%d", counter)
@@ -155,7 +299,7 @@ func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intm
 				}
 			}
 
-			m.names = append(m.names, name)
+			m.names.Add(name)
 			m.createParameterVisitor.Init(variableIndex, name)
 			typ.AcceptTypeArgumentVisitor(m.createParameterVisitor)
 			alv := m.createParameterVisitor.LocalVariable().(intsrv.ILocalVariable)
@@ -377,7 +521,7 @@ func (m *LocalVariableMaker) store(lv intsrv.ILocalVariable) {
 }
 
 func (m *LocalVariableMaker) ContainsName(name string) bool {
-	for _, item := range m.names {
+	for _, item := range m.names.ToSlice() {
 		if item == name {
 			return true
 		}
@@ -388,7 +532,7 @@ func (m *LocalVariableMaker) ContainsName(name string) bool {
 
 func (m *LocalVariableMaker) Make(containsLineNumber bool, typeMaker intsrv.ITypeMaker) {
 	m.currentFrame.UpdateLocalVariableInForStatements(typeMaker)
-	m.currentFrame.CreateNames(m.blackListNames)
+	m.currentFrame.CreateNames(m.blackListNames.ToSlice())
 	m.currentFrame.CreateDeclarations(containsLineNumber)
 }
 

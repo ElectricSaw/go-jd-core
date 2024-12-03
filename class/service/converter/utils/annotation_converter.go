@@ -1,10 +1,9 @@
 package utils
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/reference"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
@@ -21,7 +20,7 @@ type AnnotationConverter struct {
 	ElementValue intmod.IElementValue
 }
 
-func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attribute.Annotations) intmod.IAnnotationReference {
+func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles intcls.IAnnotations) intmod.IAnnotationReference {
 	if visibles == nil {
 		if invisibles == nil {
 			return nil
@@ -47,7 +46,7 @@ func (c *AnnotationConverter) ConvertWithAnnotations2(visibles, invisibles *attr
 	}
 }
 
-func (c *AnnotationConverter) ConvertWithAnnotations(annotations *attribute.Annotations) intmod.IAnnotationReference {
+func (c *AnnotationConverter) ConvertWithAnnotations(annotations intcls.IAnnotations) intmod.IAnnotationReference {
 	as := annotations.Annotations()
 
 	if len(as) == 1 {
@@ -62,7 +61,7 @@ func (c *AnnotationConverter) ConvertWithAnnotations(annotations *attribute.Anno
 	}
 }
 
-func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotation) intmod.IAnnotationReference {
+func (c *AnnotationConverter) ConvertWithAnnotation(annotation intcls.IAnnotation) intmod.IAnnotationReference {
 	descriptor := annotation.Descriptor()
 	ot := c.TypeMaker.MakeFromDescriptor(descriptor)
 	elementValuePairs := annotation.ElementValuePairs()
@@ -71,8 +70,8 @@ func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotat
 		return reference.NewAnnotationReference(ot)
 	} else if len(elementValuePairs) == 1 {
 		elementValuePair := elementValuePairs[0]
-		elementName := elementValuePair.ElementName
-		elementValue := elementValuePair.ElementValue
+		elementName := elementValuePair.Name()
+		elementValue := elementValuePair.Value()
 
 		if elementName == "name" {
 			return reference.NewAnnotationReferenceWithEv(ot, c.ConvertWithElementValue(elementValue))
@@ -83,8 +82,8 @@ func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotat
 		list := reference.NewElementValuePairs()
 
 		for _, elementValuePair := range elementValuePairs {
-			elementName := elementValuePair.ElementName
-			elementValue := elementValuePair.ElementValue
+			elementName := elementValuePair.Name()
+			elementValue := elementValuePair.Value()
 			list.Add(reference.NewElementValuePair(elementName, c.ConvertWithElementValue(elementValue)))
 		}
 
@@ -92,65 +91,65 @@ func (c *AnnotationConverter) ConvertWithAnnotation(annotation attribute.Annotat
 	}
 }
 
-func (c *AnnotationConverter) ConvertWithElementValue(ev attribute.ElementValue) intmod.IElementValue {
+func (c *AnnotationConverter) ConvertWithElementValue(ev intcls.IElementValue) intmod.IElementValue {
 	ev.Accept(c)
 	return c.ElementValue
 }
 
-func (c *AnnotationConverter) VisitPrimitiveType(elementValue *attribute.ElementValuePrimitiveType) {
+func (c *AnnotationConverter) VisitPrimitiveType(elementValue intcls.IElementValuePrimitiveType) {
 	switch elementValue.Type() {
 	case 'B':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewIntegerConstantExpression(_type.PtTypeByte,
-				elementValue.ConstValue().(constant.ConstantInteger).Value()))
+				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'D':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewDoubleConstantExpression(
-				elementValue.ConstValue().(constant.ConstantDouble).Value()))
+				elementValue.Value().(intcls.IConstantDouble).Value()))
 	case 'F':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewFloatConstantExpression(
-				elementValue.ConstValue().(constant.ConstantFloat).Value()))
+				elementValue.Value().(intcls.IConstantFloat).Value()))
 	case 'I':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewIntegerConstantExpression(_type.PtTypeInt,
-				elementValue.ConstValue().(constant.ConstantInteger).Value()))
+				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'J':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewLongConstantExpression(
-				elementValue.ConstValue().(constant.ConstantLong).Value()))
+				elementValue.Value().(intcls.IConstantLong).Value()))
 	case 'S':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewIntegerConstantExpression(_type.PtTypeShort,
-				elementValue.ConstValue().(constant.ConstantInteger).Value()))
+				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'Z':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewIntegerConstantExpression(_type.PtTypeBoolean,
-				elementValue.ConstValue().(constant.ConstantInteger).Value()))
+				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'C':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewIntegerConstantExpression(_type.PtTypeChar,
-				elementValue.ConstValue().(constant.ConstantInteger).Value()))
+				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 's':
 		c.ElementValue = reference.NewExpressionElementValue(
 			expression.NewStringConstantExpression(
-				elementValue.ConstValue().(constant.ConstantUtf8).Value()))
+				elementValue.Value().(intcls.IConstantUtf8).Value()))
 	}
 }
 
-func (c *AnnotationConverter) VisitClassInfo(elementValue *attribute.ElementValueClassInfo) {
+func (c *AnnotationConverter) VisitClassInfo(elementValue intcls.IElementValueClassInfo) {
 	classInfo := elementValue.ClassInfo()
 	ot := c.TypeMaker.MakeFromDescriptor(classInfo)
 	c.ElementValue = reference.NewExpressionElementValue(expression.NewTypeReferenceDotClassExpression(ot))
 }
 
-func (c *AnnotationConverter) VisitAnnotationValue(elementValue *attribute.ElementValueAnnotationValue) {
+func (c *AnnotationConverter) VisitAnnotationValue(elementValue intcls.IElementValueAnnotationValue) {
 	annotationValue := elementValue.AnnotationValue()
 	annotationReference := c.ConvertWithAnnotation(annotationValue)
 	c.ElementValue = reference.NewAnnotationElementValue(annotationReference)
 }
 
-func (c *AnnotationConverter) VisitEnumConstValue(elementValue *attribute.ElementValueEnumConstValue) {
+func (c *AnnotationConverter) VisitEnumConstValue(elementValue intcls.IElementValueEnumConstValue) {
 	descriptor := elementValue.Descriptor()
 	ot := c.TypeMaker.MakeFromDescriptor(descriptor)
 	constName := elementValue.ConstName()
@@ -163,7 +162,7 @@ func (c *AnnotationConverter) VisitEnumConstValue(elementValue *attribute.Elemen
 	)
 }
 
-func (c *AnnotationConverter) VisitArrayValue(elementValue *attribute.ElementValueArrayValue) {
+func (c *AnnotationConverter) VisitArrayValue(elementValue intcls.IElementValueArrayValue) {
 	values := elementValue.Values()
 
 	if values == nil {

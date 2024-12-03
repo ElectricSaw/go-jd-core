@@ -16,6 +16,7 @@ type IListIterator[T comparable] interface {
 	Remove() error       // 마지막 반환된 요소 제거
 	Add(element T) error // 현재 위치에 요소 추가
 	Set(element T) error // 마지막 반환된 요소를 대체
+	Reverse()
 	ToSlice() []T
 }
 
@@ -102,6 +103,12 @@ func (it *ListIterator[T]) Add(element T) error {
 	it.cursor++
 	it.lastIndex = -1
 	return nil
+}
+
+func (it *ListIterator[T]) Reverse() {
+	for i, j := 0, len(it.data)-1; i < j; i, j = i+1, j-1 {
+		it.data[i], it.data[j] = it.data[j], it.data[i]
+	}
 }
 
 func (it *ListIterator[T]) ToSlice() []T {

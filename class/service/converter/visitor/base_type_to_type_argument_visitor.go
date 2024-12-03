@@ -5,8 +5,20 @@ import (
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
+func NewBaseTypeToTypeArgumentVisitor() *BaseTypeToTypeArgumentVisitor {
+	return &BaseTypeToTypeArgumentVisitor{}
+}
+
 type BaseTypeToTypeArgumentVisitor struct {
 	typeArgument intmod.ITypeArgument
+}
+
+func (v *BaseTypeToTypeArgumentVisitor) Init() {
+	v.typeArgument = nil
+}
+
+func (v *BaseTypeToTypeArgumentVisitor) TypeArgument() intmod.ITypeArgument {
+	return v.typeArgument
 }
 
 func (v *BaseTypeToTypeArgumentVisitor) VisitPrimitiveType(y intmod.IPrimitiveType) {

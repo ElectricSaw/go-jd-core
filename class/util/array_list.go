@@ -28,6 +28,7 @@ func NewArrayListWithData[T comparable](data []T) IList[T] {
 
 // IList 인터페이스 정의
 type IList[T comparable] interface {
+	IBase[T]
 	ICollection[T]
 
 	Get(index int) T
@@ -35,7 +36,6 @@ type IList[T comparable] interface {
 	AddAt(index int, element T) error
 	RemoveAt(index int) T
 	IndexOf(element T) int
-	ToList() IList[T]
 	ListIterator() IListIterator[T]
 
 	// First 첫 번째 요소 반환
@@ -47,6 +47,7 @@ type IList[T comparable] interface {
 	// SubList 마지막 요소 제거
 	SubList(start, end int) IList[T]
 	Sort(action func(i, j int) bool)
+	Reverse()
 }
 
 // ArrayList 구조체 정의
@@ -203,8 +204,19 @@ func (list *ArrayList[T]) RemoveLast() T {
 	return last
 }
 
-func (list *ArrayList[T]) ToList() IList[T] {
-	return list
+func (list *ArrayList[T]) ToList() *DefaultList[T] {
+	return NewDefaultListWithSlice[T](list.data).(*DefaultList[T])
+}
+
+func (list *ArrayList[T]) IsList() bool {
+	return true
+}
+
+// ForEach 각 요소에 대해 주어진 액션 수행
+func (list *ArrayList[T]) ForEach(action func(T)) {
+	for _, v := range list.data {
+		action(v)
+	}
 }
 
 // SubList 마지막 요소 제거
@@ -214,6 +226,12 @@ func (list *ArrayList[T]) SubList(start, end int) IList[T] {
 
 func (list *ArrayList[T]) Sort(action func(i, j int) bool) {
 	sort.SliceIsSorted(list.data, action)
+}
+
+func (list *ArrayList[T]) Reverse() {
+	for i, j := 0, len(list.data)-1; i < j; i, j = i+1, j-1 {
+		list.data[i], list.data[j] = list.data[j], list.data[i]
+	}
 }
 
 // ContainsAll 여러 요소가 포함되어 있는지 확인

@@ -1,9 +1,7 @@
 package utils
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	"fmt"
 )
 
@@ -139,8 +137,8 @@ var OpcodeNames = []string{
 	"<illegal opcode>", "impdep1", "impdep2",
 }
 
-func Write(linePrefix string, method intmod.IMethod) string {
-	attributeCode := method.Attribute("Code").(*attribute.AttributeCode)
+func Write(linePrefix string, method intcls.IMethod) string {
+	attributeCode := method.Attribute("Code").(intcls.IAttributeCode)
 
 	if attributeCode == nil {
 		return ""
@@ -157,8 +155,8 @@ func Write(linePrefix string, method intmod.IMethod) string {
 	}
 }
 
-func Write2(linePrefix string, method intmod.IMethod, fromOffset, toOffset int) string {
-	attributeCode := method.Attribute("Code").(*attribute.AttributeCode)
+func Write2(linePrefix string, method intcls.IMethod, fromOffset, toOffset int) string {
+	attributeCode := method.Attribute("Code").(intcls.IAttributeCode)
 
 	if attributeCode == nil {
 		return ""
@@ -173,7 +171,7 @@ func Write2(linePrefix string, method intmod.IMethod, fromOffset, toOffset int) 
 	}
 }
 
-func writeByteCode(linePrefix string, sb *string, constants intmod.IConstantPool, attributeCode *attribute.AttributeCode) {
+func writeByteCode(linePrefix string, sb *string, constants intcls.IConstantPool, attributeCode intcls.IAttributeCode) {
 	code := attributeCode.Code()
 	length := len(code)
 
@@ -181,7 +179,7 @@ func writeByteCode(linePrefix string, sb *string, constants intmod.IConstantPool
 	writeByteCode2(linePrefix, sb, constants, code, 0, length)
 }
 
-func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPool, code []byte, fromOffset, toOffset int) {
+func writeByteCode2(linePrefix string, sb *string, constants intcls.IConstantPool, code []byte, fromOffset, toOffset int) {
 	var deltaOffset int
 	for offset := fromOffset; offset < toOffset; offset++ {
 		opcode := int(code[offset]) & 255
@@ -192,13 +190,13 @@ func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPoo
 			offset++
 			*sb += fmt.Sprintf(" #%d", int(code[offset])&255)
 		case 17: // SIPUSH
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			*sb += fmt.Sprintf(" #%d", deltaOffset)
 		case 18:
 			offset++
 			writeLDC(sb, constants, constants.Constant(int(code[offset])&255))
 		case 19, 20: // LDC_W, LDC2_W
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			writeLDC(sb, constants, constants.Constant(deltaOffset))
 		case 21, 22, 23, 24, 25, // ILOAD, LLOAD, FLOAD, DLOAD, ALOAD
 			54, 55, 56, 57, 58, // ISTORE, LSTORE, FSTORE, DSTORE, ASTORE
@@ -213,24 +211,24 @@ func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPoo
 		case 153, 154, 155, 156, 157, 158, // IFEQ, IFNE, IFLT, IFGE, IFGT, IFLE
 			159, 160, 161, 162, 163, 164, 165, 166, // IF_ICMPEQ, IF_ICMPNE, IF_ICMPLT, IF_ICMPGE, IF_ICMPGT, IF_ICMPLE, IF_ACMPEQ, IF_ACMPNE
 			167, 168: // GOTO, JSR
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			*sb += fmt.Sprintf(" -> %d", offset+deltaOffset)
 			break
 		case 170: // TABLESWITCH
 			// Skip padding
 			i := (offset + 4) & 0xFFFC
 			i--
-			deltaOffset, i = ReadInt32(code, i)
+			deltaOffset, i = PrefixReadInt32(code, i)
 			*sb += fmt.Sprintf(" default -> %d", offset+deltaOffset)
 
 			i--
-			deltaOffset, i = ReadInt32(code, i)
+			deltaOffset, i = PrefixReadInt32(code, i)
 			low := deltaOffset
-			deltaOffset, i = ReadInt32(code, i)
+			deltaOffset, i = PrefixReadInt32(code, i)
 			high := deltaOffset
 
 			for value := low; value <= high; value++ {
-				deltaOffset, i = ReadInt32(code, i)
+				deltaOffset, i = PrefixReadInt32(code, i)
 				*sb += fmt.Sprintf(", -> %d", offset+deltaOffset)
 			}
 
@@ -239,48 +237,48 @@ func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPoo
 			// Skip padding
 			i := (offset + 4) & 0xFFFC
 			i--
-			deltaOffset, i = ReadInt32(code, i)
+			deltaOffset, i = PrefixReadInt32(code, i)
 			*sb += fmt.Sprintf(" default -> %d", offset+deltaOffset)
 
 			var npairs int
-			npairs, i = ReadInt32(code, i)
+			npairs, i = PrefixReadInt32(code, i)
 
 			for k := 0; k < npairs; k++ {
 				i--
-				deltaOffset, i = ReadInt32(code, i)
+				deltaOffset, i = PrefixReadInt32(code, i)
 				*sb += fmt.Sprintf(", %d", deltaOffset)
 
 				i--
-				deltaOffset, i = ReadInt32(code, i)
+				deltaOffset, i = PrefixReadInt32(code, i)
 				*sb += fmt.Sprintf(" -> %d", offset+deltaOffset)
 			}
 
 			offset = (i - 1)
 		case 178, 179: // GETSTATIC, PUTSTATIC
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef := constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef := constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
 			typeName, _ := constants.ConstantTypeName(constantMemberRef.ClassIndex())
-			constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			name, _ := constants.ConstantUtf8(constantNameAndType.NameIndex())
 			descriptor, _ := constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			*sb += fmt.Sprintf(" %s.%s : %s", typeName, name, descriptor)
 		case 180, 181, 182, 183, 184: // GETFIELD, PUTFIELD, INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef := constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef := constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			name, _ := constants.ConstantUtf8(constantNameAndType.NameIndex())
 			descriptor, _ := constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			*sb += fmt.Sprintf(" %s : %s", name, descriptor)
 		case 185, 186: // INVOKEINTERFACE, INVOKEDYNAMIC
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef := constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef := constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			name, _ := constants.ConstantUtf8(constantNameAndType.NameIndex())
 			descriptor, _ := constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			*sb += fmt.Sprintf(" %s : %s", name, descriptor)
 			offset += 2 // Skip 2 bytes
 		case 187, 189, 192, 193: // NEW, ANEWARRAY, CHECKCAST, INSTANCEOF
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			typeName, _ := constants.ConstantTypeName(deltaOffset)
 			*sb += fmt.Sprintf(" %s", typeName)
 		case 188: // NEWARRAY
@@ -307,10 +305,10 @@ func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPoo
 			offset++
 			opcode = int(code[offset]) & 255
 			i := 0
-			i, offset = ReadInt16(code, offset)
+			i, offset = PrefixReadInt16(code, offset)
 
 			if opcode == 132 { // IINC
-				deltaOffset, offset = ReadInt16(code, offset)
+				deltaOffset, offset = PrefixReadInt16(code, offset)
 				*sb += fmt.Sprintf(" iinc #%d %d", i, deltaOffset)
 			} else {
 				switch opcode {
@@ -339,15 +337,15 @@ func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPoo
 				}
 			}
 		case 197: // MULTIANEWARRAY
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			typeName, _ := constants.ConstantTypeName(deltaOffset)
 			offset++
 			*sb += fmt.Sprintf("%s %d", typeName, code[offset])
 		case 198, 199: // IFNULL, IFNONNULL
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			*sb += fmt.Sprintf(" -> %d", offset+deltaOffset)
 		case 200, 201: // GOTO_W, JSR_W
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			*sb += fmt.Sprintf(" -> %d", offset+deltaOffset)
 		}
 
@@ -355,24 +353,24 @@ func writeByteCode2(linePrefix string, sb *string, constants intmod.IConstantPoo
 	}
 }
 
-func writeLDC(sb *string, constants intmod.IConstantPool, cont constant.IConstant) {
+func writeLDC(sb *string, constants intcls.IConstantPool, cont intcls.IConstant) {
 	switch cont.Tag() {
-	case constant.ConstTagInteger:
-		*sb += fmt.Sprintf(" %d", cont.(*constant.ConstantInteger).Value())
-	case constant.ConstTagFloat:
-		*sb += fmt.Sprintf(" %.2f", cont.(*constant.ConstantFloat).Value())
-	case constant.ConstTagClass:
-		typeNameIndex := cont.(*constant.ConstantClass).NameIndex()
-		*sb += fmt.Sprintf(" %s", constants.Constant(typeNameIndex).(*constant.ConstantUtf8).Value())
-	case constant.ConstTagLong:
-		*sb += fmt.Sprintf(" %d", cont.(*constant.ConstantLong).Value())
-	case constant.ConstTagDouble:
-		*sb += fmt.Sprintf(" %.2f", cont.(*constant.ConstantDouble).Value())
-	case constant.ConstTagString:
+	case intcls.ConstTagInteger:
+		*sb += fmt.Sprintf(" %d", cont.(intcls.IConstantInteger).Value())
+	case intcls.ConstTagFloat:
+		*sb += fmt.Sprintf(" %.2f", cont.(intcls.IConstantFloat).Value())
+	case intcls.ConstTagClass:
+		typeNameIndex := cont.(intcls.IConstantClass).NameIndex()
+		*sb += fmt.Sprintf(" %s", constants.Constant(typeNameIndex).(intcls.IConstantUtf8).Value())
+	case intcls.ConstTagLong:
+		*sb += fmt.Sprintf(" %d", cont.(intcls.IConstantLong).Value())
+	case intcls.ConstTagDouble:
+		*sb += fmt.Sprintf(" %.2f", cont.(intcls.IConstantDouble).Value())
+	case intcls.ConstTagString:
 		*sb += " '"
-		stringIndex := cont.(*constant.ConstantString).StringIndex()
+		stringIndex := cont.(intcls.IConstantString).StringIndex()
 		str, _ := constants.ConstantUtf8(stringIndex)
-		*sb += fmt.Sprintf(" %d", cont.(*constant.ConstantInteger).Value())
+		*sb += fmt.Sprintf(" %d", cont.(intcls.IConstantInteger).Value())
 		for _, c := range str {
 			switch c {
 			case '\b':
@@ -393,8 +391,8 @@ func writeLDC(sb *string, constants intmod.IConstantPool, cont constant.IConstan
 	}
 }
 
-func writeLineNumberTable(linePrefix string, sb *string, attributeCode *attribute.AttributeCode) {
-	lineNumberTable := attributeCode.Attribute("LineNumberTable").(*attribute.AttributeLineNumberTable)
+func writeLineNumberTable(linePrefix string, sb *string, attributeCode intcls.IAttributeCode) {
+	lineNumberTable := attributeCode.Attribute("LineNumberTable").(intcls.IAttributeLineNumberTable)
 
 	if lineNumberTable != nil {
 		*sb += fmt.Sprintf("%sLine number table:\n", linePrefix)
@@ -408,8 +406,8 @@ func writeLineNumberTable(linePrefix string, sb *string, attributeCode *attribut
 	}
 }
 
-func writeLocalVariableTable(linePrefix string, sb *string, attributeCode *attribute.AttributeCode) {
-	localVariableTable := attributeCode.Attribute("LocalVariableTable").(*attribute.AttributeLocalVariableTable)
+func writeLocalVariableTable(linePrefix string, sb *string, attributeCode intcls.IAttributeCode) {
+	localVariableTable := attributeCode.Attribute("LocalVariableTable").(intcls.IAttributeLocalVariableTable)
 
 	if localVariableTable != nil {
 		*sb += fmt.Sprintf("%sLocal variable table:\n", linePrefix)
@@ -425,7 +423,7 @@ func writeLocalVariableTable(linePrefix string, sb *string, attributeCode *attri
 		}
 	}
 
-	localVariableTypeTable := attributeCode.Attribute("LocalVariableTypeTable").(*attribute.AttributeLocalVariableTypeTable)
+	localVariableTypeTable := attributeCode.Attribute("LocalVariableTypeTable").(intcls.IAttributeLocalVariableTypeTable)
 
 	if localVariableTypeTable != nil {
 		*sb += fmt.Sprintf("%sLocal variable type table:\n", linePrefix)
@@ -442,7 +440,7 @@ func writeLocalVariableTable(linePrefix string, sb *string, attributeCode *attri
 	}
 }
 
-func writeExceptionTable(linePrefix string, sb *string, constants intmod.IConstantPool, attributeCode *attribute.AttributeCode) {
+func writeExceptionTable(linePrefix string, sb *string, constants intcls.IConstantPool, attributeCode intcls.IAttributeCode) {
 	codeExceptions := attributeCode.ExceptionTable()
 
 	if codeExceptions != nil {

@@ -247,21 +247,21 @@ func (f *Frame) CreateNames(parentNames []string) {
 	}
 
 	if len(types) != 0 {
-		visitor := NewGenerateLocalVariableNameVisitor(names, types)
+		visit0r := NewGenerateLocalVariableNameVisitor(names, types)
 
 		for i := 0; i < length; i++ {
 			lv := f.localVariableArray[i]
 			for lv != nil {
 				if lv.Name() == "" {
-					lv.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visitor)
-					lv.SetName(visitor.Name())
+					lv.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
+					lv.SetName(visit0r.Name())
 				}
 			}
 		}
 
 		if f.exceptionLocalVariable != nil {
-			f.exceptionLocalVariable.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visitor)
-			f.exceptionLocalVariable.SetName(visitor.Name())
+			f.exceptionLocalVariable.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
+			f.exceptionLocalVariable.SetName(visit0r.Name())
 		}
 	}
 
@@ -762,7 +762,7 @@ func (f *Frame) createStartBlockDeclarations() {
 					addIndex = f.AddIndex()
 				}
 
-				f.stat.AddAt(addIndex, statement.NewLocalVariableDeclarationStatement(
+				_ = f.stat.AddAt(addIndex, statement.NewLocalVariableDeclarationStatement(
 					lv.Type(), srvdecl.NewClassFileLocalVariableDeclarator(lv)))
 				lv.SetDeclared(true)
 			}
@@ -1012,6 +1012,7 @@ func (c *GenerateLocalVariableNameVisitor) VisitPrimitiveType(t intmod.IPrimitiv
 		c.sb += "s"
 	case intmod.FlagBoolean:
 		c.sb += "bool"
+	default:
 	}
 
 	c.generate(t)

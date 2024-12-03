@@ -8,10 +8,12 @@ import (
 )
 
 func NewClassFileNewExpression(lineNumber int, typ intmod.IObjectType) intsrv.IClassFileNewExpression {
-	return &ClassFileNewExpression{
+	e := &ClassFileNewExpression{
 		NewExpression: *expression.NewNewExpression(lineNumber, typ, "").(*expression.NewExpression),
 		bound:         false,
 	}
+	e.SetValue(e)
+	return e
 }
 
 func NewClassFileNewExpression2(lineNumber int, typ intmod.IObjectType, bodyDeclaration intmod.IBodyDeclaration) intsrv.IClassFileNewExpression {

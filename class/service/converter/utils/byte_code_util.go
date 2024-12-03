@@ -1,14 +1,12 @@
 package utils
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 )
 
 func SearchNextOpcode(basicBlock intsrv.IBasicBlock, maxOffset int) int {
-	code := basicBlock.ControlFlowGraph().Method().Attribute("Code").(attribute.AttributeCode).Code()
+	code := basicBlock.ControlFlowGraph().Method().Attribute("Code").(intcls.IAttributeCode).Code()
 	offset := basicBlock.FromOffset()
 	toOffset := basicBlock.ToOffset()
 
@@ -46,13 +44,13 @@ func SearchNextOpcode(basicBlock intsrv.IBasicBlock, maxOffset int) int {
 			159, 160, 161, 162, 163, 164, 165, 166, /* IF_ICMPEQ, IF_ICMPNE, IF_ICMPLT, IF_ICMPGE, IF_ICMPGT, IF_ICMPLE, IF_ACMPEQ, IF_ACMPNE */
 			167, /* GOTO */
 			198, 199 /* IFNULL, IFNONNULL */ :
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			if deltaOffset > 0 {
 				offset += deltaOffset - 2 - 1
 			}
 		case 200: /* GOTO_W */
 
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 
 			if deltaOffset > 0 {
 				offset += deltaOffset - 4 - 1
@@ -68,15 +66,15 @@ func SearchNextOpcode(basicBlock intsrv.IBasicBlock, maxOffset int) int {
 		case 170: /* TABLESWITCH */
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			low := deltaOffset
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			high := deltaOffset
 			offset += (4 * (high - low + 1)) - 1
 		case 171: /* LOOKUPSWITCH */
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			offset += (8 * deltaOffset) - 1
 		case 196: /* WIDE */
 			offset++
@@ -97,7 +95,7 @@ func SearchNextOpcode(basicBlock intsrv.IBasicBlock, maxOffset int) int {
 }
 
 func LastOpcode(basicBlock intsrv.IBasicBlock) int {
-	code := basicBlock.ControlFlowGraph().Method().Attribute("Code").(attribute.AttributeCode).Code()
+	code := basicBlock.ControlFlowGraph().Method().Attribute("Code").(intcls.IAttributeCode).Code()
 	offset := basicBlock.FromOffset()
 	toOffset := basicBlock.ToOffset()
 
@@ -138,12 +136,12 @@ func LastOpcode(basicBlock intsrv.IBasicBlock) int {
 			159, 160, 161, 162, 163, 164, 165, 166, /* IF_ICMPEQ, IF_ICMPNE, IF_ICMPLT, IF_ICMPGE, IF_ICMPGT, IF_ICMPLE, IF_ACMPEQ, IF_ACMPNE */
 			167, /* GOTO */
 			198, 199 /* IFNULL, IFNONNULL */ :
-			deltaOffset, offset = ReadInt16(code, offset)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
 			if deltaOffset > 0 {
 				offset += deltaOffset - 2 - 1
 			}
 		case 200: /* GOTO_W */
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 
 			if deltaOffset > 0 {
 				offset += deltaOffset - 4 - 1
@@ -161,9 +159,9 @@ func LastOpcode(basicBlock intsrv.IBasicBlock) int {
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
 
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			low := deltaOffset
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			high := deltaOffset
 
 			offset += (4 * (high - low + 1)) - 1
@@ -171,7 +169,7 @@ func LastOpcode(basicBlock intsrv.IBasicBlock) int {
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
 
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 
 			offset += (8 * deltaOffset) - 1
 		case 196: /* WIDE */
@@ -191,14 +189,14 @@ func LastOpcode(basicBlock intsrv.IBasicBlock) int {
 func EvalStackDepth(bb intsrv.IBasicBlock) int {
 	method := bb.ControlFlowGraph().Method()
 	constants := method.Constants()
-	attributeCode := method.Attribute("Code").(*attribute.AttributeCode)
+	attributeCode := method.Attribute("Code").(intcls.IAttributeCode)
 	code := attributeCode.Code()
 	return EvalStackDepth2(constants, code, bb)
 }
 
-func EvalStackDepth2(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock) int {
-	var constantMemberRef *constant.ConstantMemberRef
-	var constantNameAndType *constant.ConstantNameAndType
+func EvalStackDepth2(constants intcls.IConstantPool, code []byte, bb intsrv.IBasicBlock) int {
+	var constantMemberRef intcls.IConstantMemberRef
+	var constantNameAndType intcls.IConstantNameAndType
 	descriptor := ""
 	depth := 0
 	deltaOffset := 0
@@ -284,9 +282,9 @@ func EvalStackDepth2(constants intmod.IConstantPool, code []byte, bb intsrv.IBas
 			offset += 4                    /* Skip default offset */
 
 			offset--
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			low := deltaOffset
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			high := deltaOffset
 
 			offset += (4 * (high - low + 1)) - 1
@@ -295,23 +293,23 @@ func EvalStackDepth2(constants intmod.IConstantPool, code []byte, bb intsrv.IBas
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
 			offset--
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 
 			offset += (8 * deltaOffset) - 1
 			depth--
 		case 182, 183: /* INVOKEVIRTUAL, INVOKESPECIAL */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= 1 + countMethodParameters(descriptor)
 			if descriptor[len(descriptor)-1] != 'V' {
 				depth++
 			}
 		case 184: /* INVOKESTATIC */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= countMethodParameters(descriptor)
 			if descriptor[len(descriptor)-1] != 'V' {
@@ -319,9 +317,9 @@ func EvalStackDepth2(constants intmod.IConstantPool, code []byte, bb intsrv.IBas
 			}
 			break
 		case 185: /* INVOKEINTERFACE */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= 1 + countMethodParameters(descriptor)
 			offset += 2 /* Skip 'count' and one byte */
@@ -331,9 +329,9 @@ func EvalStackDepth2(constants intmod.IConstantPool, code []byte, bb intsrv.IBas
 			}
 			break
 		case 186: /* INVOKEDYNAMIC */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= countMethodParameters(descriptor)
 			offset += 2 /* Skip 2 bytes */
@@ -376,14 +374,14 @@ func EvalStackDepth2(constants intmod.IConstantPool, code []byte, bb intsrv.IBas
 func MinDepth(bb intsrv.IBasicBlock) int {
 	method := bb.ControlFlowGraph().Method()
 	constants := method.Constants()
-	attributeCode := method.Attribute("Code").(*attribute.AttributeCode)
+	attributeCode := method.Attribute("Code").(intcls.IAttributeCode)
 	code := attributeCode.Code()
 	return minDepth(constants, code, bb)
 }
 
-func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock) int {
-	var constantMemberRef *constant.ConstantMemberRef
-	var constantNameAndType *constant.ConstantNameAndType
+func minDepth(constants intcls.IConstantPool, code []byte, bb intsrv.IBasicBlock) int {
+	var constantMemberRef intcls.IConstantMemberRef
+	var constantNameAndType intcls.IConstantNameAndType
 	descriptor := ""
 	depth := 0
 	minimumDepth := 0
@@ -537,9 +535,9 @@ func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock
 			offset += 4                    /* Skip default offset */
 
 			offset--
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			low := deltaOffset
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 			high := deltaOffset
 
 			offset += (4 * (high - low + 1)) - 1
@@ -552,7 +550,7 @@ func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock
 			offset += 4                    /* Skip default offset */
 
 			offset--
-			deltaOffset, offset = ReadInt32(code, offset)
+			deltaOffset, offset = PrefixReadInt32(code, offset)
 
 			offset += (8 * deltaOffset) - 1
 			depth--
@@ -560,9 +558,9 @@ func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock
 				minimumDepth = depth
 			}
 		case 182, 183: /* INVOKEVIRTUAL, INVOKESPECIAL */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= 1 + countMethodParameters(descriptor)
 			if minimumDepth > depth {
@@ -573,9 +571,9 @@ func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock
 				depth++
 			}
 		case 184: /* INVOKESTATIC */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= countMethodParameters(descriptor)
 			if minimumDepth > depth {
@@ -586,9 +584,9 @@ func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock
 				depth++
 			}
 		case 185: /* INVOKEINTERFACE */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= 1 + countMethodParameters(descriptor)
 			if minimumDepth > depth {
@@ -600,9 +598,9 @@ func minDepth(constants intmod.IConstantPool, code []byte, bb intsrv.IBasicBlock
 				depth++
 			}
 		case 186: /* INVOKEDYNAMIC */
-			deltaOffset, offset = ReadInt16(code, offset)
-			constantMemberRef = constants.Constant(deltaOffset).(*constant.ConstantMemberRef)
-			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(*constant.ConstantNameAndType)
+			deltaOffset, offset = PrefixReadInt16(code, offset)
+			constantMemberRef = constants.Constant(deltaOffset).(intcls.IConstantMemberRef)
+			constantNameAndType = constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 			descriptor, _ = constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
 			depth -= countMethodParameters(descriptor)
 			if minimumDepth > depth {
@@ -683,7 +681,13 @@ func countMethodParameters(descriptor string) int {
 	return count
 }
 
-func ReadInt16(code []byte, offset int) (int, int) {
+func PrefixReadInt8(code []byte, offset int) (int, int) {
+	offset++
+	deltaOffset := int(code[offset]&255) << 8
+	return deltaOffset, offset
+}
+
+func PrefixReadInt16(code []byte, offset int) (int, int) {
 	offset++
 	deltaOffset := int(code[offset]&255) << 8
 	offset++
@@ -691,7 +695,7 @@ func ReadInt16(code []byte, offset int) (int, int) {
 	return deltaOffset, offset
 }
 
-func ReadInt32(code []byte, offset int) (int, int) {
+func PrefixReadInt32(code []byte, offset int) (int, int) {
 	offset++
 	deltaOffset := int(code[offset]&255) << 24
 	offset++
@@ -700,5 +704,31 @@ func ReadInt32(code []byte, offset int) (int, int) {
 	deltaOffset |= int(code[offset]&255) << 8
 	offset++
 	deltaOffset |= int(code[offset] & 255)
+	return deltaOffset, offset
+}
+
+func SuffixReadInt8(code []byte, offset int) (int, int) {
+	deltaOffset := int(code[offset]&255) << 8
+	offset++
+	return deltaOffset, offset
+}
+
+func SuffixReadInt16(code []byte, offset int) (int, int) {
+	deltaOffset := int(code[offset]&255) << 8
+	offset++
+	deltaOffset |= int(code[offset] & 255)
+	offset++
+	return deltaOffset, offset
+}
+
+func SuffixReadInt32(code []byte, offset int) (int, int) {
+	deltaOffset := int(code[offset]&255) << 24
+	offset++
+	deltaOffset |= int(code[offset]&255) << 16
+	offset++
+	deltaOffset |= int(code[offset]&255) << 8
+	offset++
+	deltaOffset |= int(code[offset] & 255)
+	offset++
 	return deltaOffset, offset
 }

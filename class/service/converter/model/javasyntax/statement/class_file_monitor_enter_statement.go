@@ -8,11 +8,13 @@ import (
 )
 
 func NewClassFileMonitorEnterStatement(monitor intmod.IExpression) intsrv.IClassFileMonitorEnterStatement {
-	return &ClassFileMonitorEnterStatement{
+	s := &ClassFileMonitorEnterStatement{
 		CommentStatement: *statement.NewCommentStatement(fmt.Sprintf("/* monitor enter %s */",
 			monitor)).(*statement.CommentStatement),
 		monitor: monitor,
 	}
+	s.SetValue(s)
+	return s
 }
 
 type ClassFileMonitorEnterStatement struct {

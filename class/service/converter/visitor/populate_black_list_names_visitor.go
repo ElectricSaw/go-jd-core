@@ -3,9 +3,10 @@ package visitor
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
-func NewPopulateBlackListNamesVisitor(names []string) *PopulateBlackListNamesVisitor {
+func NewPopulateBlackListNamesVisitor(names util.ISet[string]) *PopulateBlackListNamesVisitor {
 	return &PopulateBlackListNamesVisitor{
 		blackListNames: names,
 	}
@@ -14,17 +15,17 @@ func NewPopulateBlackListNamesVisitor(names []string) *PopulateBlackListNamesVis
 type PopulateBlackListNamesVisitor struct {
 	_type.AbstractNopTypeArgumentVisitor
 
-	blackListNames []string
+	blackListNames util.ISet[string]
 }
 
 func (v *PopulateBlackListNamesVisitor) VisitObjectType(t intmod.IObjectType) {
-	v.blackListNames = append(v.blackListNames, t.Name())
+	v.blackListNames.Add(t.Name())
 }
 
 func (v *PopulateBlackListNamesVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {
-	v.blackListNames = append(v.blackListNames, t.Name())
+	v.blackListNames.Add(t.Name())
 }
 
 func (v *PopulateBlackListNamesVisitor) VisitGenericType(t intmod.IGenericType) {
-	v.blackListNames = append(v.blackListNames, t.Name())
+	v.blackListNames.Add(t.Name())
 }

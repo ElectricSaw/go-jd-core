@@ -8,11 +8,13 @@ import (
 
 func NewClassFileConstructorInvocationExpression(lineNumber int, typ intmod.IObjectType, descriptor string,
 	parameterTypes intmod.IType, parameters intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression {
-	return &ClassFileConstructorInvocationExpression{
+	e := &ClassFileConstructorInvocationExpression{
 		ConstructorInvocationExpression: *expression.NewConstructorInvocationExpressionWithAll(
 			lineNumber, typ, descriptor, parameters).(*expression.ConstructorInvocationExpression),
 		parameterTypes: parameterTypes,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ClassFileConstructorInvocationExpression struct {

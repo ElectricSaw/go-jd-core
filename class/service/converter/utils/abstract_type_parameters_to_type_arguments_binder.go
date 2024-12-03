@@ -6,47 +6,42 @@ import (
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
-type ITypeParametersToTypeArgumentsBinder interface {
-	newConstructorInvocationExpression(lineNumber int, objectType intmod.IObjectType, descriptor string,
-		methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression
-	newSuperConstructorInvocationExpression(lineNumber int, objectType intmod.IObjectType, descriptor string,
-		methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileSuperConstructorInvocationExpression
-	newMethodInvocationExpression(lineNumber int, expression intmod.IExpression, objectType intmod.IObjectType, name, descriptor string,
-		methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileMethodInvocationExpression
-	newFieldReferenceExpression(lineNumber int, typ intmod.IType, expression intmod.IExpression, objectType intmod.IObjectType, name, descriptor string) intmod.IFieldReferenceExpression
-	bindParameterTypesWithArgumentTypes(typ intmod.IType, expression intmod.IExpression)
-	updateNewExpression(ne intsrv.IClassFileNewExpression, descriptor string, methodTypes intsrv.IMethodTypes, parameters intmod.IExpression)
+func NewAbstractTypeParametersToTypeArgumentsBinder() intsrv.ITypeParametersToTypeArgumentsBinder {
+	return &AbstractTypeParametersToTypeArgumentsBinder{}
 }
 
 type AbstractTypeParametersToTypeArgumentsBinder struct {
 }
 
-func (b *AbstractTypeParametersToTypeArgumentsBinder) newConstructorInvocationExpression(
+func (b *AbstractTypeParametersToTypeArgumentsBinder) NewConstructorInvocationExpression(
 	lineNumber int, objectType intmod.IObjectType, descriptor string,
 	methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression {
 	return nil
 }
 
-func (b *AbstractTypeParametersToTypeArgumentsBinder) newSuperConstructorInvocationExpression(lineNumber int, objectType intmod.IObjectType, descriptor string,
+func (b *AbstractTypeParametersToTypeArgumentsBinder) NewSuperConstructorInvocationExpression(
+	lineNumber int, objectType intmod.IObjectType, descriptor string,
 	methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileSuperConstructorInvocationExpression {
 	return nil
 }
 
-func (b *AbstractTypeParametersToTypeArgumentsBinder) newMethodInvocationExpression(
+func (b *AbstractTypeParametersToTypeArgumentsBinder) NewMethodInvocationExpression(
 	lineNumber int, expression intmod.IExpression, objectType intmod.IObjectType, name, descriptor string,
 	methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileMethodInvocationExpression {
 	return nil
 }
 
-func (b *AbstractTypeParametersToTypeArgumentsBinder) newFieldReferenceExpression(
-	lineNumber int, typ intmod.IType, expression intmod.IExpression, objectType intmod.IObjectType, name, descriptor string) intmod.IFieldReferenceExpression {
+func (b *AbstractTypeParametersToTypeArgumentsBinder) NewFieldReferenceExpression(
+	lineNumber int, typ intmod.IType, expression intmod.IExpression,
+	objectType intmod.IObjectType, name, descriptor string) intmod.IFieldReferenceExpression {
 	return nil
 }
 
-func (b *AbstractTypeParametersToTypeArgumentsBinder) bindParameterTypesWithArgumentTypes(typ intmod.IType, expression intmod.IExpression) {
+func (b *AbstractTypeParametersToTypeArgumentsBinder) BindParameterTypesWithArgumentTypes(
+	typ intmod.IType, expression intmod.IExpression) {
 }
 
-func (b *AbstractTypeParametersToTypeArgumentsBinder) updateNewExpression(ne intsrv.IClassFileNewExpression,
+func (b *AbstractTypeParametersToTypeArgumentsBinder) UpdateNewExpression(ne intsrv.IClassFileNewExpression,
 	descriptor string, methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) {
 	ne.Set(descriptor, Clone(methodTypes.ParameterTypes()), parameters)
 }

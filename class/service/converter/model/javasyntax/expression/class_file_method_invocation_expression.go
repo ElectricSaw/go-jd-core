@@ -9,13 +9,15 @@ import (
 func NewClassFileMethodInvocationExpression(lineNumber int, typeParameters intmod.ITypeParameter, typ intmod.IType,
 	expr intmod.IExpression, internalTypeName, name, descriptor string, parameterTypes intmod.IType,
 	parameters intmod.IExpression) intsrv.IClassFileMethodInvocationExpression {
-	return &ClassFileMethodInvocationExpression{
+	e := &ClassFileMethodInvocationExpression{
 		MethodInvocationExpression: *expression.NewMethodInvocationExpressionWithAll(lineNumber,
 			typ, expr, internalTypeName, name, descriptor, parameters).(*expression.MethodInvocationExpression),
 		typeParameters: typeParameters,
 		parameterTypes: parameterTypes,
 		bound:          false,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ClassFileMethodInvocationExpression struct {

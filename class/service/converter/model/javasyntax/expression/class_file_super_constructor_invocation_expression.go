@@ -8,11 +8,13 @@ import (
 
 func NewClassFileSuperConstructorInvocationExpression(lineNumber int, typ intmod.IObjectType, descriptor string,
 	parameterTypes intmod.IType, parameters intmod.IExpression) intsrv.IClassFileSuperConstructorInvocationExpression {
-	return &ClassFileSuperConstructorInvocationExpression{
+	e := &ClassFileSuperConstructorInvocationExpression{
 		SuperConstructorInvocationExpression: *expression.NewSuperConstructorInvocationExpressionWithAll(
 			lineNumber, typ, descriptor, parameters).(*expression.SuperConstructorInvocationExpression),
 		parameterTypes: parameterTypes,
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ClassFileSuperConstructorInvocationExpression struct {

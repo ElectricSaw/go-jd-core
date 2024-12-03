@@ -1,49 +1,35 @@
 package declaration
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileMethodDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
-	method intmod.IMethod, name string, returnedType intmod.IType, parameterTypes intmod.IType,
+func NewClassFileMethodDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intcls.IClassFile,
+	method intcls.IMethod, name string, returnedType intmod.IType, parameterTypes intmod.IType,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType) intsrv.IClassFileMethodDeclaration {
-	return &ClassFileMethodDeclaration{
-		MethodDeclaration: *declaration.NewMethodDeclaration6(nil, method.AccessFlags(), name, nil, returnedType,
-			nil, nil, method.Descriptor(), nil, nil).(*declaration.MethodDeclaration),
-		bodyDeclaration: bodyDeclaration,
-		classFile:       classFile,
-		parameterTypes:  parameterTypes,
-		method:          method,
-		bindings:        bindings,
-		typeBounds:      typeBounds,
-	}
+	return NewClassFileMethodDeclaration3(bodyDeclaration, classFile, method, nil, name,
+		nil, returnedType, parameterTypes, nil,
+		nil, bindings, typeBounds, -1)
 }
 
-func NewClassFileMethodDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
-	method intmod.IMethod, name string, returnedType intmod.IType, parameterTypes intmod.IType,
+func NewClassFileMethodDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intcls.IClassFile,
+	method intcls.IMethod, name string, returnedType intmod.IType, parameterTypes intmod.IType,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType, firstLineNumber int) intsrv.IClassFileMethodDeclaration {
-	return &ClassFileMethodDeclaration{
-		MethodDeclaration: *declaration.NewMethodDeclaration6(nil, method.AccessFlags(), name, nil, returnedType,
-			nil, nil, method.Descriptor(), nil, nil).(*declaration.MethodDeclaration),
-		bodyDeclaration: bodyDeclaration,
-		classFile:       classFile,
-		parameterTypes:  parameterTypes,
-		method:          method,
-		bindings:        bindings,
-		typeBounds:      typeBounds,
-		firstLineNumber: firstLineNumber,
-	}
+	return NewClassFileMethodDeclaration3(bodyDeclaration, classFile, method, nil, name,
+		nil, returnedType, parameterTypes, nil,
+		nil, bindings, typeBounds, firstLineNumber)
 }
 
-func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intmod.IClassFile,
-	method intmod.IMethod, annotationReferences intmod.IAnnotationReference, name string,
+func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intcls.IClassFile,
+	method intcls.IMethod, annotationReferences intmod.IAnnotationReference, name string,
 	typeParameters intmod.ITypeParameter, returnedType intmod.IType, parameterTypes intmod.IType,
 	exceptionTypes intmod.IType, defaultAnnotationValue intmod.IElementValue,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType, firstLineNumber int) intsrv.IClassFileMethodDeclaration {
-	return &ClassFileMethodDeclaration{
+	d := &ClassFileMethodDeclaration{
 		MethodDeclaration: *declaration.NewMethodDeclaration6(annotationReferences, method.AccessFlags(), name, typeParameters,
 			returnedType, nil, exceptionTypes, method.Descriptor(), nil, defaultAnnotationValue).(*declaration.MethodDeclaration),
 		bodyDeclaration: bodyDeclaration,
@@ -54,25 +40,27 @@ func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclara
 		typeBounds:      typeBounds,
 		firstLineNumber: firstLineNumber,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ClassFileMethodDeclaration struct {
 	declaration.MethodDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	classFile       intmod.IClassFile
-	method          intmod.IMethod
+	classFile       intcls.IClassFile
+	method          intcls.IMethod
 	parameterTypes  intmod.IType
 	bindings        map[string]intmod.ITypeArgument
 	typeBounds      map[string]intmod.IType
 	firstLineNumber int
 }
 
-func (d *ClassFileMethodDeclaration) ClassFile() intmod.IClassFile {
+func (d *ClassFileMethodDeclaration) ClassFile() intcls.IClassFile {
 	return d.classFile
 }
 
-func (d *ClassFileMethodDeclaration) Method() intmod.IMethod {
+func (d *ClassFileMethodDeclaration) Method() intcls.IMethod {
 	return d.method
 }
 

@@ -1,6 +1,7 @@
 package visitor
 
 import (
+	"bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	_ "bitbucket.org/coontec/go-jd-core/class/model/classfile"
@@ -308,7 +309,7 @@ type UpdateNewExpressionVisitor struct {
 
 	typeMaker                 intsrv.ITypeMaker
 	bodyDeclaration           intsrv.IClassFileBodyDeclaration
-	classFile                 intmod.IClassFile
+	classFile                 classpath.IClassFile
 	finalLocalVariableNameMap map[string]string
 	localClassDeclarations    util.IList[intsrv.IClassFileClassDeclaration]
 	newExpressions            util.ISet[intmod.INewExpression]

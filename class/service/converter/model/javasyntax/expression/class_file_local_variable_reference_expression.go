@@ -14,6 +14,7 @@ func NewClassFileLocalVariableReferenceExpression(lineNumber, offset int,
 		localVariable: localVariable,
 	}
 	e.localVariable.AddReference(e)
+	e.SetValue(e)
 
 	return e
 }

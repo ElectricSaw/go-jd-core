@@ -9,11 +9,13 @@ import (
 
 func NewClassFileForEachStatement(localVariable intsrv.ILocalVariable, expr intmod.IExpression,
 	state intmod.IStatement) intsrv.IClassFileForEachStatement {
-	return &ClassFileForEachStatement{
+	s := &ClassFileForEachStatement{
 		ForEachStatement: *statement.NewForEachStatement(localVariable.Type(), "", expr,
 			state).(*statement.ForEachStatement),
 		localVariable: localVariable,
 	}
+	s.SetValue(s)
+	return s
 }
 
 type ClassFileForEachStatement struct {

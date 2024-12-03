@@ -8,22 +8,20 @@ import (
 
 func NewClassFileTryStatement(tryStatements intmod.IStatement, catchClauses []intmod.ICatchClause,
 	finallyStatements intmod.IStatement, jsr, eclipse bool) intsrv.IClassFileTryStatement {
-	return &ClassFileTryStatement{
-		TryStatement: *statement.NewTryStatement(tryStatements, catchClauses,
-			finallyStatements).(*statement.TryStatement),
-		jsr:     jsr,
-		eclipse: eclipse,
-	}
+	return NewClassFileTryStatement2(nil, tryStatements, catchClauses, finallyStatements, jsr, eclipse)
 }
 
 func NewClassFileTryStatement2(resources []intmod.IResource, tryStatements intmod.IStatement,
 	catchClauses []intmod.ICatchClause, finallyStatements intmod.IStatement, jsr, eclipse bool) intsrv.IClassFileTryStatement {
-	return &ClassFileTryStatement{
-		TryStatement: *statement.NewTryStatementWithAll(resources, tryStatements,
-			catchClauses, finallyStatements).(*statement.TryStatement),
-		jsr:     jsr,
-		eclipse: eclipse,
+	tryStatement := *statement.NewTryStatementWithAll(resources, tryStatements,
+		catchClauses, finallyStatements).(*statement.TryStatement)
+	s := &ClassFileTryStatement{
+		TryStatement: tryStatement,
+		jsr:          jsr,
+		eclipse:      eclipse,
 	}
+	s.SetValue(s)
+	return s
 }
 
 type ClassFileTryStatement struct {
@@ -33,21 +31,11 @@ type ClassFileTryStatement struct {
 	eclipse bool
 }
 
-func (s *ClassFileTryStatement) AddResources(resources []intmod.IResource) {
-	if resources != nil {
-		if s.Resources() == nil {
-			s.SetResources(s.Resources())
-		} else {
-			s.TryStatement.AddResources(resources)
-		}
-	}
-}
-
-func (s *ClassFileTryStatement) isJsr() bool {
+func (s *ClassFileTryStatement) IsJsr() bool {
 	return s.jsr
 }
 
-func (s *ClassFileTryStatement) isEclipse() bool {
+func (s *ClassFileTryStatement) IsEclipse() bool {
 	return s.eclipse
 }
 

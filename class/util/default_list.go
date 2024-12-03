@@ -33,16 +33,6 @@ func NewDefaultListWithElements[T comparable](elements ...T) IList[T] {
 	return list
 }
 
-func (d *DefaultList[T]) IsList() bool {
-	return true
-}
-
-func (d *DefaultList[T]) ForEach(action func(T)) {
-	for _, v := range d.data {
-		action(v)
-	}
-}
-
 func main() {
 	list := NewDefaultListWithElements(1, 2, 3, 4)
 

@@ -7,18 +7,17 @@ import (
 )
 
 func NewClassFileLocalVariableDeclarator(localVariable intsrv.ILocalVariable) intsrv.IClassFileLocalVariableDeclarator {
-	return &ClassFileLocalVariableDeclarator{
-		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator("").(*declaration.LocalVariableDeclarator),
-		localVariable:           localVariable,
-	}
+	return NewClassFileLocalVariableDeclarator2(-1, localVariable, nil)
 }
 
 func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable intsrv.ILocalVariable,
 	initializer intmod.IVariableInitializer) intsrv.IClassFileLocalVariableDeclarator {
-	return &ClassFileLocalVariableDeclarator{
+	d := &ClassFileLocalVariableDeclarator{
 		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator3(lineNumber, "", initializer).(*declaration.LocalVariableDeclarator),
 		localVariable:           localVariable,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ClassFileLocalVariableDeclarator struct {

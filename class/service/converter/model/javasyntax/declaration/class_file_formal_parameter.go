@@ -8,25 +8,21 @@ import (
 )
 
 func NewClassFileFormalParameter(localVariable intsrv.ILocalVariable) intsrv.IClassFileFormalParameter {
-	return &ClassFileFormalParameter{
-		FormalParameter: *declaration.NewFormalParameter(nil, "").(*declaration.FormalParameter),
-		localVariable:   localVariable,
-	}
+	return NewClassFileFormalParameter3(nil, localVariable, false)
 }
 
 func NewClassFileFormalParameter2(localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
-	return &ClassFileFormalParameter{
-		FormalParameter: *declaration.NewFormalParameter3(nil, varargs, "").(*declaration.FormalParameter),
-		localVariable:   localVariable,
-	}
+	return NewClassFileFormalParameter3(nil, localVariable, varargs)
 }
 
 func NewClassFileFormalParameter3(annotationReferences intmod.IAnnotationReference,
 	localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
-	return &ClassFileFormalParameter{
+	p := &ClassFileFormalParameter{
 		FormalParameter: *declaration.NewFormalParameter4(annotationReferences, nil, varargs, "").(*declaration.FormalParameter),
 		localVariable:   localVariable,
 	}
+	p.SetValue(p)
+	return p
 }
 
 type ClassFileFormalParameter struct {

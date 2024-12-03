@@ -1,10 +1,10 @@
 package processor
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
@@ -28,8 +28,8 @@ type ConvertClassFileProcessor struct {
 }
 
 func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
-	typeMaker := message.Headers["typeMaker"].(*utils.TypeMaker)
-	classFile := message.Body.(intmod.IClassFile)
+	typeMaker := message.Headers["typeMaker"].(intsrv.ITypeMaker)
+	classFile := message.Body.(intcls.IClassFile)
 
 	annotationConverter := utils.NewAnnotationConverter(typeMaker)
 
@@ -47,65 +47,65 @@ func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
 }
 
 func (p *ConvertClassFileProcessor) convertInterfaceDeclaration(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile,
+	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileInterfaceDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
 	typeTypes := parser.ParseClassFileSignature(classFile)
-	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters, outerClassFileBodyDeclaration)
+	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters(), outerClassFileBodyDeclaration)
 
 	return srvdecl.NewClassFileInterfaceDeclaration(annotationReferences, classFile.AccessFlags(),
-		typeTypes.ThisType.InternalName(), typeTypes.ThisType.Name(),
-		typeTypes.TypeParameters, typeTypes.Interfaces, bodyDeclaration)
+		typeTypes.ThisType().InternalName(), typeTypes.ThisType().Name(),
+		typeTypes.TypeParameters(), typeTypes.Interfaces(), bodyDeclaration)
 }
 
 func (p *ConvertClassFileProcessor) convertEnumDeclaration(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile,
+	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileEnumDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
 	typeTypes := parser.ParseClassFileSignature(classFile)
-	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters, outerClassFileBodyDeclaration)
+	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters(), outerClassFileBodyDeclaration)
 
 	return srvdecl.NewClassFileEnumDeclaration(annotationReferences, classFile.AccessFlags(),
-		typeTypes.ThisType.InternalName(), typeTypes.ThisType.Name(), typeTypes.Interfaces, bodyDeclaration)
+		typeTypes.ThisType().InternalName(), typeTypes.ThisType().Name(), typeTypes.Interfaces(), bodyDeclaration)
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationDeclaration(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile,
+	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileAnnotationDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
 	typeTypes := parser.ParseClassFileSignature(classFile)
-	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters, outerClassFileBodyDeclaration)
+	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters(), outerClassFileBodyDeclaration)
 
 	return srvdecl.NewClassFileAnnotationDeclaration(annotationReferences, classFile.AccessFlags(),
-		typeTypes.ThisType.InternalName(), typeTypes.ThisType.Name(), bodyDeclaration)
+		typeTypes.ThisType().InternalName(), typeTypes.ThisType().Name(), bodyDeclaration)
 }
 
 func (p *ConvertClassFileProcessor) convertClassDeclaration(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile,
+	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileClassDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
 	typeTypes := parser.ParseClassFileSignature(classFile)
-	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters, outerClassFileBodyDeclaration)
+	bodyDeclaration := p.convertBodyDeclaration(parser, converter, classFile, typeTypes.TypeParameters(), outerClassFileBodyDeclaration)
 
 	return srvdecl.NewClassFileClassDeclaration(
 		annotationReferences, classFile.AccessFlags(),
-		typeTypes.ThisType.InternalName(), typeTypes.ThisType.Name(),
-		typeTypes.TypeParameters, typeTypes.SuperType,
-		typeTypes.Interfaces, bodyDeclaration)
+		typeTypes.ThisType().InternalName(), typeTypes.ThisType().Name(),
+		typeTypes.TypeParameters(), typeTypes.SuperType(),
+		typeTypes.Interfaces(), bodyDeclaration)
 }
 
 func (p *ConvertClassFileProcessor) convertBodyDeclaration(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile,
+	classFile intcls.IClassFile,
 	typeParameters intmod.ITypeParameter,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
 	var bindings map[string]intmod.ITypeArgument
@@ -134,9 +134,9 @@ func (p *ConvertClassFileProcessor) convertBodyDeclaration(
 }
 
 func (p *ConvertClassFileProcessor) convertFields(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile) []intsrv.IClassFileFieldDeclaration {
+	classFile intcls.IClassFile) []intsrv.IClassFileFieldDeclaration {
 	fields := classFile.Fields()
 
 	if fields == nil {
@@ -157,10 +157,10 @@ func (p *ConvertClassFileProcessor) convertFields(
 }
 
 func (p *ConvertClassFileProcessor) convertMethods(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
 	bodyDeclaration intsrv.IClassFileBodyDeclaration,
-	classFile intmod.IClassFile) []intsrv.IClassFileConstructorOrMethodDeclaration {
+	classFile intcls.IClassFile) []intsrv.IClassFileConstructorOrMethodDeclaration {
 	methods := classFile.Methods()
 
 	if methods == nil {
@@ -171,7 +171,7 @@ func (p *ConvertClassFileProcessor) convertMethods(
 		for _, method := range methods {
 			name := method.Name()
 			annotationReferences := p.convertAnnotationReferencesWithMethod(converter, method)
-			annotationDefault := method.Attributes()["AnnotationDefault"].(*attribute.AttributeAnnotationDefault)
+			annotationDefault := method.Attributes()["AnnotationDefault"].(intcls.IAttributeAnnotationDefault)
 			var defaultAnnotationValue intmod.IElementValue
 
 			if annotationDefault != nil {
@@ -182,7 +182,7 @@ func (p *ConvertClassFileProcessor) convertMethods(
 			var bindings map[string]intmod.ITypeArgument
 			var typeBounds map[string]intmod.IType
 
-			if (method.AccessFlags() & intmod.AccStatic) == 0 {
+			if (method.AccessFlags() & intcls.AccStatic) == 0 {
 				bindings = bodyDeclaration.Bindings()
 				typeBounds = bodyDeclaration.TypeBounds()
 			} else {
@@ -190,9 +190,9 @@ func (p *ConvertClassFileProcessor) convertMethods(
 				typeBounds = make(map[string]intmod.IType)
 			}
 
-			if methodTypes.TypeParameters != nil {
+			if methodTypes.TypeParameters() != nil {
 				p.populateBindingsWithTypeParameterVisitor.Init(copyBindings(bindings), copyTypeBounds(typeBounds))
-				methodTypes.TypeParameters.AcceptTypeParameterVisitor(p.populateBindingsWithTypeParameterVisitor)
+				methodTypes.TypeParameters().AcceptTypeParameterVisitor(p.populateBindingsWithTypeParameterVisitor)
 			}
 
 			code := method.Attributes()["Code"].(*attribute.AttributeCode)
@@ -207,18 +207,18 @@ func (p *ConvertClassFileProcessor) convertMethods(
 
 			if name == "<init>" {
 				list = append(list, srvdecl.NewClassFileConstructorDeclaration(
-					bodyDeclaration, classFile, method, annotationReferences, methodTypes.TypeParameters,
-					methodTypes.ParameterTypes, methodTypes.ExceptionTypes, bindings, typeBounds, firstLineNumber))
+					bodyDeclaration, classFile, method, annotationReferences, methodTypes.TypeParameters(),
+					methodTypes.ParameterTypes(), methodTypes.ExceptionTypes(), bindings, typeBounds, firstLineNumber))
 			} else if name == "<clinit>" {
 				list = append(list, srvdecl.NewClassFileStaticInitializerDeclaration(
 					bodyDeclaration, classFile, method, bindings, typeBounds, firstLineNumber).(intsrv.IClassFileConstructorOrMethodDeclaration))
 			} else {
 				methodDeclaration := srvdecl.NewClassFileMethodDeclaration3(
-					bodyDeclaration, classFile, method, annotationReferences, name, methodTypes.TypeParameters,
-					methodTypes.ReturnedType, methodTypes.ParameterTypes, methodTypes.ExceptionTypes, defaultAnnotationValue,
+					bodyDeclaration, classFile, method, annotationReferences, name, methodTypes.TypeParameters(),
+					methodTypes.ReturnedType(), methodTypes.ParameterTypes(), methodTypes.ExceptionTypes(), defaultAnnotationValue,
 					bindings, typeBounds, firstLineNumber)
 				if classFile.IsInterface() {
-					if methodDeclaration.Flags() == intmod.AccPublic {
+					if methodDeclaration.Flags() == intcls.AccPublic {
 						// For interfaces, add 'default' access flag on public methods
 						methodDeclaration.SetFlags(intmod.FlagPublic | intmod.FlagDefault)
 					}
@@ -233,9 +233,9 @@ func (p *ConvertClassFileProcessor) convertMethods(
 }
 
 func (p *ConvertClassFileProcessor) convertInnerTypes(
-	parser *utils.TypeMaker,
+	parser intsrv.ITypeMaker,
 	converter *utils.AnnotationConverter,
-	classFile intmod.IClassFile,
+	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) []intsrv.IClassFileTypeDeclaration {
 	innerClassFiles := classFile.InnerClassFiles()
 
@@ -265,7 +265,7 @@ func (p *ConvertClassFileProcessor) convertInnerTypes(
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithClass(
-	converter *utils.AnnotationConverter, classFile intmod.IClassFile) intmod.IAnnotationReference {
+	converter *utils.AnnotationConverter, classFile intcls.IClassFile) intmod.IAnnotationReference {
 	visibles := classFile.Attribute("RuntimeVisibleAnnotations").(*attribute.Annotations)
 	invisibles := classFile.Attribute("RuntimeInvisibleAnnotations").(*attribute.Annotations)
 
@@ -273,7 +273,7 @@ func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithClass(
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithField(
-	converter *utils.AnnotationConverter, field intmod.IField) intmod.IAnnotationReference {
+	converter *utils.AnnotationConverter, field intcls.IField) intmod.IAnnotationReference {
 	visibles := field.Attribute("RuntimeVisibleAnnotations").(*attribute.Annotations)
 	invisibles := field.Attribute("RuntimeInvisibleAnnotations").(*attribute.Annotations)
 
@@ -281,14 +281,14 @@ func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithField(
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithMethod(
-	converter *utils.AnnotationConverter, method intmod.IMethod) intmod.IAnnotationReference {
+	converter *utils.AnnotationConverter, method intcls.IMethod) intmod.IAnnotationReference {
 	visibles := method.Attribute("RuntimeVisibleAnnotations").(*attribute.Annotations)
 	invisibles := method.Attribute("RuntimeInvisibleAnnotations").(*attribute.Annotations)
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }
 
-func (p *ConvertClassFileProcessor) convertFieldInitializer(field intmod.IField, typeField intmod.IType) intmod.IExpressionVariableInitializer {
+func (p *ConvertClassFileProcessor) convertFieldInitializer(field intcls.IField, typeField intmod.IType) intmod.IExpressionVariableInitializer {
 	acv := field.Attribute("ConstantValue").(*attribute.AttributeConstantValue)
 
 	if acv == nil {
@@ -298,16 +298,16 @@ func (p *ConvertClassFileProcessor) convertFieldInitializer(field intmod.IField,
 		var expr intmod.IExpression
 
 		switch constantValue.Tag() {
-		case constant.ConstTagInteger:
-			expr = expression.NewIntegerConstantExpression(typeField, constantValue.(constant.ConstantInteger).Value())
-		case constant.ConstTagFloat:
-			expr = expression.NewFloatConstantExpression(constantValue.(constant.ConstantFloat).Value())
-		case constant.ConstTagLong:
-			expr = expression.NewLongConstantExpression(constantValue.(constant.ConstantLong).Value())
-		case constant.ConstTagDouble:
-			expr = expression.NewDoubleConstantExpression(constantValue.(constant.ConstantDouble).Value())
-		case constant.ConstTagUtf8:
-			expr = expression.NewStringConstantExpression(constantValue.(constant.ConstantUtf8).Value())
+		case intcls.ConstTagInteger:
+			expr = expression.NewIntegerConstantExpression(typeField, constantValue.(intcls.IConstantInteger).Value())
+		case intcls.ConstTagFloat:
+			expr = expression.NewFloatConstantExpression(constantValue.(intcls.IConstantFloat).Value())
+		case intcls.ConstTagLong:
+			expr = expression.NewLongConstantExpression(constantValue.(intcls.IConstantLong).Value())
+		case intcls.ConstTagDouble:
+			expr = expression.NewDoubleConstantExpression(constantValue.(intcls.IConstantDouble).Value())
+		case intcls.ConstTagUtf8:
+			expr = expression.NewStringConstantExpression(constantValue.(intcls.IConstantUtf8).Value())
 		default:
 			return nil
 		}
@@ -316,7 +316,7 @@ func (p *ConvertClassFileProcessor) convertFieldInitializer(field intmod.IField,
 	}
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intmod.IClassFile) intmod.IModuleDeclaration {
+func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intcls.IClassFile) intmod.IModuleDeclaration {
 	attributeModule := classFile.Attribute("Module").(*attribute.AttributeModule)
 	requires := p.convertModuleDeclarationModuleInfo(attributeModule.Requires())
 	exports := p.convertModuleDeclarationPackageInfo(attributeModule.Exports())
@@ -332,7 +332,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intmod.IC
 		attributeModule.Version(), requires, exports, opens, uses, provides)
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclarationModuleInfo(moduleInfos []attribute.ModuleInfo) []intmod.IModuleInfo {
+func (p *ConvertClassFileProcessor) convertModuleDeclarationModuleInfo(moduleInfos []intcls.IModuleInfo) []intmod.IModuleInfo {
 	if (moduleInfos == nil) || (len(moduleInfos) == 0) {
 		return nil
 	} else {
@@ -344,7 +344,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclarationModuleInfo(moduleInf
 	}
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclarationPackageInfo(packageInfos []attribute.PackageInfo) []intmod.IPackageInfo {
+func (p *ConvertClassFileProcessor) convertModuleDeclarationPackageInfo(packageInfos []intcls.IPackageInfo) []intmod.IPackageInfo {
 	if (packageInfos == nil) || (len(packageInfos) == 0) {
 		return nil
 	} else {
@@ -360,7 +360,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclarationPackageInfo(packageI
 	}
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclarationServiceInfo(serviceInfos []attribute.ServiceInfo) []intmod.IServiceInfo {
+func (p *ConvertClassFileProcessor) convertModuleDeclarationServiceInfo(serviceInfos []intcls.IServiceInfo) []intmod.IServiceInfo {
 	if (serviceInfos == nil) || (len(serviceInfos) == 0) {
 		return nil
 	} else {
@@ -380,11 +380,11 @@ type CustomPopulateBindingsWithTypeParameterVisitor struct {
 	visitor.PopulateBindingsWithTypeParameterVisitor
 }
 
-func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter *_type.TypeParameter) {
+func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
 	v.Bindings[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
 }
 
-func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter *_type.TypeParameterWithTypeBounds) {
+func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
 	v.Bindings[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
 	v.TypeBounds[parameter.Identifier()] = parameter.TypeBounds()
 }

@@ -7,10 +7,12 @@ import (
 )
 
 func NewClassFileBreakContinueStatement(offset int, targetOffset int) intsrv.IClassFileBreakContinueStatement {
-	return &ClassFileBreakContinueStatement{
+	s := &ClassFileBreakContinueStatement{
 		offset:       offset,
 		targetOffset: targetOffset,
 	}
+	s.SetStatement(s)
+	return s
 }
 
 type ClassFileBreakContinueStatement struct {

@@ -1,9 +1,9 @@
 package visitor
 
 import (
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
@@ -18,10 +18,10 @@ type UpdateTypeVisitor struct {
 
 	updateClassTypeArgumentsVisitor UpdateClassTypeArgumentsVisitor
 	localVariableSet                intsrv.ILocalVariableSet
-	localVariableType               attribute.LocalVariableType
+	localVariableType               intcls.ILocalVariableType
 }
 
-func (v *UpdateTypeVisitor) SetLocalVariableType(localVariableType attribute.LocalVariableType) {
+func (v *UpdateTypeVisitor) SetLocalVariableType(localVariableType intcls.ILocalVariableType) {
 	v.localVariableType = localVariableType
 }
 

@@ -115,7 +115,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitTypeArguments(arguments intmod.IT
 		if i == size {
 			v.result = arguments
 		} else {
-			newTypes := _type.NewTypeArgumentsWithSize(size)
+			newTypes := _type.NewTypeArgumentsWithCapacity(size)
 			newTypes.AddAll(arguments.ToSlice()[:i])
 			newTypes.Add(v.result.(intmod.ITypeArgument))
 

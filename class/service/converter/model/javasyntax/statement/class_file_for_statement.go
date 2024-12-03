@@ -9,11 +9,13 @@ import (
 
 func NewClassFileForStatement(fromOffset, toOffset int, init intmod.IExpression,
 	condition intmod.IExpression, update intmod.IExpression, state intmod.IStatement) intsrv.IClassFileForStatement {
-	return &ClassFileForStatement{
+	s := &ClassFileForStatement{
 		ForStatement: *statement.NewForStatementWithInit(init, condition, update, state).(*statement.ForStatement),
 		fromOffset:   fromOffset,
 		toOffset:     toOffset,
 	}
+	s.SetValue(s)
+	return s
 }
 
 type ClassFileForStatement struct {

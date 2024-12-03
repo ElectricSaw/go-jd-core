@@ -80,7 +80,7 @@ func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IC
 						var typeArguments intmod.ITypeArgument
 
 						if typeTypes.TypeParameters().IsList() {
-							tas := _type.NewTypeArgumentsWithSize(typeTypes.TypeParameters().Size())
+							tas := _type.NewTypeArgumentsWithCapacity(typeTypes.TypeParameters().Size())
 							for _, typeParameter := range typeTypes.TypeParameters().ToSlice() {
 								tas.Add(_type.NewGenericType(typeParameter.Identifier()))
 							}

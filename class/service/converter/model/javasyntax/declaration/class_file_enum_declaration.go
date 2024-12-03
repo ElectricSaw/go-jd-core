@@ -17,6 +17,7 @@ func NewClassFileEnumDeclaration(annotationReferences intmod.IAnnotationReferenc
 	if bodyDeclaration != nil {
 		d.firstLineNumber = bodyDeclaration.FirstLineNumber()
 	}
+	d.SetValue(d)
 	return d
 }
 
@@ -36,10 +37,12 @@ func (d *ClassFileEnumDeclaration) String() string {
 
 func NewClassFileConstant(lineNumber int, name string, index int, arguments intmod.IExpression,
 	bodyDeclaration intmod.IBodyDeclaration) intsrv.IClassFileConstant {
-	return &ClassFileConstant{
+	c := &ClassFileConstant{
 		Constant: *declaration.NewConstant5(lineNumber, name, arguments, bodyDeclaration).(*declaration.Constant),
 		index:    index,
 	}
+	c.SetValue(c)
+	return c
 }
 
 type ClassFileConstant struct {

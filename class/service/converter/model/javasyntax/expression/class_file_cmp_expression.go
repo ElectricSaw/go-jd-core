@@ -8,11 +8,13 @@ import (
 )
 
 func NewClassFileCmpExpression(lineNumber int, leftExpress, rightExpression intmod.IExpression) intsrv.IClassFileCmpExpression {
-	return &ClassFileCmpExpression{
+	e := &ClassFileCmpExpression{
 		BinaryOperatorExpression: *expression.NewBinaryOperatorExpression(lineNumber,
 			_type.PtTypeInt.(intmod.IType), leftExpress, "cmp", rightExpression,
 			7).(*expression.BinaryOperatorExpression),
 	}
+	e.SetValue(e)
+	return e
 }
 
 type ClassFileCmpExpression struct {

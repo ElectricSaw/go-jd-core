@@ -18,6 +18,7 @@ func NewClassFileAnnotationDeclaration(annotationReferences intmod.IAnnotationRe
 	} else {
 		d.firstLineNumber = bodyDeclaration.FirstLineNumber()
 	}
+	d.SetValue(d)
 
 	return d
 }

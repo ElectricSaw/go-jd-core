@@ -5,6 +5,10 @@ import (
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 )
 
+func NewBindTypeParametersToNonWildcardTypeArgumentsVisitor() *BindTypeParametersToNonWildcardTypeArgumentsVisitor {
+	return &BindTypeParametersToNonWildcardTypeArgumentsVisitor{}
+}
+
 type BindTypeParametersToNonWildcardTypeArgumentsVisitor struct {
 	bindings map[string]intmod.ITypeArgument
 	result   intmod.ITypeArgument
@@ -37,7 +41,7 @@ func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitTypeParameter
 
 func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
 	size := parameters.Size()
-	arguments := _type.NewTypeArgumentsWithSize(size)
+	arguments := _type.NewTypeArgumentsWithCapacity(size)
 
 	for _, parameter := range parameters.ToSlice() {
 		parameter.AcceptTypeParameterVisitor(v)

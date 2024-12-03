@@ -5,6 +5,10 @@ import (
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 )
 
+func NewMergeTryWithResourcesStatementVisitor() *MergeTryWithResourcesStatementVisitor {
+	return &MergeTryWithResourcesStatementVisitor{}
+}
+
 type MergeTryWithResourcesStatementVisitor struct {
 }
 

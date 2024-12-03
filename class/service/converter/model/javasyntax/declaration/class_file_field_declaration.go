@@ -7,33 +7,33 @@ import (
 	"fmt"
 )
 
-func NewClassFileFieldDeclaration(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intsrv.IClassFileFieldDeclaration {
-	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
-	}
+func NewClassFileFieldDeclaration(flags int, typ intmod.IType,
+	fieldDeclaration intmod.IFieldDeclarator) intsrv.IClassFileFieldDeclaration {
+	return NewClassFileFieldDeclaration4(nil, flags, typ, fieldDeclaration, -1)
 }
 
-func NewClassFileFieldDeclaration2(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
-	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
-		firstLineNumber:  firstLineNumber,
-	}
+func NewClassFileFieldDeclaration2(flags int, typ intmod.IType,
+	fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
+	return NewClassFileFieldDeclaration4(nil, flags, typ, fieldDeclaration, firstLineNumber)
 }
 
-func NewClassFileFieldDeclaration3(annotationReferences intmod.IAnnotationReference, flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intsrv.IClassFileFieldDeclaration {
-	return &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
-	}
+func NewClassFileFieldDeclaration3(annotationReferences intmod.IAnnotationReference,
+	flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intsrv.IClassFileFieldDeclaration {
+	return NewClassFileFieldDeclaration4(annotationReferences, flags, typ, fieldDeclaration, -1)
 }
 
-func NewClassFileFieldDeclaration4(annotationReferences intmod.IAnnotationReference, flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
-	return &ClassFileFieldDeclaration{
+func NewClassFileFieldDeclaration4(annotationReferences intmod.IAnnotationReference,
+	flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
+	d := &ClassFileFieldDeclaration{
 		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
 		firstLineNumber:  firstLineNumber,
 	}
+	d.SetValue(d)
+	return d
 }
 
 type ClassFileFieldDeclaration struct {
+	ClassFileMethodDeclaration
 	declaration.FieldDeclaration
 
 	firstLineNumber int
