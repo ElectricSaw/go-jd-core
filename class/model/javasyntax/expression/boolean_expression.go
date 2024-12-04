@@ -6,6 +6,9 @@ import (
 	"fmt"
 )
 
+var True = NewBooleanExpression(true)
+var False = NewBooleanExpression(false)
+
 func NewBooleanExpression(value bool) intmod.IBooleanExpression {
 	return NewBooleanExpressionWithLineNumber(0, value)
 }

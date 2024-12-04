@@ -40,6 +40,10 @@ func (g *ControlFlowGraph) LineNumber(offset int) int {
 	return g.offsetToLineNumbers[offset]
 }
 
+func (g *ControlFlowGraph) Start() intsrv.IBasicBlock {
+	return g.list.Get(0)
+}
+
 func (g *ControlFlowGraph) NewBasicBlock1(original intsrv.IBasicBlock) intsrv.IBasicBlock {
 	basicBlock := NewBasicBlock(g, g.list.Size(), original)
 	g.list.Add(basicBlock)

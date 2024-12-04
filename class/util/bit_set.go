@@ -32,12 +32,12 @@ type BitSet struct {
 }
 
 // NewBitSet creates a new BitSet with a specified size.
-func NewBitSetDefault() IBitSet {
-	return NewBitSet(BitsPerWord)
+func NewBitSet() IBitSet {
+	return NewBitSetWithSize(BitsPerWord)
 }
 
-// NewBitSet creates a new BitSet with a specified size.
-func NewBitSet(size int) IBitSet {
+// NewBitSetWithSize creates a new BitSet with a specified size.
+func NewBitSetWithSize(size int) IBitSet {
 	return &BitSet{
 		data: make([]uint64, (size+63)/64),
 	}

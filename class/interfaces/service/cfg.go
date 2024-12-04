@@ -60,6 +60,7 @@ type IControlFlowGraph interface {
 	Method() intmod.IMethod
 	SetOffsetToLineNumbers(offsetToLineNumbers []int)
 	LineNumber(offset int) int
+	Start() IBasicBlock
 	NewBasicBlock1(original IBasicBlock) IBasicBlock
 	NewBasicBlock2(fromOffset, toOffset int) IBasicBlock
 	NewBasicBlock3(typ, fromOffset, toOffset int) IBasicBlock
@@ -107,6 +108,7 @@ type IExceptionHandler interface {
 	InternalThrowableName() string
 	OtherInternalThrowableNames() util.IList[string]
 	BasicBlock() IBasicBlock
+	SetBasicBlock(basicBlock IBasicBlock)
 
 	AddInternalThrowableName(internalThrowableName string)
 	Replace(old, nevv IBasicBlock)

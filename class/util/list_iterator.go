@@ -9,6 +9,7 @@ import (
 type IListIterator[T comparable] interface {
 	IIterator[T]
 
+	SetCursor(index int)
 	HasPrevious() bool   // 이전 요소가 있는지 확인
 	Previous() T         // 이전 요소 반환
 	NextIndex() int      // 다음 요소의 인덱스 반환
@@ -30,6 +31,10 @@ type ListIterator[T comparable] struct {
 // NewListIterator 슬라이스 기반 ListIterator 생성자
 func NewListIterator[T comparable](data []T) IListIterator[T] {
 	return &ListIterator[T]{data: data, cursor: 0, lastIndex: -1}
+}
+
+func (it *ListIterator[T]) SetCursor(index int) {
+	it.cursor = index
 }
 
 // HasNext 다음 요소가 있는지 확인

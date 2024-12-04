@@ -4,6 +4,8 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 )
 
+var Diamond = NewDiamondTypeArgument()
+
 func NewDiamondTypeArgument() intmod.IDiamondTypeArgument {
 	return &DiamondTypeArgument{}
 }

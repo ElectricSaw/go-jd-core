@@ -380,6 +380,10 @@ func (h *ExceptionHandler) BasicBlock() intsrv.IBasicBlock {
 	return h.basicBlock
 }
 
+func (h *ExceptionHandler) SetBasicBlock(basicBlock intsrv.IBasicBlock) {
+	h.basicBlock = basicBlock
+}
+
 func (h *ExceptionHandler) AddInternalThrowableName(internalThrowableName string) {
 	if h.otherInternalThrowableNames == nil {
 		h.otherInternalThrowableNames = util.NewDefaultList[string]()

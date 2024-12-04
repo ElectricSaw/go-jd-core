@@ -13,12 +13,12 @@ func buildDominatorIndexes(cfg intsrv.IControlFlowGraph) []util.IBitSet {
 	length := list.Size()
 	arrayOfDominatorIndexes := make([]util.IBitSet, length)
 
-	initial := util.NewBitSet(length)
+	initial := util.NewBitSetWithSize(length)
 	initial.Set(0)
 	arrayOfDominatorIndexes[0] = initial
 
 	for i := 0; i < length; i++ {
-		initial = util.NewBitSet(length)
+		initial = util.NewBitSetWithSize(length)
 		initial.FlipRange(0, length)
 		arrayOfDominatorIndexes[i] = initial
 	}
@@ -145,7 +145,7 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 			// Unoptimize loop
 			start := list.Get(i)
 			startDominatorIndexes := arrayOfDominatorIndexes[i]
-			searchZoneIndexes := util.NewBitSet(length)
+			searchZoneIndexes := util.NewBitSetWithSize(length)
 			searchZoneIndexes.Or(startDominatorIndexes)
 			searchZoneIndexes.FlipRange(0, length)
 			searchZoneIndexes.Set(start.Index())
@@ -156,8 +156,8 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 					memberIndexes.Get(start.Next().Index()) &&
 					memberIndexes.Get(start.Branch().Index()) {
 					// 'next' & 'branch' blocks are inside the loop -> Split loop ?
-					nextIndexes := util.NewBitSet(length)
-					branchIndexes := util.NewBitSet(length)
+					nextIndexes := util.NewBitSetWithSize(length)
+					branchIndexes := util.NewBitSetWithSize(length)
 
 					recursiveForwardSearchLoopMemberIndexes2(nextIndexes, memberIndexes, start.Next(), start)
 					recursiveForwardSearchLoopMemberIndexes2(branchIndexes, memberIndexes, start.Branch(), start)
@@ -165,26 +165,26 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 					commonMemberIndexes := nextIndexes.Clone()
 					commonMemberIndexes.And(branchIndexes)
 
-					onlyLoopHeaderIndex := util.NewBitSet(length)
+					onlyLoopHeaderIndex := util.NewBitSetWithSize(length)
 					onlyLoopHeaderIndex.Set(i)
 
 					if commonMemberIndexes == onlyLoopHeaderIndex {
 						// Only 'start' is the common basic block -> Split loop
-						loops.Add(makeLoop(list, start, searchZoneIndexes, memberIndexes))
+						loops.Add(makeCfgLoopReducerLoop(list, start, searchZoneIndexes, memberIndexes))
 
 						branchIndexes.FlipRange(0, length)
 						searchZoneIndexes.And(branchIndexes)
 						searchZoneIndexes.Set(start.Index())
 
-						loops.Add(makeLoop(list, start, searchZoneIndexes, nextIndexes))
+						loops.Add(makeCfgLoopReducerLoop(list, start, searchZoneIndexes, nextIndexes))
 					} else {
-						loops.Add(makeLoop(list, start, searchZoneIndexes, memberIndexes))
+						loops.Add(makeCfgLoopReducerLoop(list, start, searchZoneIndexes, memberIndexes))
 					}
 				} else {
-					loops.Add(makeLoop(list, start, searchZoneIndexes, memberIndexes))
+					loops.Add(makeCfgLoopReducerLoop(list, start, searchZoneIndexes, memberIndexes))
 				}
 			} else {
-				loops.Add(makeLoop(list, start, searchZoneIndexes, memberIndexes))
+				loops.Add(makeCfgLoopReducerLoop(list, start, searchZoneIndexes, memberIndexes))
 			}
 		}
 	}
@@ -197,7 +197,7 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 }
 
 func searchLoopMemberIndexes(length int, memberIndexes util.IBitSet, current, start intsrv.IBasicBlock) util.IBitSet {
-	visited := util.NewBitSet(length)
+	visited := util.NewBitSetWithSize(length)
 
 	recursiveBackwardSearchLoopMemberIndexes(visited, current, start)
 
@@ -221,7 +221,7 @@ func recursiveBackwardSearchLoopMemberIndexes(visited util.IBitSet, current, sta
 	}
 }
 
-func makeLoop(list util.IList[intsrv.IBasicBlock], start intsrv.IBasicBlock,
+func makeCfgLoopReducerLoop(list util.IList[intsrv.IBasicBlock], start intsrv.IBasicBlock,
 	searchZoneIndexes, memberIndexes util.IBitSet) intsrv.ILoop {
 	length := list.Size()
 	maxOffset := -1
@@ -403,7 +403,7 @@ func checkSynchronizedBlockOffset(basicBlock intsrv.IBasicBlock) int {
 
 func checkThrowBlockOffset(basicBlock intsrv.IBasicBlock) int {
 	offset := basicBlock.FromOffset()
-	watchdog := util.NewBitSetDefault()
+	watchdog := util.NewBitSet()
 
 	for !basicBlock.MatchType(intsrv.GroupEnd) && !watchdog.Get(basicBlock.Index()) {
 		watchdog.Set(basicBlock.Index())
