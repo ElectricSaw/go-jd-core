@@ -281,10 +281,9 @@ func EvalStackDepth2(constants intcls.IConstantPool, code []byte, bb intsrv.IBas
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
 
-			offset--
-			deltaOffset, offset = PrefixReadInt32(code, offset)
+			deltaOffset, offset = SuffixReadInt32(code, offset)
 			low := deltaOffset
-			deltaOffset, offset = PrefixReadInt32(code, offset)
+			deltaOffset, offset = SuffixReadInt32(code, offset)
 			high := deltaOffset
 
 			offset += (4 * (high - low + 1)) - 1
@@ -292,8 +291,7 @@ func EvalStackDepth2(constants intcls.IConstantPool, code []byte, bb intsrv.IBas
 		case 171: /* LOOKUPSWITCH */
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
-			offset--
-			deltaOffset, offset = PrefixReadInt32(code, offset)
+			deltaOffset, offset = SuffixReadInt32(code, offset)
 
 			offset += (8 * deltaOffset) - 1
 			depth--
@@ -534,10 +532,9 @@ func minDepth(constants intcls.IConstantPool, code []byte, bb intsrv.IBasicBlock
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
 
-			offset--
-			deltaOffset, offset = PrefixReadInt32(code, offset)
+			deltaOffset, offset = SuffixReadInt32(code, offset)
 			low := deltaOffset
-			deltaOffset, offset = PrefixReadInt32(code, offset)
+			deltaOffset, offset = SuffixReadInt32(code, offset)
 			high := deltaOffset
 
 			offset += (4 * (high - low + 1)) - 1
@@ -549,8 +546,7 @@ func minDepth(constants intcls.IConstantPool, code []byte, bb intsrv.IBasicBlock
 			offset = (offset + 4) & 0xFFFC /* Skip padding */
 			offset += 4                    /* Skip default offset */
 
-			offset--
-			deltaOffset, offset = PrefixReadInt32(code, offset)
+			deltaOffset, offset = SuffixReadInt32(code, offset)
 
 			offset += (8 * deltaOffset) - 1
 			depth--

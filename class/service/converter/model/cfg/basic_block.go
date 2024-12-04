@@ -21,11 +21,11 @@ var LoopEnd = NewImmutableBasicBlock(intsrv.TypeLoopEnd).(intsrv.IBasicBlock)
 var End = NewImmutableBasicBlock(intsrv.TypeEnd).(intsrv.IBasicBlock)
 var Return = NewImmutableBasicBlock(intsrv.TypeReturn).(intsrv.IBasicBlock)
 
-func NewBasicBlock(controlFlowGraph *ControlFlowGraph, index int, original intsrv.IBasicBlock) intsrv.IBasicBlock {
+func NewBasicBlock(controlFlowGraph intsrv.IControlFlowGraph, index int, original intsrv.IBasicBlock) intsrv.IBasicBlock {
 	return NewBasicBlockWithBasicBlocks(controlFlowGraph, index, original, util.NewSet[intsrv.IBasicBlock]())
 }
 
-func NewBasicBlockWithBasicBlocks(controlFlowGraph *ControlFlowGraph, index int, original intsrv.IBasicBlock, predecessors util.ISet[intsrv.IBasicBlock]) intsrv.IBasicBlock {
+func NewBasicBlockWithBasicBlocks(controlFlowGraph intsrv.IControlFlowGraph, index int, original intsrv.IBasicBlock, predecessors util.ISet[intsrv.IBasicBlock]) intsrv.IBasicBlock {
 	return &BasicBlock{
 		controlFlowGraph:  controlFlowGraph,
 		index:             index,
@@ -134,8 +134,16 @@ func (b *BasicBlock) Condition() intsrv.IBasicBlock {
 	return b.condition
 }
 
+func (b *BasicBlock) SetCondition(condition intsrv.IBasicBlock) {
+	b.condition = condition
+}
+
 func (b *BasicBlock) IsInverseCondition() bool {
 	return b.inverseCondition
+}
+
+func (b *BasicBlock) SetInverseCondition(inverseCondition bool) {
+	b.inverseCondition = inverseCondition
 }
 
 func (b *BasicBlock) Sub1() intsrv.IBasicBlock {
@@ -164,6 +172,14 @@ func (b *BasicBlock) SwitchCases() util.IList[intsrv.ISwitchCase] {
 
 func (b *BasicBlock) Predecessors() util.ISet[intsrv.IBasicBlock] {
 	return b.predecessors
+}
+
+func (b *BasicBlock) SetSwitchCases(switchCases util.IList[intsrv.ISwitchCase]) {
+	b.switchCases = switchCases
+}
+
+func (b *BasicBlock) SetPredecessors(predecessors util.ISet[intsrv.IBasicBlock]) {
+	b.predecessors = predecessors
 }
 
 func (b *BasicBlock) FirstLineNumber() int {

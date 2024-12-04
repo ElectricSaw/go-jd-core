@@ -612,7 +612,7 @@ func reduceLoop(loop intsrv.ILoop) intsrv.IBasicBlock {
 			} else if bb == end {
 				member.SetNext(cfg.LoopEnd)
 			} else if !members.Contains(bb) && (bb.Predecessors().Size() > 1) {
-				member.SetNext(newJumpBasicBlock(member, bb))
+				member.SetNext(newJumpBasicBlockGraphLoopReducer(member, bb))
 			}
 		} else if member.Type() == intsrv.TypeConditionalBranch {
 			bb := member.Next()
@@ -622,7 +622,7 @@ func reduceLoop(loop intsrv.ILoop) intsrv.IBasicBlock {
 			} else if bb == end {
 				member.SetNext(cfg.LoopEnd)
 			} else if !members.Contains(bb) && (bb.Predecessors().Size() > 1) {
-				member.SetNext(newJumpBasicBlock(member, bb))
+				member.SetNext(newJumpBasicBlockGraphLoopReducer(member, bb))
 			}
 
 			bb = member.Branch()
@@ -632,7 +632,7 @@ func reduceLoop(loop intsrv.ILoop) intsrv.IBasicBlock {
 			} else if bb == end {
 				member.SetBranch(cfg.LoopEnd)
 			} else if !members.Contains(bb) && (bb.Predecessors().Size() > 1) {
-				member.SetBranch(newJumpBasicBlock(member, bb))
+				member.SetBranch(newJumpBasicBlockGraphLoopReducer(member, bb))
 			}
 		} else if member.Type() == intsrv.TypeSwitchDeclaration {
 			for _, switchCase := range member.SwitchCases().ToSlice() {
@@ -643,7 +643,7 @@ func reduceLoop(loop intsrv.ILoop) intsrv.IBasicBlock {
 				} else if bb == end {
 					switchCase.SetBasicBlock(cfg.LoopEnd)
 				} else if !members.Contains(bb) && (bb.Predecessors().Size() > 1) {
-					switchCase.SetBasicBlock(newJumpBasicBlock(member, bb))
+					switchCase.SetBasicBlock(newJumpBasicBlockGraphLoopReducer(member, bb))
 				}
 			}
 		}
@@ -664,7 +664,7 @@ func reduceLoop(loop intsrv.ILoop) intsrv.IBasicBlock {
 	return loopBB
 }
 
-func newJumpBasicBlock(bb, target intsrv.IBasicBlock) intsrv.IBasicBlock {
+func newJumpBasicBlockGraphLoopReducer(bb, target intsrv.IBasicBlock) intsrv.IBasicBlock {
 	predecessors := util.NewSet[intsrv.IBasicBlock]()
 
 	predecessors.Add(bb)

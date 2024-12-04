@@ -1,7 +1,7 @@
 package service
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
@@ -57,7 +57,7 @@ type ILoop interface {
 
 type IControlFlowGraph interface {
 	BasicBlocks() util.IList[IBasicBlock]
-	Method() intmod.IMethod
+	Method() intcls.IMethod
 	SetOffsetToLineNumbers(offsetToLineNumbers []int)
 	LineNumber(offset int) int
 	Start() IBasicBlock
@@ -82,13 +82,17 @@ type IBasicBlock interface {
 	Branch() IBasicBlock
 	SetBranch(branch IBasicBlock)
 	Condition() IBasicBlock
+	SetCondition(condition IBasicBlock)
 	IsInverseCondition() bool
+	SetInverseCondition(inverseCondition bool)
 	Sub1() IBasicBlock
 	SetSub1(sub IBasicBlock)
 	Sub2() IBasicBlock
 	SetSub2(sub IBasicBlock)
 	ExceptionHandlers() util.IList[IExceptionHandler]
 	SwitchCases() util.IList[ISwitchCase]
+	SetSwitchCases(switchCases util.IList[ISwitchCase])
+	SetPredecessors(predecessors util.ISet[IBasicBlock])
 	Predecessors() util.ISet[IBasicBlock]
 	FirstLineNumber() int
 	LastLineNumber() int

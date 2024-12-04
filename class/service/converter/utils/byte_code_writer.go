@@ -217,14 +217,12 @@ func writeByteCode2(linePrefix string, sb *string, constants intcls.IConstantPoo
 		case 170: // TABLESWITCH
 			// Skip padding
 			i := (offset + 4) & 0xFFFC
-			i--
-			deltaOffset, i = PrefixReadInt32(code, i)
+			deltaOffset, i = SuffixReadInt32(code, i)
 			*sb += fmt.Sprintf(" default -> %d", offset+deltaOffset)
 
-			i--
-			deltaOffset, i = PrefixReadInt32(code, i)
+			deltaOffset, i = SuffixReadInt32(code, i)
 			low := deltaOffset
-			deltaOffset, i = PrefixReadInt32(code, i)
+			deltaOffset, i = SuffixReadInt32(code, i)
 			high := deltaOffset
 
 			for value := low; value <= high; value++ {
@@ -236,20 +234,17 @@ func writeByteCode2(linePrefix string, sb *string, constants intcls.IConstantPoo
 		case 171: // LOOKUPSWITCH
 			// Skip padding
 			i := (offset + 4) & 0xFFFC
-			i--
-			deltaOffset, i = PrefixReadInt32(code, i)
+			deltaOffset, i = SuffixReadInt32(code, i)
 			*sb += fmt.Sprintf(" default -> %d", offset+deltaOffset)
 
 			var npairs int
 			npairs, i = PrefixReadInt32(code, i)
 
 			for k := 0; k < npairs; k++ {
-				i--
-				deltaOffset, i = PrefixReadInt32(code, i)
+				deltaOffset, i = SuffixReadInt32(code, i)
 				*sb += fmt.Sprintf(", %d", deltaOffset)
 
-				i--
-				deltaOffset, i = PrefixReadInt32(code, i)
+				deltaOffset, i = SuffixReadInt32(code, i)
 				*sb += fmt.Sprintf(" -> %d", offset+deltaOffset)
 			}
 

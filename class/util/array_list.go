@@ -34,6 +34,7 @@ type IList[T comparable] interface {
 	Get(index int) T
 	Set(index int, element T) T
 	AddAt(index int, element T) error
+	AddAllAt(index int, elements []T) error
 	RemoveAt(index int) T
 	IndexOf(element T) int
 	ListIterator() IListIterator[T]
@@ -83,11 +84,31 @@ func (list *ArrayList[T]) Add(element T) bool {
 	return true
 }
 
+// AddAt 메서드
+func (list *ArrayList[T]) AddAt(index int, element T) error {
+	if index < 0 || index > list.size {
+		return errors.New("index out of bounds")
+	}
+	list.data = append(list.data[:index], append([]T{element}, list.data[index:]...)...)
+	list.size++
+	return nil
+}
+
 func (list *ArrayList[T]) AddAll(elements []T) bool {
 	for _, element := range elements {
 		_ = list.Add(element)
 	}
 	return true
+}
+
+// 여러 요소 추가
+func (list *ArrayList[T]) AddAllAt(index int, elements []T) error {
+	if index < 0 || index > list.size {
+		return errors.New("index out of bounds")
+	}
+	list.data = append(list.data[:index], append(elements, list.data[index:]...)...)
+	list.size = len(list.data)
+	return nil
 }
 
 // Remove 메서드
@@ -120,16 +141,6 @@ func (list *ArrayList[T]) Set(index int, element T) T {
 	oldValue := list.data[index]
 	list.data[index] = element
 	return oldValue
-}
-
-// AddAt 메서드
-func (list *ArrayList[T]) AddAt(index int, element T) error {
-	if index < 0 || index > list.size {
-		return errors.New("index out of bounds")
-	}
-	list.data = append(list.data[:index], append([]T{element}, list.data[index:]...)...)
-	list.size++
-	return nil
 }
 
 // RemoveAt 메서드
