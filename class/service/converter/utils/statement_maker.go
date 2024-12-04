@@ -16,16 +16,13 @@ import (
 	"strings"
 )
 
-type IStatementMaker interface {
-}
-
 var GlobalFinallyExceptionExpression = modexp.NewNullExpression(
 	_type.NewObjectType("java/lang/Exception",
 		"java.lang.Exception", "Exception"))
 var GlobalMergeTryWithResourcesStatementVisitor = visitor.NewMergeTryWithResourcesStatementVisitor()
 
 func NewStatementMaker(typeMaker intsrv.ITypeMaker, localVariableMaker intsrv.ILocalVariableMaker,
-	comd intsrv.IClassFileConstructorOrMethodDeclaration) IStatementMaker {
+	comd intsrv.IClassFileConstructorOrMethodDeclaration) intsrv.IStatementMaker {
 	classFile := comd.ClassFile()
 
 	m := &StatementMaker{

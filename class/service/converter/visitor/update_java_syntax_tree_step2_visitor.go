@@ -11,8 +11,13 @@ var autoboxingVisitor = NewAutoboxingVisitor()
 
 func NewUpdateJavaSyntaxTreeStep2Visitor(typeMaker intsrv.ITypeMaker) *UpdateJavaSyntaxTreeStep2Visitor {
 	return &UpdateJavaSyntaxTreeStep2Visitor{
-		updateOuterFieldTypeVisitor:   *NewUpdateOuterFieldTypeVisitor(typeMaker),
-		updateBridgeMethodTypeVisitor: *NewUpdateBridgeMethodTypeVisitor(typeMaker),
+		initStaticFieldVisitor:          NewUpdateOuterFieldTypeVisitor(),
+		initInstanceFieldVisitor:        NewUpdateBridgeMethodTypeVisitor(),
+		initEnumVisitor:                 NewUpdateBridgeMethodTypeVisitor(),
+		removeDefaultConstructorVisitor: NewUpdateBridgeMethodTypeVisitor(),
+		replaceBridgeMethodVisitor:      NewUpdateBridgeMethodVisitor(typeMaker),
+		initInnerClassStep2Visitor:      NewUpdateNewExpressionVisitor(typeMaker),
+		addCastExpressionVisitor:        NewAddCastExpressionVisitor(typeMaker),
 	}
 }
 

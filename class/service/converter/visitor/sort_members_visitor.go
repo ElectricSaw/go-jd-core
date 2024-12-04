@@ -61,9 +61,21 @@ func Merge(fields, methods, innerTypes []intsrv.IClassFileMemberDeclaration) int
 
 	result := declaration.NewMemberDeclarationsWithCapacity(size)
 
-	result.AddAll(ConvertMemberDeclaration(fields))
-	result.AddAll(ConvertMemberDeclaration(methods))
-	result.AddAll(ConvertMemberDeclaration(innerTypes))
+	tmp := make([]intmod.IMemberDeclaration, 0)
+	for _, item := range fields {
+		tmp = append(tmp, item.(intmod.IMemberDeclaration))
+	}
+	for _, item := range methods {
+		tmp = append(tmp, item.(intmod.IMemberDeclaration))
+	}
+	for _, item := range innerTypes {
+		tmp = append(tmp, item.(intmod.IMemberDeclaration))
+	}
+	result.AddAll(tmp)
+
+	//result.AddAll(ConvertMemberDeclaration(fields))
+	//result.AddAll(ConvertMemberDeclaration(methods))
+	//result.AddAll(ConvertMemberDeclaration(innerTypes))
 
 	return result
 }

@@ -6,6 +6,10 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
+type IStatementMaker interface {
+	Make(cfg IControlFlowGraph) intmod.IStatements
+}
+
 type IByteCodeParser interface {
 	Parse(basicBlock IBasicBlock, statements intmod.IStatements, stack util.IStack[intmod.IExpression])
 }

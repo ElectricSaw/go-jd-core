@@ -673,7 +673,7 @@ func newJumpBasicBlockGraphLoopReducer(bb, target intsrv.IBasicBlock) intsrv.IBa
 	return bb.ControlFlowGraph().NewBasicBlock5(intsrv.TypeJump, bb.FromOffset(), target.FromOffset(), predecessors)
 }
 
-func ReduceWithLoop(cfg intsrv.IControlFlowGraph) {
+func ReduceControlFlowGraphLoopReducer(cfg intsrv.IControlFlowGraph) {
 	arrayOfDominatorIndexes := buildDominatorIndexes(cfg)
 	loops := IdentifyNaturalLoops(cfg, arrayOfDominatorIndexes)
 	loopsLength := loops.Size()

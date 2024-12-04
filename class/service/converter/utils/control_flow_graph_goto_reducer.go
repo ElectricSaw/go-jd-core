@@ -2,7 +2,7 @@ package utils
 
 import intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 
-func ReduceGraphGotoReducer(cfg intsrv.IControlFlowGraph) {
+func ReduceControlFlowGraphGotoReducer(cfg intsrv.IControlFlowGraph) {
 	for _, basicBlock := range cfg.BasicBlocks().ToSlice() {
 		if basicBlock.Type() == intsrv.TypeGoto {
 			successor := basicBlock.Next()

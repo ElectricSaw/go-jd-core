@@ -9,15 +9,15 @@ import (
 	"math"
 )
 
-func ReduceGraphGotoReducer(cfg intsrv.IControlFlowGraph) bool {
+func ReduceControlFlowGraphReducer(cfg intsrv.IControlFlowGraph) bool {
 	start := cfg.Start()
 	jsrTargets := util.NewBitSet()
 	visited := util.NewBitSetWithSize(cfg.BasicBlocks().Size())
 
-	return ReduceGraphGotoReducer2(visited, start, jsrTargets)
+	return ReduceControlFlowGraphReducer2(visited, start, jsrTargets)
 }
 
-func ReduceGraphGotoReducer2(visited util.IBitSet, basicBlock intsrv.IBasicBlock, jsrTargets util.IBitSet) bool {
+func ReduceControlFlowGraphReducer2(visited util.IBitSet, basicBlock intsrv.IBasicBlock, jsrTargets util.IBitSet) bool {
 	if !basicBlock.MatchType(intsrv.GroupEnd) && (visited.Get(basicBlock.Index()) == false) {
 		visited.Set(basicBlock.Index())
 
@@ -31,7 +31,7 @@ func ReduceGraphGotoReducer2(visited util.IBitSet, basicBlock intsrv.IBasicBlock
 		case intsrv.TypeTryJsr:
 		case intsrv.TypeTryEclipse:
 		case intsrv.TypeGotoInTernaryOperator:
-			return ReduceGraphGotoReducer2(visited, basicBlock.Next(), jsrTargets)
+			return ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets)
 		case intsrv.TypeConditionalBranch:
 		case intsrv.TypeCondition:
 		case intsrv.TypeConditionOr:
@@ -58,7 +58,7 @@ func reduceConditionalBranch(visited util.IBitSet, basicBlock intsrv.IBasicBlock
 
 	// assert basicBlock.MatchType(intsrv.GroupCondition);
 
-	if ReduceGraphGotoReducer2(visited, basicBlock.Next(), jsrTargets) && ReduceGraphGotoReducer2(visited, basicBlock.Branch(), jsrTargets) {
+	if ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets) && ReduceControlFlowGraphReducer2(visited, basicBlock.Branch(), jsrTargets) {
 		return reduceConditionalBranch2(basicBlock)
 	}
 
@@ -662,7 +662,7 @@ func reduceSwitchDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock
 	reduced := true
 
 	for _, switchCase := range basicBlock.SwitchCases().ToSlice() {
-		reduced = reduced && ReduceGraphGotoReducer2(visited, switchCase.BasicBlock(), jsrTargets)
+		reduced = reduced && ReduceControlFlowGraphReducer2(visited, switchCase.BasicBlock(), jsrTargets)
 	}
 
 	for _, switchCase := range basicBlock.SwitchCases().ToSlice() {
@@ -691,7 +691,7 @@ func reduceSwitchDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock
 	basicBlock.SetNext(cfg.End)
 	endPredecessors.Add(basicBlock)
 
-	return reduced && ReduceGraphGotoReducer2(visited, basicBlock.Next(), jsrTargets)
+	return reduced && ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets)
 }
 
 func searchLoopStart(basicBlock intsrv.IBasicBlock, maxOffset int) bool {
@@ -746,7 +746,7 @@ func reduceTryDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock, j
 
 	for _, exceptionHandler := range basicBlock.ExceptionHandlers().ToSlice() {
 		if exceptionHandler.InternalThrowableName() == "" {
-			reduced = ReduceGraphGotoReducer2(visited, exceptionHandler.BasicBlock(), jsrTargets)
+			reduced = ReduceControlFlowGraphReducer2(visited, exceptionHandler.BasicBlock(), jsrTargets)
 			finallyBB = exceptionHandler.BasicBlock()
 			break
 		}
@@ -754,7 +754,7 @@ func reduceTryDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock, j
 
 	jsrTarget := searchJsrTarget(basicBlock, jsrTargets)
 
-	reduced = reduced && ReduceGraphGotoReducer2(visited, basicBlock.Next(), jsrTargets)
+	reduced = reduced && ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets)
 
 	tryBB := basicBlock.Next()
 
@@ -768,7 +768,7 @@ func reduceTryDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock, j
 
 	for _, exceptionHandler := range basicBlock.ExceptionHandlers().ToSlice() {
 		if exceptionHandler.InternalThrowableName() != "" {
-			reduced = reduced && ReduceGraphGotoReducer2(visited, exceptionHandler.BasicBlock(), jsrTargets)
+			reduced = reduced && ReduceControlFlowGraphReducer2(visited, exceptionHandler.BasicBlock(), jsrTargets)
 		}
 
 		bb := exceptionHandler.BasicBlock()
@@ -1091,7 +1091,7 @@ func removeJsrAndMergeSubTry(basicBlock intsrv.IBasicBlock) {
 
 func reduceJsr(visited util.IBitSet, basicBlock intsrv.IBasicBlock, jsrTargets util.IBitSet) bool {
 	branch := basicBlock.Branch()
-	reduced := ReduceGraphGotoReducer2(visited, basicBlock.Next(), jsrTargets) && ReduceGraphGotoReducer2(visited, branch, jsrTargets)
+	reduced := ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets) && ReduceControlFlowGraphReducer2(visited, branch, jsrTargets)
 
 	if (branch.Index() >= 0) && jsrTargets.Get(branch.Index()) {
 		// ReduceGraphGotoReducer JSR
@@ -1154,14 +1154,14 @@ func reduceJsr(visited util.IBitSet, basicBlock intsrv.IBasicBlock, jsrTargets u
 
 func reduceLoop2(visited util.IBitSet, basicBlock intsrv.IBasicBlock, jsrTargets util.IBitSet) bool {
 	clone1 := visited.Clone()
-	reduced := ReduceGraphGotoReducer2(visited, basicBlock.Sub1(), jsrTargets)
+	reduced := ReduceControlFlowGraphReducer2(visited, basicBlock.Sub1(), jsrTargets)
 
 	if reduced == false {
 		visitedMembers := util.NewBitSet()
 		updateBasicBlock := searchUpdateBlockAndCreateContinueLoop(visitedMembers, basicBlock.Sub1())
 
 		visited = clone1.Clone()
-		reduced = ReduceGraphGotoReducer2(visited, basicBlock.Sub1(), jsrTargets)
+		reduced = ReduceControlFlowGraphReducer2(visited, basicBlock.Sub1(), jsrTargets)
 
 		if updateBasicBlock != nil {
 			removeLastContinueLoop(basicBlock.Sub1().Sub1())
@@ -1198,12 +1198,12 @@ func reduceLoop2(visited util.IBitSet, basicBlock intsrv.IBasicBlock, jsrTargets
 				basicBlock.SetSub1(newLoopBB)
 
 				visitedMembers.ClearAll()
-				reduced = ReduceGraphGotoReducer2(visitedMembers, newLoopBB, jsrTargets)
+				reduced = ReduceControlFlowGraphReducer2(visitedMembers, newLoopBB, jsrTargets)
 			}
 		}
 	}
 
-	return reduced && ReduceGraphGotoReducer2(visited, basicBlock.Next(), jsrTargets)
+	return reduced && ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets)
 }
 
 func removeLastContinueLoop(basicBlock intsrv.IBasicBlock) {

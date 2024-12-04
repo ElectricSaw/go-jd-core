@@ -11,7 +11,7 @@ import (
 var Mark = cfg.End
 var GlobalCodeExceptionComparator = NewCodeExceptionComparator()
 
-func Make(method intcls.IMethod) intsrv.IControlFlowGraph {
+func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 	attributeCode := method.Attribute("Code").(intcls.IAttributeCode)
 
 	if attributeCode == nil {
