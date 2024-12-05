@@ -6,7 +6,23 @@ import (
 )
 
 func NewStatements() intmod.IStatements {
-	return &Statements{}
+	s := &Statements{
+		DefaultList: *util.NewDefaultList[intmod.IStatement]().(*util.DefaultList[intmod.IStatement]),
+	}
+	s.SetValue(s)
+	return s
+}
+
+func NewStatementsWithList(list util.IList[intmod.IStatement]) intmod.IStatements {
+	return NewStatementsWithSlice(list.ToSlice())
+}
+
+func NewStatementsWithSlice(slice []intmod.IStatement) intmod.IStatements {
+	s := &Statements{
+		DefaultList: *util.NewDefaultListWithSlice(slice).(*util.DefaultList[intmod.IStatement]),
+	}
+	s.SetValue(s)
+	return s
 }
 
 type Statements struct {

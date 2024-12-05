@@ -12,7 +12,9 @@ import (
 	"fmt"
 )
 
-func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker, comd intsrv.IClassFileConstructorOrMethodDeclaration, constructor bool) intsrv.ILocalVariableMaker {
+func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker,
+	comd intsrv.IClassFileConstructorOrMethodDeclaration,
+	constructor bool) intsrv.ILocalVariableMaker {
 	classFile := comd.ClassFile()
 	method := comd.Method()
 	parameterTypes := comd.ParameterTypes()

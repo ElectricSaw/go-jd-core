@@ -79,6 +79,7 @@ type IClassFileConstructorDeclaration interface {
 	Bindings() map[string]intmod.ITypeArgument
 	TypeBounds() map[string]intmod.IType
 	FirstLineNumber() int
+	SetFirstLineNumber(firstLineNumber int)
 }
 
 type IClassFileConstructorOrMethodDeclaration interface {

@@ -1,14 +1,14 @@
 package declaration
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
 	"fmt"
 )
 
-func NewClassFileBodyDeclaration(classFile classpath.IClassFile, bindings map[string]intmod.ITypeArgument,
+func NewClassFileBodyDeclaration(classFile intcls.IClassFile, bindings map[string]intmod.ITypeArgument,
 	typeBounds map[string]intmod.IType, outerBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
 	d := &ClassFileBodyDeclaration{
 		BodyDeclaration:      *declaration.NewBodyDeclaration(classFile.InternalTypeName(), nil).(*declaration.BodyDeclaration),
@@ -24,7 +24,7 @@ func NewClassFileBodyDeclaration(classFile classpath.IClassFile, bindings map[st
 type ClassFileBodyDeclaration struct {
 	declaration.BodyDeclaration
 
-	classFile                classpath.IClassFile
+	classFile                intcls.IClassFile
 	fieldDeclarations        []intsrv.IClassFileFieldDeclaration
 	methodDeclarations       []intsrv.IClassFileConstructorOrMethodDeclaration
 	innerTypeDeclarations    []intsrv.IClassFileTypeDeclaration
@@ -132,7 +132,7 @@ func (d *ClassFileBodyDeclaration) UpdateFirstLineNumber(members []intsrv.IClass
 	}
 }
 
-func (d *ClassFileBodyDeclaration) ClassFile() classpath.IClassFile {
+func (d *ClassFileBodyDeclaration) ClassFile() intcls.IClassFile {
 	return d.classFile
 }
 

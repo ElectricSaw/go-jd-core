@@ -77,3 +77,7 @@ func (d *ClassFileConstructorDeclaration) TypeBounds() map[string]intmod.IType {
 func (d *ClassFileConstructorDeclaration) FirstLineNumber() int {
 	return d.firstLineNumber
 }
+
+func (d *ClassFileConstructorDeclaration) SetFirstLineNumber(firstLineNumber int) {
+	d.firstLineNumber = firstLineNumber
+}
