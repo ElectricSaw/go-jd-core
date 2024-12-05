@@ -14,7 +14,7 @@ type IAssertStatement interface {
 type IBreakStatement interface {
 	IStatement
 
-	Label() string
+	Text() string
 	IsBreakStatement() bool
 	Accept(visitor IStatementVisitor)
 }
@@ -29,7 +29,7 @@ type IByteCodeStatement interface {
 type ICommentStatement interface {
 	IStatement
 
-	Label() string
+	Text() string
 	IsContinueStatement() bool
 	Accept(visitor IStatementVisitor)
 }
@@ -37,7 +37,7 @@ type ICommentStatement interface {
 type IContinueStatement interface {
 	IStatement
 
-	Label() string
+	Text() string
 	IsContinueStatement() bool
 	Accept(visitor IStatementVisitor)
 }
@@ -113,7 +113,7 @@ type IIfStatement interface {
 type ILabelStatement interface {
 	IStatement
 
-	Label() string
+	Text() string
 	Statement() IStatement
 	Statements() IStatement
 	IsLabelStatement() bool

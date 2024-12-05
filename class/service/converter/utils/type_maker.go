@@ -29,7 +29,7 @@ var InternalNameToObjectPrimitiveType = map[string]intmod.IObjectType{
 	_type.OtTypePrimitiveVoid.InternalName():    _type.OtTypePrimitiveVoid,
 }
 
-func NewTypeMaker() intsrv.ITypeMaker {
+func NewTypeMaker(loader api.Loader) intsrv.ITypeMaker {
 	t := &TypeMaker{
 		signatureToType:                 make(map[string]intmod.IType),
 		internalTypeNameFieldNameToType: make(map[string]intmod.IType),
@@ -43,6 +43,7 @@ func NewTypeMaker() intsrv.ITypeMaker {
 		assignableRawTypes:            make(map[int64]bool),
 		superParameterizedObjectTypes: make(map[int64]intmod.IObjectType),
 		hierarchy:                     make(map[string][]string),
+		loader:                        loader,
 	}
 
 	t.signatureToType["B"] = _type.PtTypeByte.(intmod.IType)

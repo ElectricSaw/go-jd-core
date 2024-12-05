@@ -14,7 +14,7 @@ type CommentStatement struct {
 	text string
 }
 
-func (s *CommentStatement) Label() string {
+func (s *CommentStatement) Text() string {
 	return s.text
 }
 

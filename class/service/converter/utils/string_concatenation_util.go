@@ -5,6 +5,7 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	srvexp "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/expression"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 func StringConcatenationUtilCreate1(expr intmod.IExpression, lineNumber int, typeName string) intmod.IExpression {
@@ -55,7 +56,7 @@ func StringConcatenationUtilCreate1(expr intmod.IExpression, lineNumber int, typ
 }
 
 func StringConcatenationUtilCreate2(recipe string, parameters intmod.IExpression) intmod.IExpression {
-	st := NewStringTokenizer3(recipe, "\u0001", true)
+	st := util.NewStringTokenizer3(recipe, "\u0001", true)
 
 	if st.HasMoreTokens() {
 		token, _ := st.NextToken()

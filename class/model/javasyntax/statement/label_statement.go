@@ -19,7 +19,7 @@ type LabelStatement struct {
 	statement intmod.IStatement
 }
 
-func (s *LabelStatement) Label() string {
+func (s *LabelStatement) Text() string {
 	return s.label
 }
 

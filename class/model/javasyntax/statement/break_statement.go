@@ -16,7 +16,7 @@ type BreakStatement struct {
 	label string
 }
 
-func (s *BreakStatement) Label() string {
+func (s *BreakStatement) Text() string {
 	return s.label
 }
 

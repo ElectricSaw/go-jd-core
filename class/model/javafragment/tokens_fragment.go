@@ -4,9 +4,15 @@ import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
 	"bitbucket.org/coontec/go-jd-core/class/model/token"
+	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter/visitor"
 )
 
 var Comma = NewTokensFragment(token.Comma)
+var Semicolon = NewTokensFragment(token.Semicolon)
+var StartDeclarationOrStatementBlock = NewTokensFragment(token.StartDeclarationOrStatementBlock)
+var EndDeclarationOrStatementBlock = NewTokensFragment(token.EndDeclarationOrStatementBlock)
+var EndDeclarationOrStatementBlockSemicolon = NewTokensFragment(token.EndDeclarationOrStatementBlock, token.Semicolon)
+var ReturnSemicolon = NewTokensFragment(visitor.Return, token.Semicolon)
 
 func NewTokensFragment(tokens ...intmod.IToken) intmod.ITokensFragment {
 	return NewTokensFragmentWithSlice(tokens)
