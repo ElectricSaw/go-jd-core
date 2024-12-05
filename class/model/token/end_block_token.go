@@ -1,6 +1,9 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
 var EndBlock = NewEndBlockToken("}")
 var EndArrayBlock = NewEndBlockToken("]")
@@ -9,7 +12,7 @@ var EndParametersBlock = NewEndBlockToken(")")
 var EndResourcesBlock = NewEndBlockToken(")")
 var EndDeclarationOrStatementBlock = NewEndBlockToken("")
 
-func NewEndBlockToken(text string) *EndBlockToken {
+func NewEndBlockToken(text string) intmod.IEndBlockToken {
 	return &EndBlockToken{text}
 }
 
@@ -21,7 +24,11 @@ func (t *EndBlockToken) Text() string {
 	return t.text
 }
 
-func (t *EndBlockToken) Accept(visitor TokenVisitor) {
+func (t *EndBlockToken) SetText(text string) {
+	t.text = text
+}
+
+func (t *EndBlockToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitEndBlockToken(t)
 }
 

@@ -1,8 +1,11 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
-func NewNewLineToken(count int) *NewLineToken {
+func NewNewLineToken(count int) intmod.INewLineToken {
 	return &NewLineToken{count}
 }
 
@@ -14,7 +17,11 @@ func (t *NewLineToken) Count() int {
 	return t.count
 }
 
-func (t *NewLineToken) Accept(visitor TokenVisitor) {
+func (t *NewLineToken) SetCount(count int) {
+	t.count = count
+}
+
+func (t *NewLineToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitNewLineToken(t)
 }
 

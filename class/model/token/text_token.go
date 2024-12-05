@@ -1,6 +1,9 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
 var At = NewTextToken("@")
 var Comma = NewTextToken(",")
@@ -33,7 +36,7 @@ var VarArgs = NewTextToken("... ")
 var VerticalLine = NewTextToken("|")
 var Exclamation = NewTextToken("!")
 
-func NewTextToken(text string) *TextToken {
+func NewTextToken(text string) intmod.ITextToken {
 	return &TextToken{text}
 }
 
@@ -45,7 +48,11 @@ func (t *TextToken) Text() string {
 	return t.text
 }
 
-func (t *TextToken) Accept(visitor TokenVisitor) {
+func (t *TextToken) SetText(text string) {
+	t.text = text
+}
+
+func (t *TextToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitTextToken(t)
 }
 

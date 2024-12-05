@@ -1,8 +1,11 @@
 package fragment
 
-func NewEndMovableBlockFragment() *EndMovableBlockFragment {
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewEndMovableBlockFragment() intmod.IEndMovableBlockFragment {
 	return &EndMovableBlockFragment{
-		FlexibleFragment: *NewFlexibleFragment(0, 0, 0, 0, "End movable block"),
+		FlexibleFragment: *NewFlexibleFragment(0, 0,
+			0, 0, "End movable block").(*FlexibleFragment),
 	}
 }
 
@@ -10,7 +13,7 @@ type EndMovableBlockFragment struct {
 	FlexibleFragment
 }
 
-func (f *EndMovableBlockFragment) Accept(visitor FragmentVisitor) {
+func (f *EndMovableBlockFragment) AcceptFragmentVisitor(visitor intmod.IFragmentVisitor) {
 	visitor.VisitEndMovableBlockFragment(f)
 }
 

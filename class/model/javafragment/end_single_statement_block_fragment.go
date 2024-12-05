@@ -1,11 +1,16 @@
 package javafragment
 
-import "bitbucket.org/coontec/go-jd-core/class/model/fragment"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
+)
 
-func NewEndSingleStatementBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, start *StartSingleStatementBlockFragment) *EndSingleStatementBlockFragment {
+func NewEndSingleStatementBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string, start intmod.IStartSingleStatementBlockFragment) intmod.IEndSingleStatementBlockFragment {
 	f := &EndSingleStatementBlockFragment{
-		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
-		start:                    start,
+		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label).(*fragment.EndFlexibleBlockFragment),
+		start: start,
 	}
 
 	f.start.SetEndSingleStatementBlockFragment(f)
@@ -16,20 +21,24 @@ func NewEndSingleStatementBlockFragment(minimalLineCount int, lineCount int, max
 type EndSingleStatementBlockFragment struct {
 	fragment.EndFlexibleBlockFragment
 
-	start *StartSingleStatementBlockFragment
+	start intmod.IStartSingleStatementBlockFragment
 }
 
-func (f *EndSingleStatementBlockFragment) StartSingleStatementBlockFragment() *StartSingleStatementBlockFragment {
+func (f *EndSingleStatementBlockFragment) Start() intmod.IStartSingleStatementBlockFragment {
 	return f.start
 }
 
+func (f *EndSingleStatementBlockFragment) SetStart(start intmod.IStartSingleStatementBlockFragment) {
+	f.start = start
+}
+
 func (f *EndSingleStatementBlockFragment) IncLineCount(force bool) bool {
-	if f.LineCount < f.MaximalLineCount {
-		f.LineCount++
+	if f.LineCount() < f.MaximalLineCount() {
+		f.SetLineCount(f.LineCount() + 1)
 
 		if !force {
-			if f.start.LineCount == 0 {
-				f.start.LineCount = 1
+			if f.start.LineCount() == 0 {
+				f.start.SetLineCount(1)
 			}
 		}
 
@@ -39,12 +48,12 @@ func (f *EndSingleStatementBlockFragment) IncLineCount(force bool) bool {
 }
 
 func (f *EndSingleStatementBlockFragment) DecLineCount(force bool) bool {
-	if f.LineCount > f.MinimalLineCount {
-		f.LineCount--
+	if f.LineCount() > f.MinimalLineCount() {
+		f.SetLineCount(f.LineCount() - 1)
 
 		if !force {
-			if f.LineCount == 0 {
-				f.start.LineCount = 0
+			if f.LineCount() == 0 {
+				f.start.SetLineCount(0)
 			}
 		}
 
@@ -53,6 +62,6 @@ func (f *EndSingleStatementBlockFragment) DecLineCount(force bool) bool {
 	return false
 }
 
-func (f *EndSingleStatementBlockFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *EndSingleStatementBlockFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitEndSingleStatementBlockFragment(f)
 }

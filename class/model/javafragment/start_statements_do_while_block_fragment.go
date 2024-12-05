@@ -1,14 +1,18 @@
 package javafragment
 
-func NewStartStatementsDoWhileBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartStatementsDoWhileBlockFragment {
-	return &StartStatementsDoWhileBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
-	}
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewStartStatementsDoWhileBlockFragment(minimalLineCount, lineCount, maximalLineCount,
+	weight int, label string) intmod.IStartStatementsDoWhileBlockFragment {
+	return NewStartStatementsDoWhileBlockFragmentWithGroup(minimalLineCount, lineCount,
+		maximalLineCount, weight, label, NewStartStatementsBlockFragmentGroup())
 }
 
-func NewStartStatementsDoWhileBlockFragmentWithGroup(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, group *StartStatementsBlockFragmentGroup) *StartStatementsDoWhileBlockFragment {
+func NewStartStatementsDoWhileBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string, group intmod.IStartStatementsBlockFragmentGroup) intmod.IStartStatementsDoWhileBlockFragment {
 	return &StartStatementsDoWhileBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight, label, group),
+		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount,
+			lineCount, maximalLineCount, weight, label, group).(*StartStatementsBlockFragment),
 	}
 }
 
@@ -16,6 +20,6 @@ type StartStatementsDoWhileBlockFragment struct {
 	StartStatementsBlockFragment
 }
 
-func (f *StartStatementsDoWhileBlockFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *StartStatementsDoWhileBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitStartStatementsDoWhileBlockFragment(f)
 }

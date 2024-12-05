@@ -1,14 +1,18 @@
 package javafragment
 
-func NewStartStatementsInfiniteWhileBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartStatementsInfiniteWhileBlockFragment {
-	return &StartStatementsInfiniteWhileBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
-	}
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewStartStatementsInfiniteWhileBlockFragment(minimalLineCount, lineCount, maximalLineCount,
+	weight int, label string) intmod.IStartStatementsInfiniteWhileBlockFragment {
+	return NewStartStatementsInfiniteWhileBlockFragmentWithGroup(minimalLineCount, lineCount,
+		maximalLineCount, weight, label, NewStartStatementsBlockFragmentGroup())
 }
 
-func NewStartStatementsInfiniteWhileBlockFragmentWithGroup(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, group *StartStatementsBlockFragmentGroup) *StartStatementsInfiniteWhileBlockFragment {
+func NewStartStatementsInfiniteWhileBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string, group intmod.IStartStatementsBlockFragmentGroup) intmod.IStartStatementsInfiniteWhileBlockFragment {
 	return &StartStatementsInfiniteWhileBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight, label, group),
+		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount,
+			lineCount, maximalLineCount, weight, label, group).(*StartStatementsBlockFragment),
 	}
 }
 
@@ -16,6 +20,6 @@ type StartStatementsInfiniteWhileBlockFragment struct {
 	StartStatementsBlockFragment
 }
 
-func (f *StartStatementsInfiniteWhileBlockFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *StartStatementsInfiniteWhileBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitStartStatementsInfiniteWhileBlockFragment(f)
 }

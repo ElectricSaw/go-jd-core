@@ -1,8 +1,11 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
-func NewKeywordToken(keyword string) *KeywordToken {
+func NewKeywordToken(keyword string) intmod.IKeywordToken {
 	return &KeywordToken{keyword}
 }
 
@@ -14,7 +17,11 @@ func (t *KeywordToken) Keyword() string {
 	return t.keyword
 }
 
-func (t *KeywordToken) Accept(visitor TokenVisitor) {
+func (t *KeywordToken) SetKeyword(keyword string) {
+	t.keyword = keyword
+}
+
+func (t *KeywordToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitKeywordToken(t)
 }
 

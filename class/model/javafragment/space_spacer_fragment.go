@@ -1,8 +1,10 @@
 package javafragment
 
-func NewSpaceSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) *SpaceSpacerFragment {
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewSpaceSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) intmod.ISpaceSpacerFragment {
 	return &SpaceSpacerFragment{
-		SpacerFragment: *NewSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+		SpacerFragment: *NewSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight, label).(*SpacerFragment),
 	}
 }
 
@@ -10,6 +12,6 @@ type SpaceSpacerFragment struct {
 	SpacerFragment
 }
 
-func (f *SpaceSpacerFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *SpaceSpacerFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitSpaceSpacerFragment(f)
 }

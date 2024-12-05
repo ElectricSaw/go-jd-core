@@ -1,8 +1,11 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
-func NewBooleanConstantToken(value bool) *BooleanConstantToken {
+func NewBooleanConstantToken(value bool) intmod.IBooleanConstantToken {
 	return &BooleanConstantToken{value}
 }
 
@@ -14,7 +17,11 @@ func (t *BooleanConstantToken) Value() bool {
 	return t.value
 }
 
-func (t *BooleanConstantToken) Accept(visitor TokenVisitor) {
+func (t *BooleanConstantToken) SetValue(value bool) {
+	t.value = value
+}
+
+func (t *BooleanConstantToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitBooleanConstantToken(t)
 }
 

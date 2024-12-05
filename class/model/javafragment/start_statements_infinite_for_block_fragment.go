@@ -1,14 +1,18 @@
 package javafragment
 
-func NewStartStatementsInfiniteForBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartStatementsInfiniteForBlockFragment {
-	return &StartStatementsInfiniteForBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
-	}
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewStartStatementsInfiniteForBlockFragment(minimalLineCount, lineCount, maximalLineCount,
+	weight int, label string) intmod.IStartStatementsInfiniteForBlockFragment {
+	return NewStartStatementsInfiniteForBlockFragmentWithGroup(minimalLineCount, lineCount,
+		maximalLineCount, weight, label, NewStartStatementsBlockFragmentGroup())
 }
 
-func NewStartStatementsInfiniteForBlockFragmentWithGroup(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, group *StartStatementsBlockFragmentGroup) *StartStatementsInfiniteForBlockFragment {
+func NewStartStatementsInfiniteForBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string, group intmod.IStartStatementsBlockFragmentGroup) intmod.IStartStatementsInfiniteForBlockFragment {
 	return &StartStatementsInfiniteForBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight, label, group),
+		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount,
+			lineCount, maximalLineCount, weight, label, group).(*StartStatementsBlockFragment),
 	}
 }
 
@@ -16,6 +20,6 @@ type StartStatementsInfiniteForBlockFragment struct {
 	StartStatementsBlockFragment
 }
 
-func (f *StartStatementsInfiniteForBlockFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *StartStatementsInfiniteForBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitStartStatementsInfiniteForBlockFragment(f)
 }

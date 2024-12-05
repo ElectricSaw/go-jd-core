@@ -1,59 +1,84 @@
 package javafragment
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
 	"math"
 )
 
-func NewStartStatementsBlockFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartStatementsBlockFragment {
-	f := &StartStatementsBlockFragment{
-		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
-	}
-	f.Group = NewStartStatementsBlockFragmentGroup(f)
-	return f
+func NewStartStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string) intmod.IStartStatementsBlockFragment {
+	return NewStartStatementsBlockFragmentWithGroup(minimalLineCount, lineCount,
+		maximalLineCount, weight, label, NewStartStatementsBlockFragmentGroup())
 }
 
-func NewStartStatementsBlockFragmentWithGroup(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string, group *StartStatementsBlockFragmentGroup) *StartStatementsBlockFragment {
+func NewStartStatementsBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string, group intmod.IStartStatementsBlockFragmentGroup) intmod.IStartStatementsBlockFragment {
 	f := &StartStatementsBlockFragment{
-		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
-		Group:                      group,
+		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount, lineCount,
+			maximalLineCount, weight, label).(*fragment.StartFlexibleBlockFragment),
+		group: group,
 	}
-	f.Group.add(f)
+	f.group.Add(f)
 	return f
 }
 
 type StartStatementsBlockFragment struct {
 	fragment.StartFlexibleBlockFragment
 
-	Group *StartStatementsBlockFragmentGroup
+	group intmod.IStartStatementsBlockFragmentGroup
 }
 
-func (f *StartStatementsBlockFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *StartStatementsBlockFragment) Group() intmod.IStartStatementsBlockFragmentGroup {
+	return f.group
+}
+
+func (f *StartStatementsBlockFragment) SetGroup(group intmod.IStartStatementsBlockFragmentGroup) {
+	f.group = group
+}
+
+func (f *StartStatementsBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitStartStatementsBlockFragment(f)
 }
 
-func NewStartStatementsBlockFragmentGroup(frag fragment.IFlexibleFragment) *StartStatementsBlockFragmentGroup {
-	f := &StartStatementsBlockFragmentGroup{minimalLineCount: math.MaxInt}
-	f.fragments = append(f.fragments, frag)
-	return f
+func NewStartStatementsBlockFragmentGroup() intmod.IStartStatementsBlockFragmentGroup {
+	return &StartStatementsBlockFragmentGroup{minimalLineCount: math.MaxInt}
 }
 
 type StartStatementsBlockFragmentGroup struct {
-	fragments        []fragment.IFlexibleFragment
+	fragments        []intmod.IFlexibleFragment
 	minimalLineCount int
-}
-
-func (g *StartStatementsBlockFragmentGroup) add(frag fragment.IFlexibleFragment) {
-	g.fragments = append(g.fragments, frag)
 }
 
 func (g *StartStatementsBlockFragmentGroup) MinimalLineCount() int {
 	if g.minimalLineCount == math.MaxInt {
 		for _, frag := range g.fragments {
-			if g.minimalLineCount > frag.GetLineCount() {
-				g.minimalLineCount = frag.GetLineCount()
+			if g.minimalLineCount > frag.LineCount() {
+				g.minimalLineCount = frag.LineCount()
 			}
 		}
 	}
 	return g.minimalLineCount
+}
+
+func (g *StartStatementsBlockFragmentGroup) SetMinimalLineCount(minimalLineCount int) {
+	g.minimalLineCount = minimalLineCount
+}
+
+func (g *StartStatementsBlockFragmentGroup) Get(index int) intmod.IFlexibleFragment {
+	return g.fragments[index]
+}
+
+func (g *StartStatementsBlockFragmentGroup) Add(frag intmod.IFlexibleFragment) {
+	g.fragments = append(g.fragments, frag)
+}
+
+func (g *StartStatementsBlockFragmentGroup) Remove(index int) intmod.IFlexibleFragment {
+	ret := g.fragments[index]
+	g.fragments = append(g.fragments[:index], g.fragments[index+1:]...)
+	return ret
+}
+
+func (g *StartStatementsBlockFragmentGroup) ToSlice() []intmod.IFlexibleFragment {
+	return g.fragments
 }

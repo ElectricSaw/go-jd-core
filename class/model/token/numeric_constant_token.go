@@ -1,8 +1,11 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
-func NewNumericConstantToken(text string) *NumericConstantToken {
+func NewNumericConstantToken(text string) intmod.INumericConstantToken {
 	return &NumericConstantToken{text}
 }
 
@@ -14,7 +17,11 @@ func (t *NumericConstantToken) Text() string {
 	return t.text
 }
 
-func (t *NumericConstantToken) Accept(visitor TokenVisitor) {
+func (t *NumericConstantToken) SetText(text string) {
+	t.text = text
+}
+
+func (t *NumericConstantToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitNumericConstantToken(t)
 }
 

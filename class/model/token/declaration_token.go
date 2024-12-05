@@ -1,17 +1,11 @@
 package token
 
-import "fmt"
-
-const (
-	TypeToken        = 1
-	FieldToken       = 2
-	MethodToken      = 3
-	ConstructorToken = 4
-	PackageToken     = 5
-	ModuleToken      = 6
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
 )
 
-func NewDeclarationToken(typ int, internalTypeName string, name string, descriptor string) *DeclarationToken {
+func NewDeclarationToken(typ int, internalTypeName, name, descriptor string) intmod.IDeclarationToken {
 	return &DeclarationToken{typ, internalTypeName, name, descriptor}
 }
 
@@ -26,19 +20,35 @@ func (t *DeclarationToken) Type() int {
 	return t.typ
 }
 
+func (t *DeclarationToken) SetType(typ int) {
+	t.typ = typ
+}
+
 func (t *DeclarationToken) InternalTypeName() string {
 	return t.internalTypeName
+}
+
+func (t *DeclarationToken) SetInternalTypeName(internalName string) {
+	t.internalTypeName = internalName
 }
 
 func (t *DeclarationToken) Name() string {
 	return t.name
 }
 
+func (t *DeclarationToken) SetName(name string) {
+	t.name = name
+}
+
 func (t *DeclarationToken) Descriptor() string {
 	return t.descriptor
 }
 
-func (t *DeclarationToken) Accept(visitor TokenVisitor) {
+func (t *DeclarationToken) SetDescriptor(descriptor string) {
+	t.descriptor = descriptor
+}
+
+func (t *DeclarationToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitDeclarationToken(t)
 }
 

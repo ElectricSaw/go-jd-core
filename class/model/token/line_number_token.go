@@ -1,14 +1,13 @@
 package token
 
-import "fmt"
-
-const (
-	UnknownLineNumberToken = 0
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
 )
 
-var UnknownLineNumber = NewLineNumberToken(UnknownLineNumberToken)
+var UnknownLineNumber = NewLineNumberToken(intmod.UnknownLineNumberToken)
 
-func NewLineNumberToken(lineNumber int) *LineNumberToken {
+func NewLineNumberToken(lineNumber int) intmod.ILineNumberToken {
 	return &LineNumberToken{lineNumber}
 }
 
@@ -20,7 +19,11 @@ func (t *LineNumberToken) LineNumber() int {
 	return t.lineNumber
 }
 
-func (t *LineNumberToken) Accept(visitor TokenVisitor) {
+func (t *LineNumberToken) SetLineNumber(lineNumber int) {
+	t.lineNumber = lineNumber
+}
+
+func (t *LineNumberToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitLineNumberToken(t)
 }
 

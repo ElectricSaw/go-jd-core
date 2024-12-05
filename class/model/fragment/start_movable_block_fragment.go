@@ -1,19 +1,30 @@
 package fragment
 
-func NewStartMovableBlockFragment(typ int) *StartMovableBlockFragment {
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewStartMovableBlockFragment(typ int) intmod.IStartMovableBlockFragment {
 	return &StartMovableBlockFragment{
-		FlexibleFragment: *NewFlexibleFragment(0, 0, 0, 0, "Start movable block"),
-		Type:             typ,
+		FlexibleFragment: *NewFlexibleFragment(0, 0,
+			0, 0, "Start movable block").(*FlexibleFragment),
+		typ: typ,
 	}
 }
 
 type StartMovableBlockFragment struct {
 	FlexibleFragment
 
-	Type int
+	typ int
 }
 
-func (f *StartMovableBlockFragment) Accept(visitor FragmentVisitor) {
+func (f *StartMovableBlockFragment) Type() int {
+	return f.typ
+}
+
+func (f *StartMovableBlockFragment) SetType(typ int) {
+	f.typ = typ
+}
+
+func (f *StartMovableBlockFragment) AcceptFragmentVisitor(visitor intmod.IFragmentVisitor) {
 	visitor.VisitStartMovableBlockFragment(f)
 }
 

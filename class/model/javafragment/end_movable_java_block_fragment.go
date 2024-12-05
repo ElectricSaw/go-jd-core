@@ -1,12 +1,15 @@
 package javafragment
 
-import "bitbucket.org/coontec/go-jd-core/class/model/fragment"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
+)
 
 var EndMovableBlock = NewEndMovableJavaBlockFragment()
 
-func NewEndMovableJavaBlockFragment() *EndMovableJavaBlockFragment {
+func NewEndMovableJavaBlockFragment() intmod.IEndMovableJavaBlockFragment {
 	return &EndMovableJavaBlockFragment{
-		EndMovableBlockFragment: *fragment.NewEndMovableBlockFragment(),
+		EndMovableBlockFragment: *fragment.NewEndMovableBlockFragment().(*fragment.EndMovableBlockFragment),
 	}
 }
 
@@ -14,6 +17,6 @@ type EndMovableJavaBlockFragment struct {
 	fragment.EndMovableBlockFragment
 }
 
-func (f *EndMovableJavaBlockFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *EndMovableJavaBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitEndMovableJavaBlockFragment(f)
 }

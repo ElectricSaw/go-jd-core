@@ -1,6 +1,9 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
 var StartBlock = NewStartBlockToken("{")
 var StartArrayBlock = NewStartBlockToken("[")
@@ -9,7 +12,7 @@ var StartParametersBlock = NewStartBlockToken("(")
 var StartResourcesBlock = NewStartBlockToken("(")
 var StartDeclarationOrStatementBlock = NewStartBlockToken("")
 
-func NewStartBlockToken(text string) *StartBlockToken {
+func NewStartBlockToken(text string) intmod.IStartBlockToken {
 	return &StartBlockToken{text}
 }
 
@@ -21,7 +24,11 @@ func (t *StartBlockToken) Text() string {
 	return t.text
 }
 
-func (t *StartBlockToken) Accept(visitor TokenVisitor) {
+func (t *StartBlockToken) SetText(text string) {
+	t.text = text
+}
+
+func (t *StartBlockToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitStartBlockToken(t)
 }
 

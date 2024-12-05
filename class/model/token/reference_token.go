@@ -1,10 +1,13 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
-func NewReferenceToken(typ int, internalTypeName string, name string, descriptor string, ownerInternalName string) *ReferenceToken {
+func NewReferenceToken(typ int, internalTypeName, name, descriptor, ownerInternalName string) intmod.IReferenceToken {
 	return &ReferenceToken{
-		DeclarationToken:  NewDeclarationToken(typ, internalTypeName, name, descriptor),
+		DeclarationToken:  *NewDeclarationToken(typ, internalTypeName, name, descriptor).(*DeclarationToken),
 		ownerInternalName: ownerInternalName,
 	}
 }
@@ -19,7 +22,11 @@ func (t *ReferenceToken) OwnerInternalName() string {
 	return t.ownerInternalName
 }
 
-func (t *ReferenceToken) Accept(visitor TokenVisitor) {
+func (t *ReferenceToken) SetOwnerInternalName(ownerInternalName string) {
+	t.ownerInternalName = ownerInternalName
+}
+
+func (t *ReferenceToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitReferenceToken(t)
 }
 

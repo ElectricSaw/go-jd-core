@@ -1,8 +1,11 @@
 package fragment
 
-func NewSpacerBetweenMovableBlocksFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) *SpacerBetweenMovableBlocksFragment {
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
+func NewSpacerBetweenMovableBlocksFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) intmod.ISpacerBetweenMovableBlocksFragment {
 	return &SpacerBetweenMovableBlocksFragment{
-		FlexibleFragment: *NewFlexibleFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+		FlexibleFragment: *NewFlexibleFragment(minimalLineCount, lineCount,
+			maximalLineCount, weight, label).(*FlexibleFragment),
 	}
 }
 
@@ -11,10 +14,10 @@ type SpacerBetweenMovableBlocksFragment struct {
 }
 
 func (f *SpacerBetweenMovableBlocksFragment) SetInitialLineCount(initialLineCount int) {
-	f.InitialLineCount = initialLineCount
-	f.LineCount = initialLineCount
+	f.initialLineCount = initialLineCount
+	f.lineCount = initialLineCount
 }
 
-func (f *SpacerBetweenMovableBlocksFragment) Accept(visitor FragmentVisitor) {
+func (f *SpacerBetweenMovableBlocksFragment) AcceptFragmentVisitor(visitor intmod.IFragmentVisitor) {
 	visitor.VisitSpacerBetweenMovableBlocksFragment(f)
 }

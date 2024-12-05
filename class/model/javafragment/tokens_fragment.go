@@ -1,49 +1,51 @@
 package javafragment
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
 	"bitbucket.org/coontec/go-jd-core/class/model/token"
 )
 
 var Comma = NewTokensFragment(token.Comma)
 
-func NewTokensFragment(tokens ...token.Token) *TokensFragment {
+func NewTokensFragment(tokens ...intmod.IToken) intmod.ITokensFragment {
 	return NewTokensFragmentWithSlice(tokens)
 }
 
-func NewTokensFragmentWithSlice(tokens []token.Token) *TokensFragment {
+func NewTokensFragmentWithSlice(tokens []intmod.IToken) intmod.ITokensFragment {
 	return newTokensFragment(getLineCount(tokens), tokens)
 }
 
-func newTokensFragment(lineCount int, tokens []token.Token) *TokensFragment {
+func newTokensFragment(lineCount int, tokens []intmod.IToken) intmod.ITokensFragment {
 	return &TokensFragment{
-		FlexibleFragment: *fragment.NewFlexibleFragment(lineCount, lineCount, lineCount, 0, "Tokens"),
-		tokens:           tokens,
+		FlexibleFragment: *fragment.NewFlexibleFragment(lineCount, lineCount, lineCount,
+			0, "Tokens").(*fragment.FlexibleFragment),
+		tokens: tokens,
 	}
-}
-
-func getLineCount(tokens []token.Token) int {
-	visitor := &LineCountVisitor{}
-
-	for _, tkn := range tokens {
-		tkn.Accept(visitor)
-	}
-
-	return visitor.LineCount()
 }
 
 type TokensFragment struct {
 	fragment.FlexibleFragment
 
-	tokens []token.Token
+	tokens []intmod.IToken
 }
 
-func (f *TokensFragment) Tokens() []token.Token {
+func (f *TokensFragment) TokenAt(index int) intmod.IToken {
+	return f.tokens[index]
+}
+
+func (f *TokensFragment) Tokens() []intmod.IToken {
 	return f.tokens
 }
 
-func (f *TokensFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *TokensFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitTokensFragment(f)
+}
+
+func NewLineCountVisitor() intmod.ILineCountVisitor {
+	return &LineCountVisitor{
+		lineCount: 0,
+	}
 }
 
 type LineCountVisitor struct {
@@ -56,6 +58,16 @@ func (v *LineCountVisitor) LineCount() int {
 	return v.lineCount
 }
 
-func (v *LineCountVisitor) VisitLineNumberToken(token *token.LineNumberToken) {
+func (v *LineCountVisitor) VisitLineNumberToken(_ intmod.ILineNumberToken) {
 	v.lineCount++
+}
+
+func getLineCount(tokens []intmod.IToken) int {
+	visitor := NewLineCountVisitor()
+
+	for _, tkn := range tokens {
+		tkn.Accept(visitor)
+	}
+
+	return visitor.LineCount()
 }

@@ -1,60 +1,85 @@
 package javafragment
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
 	"bitbucket.org/coontec/go-jd-core/class/model/token"
 )
 
-func NewLineNumberTokensFragment(tokens []token.Token) *LineNumberTokensFragment {
+func NewLineNumberTokensFragment(tokens []intmod.IToken) intmod.ILineNumberTokensFragment {
 	return &LineNumberTokensFragment{
 		tokens: tokens,
 	}
 }
 
-func SearchFirstLineNumber(tokens []token.Token) int {
-	visitor := new(SearchLineNumberVisitor)
+func SearchFirstLineNumber(tokens []intmod.IToken) int {
+	visitor := NewSearchLineNumberVisitor()
 
 	for _, tkn := range tokens {
 		tkn.Accept(visitor)
 
-		if visitor.LineNumber != token.UnknownLineNumberToken {
-			return visitor.LineNumber - visitor.NewLineCounter
+		if visitor.LineNumber() != intmod.UnknownLineNumberToken {
+			return visitor.LineNumber() - visitor.NewLineNumber()
 		}
 	}
 
-	return token.UnknownLineNumberToken
+	return intmod.UnknownLineNumberToken
 }
 
 type LineNumberTokensFragment struct {
 	fragment.FixedFragment
 
-	tokens []token.Token
+	tokens []intmod.IToken
 }
 
-func (f *LineNumberTokensFragment) Tokens() []token.Token {
+func (f *LineNumberTokensFragment) TokenAt(index int) intmod.IToken {
+	return f.tokens[index]
+}
+
+func (f *LineNumberTokensFragment) Tokens() []intmod.IToken {
 	return f.tokens
 }
 
-func (f *LineNumberTokensFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *LineNumberTokensFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitLineNumberTokensFragment(f)
+}
+
+func NewSearchLineNumberVisitor() intmod.ISearchLineNumberVisitor {
+	return &SearchLineNumberVisitor{}
 }
 
 type SearchLineNumberVisitor struct {
 	token.AbstractNopTokenVisitor
 
-	LineNumber     int
-	NewLineCounter int
+	lineNumber     int
+	newLineCounter int
+}
+
+func (v *SearchLineNumberVisitor) LineNumber() int {
+	return v.lineNumber
+}
+
+func (v *SearchLineNumberVisitor) SetLineNumber(lineNumber int) {
+	v.lineNumber = lineNumber
+}
+
+func (v *SearchLineNumberVisitor) NewLineNumber() int {
+	return v.newLineCounter
+}
+
+func (v *SearchLineNumberVisitor) SetNewLineNumber(newLineCounter int) {
+	v.newLineCounter = newLineCounter
 }
 
 func (v *SearchLineNumberVisitor) Reset() {
-	v.LineNumber = token.UnknownLineNumberToken
-	v.NewLineCounter = 0
+	v.lineNumber = intmod.UnknownLineNumberToken
+	v.newLineCounter = 0
 }
 
-func (v *SearchLineNumberVisitor) VisitLineNumberToken(token *token.LineNumberToken) {
-	v.LineNumber = token.LineNumber()
+func (v *SearchLineNumberVisitor) VisitLineNumberToken(token intmod.ILineNumberToken) {
+	v.lineNumber = token.LineNumber()
 }
 
 func (v *SearchLineNumberVisitor) VisitNewLineToken(token *token.NewLineToken) {
-	v.NewLineCounter++
+	v.newLineCounter++
 }

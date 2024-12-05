@@ -1,34 +1,39 @@
 package javafragment
 
-import "bitbucket.org/coontec/go-jd-core/class/model/fragment"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
+)
 
-func NewStartBodyFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *StartBodyFragment {
+func NewStartBodyFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
+	label string) intmod.IStartBodyFragment {
 	return &StartBodyFragment{
-		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
+		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label).(*fragment.StartFlexibleBlockFragment),
 	}
 }
 
 type StartBodyFragment struct {
 	fragment.StartFlexibleBlockFragment
 
-	end *EndBodyFragment
+	end intmod.IEndBodyFragment
 }
 
-func (f *StartBodyFragment) EndBodyFragment() *EndBodyFragment {
+func (f *StartBodyFragment) End() intmod.IEndBodyFragment {
 	return f.end
 }
 
-func (f *StartBodyFragment) SetEndBodyFragment(end *EndBodyFragment) {
+func (f *StartBodyFragment) SetEnd(end intmod.IEndBodyFragment) {
 	f.end = end
 }
 
 func (f *StartBodyFragment) IncLineCount(force bool) bool {
-	if f.LineCount < f.MaximalLineCount {
-		f.LineCount++
+	if f.LineCount() < f.MaximalLineCount() {
+		f.SetLineCount(f.LineCount() + 1)
 
 		if !force {
-			if f.LineCount == 1 && f.end.LineCount == 0 {
-				f.end.LineCount = f.LineCount
+			if f.LineCount() == 1 && f.end.LineCount() == 0 {
+				f.end.SetLineCount(f.LineCount())
 			}
 		}
 
@@ -38,12 +43,12 @@ func (f *StartBodyFragment) IncLineCount(force bool) bool {
 }
 
 func (f *StartBodyFragment) DecLineCount(force bool) bool {
-	if f.LineCount > f.MinimalLineCount {
-		f.LineCount--
+	if f.LineCount() > f.MinimalLineCount() {
+		f.SetLineCount(f.LineCount() - 1)
 
 		if !force {
-			if f.LineCount == 1 {
-				f.end.LineCount = f.LineCount
+			if f.LineCount() == 1 {
+				f.end.SetLineCount(f.LineCount())
 			}
 		}
 
@@ -52,6 +57,6 @@ func (f *StartBodyFragment) DecLineCount(force bool) bool {
 	return false
 }
 
-func (f *StartBodyFragment) Accept(visitor JavaFragmentVisitor) {
+func (f *StartBodyFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitStartBodyFragment(f)
 }

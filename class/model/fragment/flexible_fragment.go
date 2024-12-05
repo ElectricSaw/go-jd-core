@@ -1,75 +1,113 @@
 package fragment
 
 import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
 	"fmt"
 	"strings"
 )
 
-func NewFlexibleFragment(minimalLineCount int, lineCount int, maximalLineCount int, weight int, label string) *FlexibleFragment {
+func NewFlexibleFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) intmod.IFlexibleFragment {
 	return &FlexibleFragment{
-		MinimalLineCount: minimalLineCount,
-		MaximalLineCount: maximalLineCount,
-		InitialLineCount: lineCount,
-		LineCount:        lineCount,
-		Weight:           weight,
-		Label:            label,
+		minimalLineCount: minimalLineCount,
+		maximalLineCount: maximalLineCount,
+		initialLineCount: lineCount,
+		lineCount:        lineCount,
+		weight:           weight,
+		label:            label,
 	}
 }
 
-type IFlexibleFragment interface {
-	GetLineCount() int
-	flexibleFragmentIgnore()
-}
-
 type FlexibleFragment struct {
-	MinimalLineCount int
-	MaximalLineCount int
-	InitialLineCount int
-	LineCount        int
-	Weight           int
-	Label            string
+	minimalLineCount int
+	maximalLineCount int
+	initialLineCount int
+	lineCount        int
+	weight           int
+	label            string
 }
 
-func (f *FlexibleFragment) GetLineCount() int {
-	return f.LineCount
+func (f *FlexibleFragment) MinimalLineCount() int {
+	return f.minimalLineCount
+}
+
+func (f *FlexibleFragment) SetMinimalLineCount(minimalLineCount int) {
+	f.minimalLineCount = minimalLineCount
+}
+
+func (f *FlexibleFragment) MaximalLineCount() int {
+	return f.maximalLineCount
+}
+
+func (f *FlexibleFragment) SetMaximalLineCount(maximalLineCount int) {
+	f.maximalLineCount = maximalLineCount
+}
+
+func (f *FlexibleFragment) InitialLineCount() int {
+	return f.initialLineCount
+}
+
+func (f *FlexibleFragment) SetInitialLineCount(initialLineCount int) {
+	f.initialLineCount = initialLineCount
+}
+
+func (f *FlexibleFragment) LineCount() int {
+	return f.lineCount
+}
+
+func (f *FlexibleFragment) SetLineCount(lineCount int) {
+	f.lineCount = lineCount
+}
+
+func (f *FlexibleFragment) Weight() int {
+	return f.weight
+}
+
+func (f *FlexibleFragment) SetWeight(weight int) {
+	f.weight = weight
+}
+
+func (f *FlexibleFragment) Label() string {
+	return f.label
+}
+
+func (f *FlexibleFragment) SetLabel(label string) {
+	f.label = label
 }
 
 func (f *FlexibleFragment) IncLineCount(force bool) bool {
-	if f.LineCount < f.MaximalLineCount {
-		f.LineCount++
+	if f.lineCount < f.maximalLineCount {
+		f.lineCount++
 		return true
 	}
 	return false
 }
 
 func (f *FlexibleFragment) DecLineCount(force bool) bool {
-	if f.LineCount > f.MinimalLineCount {
-		f.LineCount--
+	if f.lineCount > f.minimalLineCount {
+		f.lineCount--
 		return true
 	}
 	return false
 }
 
-func (f *FlexibleFragment) Accept(visitor FragmentVisitor) {
+func (f *FlexibleFragment) AcceptFragmentVisitor(visitor intmod.IFragmentVisitor) {
 	visitor.VisitFlexibleFragment(f)
 }
 
 func (f *FlexibleFragment) String() string {
 	var msg strings.Builder
 
-	msg.WriteString(fmt.Sprintf("FlexibleFragment { minimal-line-count=%d", f.MinimalLineCount))
-	msg.WriteString(fmt.Sprintf(", maximal-line-count=%d", f.MaximalLineCount))
-	msg.WriteString(fmt.Sprintf(", initial-line-count=%d", f.InitialLineCount))
-	msg.WriteString(fmt.Sprintf(", line-count=%d", f.LineCount))
-	msg.WriteString(fmt.Sprintf(", weight=%d", f.Weight))
+	msg.WriteString(fmt.Sprintf("FlexibleFragment { minimal-line-count=%d", f.minimalLineCount))
+	msg.WriteString(fmt.Sprintf(", maximal-line-count=%d", f.maximalLineCount))
+	msg.WriteString(fmt.Sprintf(", initial-line-count=%d", f.initialLineCount))
+	msg.WriteString(fmt.Sprintf(", line-count=%d", f.lineCount))
+	msg.WriteString(fmt.Sprintf(", weight=%d", f.weight))
 
-	if f.Label != "" {
-		msg.WriteString(fmt.Sprintf(", label=%s }", f.Label))
+	if f.label != "" {
+		msg.WriteString(fmt.Sprintf(", label=%s }", f.label))
 	} else {
 		msg.WriteString("}")
 	}
 
 	return msg.String()
 }
-
-func (f *FlexibleFragment) flexibleFragmentIgnore() {}

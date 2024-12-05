@@ -1,6 +1,9 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
 const (
 	CommentToken          = 1
@@ -14,7 +17,7 @@ var EndJavaDoc = NewEndMarkerToken(JavaDocToken)
 var EndError = NewEndMarkerToken(ErrorToken)
 var EndImportStatements = NewEndMarkerToken(ImportStatementsToken)
 
-func NewEndMarkerToken(typ int) *EndMarkerToken {
+func NewEndMarkerToken(typ int) intmod.IEndMarkerToken {
 	return &EndMarkerToken{typ}
 }
 
@@ -26,7 +29,11 @@ func (t *EndMarkerToken) Type() int {
 	return t.typ
 }
 
-func (t *EndMarkerToken) Accept(visitor TokenVisitor) {
+func (t *EndMarkerToken) SetType(typ int) {
+	t.typ = typ
+}
+
+func (t *EndMarkerToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitEndMarkerToken(t)
 }
 

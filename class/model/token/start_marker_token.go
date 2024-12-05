@@ -1,13 +1,16 @@
 package token
 
-import "fmt"
+import (
+	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"fmt"
+)
 
 var StartComment = NewStartMarkerToken(CommentToken)
 var StartJavaDocToken = NewStartMarkerToken(JavaDocToken)
 var StartErrorToken = NewStartMarkerToken(ErrorToken)
 var StartImportStatementsToken = NewStartMarkerToken(ImportStatementsToken)
 
-func NewStartMarkerToken(typ int) *StartMarkerToken {
+func NewStartMarkerToken(typ int) intmod.IStartMarkerToken {
 	return &StartMarkerToken{typ}
 }
 
@@ -19,7 +22,11 @@ func (t *StartMarkerToken) Type() int {
 	return t.typ
 }
 
-func (t *StartMarkerToken) Accept(visitor TokenVisitor) {
+func (t *StartMarkerToken) SetType(typ int) {
+	t.typ = typ
+}
+
+func (t *StartMarkerToken) Accept(visitor intmod.ITokenVisitor) {
 	visitor.VisitStartMarkerToken(t)
 }
 

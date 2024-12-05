@@ -50,7 +50,7 @@ func (s *SwitchStatement) Accept(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatement(s)
 }
 
-// --- Label --- //
+// --- label --- //
 
 func NewDefaultLabel() intmod.IDefaultLabel {
 	return &DefaultLabel{}
