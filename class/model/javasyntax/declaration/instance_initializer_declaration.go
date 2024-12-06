@@ -30,7 +30,7 @@ func (d *InstanceInitializerDeclaration) Statements() intmod.IStatement {
 	return d.statements
 }
 
-func (d *InstanceInitializerDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *InstanceInitializerDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitInstanceInitializerDeclaration(d)
 }
 

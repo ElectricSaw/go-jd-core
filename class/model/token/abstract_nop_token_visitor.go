@@ -1,5 +1,7 @@
 package token
 
+import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+
 type AbstractNopTokenVisitor struct {
 }
 

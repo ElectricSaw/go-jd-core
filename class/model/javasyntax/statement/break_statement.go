@@ -24,6 +24,6 @@ func (s *BreakStatement) IsBreakStatement() bool {
 	return true
 }
 
-func (s *BreakStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *BreakStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitBreakStatement(s)
 }

@@ -72,7 +72,7 @@ func (s *ForStatement) Statements() intmod.IStatement {
 	return s.statements
 }
 
-func (s *ForStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ForStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitForStatement(s)
 }
 

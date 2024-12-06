@@ -62,6 +62,6 @@ func (s *Statements) IsStatements() bool {
 	return true
 }
 
-func (s *Statements) Accept(visitor intmod.IStatementVisitor) {
+func (s *Statements) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitStatements(s)
 }

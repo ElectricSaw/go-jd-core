@@ -30,6 +30,6 @@ func (s *AssertStatement) Message() intmod.IExpression {
 	return s.message
 }
 
-func (s *AssertStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *AssertStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitAssertStatement(s)
 }

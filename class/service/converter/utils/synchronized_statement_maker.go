@@ -71,7 +71,7 @@ func (v *RemoveMonitorExitVisitor) VisitStatements(list intmod.IStatements) {
 					}
 				}
 			} else {
-				statement.Accept(v)
+				statement.AcceptStatement(v)
 			}
 		}
 	}

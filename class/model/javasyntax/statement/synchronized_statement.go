@@ -28,7 +28,7 @@ func (s *SynchronizedStatement) Statements() intmod.IStatement {
 	return s.statements
 }
 
-func (s *SynchronizedStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *SynchronizedStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitSynchronizedStatement(s)
 
 }

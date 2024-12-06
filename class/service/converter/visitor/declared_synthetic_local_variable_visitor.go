@@ -25,7 +25,7 @@ func (v *DeclaredSyntheticLocalVariableVisitor) Init() {
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitFieldDeclaration(decl intmod.IFieldDeclaration) {
 	v.SafeAcceptReference(decl.AnnotationReferences())
-	decl.FieldDeclarators().Accept(v)
+	decl.FieldDeclarators().AcceptDeclaration(v)
 }
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitFormalParameter(decl intmod.IFormalParameter) {
@@ -100,11 +100,11 @@ func (v *DeclaredSyntheticLocalVariableVisitor) VisitForEachStatement(expr intmo
 }
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitSwitchStatementLabelBlock(state intmod.ILabelBlock) {
-	state.Statements().Accept(v)
+	state.Statements().AcceptStatement(v)
 }
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitSwitchStatementMultiLabelsBlock(state intmod.IMultiLabelsBlock) {
-	state.Statements().Accept(v)
+	state.Statements().AcceptStatement(v)
 }
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitTryStatementCatchClause(state intmod.ICatchClause) {

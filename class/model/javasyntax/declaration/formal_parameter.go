@@ -67,7 +67,7 @@ func (d *FormalParameter) SetName(name string) {
 	d.name = name
 }
 
-func (d *FormalParameter) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *FormalParameter) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFormalParameter(d)
 }
 

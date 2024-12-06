@@ -50,7 +50,7 @@ func (s *ReturnExpressionStatement) IsReturnExpressionStatement() bool {
 	return true
 }
 
-func (s *ReturnExpressionStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ReturnExpressionStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitReturnExpressionStatement(s)
 }
 

@@ -32,6 +32,6 @@ func (i *ExpressionVariableInitializer) IsExpressionVariableInitializer() bool {
 	return true
 }
 
-func (i *ExpressionVariableInitializer) Accept(visitor intmod.IDeclarationVisitor) {
+func (i *ExpressionVariableInitializer) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitExpressionVariableInitializer(i)
 }

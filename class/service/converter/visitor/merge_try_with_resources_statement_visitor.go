@@ -13,13 +13,13 @@ type MergeTryWithResourcesStatementVisitor struct {
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) VisitIfElseStatement(statement intmod.IIfElseStatement) {
-	statement.Statements().Accept(v)
-	statement.ElseStatements().Accept(v)
+	statement.Statements().AcceptStatement(v)
+	statement.ElseStatements().AcceptStatement(v)
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatement(statement intmod.ISwitchStatement) {
 	for _, block := range statement.Blocks() {
-		block.Statements().Accept(v)
+		block.Statements().AcceptStatement(v)
 	}
 }
 
@@ -27,7 +27,7 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitTryStatement(statement intm
 	tryStatements := statement.TryStatements()
 
 	v.SafeAcceptListStatement(statement.ResourceList())
-	tryStatements.Accept(v)
+	tryStatements.AcceptStatement(v)
 	v.SafeAcceptListStatement(statement.CatchClauseList())
 	v.SafeAccept(statement.FinallyStatements())
 
@@ -73,10 +73,10 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitWhileStatement(statement in
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementLabelBlock(statement intmod.ILabelBlock) {
-	statement.Statements().Accept(v)
+	statement.Statements().AcceptStatement(v)
 }
 func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementMultiLabelsBlock(statement intmod.IMultiLabelsBlock) {
-	statement.Statements().Accept(v)
+	statement.Statements().AcceptStatement(v)
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) VisitAssertStatement(statement intmod.IAssertStatement) {
@@ -115,20 +115,20 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitTypeDeclarationStatement(st
 
 func (v *MergeTryWithResourcesStatementVisitor) SafeAccept(list intmod.IStatement) {
 	if list != nil {
-		list.Accept(v)
+		list.AcceptStatement(v)
 	}
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) AcceptListStatement(list []intmod.IStatement) {
 	for _, state := range list {
-		state.Accept(v)
+		state.AcceptStatement(v)
 	}
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) SafeAcceptListStatement(list []intmod.IStatement) {
 	if list != nil {
 		for _, state := range list {
-			state.Accept(v)
+			state.AcceptStatement(v)
 		}
 	}
 }

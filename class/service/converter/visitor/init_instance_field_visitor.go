@@ -71,7 +71,7 @@ func (v *InitInstanceFieldVisitor) VisitBodyDeclaration(declaration intmod.IBody
 
 func (v *InitInstanceFieldVisitor) VisitFieldDeclaration(declaration intmod.IFieldDeclaration) {
 	if (declaration.Flags() & intmod.FlagStatic) == 0 {
-		declaration.FieldDeclarators().Accept(v)
+		declaration.FieldDeclarators().AcceptDeclaration(v)
 	}
 }
 
@@ -100,7 +100,7 @@ func (v *InitInstanceFieldVisitor) VisitConstructorDeclaration(declaration intmo
 						(firstLineNumber != intmod.UnknownLineNumber) && iterator.HasNext() {
 						if (v.lineNumber == intmod.UnknownLineNumber) || (v.lineNumber >= firstLineNumber) {
 							v.searchFirstLineNumberVisitor.Init()
-							iterator.Next().Accept(v.searchFirstLineNumberVisitor)
+							iterator.Next().AcceptStatement(v.searchFirstLineNumberVisitor)
 							iterator.Previous()
 
 							ln := v.searchFirstLineNumberVisitor.LineNumber()

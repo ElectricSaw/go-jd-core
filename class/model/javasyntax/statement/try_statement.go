@@ -87,7 +87,7 @@ func (s *TryStatement) IsTryStatement() bool {
 	return true
 }
 
-func (s *TryStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *TryStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitTryStatement(s)
 }
 
@@ -123,7 +123,7 @@ func (r *Resource) SetExpression(expression intmod.IExpression) {
 	r.expression = expression
 }
 
-func (r *Resource) Accept(visitor intmod.IStatementVisitor) {
+func (r *Resource) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitTryStatementResource(r)
 }
 
@@ -170,6 +170,6 @@ func (c *CatchClause) AddType(typ intmod.IObjectType) {
 	c.otherType = append(c.otherType, typ)
 }
 
-func (c *CatchClause) Accept(visitor intmod.IStatementVisitor) {
+func (c *CatchClause) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitTryStatementCatchClause(c)
 }

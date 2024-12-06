@@ -11,7 +11,7 @@ type AbstractJavaSyntaxVisitor struct {
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit *CompilationUnit) {
-	compilationUnit.TypeDeclarations().Accept(v)
+	compilationUnit.TypeDeclarations().AcceptDeclaration(v)
 }
 
 // --- DeclarationVisitor ---
@@ -75,7 +75,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(decl intmod.IFieldDecl
 	t := decl.Type()
 	t.AcceptTypeVisitor(v)
 	v.SafeAcceptReference(decl.AnnotationReferences())
-	decl.FieldDeclarators().Accept(v)
+	decl.FieldDeclarators().AcceptDeclaration(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarator(decl intmod.IFieldDeclarator) {
@@ -246,7 +246,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitInstanceOfExpression(expr intmod.IInsta
 
 func (v *AbstractJavaSyntaxVisitor) VisitLambdaFormalParametersExpression(expr intmod.ILambdaFormalParametersExpression) {
 	v.SafeAcceptDeclaration(expr.FormalParameters())
-	expr.Statements().Accept(v)
+	expr.Statements().AcceptStatement(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLambdaIdentifiersExpression(expr intmod.ILambdaIdentifiersExpression) {
@@ -463,7 +463,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitIfStatement(stat intmod.IIfStatement) {
 func (v *AbstractJavaSyntaxVisitor) VisitIfElseStatement(stat intmod.IIfElseStatement) {
 	stat.Condition().Accept(v)
 	v.SafeAcceptStatement(stat.Statements())
-	stat.ElseStatements().Accept(v)
+	stat.ElseStatements().AcceptStatement(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLabelStatement(stat intmod.ILabelStatement) {
@@ -512,13 +512,13 @@ func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementExpressionLabel(stat int
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementLabelBlock(stat intmod.ILabelBlock) {
-	stat.Label().Accept(v)
-	stat.Statements().Accept(v)
+	stat.Label().AcceptStatement(v)
+	stat.Statements().AcceptStatement(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSwitchStatementMultiLabelsBlock(stat intmod.IMultiLabelsBlock) {
 	v.SafeAcceptListStatement(stat.ToSlice())
-	stat.Statements().Accept(v)
+	stat.Statements().AcceptStatement(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitSynchronizedStatement(stat intmod.ISynchronizedStatement) {
@@ -532,7 +532,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitThrowStatement(stat intmod.IThrowStatem
 
 func (v *AbstractJavaSyntaxVisitor) VisitTryStatement(stat intmod.ITryStatement) {
 	v.SafeAcceptListStatement(stat.ResourceList())
-	stat.TryStatements().Accept(v)
+	stat.TryStatements().AcceptStatement(v)
 	v.SafeAcceptListStatement(stat.CatchClauseList())
 	v.SafeAcceptStatement(stat.FinallyStatements())
 }
@@ -550,7 +550,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTryStatementCatchClause(stat intmod.ICa
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarationStatement(stat intmod.ITypeDeclarationStatement) {
-	stat.TypeDeclaration().Accept(v)
+	stat.TypeDeclaration().AcceptDeclaration(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitWhileStatement(stat intmod.IWhileStatement) {
@@ -615,7 +615,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclaration(decl intmod.ITypeDeclar
 
 func (v *AbstractJavaSyntaxVisitor) AcceptListDeclaration(list []intmod.IDeclaration) {
 	for _, value := range list {
-		value.Accept(v)
+		value.AcceptDeclaration(v)
 	}
 }
 
@@ -633,13 +633,13 @@ func (v *AbstractJavaSyntaxVisitor) AcceptListReference(list []intmod.IReference
 
 func (v *AbstractJavaSyntaxVisitor) AcceptListStatement(list []intmod.IStatement) {
 	for _, value := range list {
-		value.Accept(v)
+		value.AcceptStatement(v)
 	}
 }
 
 func (v *AbstractJavaSyntaxVisitor) SafeAcceptDeclaration(decl intmod.IDeclaration) {
 	if decl != nil {
-		decl.Accept(v)
+		decl.AcceptDeclaration(v)
 	}
 }
 
@@ -657,7 +657,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptReference(ref intmod.IReference) {
 
 func (v *AbstractJavaSyntaxVisitor) SafeAcceptStatement(list intmod.IStatement) {
 	if list != nil {
-		list.Accept(v)
+		list.AcceptStatement(v)
 	}
 }
 
@@ -676,7 +676,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptTypeParameter(list intmod.ITypePar
 func (v *AbstractJavaSyntaxVisitor) SafeAcceptListDeclaration(list []intmod.IDeclaration) {
 	if list != nil {
 		for _, value := range list {
-			value.Accept(v)
+			value.AcceptDeclaration(v)
 		}
 	}
 }
@@ -692,7 +692,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptListConstant(list []intmod.IConsta
 func (v *AbstractJavaSyntaxVisitor) SafeAcceptListStatement(list []intmod.IStatement) {
 	if list != nil {
 		for _, value := range list {
-			value.Accept(v)
+			value.AcceptStatement(v)
 		}
 	}
 }

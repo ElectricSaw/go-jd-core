@@ -25,7 +25,7 @@ func (d *LocalVariableDeclarators) SetName(_ string) {}
 
 func (d *LocalVariableDeclarators) Dimension() int { return 0 }
 
-func (d *LocalVariableDeclarators) SetDimension(dimension int) {}
+func (d *LocalVariableDeclarators) SetDimension(_ int) {}
 
 func (d *LocalVariableDeclarators) LineNumber() int {
 	if d.Size() == 0 {
@@ -37,7 +37,7 @@ func (d *LocalVariableDeclarators) LineNumber() int {
 
 func (d *LocalVariableDeclarators) VariableInitializer() intmod.IVariableInitializer { return nil }
 
-func (d *LocalVariableDeclarators) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *LocalVariableDeclarators) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarators(d)
 }
 

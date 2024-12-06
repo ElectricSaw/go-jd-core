@@ -41,7 +41,6 @@ type IAnnotationDeclaration interface {
 	AnnotationReferences() IAnnotationReference
 	BodyDeclaration() IBodyDeclaration
 	AnnotationDeclarators() IFieldDeclarator
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -51,12 +50,11 @@ type IArrayVariableInitializer interface {
 
 	Type() IType
 	LineNumber() int
-	Accept(visitor IDeclarationVisitor)
 }
 
 type IBodyDeclaration interface {
 	IDeclaration
-	util.IBase[IMemberDeclaration]
+	util.IBase[IBodyDeclaration]
 
 	InternalTypeName() string
 	MemberDeclarations() IMemberDeclaration
@@ -72,7 +70,6 @@ type IClassDeclaration interface {
 	BodyDeclaration() IBodyDeclaration
 	SuperType() IObjectType
 	IsClassDeclaration() bool
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -90,12 +87,11 @@ type IConstructorDeclaration interface {
 	Descriptor() string
 	Statements() IStatement
 	SetStatements(state IStatement)
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
 type IDeclaration interface {
-	Accept(visitor IDeclarationVisitor)
+	AcceptDeclaration(visitor IDeclarationVisitor)
 }
 
 type IDeclarationVisitor interface {
@@ -134,7 +130,6 @@ type IFieldDeclaration interface {
 	SetType(t IType)
 	FieldDeclarators() IFieldDeclarator
 	SetFieldDeclarators(fd IFieldDeclarator)
-	Accept(visitor IDeclarationVisitor)
 }
 
 type IFieldDeclarator interface {
@@ -147,7 +142,6 @@ type IFieldDeclarator interface {
 	Dimension() int
 	VariableInitializer() IVariableInitializer
 	SetVariableInitializer(variableInitializer IVariableInitializer)
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -161,7 +155,6 @@ type IFieldDeclarators interface {
 	Dimension() int
 	VariableInitializer() IVariableInitializer
 	SetVariableInitializer(variableInitializer IVariableInitializer)
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -176,15 +169,12 @@ type IFormalParameter interface {
 	IsVarargs() bool
 	Name() string
 	SetName(name string)
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
 type IFormalParameters interface {
 	IFormalParameter
 	util.IList[IFormalParameter]
-
-	Accept(visitor IDeclarationVisitor)
 }
 
 type IMemberDeclaration interface {
@@ -220,7 +210,6 @@ type IEnumDeclaration interface {
 	Constants() []IConstant
 	SetConstants(constants []IConstant)
 	BodyDeclaration() IBodyDeclaration
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -233,7 +222,6 @@ type IConstant interface {
 	Arguments() IExpression
 	SetArguments(arguments IExpression)
 	BodyDeclaration() IBodyDeclaration
-	Accept(visitor IDeclarationVisitor)
 }
 
 type IExpressionVariableInitializer interface {
@@ -243,7 +231,6 @@ type IExpressionVariableInitializer interface {
 	LineNumber() int
 	SetExpression(expression IExpression)
 	IsExpressionVariableInitializer() bool
-	Accept(visitor IDeclarationVisitor)
 }
 
 type IInstanceInitializerDeclaration interface {
@@ -251,7 +238,6 @@ type IInstanceInitializerDeclaration interface {
 
 	Description() string
 	Statements() IStatement
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -262,7 +248,6 @@ type IInterfaceDeclaration interface {
 	BodyDeclaration() IBodyDeclaration
 	TypeParameters() ITypeParameter
 	Interfaces() IType
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -274,7 +259,6 @@ type ILocalVariableDeclaration interface {
 	Type() IType
 	LocalVariableDeclarators() ILocalVariableDeclarator
 	SetLocalVariableDeclarators(localVariableDeclarators ILocalVariableDeclarator)
-	Accept(visitor IDeclarationVisitor)
 }
 
 type ILocalVariableDeclarator interface {
@@ -287,7 +271,6 @@ type ILocalVariableDeclarator interface {
 	SetDimension(dimension int)
 	LineNumber() int
 	VariableInitializer() IVariableInitializer
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -297,15 +280,12 @@ type ILocalVariableDeclarators interface {
 
 	LineNumber() int
 	VariableInitializer() IVariableInitializer
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
 type IMemberDeclarations interface {
 	IMemberDeclaration
 	util.IList[IMemberDeclaration]
-
-	Accept(visitor IDeclarationVisitor)
 }
 
 type IMethodDeclaration interface {
@@ -325,7 +305,6 @@ type IMethodDeclaration interface {
 	Statements() IStatement
 	SetStatements(statements IStatement)
 	DefaultAnnotationValue() IElementValue
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
@@ -333,12 +312,11 @@ type IModuleDeclaration interface {
 	ITypeDeclaration
 
 	Version() string
-	Requires() []IModuleInfo
-	Exports() []IPackageInfo
-	Opens() []IPackageInfo
-	Uses() []string
-	Provides() []IServiceInfo
-	Accept(visitor IDeclarationVisitor)
+	Requires() util.IList[IModuleInfo]
+	Exports() util.IList[IPackageInfo]
+	Opens() util.IList[IPackageInfo]
+	Uses() util.IList[string]
+	Provides() util.IList[IServiceInfo]
 	String() string
 }
 
@@ -368,12 +346,10 @@ type IStaticInitializerDeclaration interface {
 	Description() string
 	Statements() IStatement
 	SetStatements(statements IStatement)
-	Accept(visitor IDeclarationVisitor)
 	String() string
 }
 
 type ITypeDeclarations interface {
 	ITypeDeclaration
-
-	Accept(visitor IDeclarationVisitor)
+	util.IList[IMemberDeclaration]
 }

@@ -32,6 +32,6 @@ func (s *IfStatement) IsIfStatement() bool {
 	return s.condition != nil
 }
 
-func (s *IfStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *IfStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitIfStatement(s)
 }

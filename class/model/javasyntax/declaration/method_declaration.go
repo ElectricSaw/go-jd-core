@@ -129,7 +129,7 @@ func (d *MethodDeclaration) DefaultAnnotationValue() intmod.IElementValue {
 	return d.defaultAnnotationValue
 }
 
-func (d *MethodDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *MethodDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitMethodDeclaration(d)
 }
 

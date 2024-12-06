@@ -48,6 +48,6 @@ func (d *MemberDeclarations) Iterator() util.IIterator[intmod.IMemberDeclaration
 	return d.DefaultList.Iterator()
 }
 
-func (d *MemberDeclarations) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *MemberDeclarations) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitMemberDeclarations(d)
 }

@@ -42,6 +42,6 @@ func (s *LocalVariableDeclarationStatement) SetLocalVariableDeclarators(declarat
 	s.localVariableDeclarators = declarators
 }
 
-func (s *LocalVariableDeclarationStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *LocalVariableDeclarationStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitLocalVariableDeclarationStatement(s)
 }

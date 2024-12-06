@@ -1503,7 +1503,7 @@ func (p *ByteCodeParser) prepareLambdaStatements(formalParameters intmod.IFormal
 
 				if len(mapping) != 0 {
 					p.renameLocalVariablesVisitor.Init(mapping)
-					baseStatement.Accept(p.renameLocalVariablesVisitor)
+					baseStatement.AcceptStatement(p.renameLocalVariablesVisitor)
 				}
 			}
 		}
@@ -2125,7 +2125,7 @@ func (p *ByteCodeParser) getFieldInstanceReference(expression intmod.IExpression
 		if ot.InternalName() != internalName {
 			p.memberVisitor.Init(name, "")
 			for _, field := range p.bodyDeclaration.FieldDeclarations() {
-				field.FieldDeclarators().Accept(p.memberVisitor)
+				field.FieldDeclarators().AcceptDeclaration(p.memberVisitor)
 				if p.memberVisitor.Found() {
 					return modexp.NewSuperExpressionWithAll(expression.LineNumber(), expression.Type())
 				}
@@ -2148,7 +2148,7 @@ func (p *ByteCodeParser) getMethodInstanceReference(expression intmod.IExpressio
 			p.memberVisitor.Init(name, descriptor)
 
 			for _, member := range p.bodyDeclaration.MethodDeclarations() {
-				member.Accept(p.memberVisitor)
+				member.AcceptDeclaration(p.memberVisitor)
 				if p.memberVisitor.Found() {
 					return modexp.NewSuperExpressionWithAll(expression.LineNumber(), expression.Type())
 				}

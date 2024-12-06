@@ -99,7 +99,7 @@ func (v *UpdateJavaSyntaxTreeStep2Visitor) VisitEnumDeclaration(declaration intm
 	cfed := declaration.(intsrv.IClassFileEnumDeclaration)
 
 	cfed.SetFlags(cfed.Flags() & ^(intmod.FlagStatic | intmod.FlagFinal | intmod.FlagAbstract))
-	cfed.BodyDeclaration().Accept(v)
+	cfed.BodyDeclaration().AcceptDeclaration(v)
 	v.initEnumVisitor.VisitBodyDeclaration(cfed.BodyDeclaration())
 	cfed.SetConstants(v.initEnumVisitor.Constants().ToSlice())
 }

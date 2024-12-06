@@ -59,6 +59,6 @@ func (d *FieldDeclaration) SetFieldDeclarators(fd intmod.IFieldDeclarator) {
 	d.fieldDeclarators = fd
 }
 
-func (d *FieldDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *FieldDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFieldDeclaration(d)
 }

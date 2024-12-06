@@ -12,7 +12,7 @@ type NoStatement struct {
 	AbstractStatement
 }
 
-func (s *NoStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *NoStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitNoStatement(s)
 }
 

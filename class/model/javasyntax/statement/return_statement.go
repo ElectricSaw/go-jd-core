@@ -16,7 +16,7 @@ func (s *ReturnStatement) IsReturnStatement() bool {
 	return true
 }
 
-func (s *ReturnStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ReturnStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitReturnStatement(s)
 }
 

@@ -304,7 +304,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 				}
 				if stat.Statements() != nil {
 					searchLocalVariableVisitor.Init()
-					stat.Statements().Accept(searchLocalVariableVisitor)
+					stat.Statements().AcceptStatement(searchLocalVariableVisitor)
 					for _, variable := range searchLocalVariableVisitor.Variables() {
 						undeclaredInExpressionStatements = append(undeclaredInExpressionStatements, variable)
 					}
@@ -312,7 +312,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 			}
 		} else {
 			searchLocalVariableVisitor.Init()
-			stat.Accept(searchLocalVariableVisitor)
+			stat.AcceptStatement(searchLocalVariableVisitor)
 			for _, variable := range searchLocalVariableVisitor.Variables() {
 				undeclaredInExpressionStatements = append(undeclaredInExpressionStatements, variable)
 			}
@@ -427,7 +427,7 @@ func (f *Frame) createInlineDeclarations() {
 			for iterator.HasNext() {
 				state := iterator.Next()
 				searchUndeclaredLocalVariableVisitor.Init()
-				state.Accept(searchUndeclaredLocalVariableVisitor)
+				state.AcceptStatement(searchUndeclaredLocalVariableVisitor)
 
 				//undeclaredLocalVariablesInStatement := searchUndeclaredLocalVariableVisitor.Variables()
 				undeclaredLocalVariablesInStatement := util.NewSetWithSlice[intsrv.ILocalVariable](searchUndeclaredLocalVariableVisitor.Variables())

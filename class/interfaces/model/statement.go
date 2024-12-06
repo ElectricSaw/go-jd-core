@@ -8,7 +8,6 @@ type IAssertStatement interface {
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Message() IExpression
-	Accept(visitor IStatementVisitor)
 }
 
 type IBreakStatement interface {
@@ -16,14 +15,12 @@ type IBreakStatement interface {
 
 	Text() string
 	IsBreakStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type IByteCodeStatement interface {
 	IStatement
 
 	Text() string
-	Accept(visitor IStatementVisitor)
 }
 
 type ICommentStatement interface {
@@ -31,7 +28,6 @@ type ICommentStatement interface {
 
 	Text() string
 	IsContinueStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type IContinueStatement interface {
@@ -39,7 +35,6 @@ type IContinueStatement interface {
 
 	Text() string
 	IsContinueStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type IDoWhileStatement interface {
@@ -48,7 +43,6 @@ type IDoWhileStatement interface {
 	Condition() IExpression
 	SetCondition(condition IExpression)
 	Statements() IStatement
-	Accept(visitor IStatementVisitor)
 }
 
 type IExpressionStatement interface {
@@ -57,7 +51,6 @@ type IExpressionStatement interface {
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	IsExpressionStatement() bool
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -70,7 +63,6 @@ type IForEachStatement interface {
 	SetExpression(expression IExpression)
 	Statement() IStatement
 	Statements() IStatement
-	Accept(visitor IStatementVisitor)
 }
 
 type IForStatement interface {
@@ -85,7 +77,6 @@ type IForStatement interface {
 	Update() IExpression
 	SetUpdate(update IExpression)
 	Statements() IStatement
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -97,7 +88,6 @@ type IIfElseStatement interface {
 	Statements() IStatement
 	ElseStatements() IStatement
 	IsIfElseStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type IIfStatement interface {
@@ -107,7 +97,6 @@ type IIfStatement interface {
 	SetCondition(condition IExpression)
 	Statements() IStatement
 	IsIfStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type ILabelStatement interface {
@@ -117,7 +106,6 @@ type ILabelStatement interface {
 	Statement() IStatement
 	Statements() IStatement
 	IsLabelStatement() bool
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -127,25 +115,23 @@ type ILambdaExpressionStatement interface {
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	IsLambdaExpressionStatement() bool
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
 type ILocalVariableDeclarationStatement interface {
 	IStatement
+	ILocalVariableDeclaration
 
 	IsFinal() bool
 	SetFinal(final bool)
 	Type() IType
 	LocalVariableDeclarators() ILocalVariableDeclarator
 	SetLocalVariableDeclarators(declarators ILocalVariableDeclarator)
-	Accept(visitor IStatementVisitor)
 }
 
 type INoStatement interface {
 	IStatement
 
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -158,7 +144,6 @@ type IReturnExpressionStatement interface {
 	SetExpression(expression IExpression)
 	GenericExpression() IExpression
 	IsReturnExpressionStatement() bool
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -166,7 +151,6 @@ type IReturnStatement interface {
 	IStatement
 
 	IsReturnStatement() bool
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -175,13 +159,12 @@ type IStatements interface {
 	util.IList[IStatement]
 
 	IsStatements() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type IStatement interface {
 	util.IBase[IStatement]
 
-	Accept(visitor IStatementVisitor)
+	AcceptStatement(visitor IStatementVisitor)
 
 	IsBreakStatement() bool
 	IsContinueStatement() bool
@@ -258,7 +241,6 @@ type ISwitchStatement interface {
 	List() []IStatement
 	Blocks() []IBlock
 	IsSwitchStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type ISynchronizedStatement interface {
@@ -267,7 +249,6 @@ type ISynchronizedStatement interface {
 	Monitor() IExpression
 	SetMonitor(monitor IExpression)
 	Statements() IStatement
-	Accept(visitor IStatementVisitor)
 }
 
 type IThrowStatement interface {
@@ -276,7 +257,6 @@ type IThrowStatement interface {
 	Expression() IExpression
 	SetExpression(expression IExpression)
 	IsThrowStatement() bool
-	Accept(visitor IStatementVisitor)
 	String() string
 }
 
@@ -295,14 +275,12 @@ type ITryStatement interface {
 	FinallyStatements() IStatement
 	SetFinallyStatements(finallyStatement IStatement)
 	IsTryStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type ITypeDeclarationStatement interface {
 	IStatement
 
 	TypeDeclaration() ITypeDeclaration
-	Accept(visitor IStatementVisitor)
 }
 
 type IWhileStatement interface {
@@ -312,7 +290,6 @@ type IWhileStatement interface {
 	SetCondition(condition IExpression)
 	Statements() IStatement
 	IsWhileStatement() bool
-	Accept(visitor IStatementVisitor)
 }
 
 type ILabel interface {
@@ -320,14 +297,18 @@ type ILabel interface {
 }
 
 type IDefaultLabel interface {
-	Accept(visitor IStatementVisitor)
+	IStatement
+
+	AcceptStatement(visitor IStatementVisitor)
 	String() string
 }
 
 type IExpressionLabel interface {
+	IStatement
+
 	Expression() IExpression
 	SetExpression(expression IExpression)
-	Accept(visitor IStatementVisitor)
+	AcceptStatement(visitor IStatementVisitor)
 	String() string
 }
 
@@ -342,7 +323,7 @@ type ILabelBlock interface {
 
 	Label() ILabel
 	IsSwitchStatementLabelBlock() bool
-	Accept(visitor IStatementVisitor)
+	AcceptStatement(visitor IStatementVisitor)
 	String() string
 }
 
@@ -351,7 +332,7 @@ type IMultiLabelsBlock interface {
 
 	Labels() []ILabel
 	IsSwitchStatementMultiLabelsBlock() bool
-	Accept(visitor IStatementVisitor)
+	AcceptStatement(visitor IStatementVisitor)
 	String() string
 }
 
@@ -362,13 +343,13 @@ type IResource interface {
 	Name() string
 	Expression() IExpression
 	SetExpression(expression IExpression)
-	Accept(visitor IStatementVisitor)
+	AcceptStatement(visitor IStatementVisitor)
 }
 
 type ICatchClause interface {
 	util.IBase[IStatement]
 
-	Accept(visitor IStatementVisitor)
+	AcceptStatement(visitor IStatementVisitor)
 
 	IsBreakStatement() bool
 	IsContinueStatement() bool

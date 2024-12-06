@@ -18,6 +18,6 @@ func (s *ByteCodeStatement) Text() string {
 	return s.text
 }
 
-func (s *ByteCodeStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ByteCodeStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitByteCodeStatement(s)
 }

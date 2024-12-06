@@ -35,7 +35,7 @@ func (v *AddCastExpressionVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclara
 
 		if obj, ok := decl.(intsrv.IClassFileBodyDeclaration); ok {
 			v.typeBounds = obj.TypeBounds()
-			memberDeclarations.Accept(v)
+			memberDeclarations.AcceptDeclaration(v)
 			v.typeBounds = tb
 		}
 	}
@@ -46,7 +46,7 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclaration(decl intmod.IFieldDecla
 		t := v.typ
 
 		v.typ = decl.Type()
-		decl.FieldDeclarators().Accept(v)
+		decl.FieldDeclarators().AcceptDeclaration(v)
 		v.typ = t
 	}
 }
@@ -58,12 +58,12 @@ func (v *AddCastExpressionVisitor) VisitFieldDeclarator(declarator intmod.IField
 		extraDimension := declarator.Dimension()
 
 		if extraDimension == 0 {
-			variableInitializer.Accept(v)
+			variableInitializer.AcceptDeclaration(v)
 		} else {
 			t := v.typ
 
 			v.typ = v.typ.CreateType(v.typ.Dimension() + extraDimension)
-			variableInitializer.Accept(v)
+			variableInitializer.AcceptDeclaration(v)
 			v.typ = t
 		}
 	}
@@ -76,7 +76,7 @@ func (v *AddCastExpressionVisitor) VisitStaticInitializerDeclaration(decl intmod
 		tb := v.typeBounds
 
 		v.typeBounds = decl.(intsrv.IClassFileStaticInitializerDeclaration).TypeBounds()
-		state.Accept(v)
+		state.AcceptStatement(v)
 		v.typeBounds = tb
 	}
 }
@@ -91,7 +91,7 @@ func (v *AddCastExpressionVisitor) VisitConstructorDeclaration(decl intmod.ICons
 
 			v.typeBounds = decl.(intsrv.IClassFileConstructorDeclaration).TypeBounds()
 			v.exceptionType = decl.ExceptionTypes()
-			statements.Accept(v)
+			statements.AcceptStatement(v)
 			v.typeBounds = tb
 			v.exceptionType = et
 		}
@@ -110,7 +110,7 @@ func (v *AddCastExpressionVisitor) VisitMethodDeclaration(decl intmod.IMethodDec
 			v.typeBounds = decl.(intsrv.IClassFileMethodDeclaration).TypeBounds()
 			v.returnedType = decl.ReturnedType()
 			v.exceptionType = decl.ExceptionTypes()
-			statements.Accept(v)
+			statements.AcceptStatement(v)
 			v.typeBounds = tb
 			v.returnedType = rt
 			v.exceptionType = et
@@ -125,7 +125,7 @@ func (v *AddCastExpressionVisitor) VisitLambdaIdentifiersExpression(expression i
 		rt := v.returnedType
 
 		v.returnedType = _type.OtTypeObject.(intmod.IType)
-		statements.Accept(v)
+		statements.AcceptStatement(v)
 		v.returnedType = rt
 	}
 }
@@ -159,12 +159,12 @@ func (v *AddCastExpressionVisitor) VisitLocalVariableDeclarator(declarator intmo
 		extraDimension := declarator.Dimension()
 
 		if extraDimension == 0 {
-			variableInitializer.Accept(v)
+			variableInitializer.AcceptDeclaration(v)
 		} else {
 			t := v.typ
 
 			v.typ = v.typ.CreateType(v.typ.Dimension() + extraDimension)
-			variableInitializer.Accept(v)
+			variableInitializer.AcceptDeclaration(v)
 			v.typ = t
 		}
 	}
@@ -198,7 +198,7 @@ func (v *AddCastExpressionVisitor) VisitExpressionVariableInitializer(decl intmo
 		t := v.typ
 
 		v.typ = nia.Type()
-		nia.ArrayInitializer().Accept(v)
+		nia.ArrayInitializer().AcceptDeclaration(v)
 		v.typ = t
 	} else {
 		decl.SetExpression(v.updateExpression(v.typ, expr, false, true))
@@ -257,7 +257,7 @@ func (v *AddCastExpressionVisitor) VisitNewInitializedArray(expression intmod.IN
 		t := v.typ
 
 		v.typ = expression.Type()
-		arrayInitializer.Accept(v)
+		arrayInitializer.AcceptDeclaration(v)
 		v.typ = t
 	}
 }

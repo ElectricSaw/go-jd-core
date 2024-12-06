@@ -14,7 +14,7 @@ func (d *AbstractMemberDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *AbstractMemberDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *AbstractMemberDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 
 }
 
@@ -26,7 +26,7 @@ func (d *AbstractTypeDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *AbstractTypeDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *AbstractTypeDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 
 }
 
@@ -69,6 +69,6 @@ func (d *AbstractVariableInitializer) Expression() intmod.IExpression {
 	return expression.NeNoExpression
 }
 
-func (d *AbstractVariableInitializer) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *AbstractVariableInitializer) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 
 }

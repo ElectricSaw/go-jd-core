@@ -46,7 +46,7 @@ func (s *SwitchStatement) IsSwitchStatement() bool {
 	return true
 }
 
-func (s *SwitchStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *SwitchStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatement(s)
 }
 
@@ -60,7 +60,7 @@ type DefaultLabel struct {
 	AbstractStatement
 }
 
-func (l *DefaultLabel) Accept(visitor intmod.IStatementVisitor) {
+func (l *DefaultLabel) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementDefaultLabel(l)
 }
 
@@ -88,7 +88,7 @@ func (l *ExpressionLabel) SetExpression(expression intmod.IExpression) {
 	l.expression = expression
 }
 
-func (l *ExpressionLabel) Accept(visitor intmod.IStatementVisitor) {
+func (l *ExpressionLabel) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementExpressionLabel(l)
 }
 
@@ -137,7 +137,7 @@ func (b *LabelBlock) IsSwitchStatementLabelBlock() bool {
 	return true
 }
 
-func (b *LabelBlock) Accept(visitor intmod.IStatementVisitor) {
+func (b *LabelBlock) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementLabelBlock(b)
 }
 
@@ -176,7 +176,7 @@ func (b *MultiLabelsBlock) IsSwitchStatementMultiLabelsBlock() bool {
 	return true
 }
 
-func (b *MultiLabelsBlock) Accept(visitor intmod.IStatementVisitor) {
+func (b *MultiLabelsBlock) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitSwitchStatementMultiLabelsBlock(b)
 }
 

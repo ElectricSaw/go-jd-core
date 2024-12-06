@@ -72,7 +72,7 @@ func (v *AbstractUpdateExpressionVisitor) VisitExpressionVariableInitializer(dec
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclaration(declaration intmod.IFieldDeclaration) {
-	declaration.FieldDeclarators().Accept(v)
+	declaration.FieldDeclarators().AcceptDeclaration(v)
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitFieldDeclarator(declaration intmod.IFieldDeclarator) {
@@ -133,7 +133,7 @@ func (v *AbstractUpdateExpressionVisitor) VisitInstanceOfExpression(expression i
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitLambdaFormalParametersExpression(expression intmod.ILambdaFormalParametersExpression) {
-	expression.Statements().Accept(v)
+	expression.Statements().AcceptStatement(v)
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitLengthExpression(expression intmod.ILengthExpression) {
@@ -260,7 +260,7 @@ func (v *AbstractUpdateExpressionVisitor) VisitIfElseStatement(statement intmod.
 	statement.SetCondition(v.UpdateExpression(statement.Condition()))
 	statement.Condition().Accept(v)
 	v.SafeAcceptStatement(statement.Statements())
-	statement.ElseStatements().Accept(v)
+	statement.ElseStatements().AcceptStatement(v)
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitLambdaExpressionStatement(statement intmod.ILambdaExpressionStatement) {

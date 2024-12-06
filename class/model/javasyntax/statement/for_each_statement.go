@@ -42,6 +42,6 @@ func (s *ForEachStatement) Statement() intmod.IStatement {
 	return s.statement
 }
 
-func (s *ForEachStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ForEachStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitForEachStatement(s)
 }

@@ -48,9 +48,9 @@ func (s *ClassFileBreakContinueStatement) SetContinueLabel(continueLabel bool) {
 	s.continueLabel = continueLabel
 }
 
-func (s *ClassFileBreakContinueStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ClassFileBreakContinueStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	if s.statement == nil {
-		s.statement.Accept(visitor)
+		s.statement.AcceptStatement(visitor)
 	}
 }
 

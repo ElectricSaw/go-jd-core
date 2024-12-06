@@ -29,7 +29,7 @@ func (s *ThrowStatement) IsThrowStatement() bool {
 	return true
 }
 
-func (s *ThrowStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ThrowStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitThrowStatement(s)
 }
 

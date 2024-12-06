@@ -32,7 +32,7 @@ func (d *StaticInitializerDeclaration) SetStatements(statements intmod.IStatemen
 	d.statements = statements
 }
 
-func (d *StaticInitializerDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *StaticInitializerDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitStaticInitializerDeclaration(d)
 }
 

@@ -73,7 +73,7 @@ func (v *InitStaticFieldVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclarati
 
 			length := methods.Size()
 			for i := 0; i < length; i++ {
-				methods.Get(i).Accept(v)
+				methods.Get(i).AcceptDeclaration(v)
 
 				if !v.deleteStaticDeclaration {
 					if v.deleteStaticDeclaration {
@@ -219,7 +219,7 @@ func (v *InitStaticFieldVisitor) setStaticFieldInitializer(state intmod.IStateme
 
 func (v *InitStaticFieldVisitor) getFirstLineNumber(state intmod.IStatement) int {
 	v.searchFirstLineNumberVisitor.Init()
-	state.Accept(v.searchFirstLineNumberVisitor)
+	state.AcceptStatement(v.searchFirstLineNumberVisitor)
 	return v.searchFirstLineNumberVisitor.LineNumber()
 }
 

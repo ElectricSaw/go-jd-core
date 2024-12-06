@@ -86,7 +86,7 @@ func (d *ConstructorDeclaration) SetStatements(state intmod.IStatement) {
 	d.statements = state
 }
 
-func (d *ConstructorDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *ConstructorDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitConstructorDeclaration(d)
 }
 

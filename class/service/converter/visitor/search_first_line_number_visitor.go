@@ -29,7 +29,7 @@ func (v *SearchFirstLineNumberVisitor) VisitStatements(statements intmod.IStatem
 	if v.lineNumber == -1 {
 
 		for _, value := range statements.ToSlice() {
-			value.Accept(v)
+			value.AcceptStatement(v)
 			if v.lineNumber != -1 {
 				break
 			}
@@ -209,13 +209,13 @@ func (v *SearchFirstLineNumberVisitor) VisitWhileStatement(statement intmod.IWhi
 	if statement.Condition() != nil {
 		statement.Condition().Accept(v)
 	} else if statement.Statements() != nil {
-		statement.Statements().Accept(v)
+		statement.Statements().AcceptStatement(v)
 	}
 }
 
 func (v *SearchFirstLineNumberVisitor) VisitDoWhileStatement(statement intmod.IDoWhileStatement) {
 	if statement.Statements() != nil {
-		statement.Statements().Accept(v)
+		statement.Statements().AcceptStatement(v)
 	} else if statement.Condition() != nil {
 		statement.Condition().Accept(v)
 	}
@@ -229,7 +229,7 @@ func (v *SearchFirstLineNumberVisitor) VisitForStatement(statement intmod.IForSt
 	} else if statement.Update() != nil {
 		statement.Update().Accept(v)
 	} else if statement.Statements() != nil {
-		statement.Statements().Accept(v)
+		statement.Statements().AcceptStatement(v)
 	}
 }
 
@@ -241,6 +241,6 @@ func (v *SearchFirstLineNumberVisitor) VisitTryStatement(statement intmod.ITrySt
 	if statement.Resources() != nil {
 		v.AcceptListStatement(statement.ResourceList())
 	} else {
-		statement.TryStatements().Accept(v)
+		statement.TryStatements().AcceptStatement(v)
 	}
 }

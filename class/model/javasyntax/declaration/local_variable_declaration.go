@@ -37,6 +37,6 @@ func (d *LocalVariableDeclaration) SetLocalVariableDeclarators(localVariableDecl
 	d.localVariableDeclarators = localVariableDeclarators
 }
 
-func (d *LocalVariableDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *LocalVariableDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclaration(d)
 }

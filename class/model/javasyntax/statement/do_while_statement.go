@@ -30,6 +30,6 @@ func (s *DoWhileStatement) Statements() intmod.IStatement {
 	return s.statements
 }
 
-func (s *DoWhileStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *DoWhileStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitDoWhileStatement(s)
 }

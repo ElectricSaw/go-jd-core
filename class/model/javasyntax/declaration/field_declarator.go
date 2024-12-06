@@ -57,7 +57,7 @@ func (d *FieldDeclarator) SetVariableInitializer(variableInitializer intmod.IVar
 	d.variableInitializer = variableInitializer
 }
 
-func (d *FieldDeclarator) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *FieldDeclarator) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitFieldDeclarator(d)
 }
 

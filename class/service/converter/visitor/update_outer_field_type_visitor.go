@@ -75,7 +75,7 @@ func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IC
 				v.searchFieldVisitor.Init(name)
 
 				for _, field := range cfcd.BodyDeclaration().FieldDeclarations() {
-					field.FieldDeclarators().Accept(&v.searchFieldVisitor)
+					field.FieldDeclarators().AcceptDeclaration(&v.searchFieldVisitor)
 					if v.searchFieldVisitor.Found() {
 						var typeArguments intmod.ITypeArgument
 

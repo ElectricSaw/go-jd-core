@@ -32,6 +32,6 @@ func (s *WhileStatement) IsWhileStatement() bool {
 	return true
 }
 
-func (s *WhileStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *WhileStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitWhileStatement(s)
 }

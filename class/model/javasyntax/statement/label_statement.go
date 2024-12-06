@@ -31,7 +31,7 @@ func (s *LabelStatement) IsLabelStatement() bool {
 	return true
 }
 
-func (s *LabelStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *LabelStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitLabelStatement(s)
 }
 

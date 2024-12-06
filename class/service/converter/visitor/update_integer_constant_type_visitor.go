@@ -68,7 +68,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitIfStatement(state intmod.IIfStat
 func (v *UpdateIntegerConstantTypeVisitor) VisitIfElseStatement(state intmod.IIfElseStatement) {
 	state.SetCondition(v.updateBooleanExpression(state.Condition()))
 	v.SafeAcceptStatement(state.Statements())
-	state.ElseStatements().Accept(v)
+	state.ElseStatements().AcceptStatement(v)
 }
 
 func (v *UpdateIntegerConstantTypeVisitor) VisitWhileStatement(state intmod.IWhileStatement) {
@@ -246,7 +246,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitArrayVariableInitializer(decl in
 	v.arrayVariableInitializerType = decl.Type()
 	// v.acceptListDeclaration(decl);
 	for _, item := range decl.ToSlice() {
-		item.Accept(v)
+		item.AcceptDeclaration(v)
 	}
 	v.arrayVariableInitializerType = t
 }
@@ -261,7 +261,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitLocalVariableDeclaration(decl in
 func (v *UpdateIntegerConstantTypeVisitor) VisitFieldDeclaration(decl intmod.IFieldDeclaration) {
 	t := v.arrayVariableInitializerType
 	v.arrayVariableInitializerType = decl.Type()
-	decl.FieldDeclarators().Accept(v)
+	decl.FieldDeclarators().AcceptDeclaration(v)
 	v.arrayVariableInitializerType = t
 }
 

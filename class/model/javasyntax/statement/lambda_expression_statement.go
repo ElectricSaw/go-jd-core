@@ -29,7 +29,7 @@ func (s *LambdaExpressionStatement) IsLambdaExpressionStatement() bool {
 	return true
 }
 
-func (s *LambdaExpressionStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *LambdaExpressionStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitLambdaExpressionStatement(s)
 }
 

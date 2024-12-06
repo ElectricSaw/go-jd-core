@@ -89,7 +89,7 @@ func (v *InitEnumVisitor) VisitMethodDeclaration(declaration intmod.IMethodDecla
 func (v *InitEnumVisitor) VisitFieldDeclaration(declaration intmod.IFieldDeclaration) {
 	if (declaration.Flags() & intmod.FlagEnum) != 0 {
 		cffd := declaration.(intsrv.IClassFileFieldDeclaration)
-		cffd.FieldDeclarators().Accept(v)
+		cffd.FieldDeclarators().AcceptDeclaration(v)
 		cffd.SetFlags(cffd.Flags() | intmod.FlagSynthetic)
 	}
 }

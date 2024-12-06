@@ -57,7 +57,7 @@ func (d *LocalVariableDeclarator) VariableInitializer() intmod.IVariableInitiali
 	return d.variableInitializer
 }
 
-func (d *LocalVariableDeclarator) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *LocalVariableDeclarator) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarator(d)
 }
 

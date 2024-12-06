@@ -42,7 +42,7 @@ func (d *InterfaceDeclaration) Interfaces() intmod.IType {
 	return d.interfaces
 }
 
-func (d *InterfaceDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *InterfaceDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitInterfaceDeclaration(d)
 }
 

@@ -13,6 +13,7 @@ import (
 	srvdecl "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 )
 
 var populateBindingsWithTypeParameterVisitor = &CustomPopulateBindingsWithTypeParameterVisitor{}
@@ -321,9 +322,9 @@ func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intcls.IC
 	requires := p.convertModuleDeclarationModuleInfo(attributeModule.Requires())
 	exports := p.convertModuleDeclarationPackageInfo(attributeModule.Exports())
 	opens := p.convertModuleDeclarationPackageInfo(attributeModule.Opens())
-	uses := make([]string, 0, len(attributeModule.Uses()))
+	uses := util.NewDefaultListWithCapacity[string](len(attributeModule.Uses()))
 	for _, use := range attributeModule.Uses() {
-		uses = append(uses, use)
+		uses.Add(use)
 	}
 	provides := p.convertModuleDeclarationServiceInfo(attributeModule.Provides())
 
@@ -332,45 +333,45 @@ func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intcls.IC
 		attributeModule.Version(), requires, exports, opens, uses, provides)
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclarationModuleInfo(moduleInfos []intcls.IModuleInfo) []intmod.IModuleInfo {
+func (p *ConvertClassFileProcessor) convertModuleDeclarationModuleInfo(moduleInfos []intcls.IModuleInfo) util.IList[intmod.IModuleInfo] {
 	if (moduleInfos == nil) || (len(moduleInfos) == 0) {
 		return nil
 	} else {
-		list := make([]intmod.IModuleInfo, 0, len(moduleInfos))
+		list := util.NewDefaultListWithCapacity[intmod.IModuleInfo](len(moduleInfos))
 		for _, moduleInfo := range moduleInfos {
-			list = append(list, declaration.NewModuleInfo(moduleInfo.Name(), moduleInfo.Flags(), moduleInfo.Version()))
+			list.Add(declaration.NewModuleInfo(moduleInfo.Name(), moduleInfo.Flags(), moduleInfo.Version()))
 		}
 		return list
 	}
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclarationPackageInfo(packageInfos []intcls.IPackageInfo) []intmod.IPackageInfo {
+func (p *ConvertClassFileProcessor) convertModuleDeclarationPackageInfo(packageInfos []intcls.IPackageInfo) util.IList[intmod.IPackageInfo] {
 	if (packageInfos == nil) || (len(packageInfos) == 0) {
 		return nil
 	} else {
-		list := make([]intmod.IPackageInfo, 0, len(packageInfos))
+		list := util.NewDefaultListWithCapacity[intmod.IPackageInfo](len(packageInfos))
 		for _, packageInfo := range packageInfos {
 			var moduleInfoNames []string
 			if packageInfo.ModuleInfoNames() != nil {
 				moduleInfoNames = copyStrings(packageInfo.ModuleInfoNames())
 			}
-			list = append(list, declaration.NewPackageInfo(packageInfo.InternalName(), packageInfo.Flags(), moduleInfoNames))
+			list.Add(declaration.NewPackageInfo(packageInfo.InternalName(), packageInfo.Flags(), moduleInfoNames))
 		}
 		return list
 	}
 }
 
-func (p *ConvertClassFileProcessor) convertModuleDeclarationServiceInfo(serviceInfos []intcls.IServiceInfo) []intmod.IServiceInfo {
+func (p *ConvertClassFileProcessor) convertModuleDeclarationServiceInfo(serviceInfos []intcls.IServiceInfo) util.IList[intmod.IServiceInfo] {
 	if (serviceInfos == nil) || (len(serviceInfos) == 0) {
 		return nil
 	} else {
-		list := make([]intmod.IServiceInfo, 0, len(serviceInfos))
+		list := util.NewDefaultListWithCapacity[intmod.IServiceInfo](len(serviceInfos))
 		for _, serviceInfo := range serviceInfos {
 			var implementationTypeNames []string
 			if serviceInfo.ImplementationTypeNames() != nil {
 				implementationTypeNames = copyStrings(serviceInfo.ImplementationTypeNames())
 			}
-			list = append(list, declaration.NewServiceInfo(serviceInfo.InterfaceTypeName(), implementationTypeNames))
+			list.Add(declaration.NewServiceInfo(serviceInfo.InterfaceTypeName(), implementationTypeNames))
 		}
 		return list
 	}

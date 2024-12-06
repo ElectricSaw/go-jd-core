@@ -22,6 +22,6 @@ func (s *CommentStatement) IsContinueStatement() bool {
 	return true
 }
 
-func (s *CommentStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *CommentStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitCommentStatement(s)
 }

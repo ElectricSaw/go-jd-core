@@ -201,7 +201,7 @@ func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitBodyDeclaration(decl 
 
 func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldDeclaration(decl intmod.IFieldDeclaration) {
 	v.syntheticField = false
-	decl.FieldDeclarators().Accept(v)
+	decl.FieldDeclarators().AcceptDeclaration(v)
 
 	if v.syntheticField {
 		decl.SetFlags(decl.Flags() | intmod.FlagSynthetic)
@@ -331,7 +331,7 @@ func (v *UpdateNewExpressionVisitor) VisitConstructorDeclaration(decl intmod.ICo
 	if len(v.finalLocalVariableNameMap) != 0 {
 		visitor := NewUpdateParametersAndLocalVariablesVisitor(v)
 
-		decl.Statements().Accept(visitor)
+		decl.Statements().AcceptStatement(visitor)
 
 		if decl.FormalParameters() != nil {
 			decl.FormalParameters().Accept(visitor)
@@ -343,7 +343,7 @@ func (v *UpdateNewExpressionVisitor) VisitConstructorDeclaration(decl intmod.ICo
 			return v.localClassDeclarations.Get(i).FirstLineNumber() <
 				v.localClassDeclarations.Get(j).FirstLineNumber()
 		})
-		decl.Accept(NewAddLocalClassDeclarationVisitor(v))
+		decl.AcceptDeclaration(NewAddLocalClassDeclarationVisitor(v))
 	}
 }
 
@@ -354,7 +354,7 @@ func (v *UpdateNewExpressionVisitor) VisitMethodDeclaration(decl intmod.IMethodD
 
 	if len(v.finalLocalVariableNameMap) != 0 {
 		visitor := NewUpdateParametersAndLocalVariablesVisitor(v)
-		decl.Statements().Accept(visitor)
+		decl.Statements().AcceptStatement(visitor)
 
 		if decl.FormalParameters() != nil {
 			decl.FormalParameters().Accept(visitor)
@@ -366,7 +366,7 @@ func (v *UpdateNewExpressionVisitor) VisitMethodDeclaration(decl intmod.IMethodD
 			return v.localClassDeclarations.Get(i).FirstLineNumber() <
 				v.localClassDeclarations.Get(j).FirstLineNumber()
 		})
-		decl.Accept(NewAddLocalClassDeclarationVisitor(v))
+		decl.AcceptDeclaration(NewAddLocalClassDeclarationVisitor(v))
 	}
 }
 
@@ -376,7 +376,7 @@ func (v *UpdateNewExpressionVisitor) VisitStaticInitializerDeclaration(decl intm
 	v.SafeAcceptStatement(decl.Statements())
 
 	if len(v.finalLocalVariableNameMap) != 0 {
-		decl.Statements().Accept(NewUpdateParametersAndLocalVariablesVisitor(v))
+		decl.Statements().AcceptStatement(NewUpdateParametersAndLocalVariablesVisitor(v))
 	}
 
 	if !v.localClassDeclarations.IsEmpty() {
@@ -395,7 +395,7 @@ func (v *UpdateNewExpressionVisitor) VisitStatements(list intmod.IStatements) {
 		for iterator.HasNext() {
 			//iterator.next().accept(v);
 			s := iterator.Next()
-			s.Accept(v)
+			s.AcceptStatement(v)
 
 			if v.lineNumber == intmod.UnknownLineNumber && !v.localClassDeclarations.IsEmpty() {
 				iterator.Previous()
@@ -688,12 +688,12 @@ func (v *AddLocalClassDeclarationVisitor) VisitStaticInitializerDeclaration(decl
 func (v *AddLocalClassDeclarationVisitor) addLocalClassDeclarations(stat intmod.IStatement) intmod.IStatement {
 	if !v.parent.localClassDeclarations.IsEmpty() {
 		if stat.IsStatements() {
-			stat.Accept(v)
+			stat.AcceptStatement(v)
 		} else {
 			decl := v.parent.localClassDeclarations.Get(0)
 
 			v.searchFirstLineNumberVisitor.Init()
-			stat.Accept(v.searchFirstLineNumberVisitor)
+			stat.AcceptStatement(v.searchFirstLineNumberVisitor)
 
 			if v.searchFirstLineNumberVisitor.LineNumber() != -1 {
 				v.lineNumber = v.searchFirstLineNumberVisitor.LineNumber()
@@ -722,7 +722,7 @@ func (v *AddLocalClassDeclarationVisitor) addLocalClassDeclarations(stat intmod.
 				}
 				stat = list
 			} else {
-				stat.Accept(v)
+				stat.AcceptStatement(v)
 			}
 		}
 	}
@@ -740,7 +740,7 @@ func (v *AddLocalClassDeclarationVisitor) VisitStatements(list intmod.IStatement
 			state := statementIterator.Next()
 
 			v.searchFirstLineNumberVisitor.Init()
-			state.Accept(v.searchFirstLineNumberVisitor)
+			state.AcceptStatement(v.searchFirstLineNumberVisitor)
 
 			if v.searchFirstLineNumberVisitor.LineNumber() != -1 {
 				v.lineNumber = v.searchFirstLineNumberVisitor.LineNumber()

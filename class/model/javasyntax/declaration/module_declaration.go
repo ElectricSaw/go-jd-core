@@ -2,12 +2,14 @@ package declaration
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
 
 func NewModuleDeclaration(flags int, internalTypeName, name, version string,
-	requires []intmod.IModuleInfo, exports []intmod.IPackageInfo, opens []intmod.IPackageInfo,
-	uses []string, provides []intmod.IServiceInfo) intmod.IModuleDeclaration {
+	requires util.IList[intmod.IModuleInfo], exports util.IList[intmod.IPackageInfo],
+	opens util.IList[intmod.IPackageInfo], uses util.IList[string],
+	provides util.IList[intmod.IServiceInfo]) intmod.IModuleDeclaration {
 	d := &ModuleDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil).(*TypeDeclaration),
 		version:         version,
@@ -25,38 +27,38 @@ type ModuleDeclaration struct {
 	TypeDeclaration
 
 	version  string
-	requires []intmod.IModuleInfo
-	exports  []intmod.IPackageInfo
-	opens    []intmod.IPackageInfo
-	uses     []string
-	provides []intmod.IServiceInfo
+	requires util.IList[intmod.IModuleInfo]
+	exports  util.IList[intmod.IPackageInfo]
+	opens    util.IList[intmod.IPackageInfo]
+	uses     util.IList[string]
+	provides util.IList[intmod.IServiceInfo]
 }
 
 func (d *ModuleDeclaration) Version() string {
 	return d.version
 }
 
-func (d *ModuleDeclaration) Requires() []intmod.IModuleInfo {
+func (d *ModuleDeclaration) Requires() util.IList[intmod.IModuleInfo] {
 	return d.requires
 }
 
-func (d *ModuleDeclaration) Exports() []intmod.IPackageInfo {
+func (d *ModuleDeclaration) Exports() util.IList[intmod.IPackageInfo] {
 	return d.exports
 }
 
-func (d *ModuleDeclaration) Opens() []intmod.IPackageInfo {
+func (d *ModuleDeclaration) Opens() util.IList[intmod.IPackageInfo] {
 	return d.opens
 }
 
-func (d *ModuleDeclaration) Uses() []string {
+func (d *ModuleDeclaration) Uses() util.IList[string] {
 	return d.uses
 }
 
-func (d *ModuleDeclaration) Provides() []intmod.IServiceInfo {
+func (d *ModuleDeclaration) Provides() util.IList[intmod.IServiceInfo] {
 	return d.provides
 }
 
-func (d *ModuleDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *ModuleDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitModuleDeclaration(d)
 }
 

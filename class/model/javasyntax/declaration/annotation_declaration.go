@@ -26,7 +26,7 @@ func (d *AnnotationDeclaration) AnnotationDeclarators() intmod.IFieldDeclarator 
 	return d.annotationDeclaratiors
 }
 
-func (d *AnnotationDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *AnnotationDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitAnnotationDeclaration(d)
 }
 

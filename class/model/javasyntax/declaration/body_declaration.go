@@ -15,7 +15,7 @@ func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMembe
 }
 
 type BodyDeclaration struct {
-	util.DefaultBase[intmod.IMemberDeclaration]
+	util.DefaultBase[intmod.IBodyDeclaration]
 
 	internalTypeName   string
 	memberDeclarations intmod.IMemberDeclaration
@@ -33,6 +33,6 @@ func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration intmod.IMember
 	d.memberDeclarations = memberDeclaration
 }
 
-func (d *BodyDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *BodyDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitBodyDeclaration(d)
 }

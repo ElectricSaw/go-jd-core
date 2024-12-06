@@ -26,6 +26,6 @@ func (s *IfElseStatement) IsIfElseStatement() bool {
 	return true
 }
 
-func (s *IfElseStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *IfElseStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitIfElseStatement(s)
 }

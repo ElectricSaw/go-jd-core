@@ -16,7 +16,7 @@ type AbstractStatement struct {
 	util.DefaultBase[intmod.IStatement]
 }
 
-func (s *AbstractStatement) Accept(visitor intmod.IStatementVisitor) {}
+func (s *AbstractStatement) AcceptStatement(visitor intmod.IStatementVisitor) {}
 
 func (s *AbstractStatement) IsBreakStatement() bool                    { return false }
 func (s *AbstractStatement) IsContinueStatement() bool                 { return false }

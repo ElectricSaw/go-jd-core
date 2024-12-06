@@ -23,18 +23,18 @@ func (v *RemoveLastContinueStatementVisitor) VisitStatements(list intmod.IStatem
 			list.RemoveLast()
 			v.VisitStatements(list)
 		} else {
-			last.Accept(v)
+			last.AcceptStatement(v)
 		}
 	}
 }
 
 func (v *RemoveLastContinueStatementVisitor) VisitIfElseStatement(state intmod.IIfElseStatement) {
 	v.SafeAcceptStatement(state.Statements())
-	state.ElseStatements().Accept(v)
+	state.ElseStatements().AcceptStatement(v)
 }
 
 func (v *RemoveLastContinueStatementVisitor) VisitTryStatement(state intmod.ITryStatement) {
-	state.TryStatements().Accept(v)
+	state.TryStatements().AcceptStatement(v)
 	tmp := make([]intmod.IStatement, 0)
 	for _, block := range state.CatchClauses() {
 		tmp = append(tmp, block)
@@ -52,11 +52,11 @@ func (v *RemoveLastContinueStatementVisitor) VisitSwitchStatement(state intmod.I
 }
 
 func (v *RemoveLastContinueStatementVisitor) VisitSwitchStatementLabelBlock(state intmod.ILabelBlock) {
-	state.Statements().Accept(v)
+	state.Statements().AcceptStatement(v)
 }
 
 func (v *RemoveLastContinueStatementVisitor) VisitSwitchStatementMultiLabelsBlock(state intmod.IMultiLabelsBlock) {
-	state.Statements().Accept(v)
+	state.Statements().AcceptStatement(v)
 }
 
 func (v *RemoveLastContinueStatementVisitor) VisitIfStatement(state intmod.IIfStatement) {

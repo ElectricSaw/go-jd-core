@@ -97,7 +97,7 @@ func makeLoopStatementMaker(majorVersion int, typeBounds map[string]intmod.IType
 			// Known line numbers
 			visit := visitor.NewSearchFirstLineNumberVisitor()
 
-			subStatements.First().Accept(visit)
+			subStatements.First().AcceptStatement(visit)
 
 			firstLineNumber := visit.LineNumber()
 
@@ -164,7 +164,7 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 		break
 	default:
 		visit := visitor.NewSearchFirstLineNumberVisitor()
-		subStatements.Get(0).Accept(visit)
+		subStatements.Get(0).AcceptStatement(visit)
 		firstLineNumber := visit.LineNumber()
 		if firstLineNumber > 0 {
 			// Populates 'update'
@@ -552,7 +552,7 @@ func makeForEachList(
 
 	length := subStatements.Size()
 	for i := 1; i < length; i++ {
-		subStatements.Get(i).Accept(visitor1)
+		subStatements.Get(i).AcceptStatement(visitor1)
 	}
 
 	if visitor1.ContainsReference() {

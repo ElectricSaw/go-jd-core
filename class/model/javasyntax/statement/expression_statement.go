@@ -29,7 +29,7 @@ func (s *ExpressionStatement) IsExpressionStatement() bool {
 	return true
 }
 
-func (s *ExpressionStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *ExpressionStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitExpressionStatement(s)
 }
 

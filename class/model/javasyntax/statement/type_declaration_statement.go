@@ -20,6 +20,6 @@ func (s *TypeDeclarationStatement) TypeDeclaration() intmod.ITypeDeclaration {
 	return s.typeDeclaration
 }
 
-func (s *TypeDeclarationStatement) Accept(visitor intmod.IStatementVisitor) {
+func (s *TypeDeclarationStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
 	visitor.VisitTypeDeclarationStatement(s)
 }

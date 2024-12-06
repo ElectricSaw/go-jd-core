@@ -948,7 +948,7 @@ func (m *StatementMaker) createObjectTypeReferenceDotClassExpression(lineNumber 
 	m.memberVisitor.Init(fieldName)
 
 	for _, field := range m.bodyDeclaration.FieldDeclarations() {
-		field.FieldDeclarators().Accept(m.memberVisitor)
+		field.FieldDeclarators().AcceptDeclaration(m.memberVisitor)
 		if m.memberVisitor.Found() {
 			field.SetFlags(field.Flags() | intcls.AccSynthetic)
 			break
@@ -959,7 +959,7 @@ func (m *StatementMaker) createObjectTypeReferenceDotClassExpression(lineNumber 
 	m.memberVisitor.Init("class$")
 
 	for _, member := range m.bodyDeclaration.MethodDeclarations() {
-		member.Accept(m.memberVisitor)
+		member.AcceptDeclaration(m.memberVisitor)
 		if m.memberVisitor.Found() {
 			member.SetFlags(member.Flags() | intcls.AccSynthetic)
 			break

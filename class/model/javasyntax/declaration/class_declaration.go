@@ -37,7 +37,7 @@ func (d *ClassDeclaration) IsClassDeclaration() bool {
 	return true
 }
 
-func (d *ClassDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *ClassDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitClassDeclaration(d)
 }
 

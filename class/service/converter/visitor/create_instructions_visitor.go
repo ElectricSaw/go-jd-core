@@ -35,12 +35,12 @@ func (v *CreateInstructionsVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclar
 	if methods != nil {
 		for _, method := range methods {
 			if (method.Flags() & (intmod.FlagSynthetic | intmod.FlagBridge)) != 0 {
-				method.Accept(v)
+				method.AcceptDeclaration(v)
 			} else if (method.Flags() & (intmod.FlagStatic | intmod.FlagBridge)) == intmod.FlagStatic {
 				if strings.HasPrefix(method.Method().Name(), "access$") {
 					// Accessor -> bridge method
 					method.SetFlags(method.Flags() | intmod.FlagBridge)
-					method.Accept(v)
+					method.AcceptDeclaration(v)
 				}
 			} else if method.ParameterTypes() != nil {
 				if method.ParameterTypes().IsList() {
@@ -48,7 +48,7 @@ func (v *CreateInstructionsVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclar
 						if item.IsObjectType() && (item.Name() == "") {
 							// Synthetic type in parameters -> synthetic method
 							method.SetFlags(method.Flags() | intmod.FlagSynthetic)
-							method.Accept(v)
+							method.AcceptDeclaration(v)
 							break
 						}
 					}
@@ -57,7 +57,7 @@ func (v *CreateInstructionsVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclar
 					if typ.IsObjectType() && (typ.Name() == "") {
 						// Synthetic type in parameters -> synthetic method
 						method.SetFlags(method.Flags() | intmod.FlagSynthetic)
-						method.Accept(v)
+						method.AcceptDeclaration(v)
 						break
 					}
 				}
@@ -66,7 +66,7 @@ func (v *CreateInstructionsVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclar
 
 		for _, method := range methods {
 			if (method.Flags() & (intmod.FlagSynthetic | intmod.FlagBridge)) == 0 {
-				method.Accept(v)
+				method.AcceptDeclaration(v)
 			}
 		}
 	}

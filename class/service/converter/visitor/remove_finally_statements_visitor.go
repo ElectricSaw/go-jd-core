@@ -52,14 +52,14 @@ func (v *RemoveFinallyStatementsVisitor) VisitStatements(statements intmod.IStat
 				// Infinite loop => Do not remove any statement
 				v.statementCountToRemove = 0
 				i--
-				whileStatement.Statements().Accept(v)
+				whileStatement.Statements().AcceptStatement(v)
 			}
 		}
 
 		// Remove 'finally' statements
 		if v.statementCountToRemove > 0 {
 			if !v.lastFinallyStatementIsATryStatement && (i > 0) && stmts.Get(i-1).IsTryStatement() {
-				stmts.Get(i - 1).Accept(v)
+				stmts.Get(i - 1).AcceptStatement(v)
 				v.statementCountToRemove = 0
 				i--
 			} else {
@@ -70,10 +70,10 @@ func (v *RemoveFinallyStatementsVisitor) VisitStatements(statements intmod.IStat
 					list := statements.SubList(i-v.statementCountToRemove, i)
 
 					for _, statement := range list.ToSlice() {
-						statement.Accept(v.declaredSyntheticLocalVariableVisitor)
+						statement.AcceptStatement(v.declaredSyntheticLocalVariableVisitor)
 					}
 
-					lastStatement.Accept(v.declaredSyntheticLocalVariableVisitor)
+					lastStatement.AcceptStatement(v.declaredSyntheticLocalVariableVisitor)
 					list.Clear()
 					i -= v.statementCountToRemove
 					v.statementCountToRemove = 0
@@ -81,7 +81,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitStatements(statements intmod.IStat
 					list := statements.ToList()
 
 					for _, statement := range list.ToSlice() {
-						statement.Accept(v.declaredSyntheticLocalVariableVisitor)
+						statement.AcceptStatement(v.declaredSyntheticLocalVariableVisitor)
 					}
 
 					list.Clear()
@@ -96,7 +96,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitStatements(statements intmod.IStat
 
 		// Recursive visit
 		for ; i > 0; i++ {
-			stmts.Get(i).Accept(v)
+			stmts.Get(i).AcceptStatement(v)
 
 			if v.statementCountToRemove > 0 {
 				if (i + v.statementCountToRemove) < statements.Size() {
@@ -135,13 +135,13 @@ func getInfiniteWhileStatement(statement intmod.IStatement) intmod.IWhileStateme
 }
 
 func (v *RemoveFinallyStatementsVisitor) VisitIfElseStatement(statement intmod.IIfElseStatement) {
-	statement.Statements().Accept(v)
-	statement.ElseStatements().Accept(v)
+	statement.Statements().AcceptStatement(v)
+	statement.ElseStatements().AcceptStatement(v)
 }
 
 func (v *RemoveFinallyStatementsVisitor) VisitSwitchStatement(statement intmod.ISwitchStatement) {
 	for _, block := range statement.Blocks() {
-		block.Statements().Accept(v)
+		block.Statements().AcceptStatement(v)
 	}
 }
 
@@ -156,10 +156,10 @@ func (v *RemoveFinallyStatementsVisitor) VisitTryStatement(statement intmod.ITry
 		case 0:
 			break
 		case 1:
-			finallyStatements.First().Accept(v)
+			finallyStatements.First().AcceptStatement(v)
 		default:
 			for _, stmt := range finallyStatements.ToSlice() {
-				stmt.Accept(v)
+				stmt.AcceptStatement(v)
 			}
 		}
 
@@ -188,7 +188,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitTryStatement(statement intmod.ITry
 
 		if catchClauses != nil {
 			for _, cc := range catchClauses.ToSlice() {
-				cc.Statements().Accept(v)
+				cc.Statements().AcceptStatement(v)
 			}
 		}
 
@@ -210,7 +210,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitTryStatement(statement intmod.ITry
 
 		if catchClauses != nil {
 			for _, cc := range catchClauses.ToSlice() {
-				cc.Statements().Accept(v)
+				cc.Statements().AcceptStatement(v)
 			}
 		}
 
@@ -248,10 +248,10 @@ func (v *RemoveFinallyStatementsVisitor) VisitWhileStatement(statement intmod.IW
 }
 
 func (v *RemoveFinallyStatementsVisitor) VisitSwitchStatementLabelBlock(statement intmod.ILabelBlock) {
-	statement.Statements().Accept(v)
+	statement.Statements().AcceptStatement(v)
 }
 func (v *RemoveFinallyStatementsVisitor) VisitSwitchStatementMultiLabelsBlock(statement intmod.IMultiLabelsBlock) {
-	statement.Statements().Accept(v)
+	statement.Statements().AcceptStatement(v)
 }
 
 func (v *RemoveFinallyStatementsVisitor) VisitAssertStatement(_ intmod.IAssertStatement) {
@@ -307,14 +307,14 @@ func (v *RemoveFinallyStatementsVisitor) VisitTypeDeclarationStatement(_ intmod.
 
 func (v *RemoveFinallyStatementsVisitor) safeAccept(list intmod.IStatement) {
 	if list != nil {
-		list.Accept(v)
+		list.AcceptStatement(v)
 	}
 }
 
 func (v *RemoveFinallyStatementsVisitor) safeAcceptListStatement(list []intmod.IStatement) {
 	if list != nil {
 		for _, statement := range list {
-			statement.Accept(v)
+			statement.AcceptStatement(v)
 		}
 	}
 }

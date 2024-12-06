@@ -42,7 +42,7 @@ func (d *EnumDeclaration) SetConstants(constants []intmod.IConstant) {
 	d.constants = constants
 }
 
-func (d *EnumDeclaration) Accept(visitor intmod.IDeclarationVisitor) {
+func (d *EnumDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitEnumDeclaration(d)
 }
 
@@ -118,6 +118,6 @@ func (c *Constant) BodyDeclaration() intmod.IBodyDeclaration {
 	return c.bodyDeclaration
 }
 
-func (c *Constant) Accept(visitor intmod.IDeclarationVisitor) {
+func (c *Constant) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitEnumDeclarationConstant(c)
 }

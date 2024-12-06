@@ -29,6 +29,6 @@ func (i *ArrayVariableInitializer) LineNumber() int {
 	return i.Get(0).LineNumber()
 }
 
-func (i *ArrayVariableInitializer) Accept(visitor intmod.IDeclarationVisitor) {
+func (i *ArrayVariableInitializer) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
 	visitor.VisitArrayVariableInitializer(i)
 }
