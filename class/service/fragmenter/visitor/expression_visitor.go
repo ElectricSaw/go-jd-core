@@ -6,6 +6,7 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/javafragment"
 	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
 	"bitbucket.org/coontec/go-jd-core/class/model/token"
+	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter/visitor/fragutil"
 	"bitbucket.org/coontec/go-jd-core/class/util"
 	"fmt"
 )
@@ -201,7 +202,7 @@ func (v *ExpressionVisitor) VisitIntegerConstantExpression(expr intmod.IIntegerC
 
 	switch pt.JavaPrimitiveFlags() {
 	case intmod.FlagChar:
-		v.tokens.Add(token.NewCharacterConstantToken(EscapeChar(expr.IntegerValue()), v.currentInternalTypeName))
+		v.tokens.Add(token.NewCharacterConstantToken(fragutil.EscapeChar(expr.IntegerValue()), v.currentInternalTypeName))
 		break
 	case intmod.FlagBoolean:
 		v.tokens.Add(token.NewBooleanConstantToken(expr.IntegerValue() != 0))
@@ -289,19 +290,19 @@ func (v *ExpressionVisitor) visitLambdaBody(statementList intmod.IStatement) {
 		v.tokens.Add(token.SpaceArrowSpace)
 
 		if statementList.IsLambdaExpressionStatement() {
-			statementList.Accept(v)
+			statementList.AcceptStatement(v)
 		} else {
 			v.fragments.AddTokensFragment(v.tokens)
 
-			start := AddStartStatementsInLambdaBlock(v.fragments)
+			start := fragutil.AddStartStatementsInLambdaBlock(v.fragments)
 
 			v.tokens = NewTokens(v)
-			statementList.Accept(v)
+			statementList.AcceptStatement(v)
 
 			if v.inExpressionFlag {
-				AddEndStatementsInLambdaBlockInParameter(v.fragments, start)
+				fragutil.AddEndStatementsInLambdaBlockInParameter(v.fragments, start)
 			} else {
-				AddEndStatementsInLambdaBlock(v.fragments, start)
+				fragutil.AddEndStatementsInLambdaBlock(v.fragments, start)
 			}
 
 			v.tokens = NewTokens(v)
@@ -427,7 +428,7 @@ func (v *ExpressionVisitor) VisitNewInitializedArray(expr intmod.INewInitialized
 	typ := expr.Type()
 	typ.AcceptTypeVisitor(v)
 	v.tokens.Add(token.Space)
-	expr.ArrayInitializer().Accept(v)
+	expr.ArrayInitializer().AcceptDeclaration(v)
 }
 
 func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
@@ -458,13 +459,13 @@ func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
 	if bodyDeclaration != nil {
 		v.fragments.AddTokensFragment(v.tokens)
 
-		start := AddStartTypeBody(v.fragments)
+		start := fragutil.AddStartTypeBody(v.fragments)
 		ot := expr.ObjectType()
 
 		v.storeContext()
 		v.currentInternalTypeName = bodyDeclaration.InternalTypeName()
 		v.currentTypeName = ot.Name()
-		bodyDeclaration.Accept(v)
+		bodyDeclaration.AcceptDeclaration(v)
 
 		if !v.tokens.IsEmpty() {
 			v.tokens = NewTokens(v)
@@ -473,9 +474,9 @@ func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
 		v.restoreContext()
 
 		if v.inExpressionFlag {
-			AddEndSubTypeBodyInParameter(v.fragments, start)
+			fragutil.AddEndSubTypeBodyInParameter(v.fragments, start)
 		} else {
-			AddEndSubTypeBody(v.fragments, start)
+			fragutil.AddEndSubTypeBody(v.fragments, start)
 		}
 
 		v.tokens = NewTokens(v)
@@ -515,7 +516,7 @@ func (v *ExpressionVisitor) VisitPreOperatorExpression(expr intmod.IPreOperatorE
 
 func (v *ExpressionVisitor) VisitStringConstantExpression(expr intmod.IStringConstantExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(token.NewStringConstantToken(EscapeString(expr.StringValue()), v.currentInternalTypeName))
+	v.tokens.Add(token.NewStringConstantToken(fragutil.EscapeString(expr.StringValue()), v.currentInternalTypeName))
 }
 
 func (v *ExpressionVisitor) VisitSuperConstructorInvocationExpression(expr intmod.ISuperConstructorInvocationExpression) {

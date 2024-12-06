@@ -13,7 +13,7 @@ type IClassFileBreakContinueStatement interface {
 	SetStatement(statement intmod.IStatement)
 	IsContinueLabel() bool
 	SetContinueLabel(continueLabel bool)
-	Accept(visitor intmod.IStatementVisitor)
+	AcceptStatement(visitor intmod.IStatementVisitor)
 	String() string
 }
 

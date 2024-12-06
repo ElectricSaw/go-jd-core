@@ -1,4 +1,4 @@
-package visitor
+package fragutil
 
 import (
 	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
