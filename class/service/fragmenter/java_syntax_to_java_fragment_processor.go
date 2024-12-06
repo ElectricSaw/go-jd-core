@@ -7,6 +7,10 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter/visitor"
 )
 
+func NewJavaSyntaxToJavaFragmentProcessor() *JavaSyntaxToJavaFragmentProcessor {
+	return &JavaSyntaxToJavaFragmentProcessor{}
+}
+
 type JavaSyntaxToJavaFragmentProcessor struct {
 }
 

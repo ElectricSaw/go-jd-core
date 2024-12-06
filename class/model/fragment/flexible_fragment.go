@@ -74,6 +74,10 @@ func (f *FlexibleFragment) SetLabel(label string) {
 	f.label = label
 }
 
+func (f *FlexibleFragment) ResetLineCount() {
+	f.lineCount = f.initialLineCount
+}
+
 func (f *FlexibleFragment) IncLineCount(force bool) bool {
 	if f.lineCount < f.maximalLineCount {
 		f.lineCount++

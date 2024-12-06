@@ -51,6 +51,7 @@ type IFlexibleFragment interface {
 	Label() string
 	SetLabel(label string)
 
+	ResetLineCount()
 	IncLineCount(force bool) bool
 	DecLineCount(force bool) bool
 	String() string

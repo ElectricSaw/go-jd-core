@@ -4,6 +4,8 @@ import (
 	"bitbucket.org/coontec/go-jd-core/class/model/message"
 	"bitbucket.org/coontec/go-jd-core/class/service/converter"
 	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
+	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter"
+	"bitbucket.org/coontec/go-jd-core/class/service/layouter"
 	"bitbucket.org/coontec/go-jd-core/class/tests/testutils"
 	"strings"
 	"testing"
@@ -24,6 +26,8 @@ func TestLog4j(t *testing.T) {
 	// 실행 테스트.
 	dsr := deserializer.NewDeserializeClassFileProcessor()
 	cnv := converter.NewClassFileToJavaSyntaxProcessor()
+	frg := fragmenter.NewJavaSyntaxToJavaFragmentProcessor()
+	lyt := layouter.NewLayoutFragmentProcessor()
 
 	for k, _ := range classLoader.Map {
 		if strings.HasSuffix(k, ".class") && (strings.Index(k, "$") == -1) {
@@ -32,6 +36,8 @@ func TestLog4j(t *testing.T) {
 
 			err := dsr.Process(message)
 			err = cnv.Process(message)
+			err = frg.Process(message)
+			err = lyt.Process(message)
 			if err != nil {
 				t.Fatal(err)
 			}
