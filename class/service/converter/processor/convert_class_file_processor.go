@@ -24,7 +24,7 @@ func NewConvertClassFileProcessor() *ConvertClassFileProcessor {
 }
 
 type ConvertClassFileProcessor struct {
-	populateBindingsWithTypeParameterVisitor *visitor.PopulateBindingsWithTypeParameterVisitor
+	populateBindingsWithTypeParameterVisitor intsrv.IPopulateBindingsWithTypeParameterVisitor
 }
 
 func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
@@ -48,7 +48,7 @@ func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
 
 func (p *ConvertClassFileProcessor) convertInterfaceDeclaration(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileInterfaceDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
@@ -62,7 +62,7 @@ func (p *ConvertClassFileProcessor) convertInterfaceDeclaration(
 
 func (p *ConvertClassFileProcessor) convertEnumDeclaration(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileEnumDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
@@ -75,7 +75,7 @@ func (p *ConvertClassFileProcessor) convertEnumDeclaration(
 
 func (p *ConvertClassFileProcessor) convertAnnotationDeclaration(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileAnnotationDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
@@ -88,7 +88,7 @@ func (p *ConvertClassFileProcessor) convertAnnotationDeclaration(
 
 func (p *ConvertClassFileProcessor) convertClassDeclaration(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileClassDeclaration {
 	annotationReferences := p.convertAnnotationReferencesWithClass(converter, classFile)
@@ -104,7 +104,7 @@ func (p *ConvertClassFileProcessor) convertClassDeclaration(
 
 func (p *ConvertClassFileProcessor) convertBodyDeclaration(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile,
 	typeParameters intmod.ITypeParameter,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
@@ -135,7 +135,7 @@ func (p *ConvertClassFileProcessor) convertBodyDeclaration(
 
 func (p *ConvertClassFileProcessor) convertFields(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile) []intsrv.IClassFileFieldDeclaration {
 	fields := classFile.Fields()
 
@@ -158,7 +158,7 @@ func (p *ConvertClassFileProcessor) convertFields(
 
 func (p *ConvertClassFileProcessor) convertMethods(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	bodyDeclaration intsrv.IClassFileBodyDeclaration,
 	classFile intcls.IClassFile) []intsrv.IClassFileConstructorOrMethodDeclaration {
 	methods := classFile.Methods()
@@ -234,7 +234,7 @@ func (p *ConvertClassFileProcessor) convertMethods(
 
 func (p *ConvertClassFileProcessor) convertInnerTypes(
 	parser intsrv.ITypeMaker,
-	converter *utils.AnnotationConverter,
+	converter intsrv.IAnnotationConverter,
 	classFile intcls.IClassFile,
 	outerClassFileBodyDeclaration intsrv.IClassFileBodyDeclaration) []intsrv.IClassFileTypeDeclaration {
 	innerClassFiles := classFile.InnerClassFiles()
@@ -265,7 +265,7 @@ func (p *ConvertClassFileProcessor) convertInnerTypes(
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithClass(
-	converter *utils.AnnotationConverter, classFile intcls.IClassFile) intmod.IAnnotationReference {
+	converter intsrv.IAnnotationConverter, classFile intcls.IClassFile) intmod.IAnnotationReference {
 	visibles := classFile.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
 	invisibles := classFile.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
 
@@ -273,7 +273,7 @@ func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithClass(
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithField(
-	converter *utils.AnnotationConverter, field intcls.IField) intmod.IAnnotationReference {
+	converter intsrv.IAnnotationConverter, field intcls.IField) intmod.IAnnotationReference {
 	visibles := field.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
 	invisibles := field.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
 
@@ -281,7 +281,7 @@ func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithField(
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithMethod(
-	converter *utils.AnnotationConverter, method intcls.IMethod) intmod.IAnnotationReference {
+	converter intsrv.IAnnotationConverter, method intcls.IMethod) intmod.IAnnotationReference {
 	visibles := method.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
 	invisibles := method.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
 
@@ -381,12 +381,12 @@ type CustomPopulateBindingsWithTypeParameterVisitor struct {
 }
 
 func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
-	v.Bindings[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
+	v.Bindings()[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
 }
 
 func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
-	v.Bindings[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
-	v.TypeBounds[parameter.Identifier()] = parameter.TypeBounds()
+	v.Bindings()[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
+	v.TypeBounds()[parameter.Identifier()] = parameter.TypeBounds()
 }
 
 func copyStrings(names []string) []string {

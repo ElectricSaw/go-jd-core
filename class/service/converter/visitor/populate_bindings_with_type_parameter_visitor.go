@@ -19,6 +19,14 @@ func (v *PopulateBindingsWithTypeParameterVisitor) Init(bindings map[string]intm
 	v.typeBounds = typeBounds
 }
 
+func (v *PopulateBindingsWithTypeParameterVisitor) Bindings() map[string]intmod.ITypeArgument {
+	return v.bindings
+}
+
+func (v *PopulateBindingsWithTypeParameterVisitor) TypeBounds() map[string]intmod.IType {
+	return v.typeBounds
+}
+
 func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
 	v.bindings[parameter.Identifier()] = nil
 }

@@ -171,6 +171,8 @@ type IPopulateBindingsWithTypeParameterVisitor interface {
 	intmod.ITypeParameterVisitor
 
 	Init(bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType)
+	Bindings() map[string]intmod.ITypeArgument
+	TypeBounds() map[string]intmod.IType
 }
 
 type IPopulateBlackListNamesVisitor interface {

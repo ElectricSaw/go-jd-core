@@ -9,6 +9,7 @@ type IJavaSyntaxVisitor interface {
 	ITypeParameterVisitor
 	ITypeArgumentVisitor
 
+	VisitCompilationUnit(compilationUnit ICompilationUnit)
 	VisitTypeDeclaration(decl ITypeDeclaration)
 	AcceptListDeclaration(list []IDeclaration)
 	AcceptListExpression(list []IExpression)
