@@ -1,11 +1,11 @@
 package utils
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	srvexp "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/expression"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	srvexp "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 func StringConcatenationUtilCreate1(expr intmod.IExpression, lineNumber int, typeName string) intmod.IExpression {

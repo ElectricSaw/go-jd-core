@@ -1,10 +1,10 @@
 package javafragment
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
-	"bitbucket.org/coontec/go-jd-core/class/model/token"
-	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter/visitor"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/fragment"
+	"github.com/ElectricSaw/go-jd-core/class/model/token"
+	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter/visitor"
 )
 
 var Comma = NewTokensFragment(token.Comma)

@@ -1,15 +1,15 @@
 package visitor
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	_ "bitbucket.org/coontec/go-jd-core/class/model/classfile"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	_ "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	"github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	_ "github.com/ElectricSaw/go-jd-core/class/model/classfile"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	_ "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"strings"
 	"unicode"
 )

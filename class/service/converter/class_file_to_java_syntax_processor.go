@@ -1,11 +1,11 @@
 package converter
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/api"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/processor"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
+	"github.com/ElectricSaw/go-jd-core/class/api"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/processor"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
 )
 
 var ConvertClassFileProcessor = processor.NewConvertClassFileProcessor()

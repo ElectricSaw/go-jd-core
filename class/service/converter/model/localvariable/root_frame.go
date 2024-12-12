@@ -1,7 +1,7 @@
 package localvariable
 
 import (
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 )
 
 func NewRootFrame() intsrv.IRootFrame {

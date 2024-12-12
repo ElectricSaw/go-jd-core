@@ -1,6 +1,6 @@
 package attribute
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewAttributeModule(name string, flags int, version string,
 	requires []intcls.IModuleInfo, exports []intcls.IPackageInfo, opens []intcls.IPackageInfo,

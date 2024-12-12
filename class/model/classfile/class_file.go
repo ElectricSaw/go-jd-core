@@ -1,7 +1,7 @@
 package classfile
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 )
 
 func NewClassFile(majorVersion int, minorVersion int, accessFlags int,

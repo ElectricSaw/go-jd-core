@@ -1,7 +1,7 @@
 package classfile
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 )
 
 func NewField(accessFlags int, name string, descriptor string, attributes map[string]intcls.IAttribute) intcls.IField {

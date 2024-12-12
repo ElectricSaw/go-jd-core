@@ -1,8 +1,8 @@
 package service
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 const (

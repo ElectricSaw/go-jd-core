@@ -1,10 +1,10 @@
 package utils
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/cfg"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/cfg"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"sort"
 )
 

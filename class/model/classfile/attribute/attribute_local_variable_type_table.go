@@ -1,6 +1,6 @@
 package attribute
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewAttributeLocalVariableTypeTable(localVariableTypeTable []intcls.ILocalVariableType) intcls.IAttributeLocalVariableTypeTable {
 	return &AttributeLocalVariableTypeTable{localVariableTypeTable: localVariableTypeTable}

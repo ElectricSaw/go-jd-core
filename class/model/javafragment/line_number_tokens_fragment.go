@@ -1,9 +1,9 @@
 package javafragment
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/fragment"
-	"bitbucket.org/coontec/go-jd-core/class/model/token"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/fragment"
+	"github.com/ElectricSaw/go-jd-core/class/model/token"
 )
 
 func NewLineNumberTokensFragment(tokens []intmod.IToken) intmod.ILineNumberTokensFragment {

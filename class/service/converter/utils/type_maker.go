@@ -1,14 +1,14 @@
 package utils
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/api"
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
-	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
+	"github.com/ElectricSaw/go-jd-core/class/api"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/service/deserializer"
 	"errors"
 	"fmt"
 	"hash/fnv"

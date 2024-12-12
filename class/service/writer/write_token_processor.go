@@ -1,8 +1,12 @@
 package writer
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
 )
+
+func NewWriteTokenProcessor() *WriteTokenProcessor {
+	return &WriteTokenProcessor{}
+}
 
 type WriteTokenProcessor struct {
 }

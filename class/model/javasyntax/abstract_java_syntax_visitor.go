@@ -1,9 +1,9 @@
 package javasyntax
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
 type AbstractJavaSyntaxVisitor struct {

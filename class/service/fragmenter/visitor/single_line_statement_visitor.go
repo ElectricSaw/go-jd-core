@@ -1,9 +1,9 @@
 package visitor
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 func NewSingleLineStatementVisitor() *SingleLineStatementVisitor {

@@ -1,8 +1,8 @@
 package service
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 type Magic uint32

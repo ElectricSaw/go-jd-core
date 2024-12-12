@@ -1,11 +1,11 @@
 package deserializer
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/api"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
+	"github.com/ElectricSaw/go-jd-core/class/api"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	"github.com/ElectricSaw/go-jd-core/class/model/classfile"
+	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
+	"github.com/ElectricSaw/go-jd-core/class/model/classfile/constant"
 	"errors"
 	"fmt"
 	"log"

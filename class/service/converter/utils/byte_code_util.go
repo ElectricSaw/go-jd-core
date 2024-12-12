@@ -1,8 +1,8 @@
 package utils
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 )
 
 func SearchNextOpcode(basicBlock intsrv.IBasicBlock, maxOffset int) int {

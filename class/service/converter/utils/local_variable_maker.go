@@ -1,14 +1,14 @@
 package utils
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/localvariable"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/localvariable"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"fmt"
 )
 

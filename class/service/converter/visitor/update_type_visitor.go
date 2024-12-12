@@ -1,10 +1,10 @@
 package visitor
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
 func NewUpdateTypeVisitor(localVariableSet intsrv.ILocalVariableSet) *UpdateTypeVisitor {

@@ -1,17 +1,17 @@
 package utils
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	modexp "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	modsts "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/model/cfg"
-	srvsts "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/statement"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	modexp "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	modsts "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/cfg"
+	srvsts "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"fmt"
 	"strings"
 )
@@ -77,16 +77,16 @@ func (m *StatementMaker) Make(cfg intsrv.IControlFlowGraph) intmod.IStatements {
 	// Remove 'finally' statements
 	if m.removeFinallyStatementsFlag {
 		m.removeFinallyStatementsVisitor.Init()
-		statements.Accept(m.removeFinallyStatementsVisitor)
+		statements.AcceptStatement(m.removeFinallyStatementsVisitor)
 	}
 
 	// Merge 'try-with-resources' statements
 	if m.mergeTryWithResourcesStatementFlag {
-		statements.Accept(GlobalMergeTryWithResourcesStatementVisitor)
+		statements.AcceptStatement(GlobalMergeTryWithResourcesStatementVisitor)
 	}
 
 	// Replace pattern "synthetic_local_var = ...; return synthetic_local_var;" with "return ...;"
-	statements.Accept(m.removeBinaryOpReturnStatementsVisitor)
+	statements.AcceptStatement(m.removeBinaryOpReturnStatementsVisitor)
 
 	// Remove last 'return' statement
 	if !statements.IsEmpty() && statements.Last().IsReturnStatement() {
@@ -96,7 +96,7 @@ func (m *StatementMaker) Make(cfg intsrv.IControlFlowGraph) intmod.IStatements {
 	m.localVariableMaker.PopFrame()
 
 	// Update integer constant type to 'byte', 'char', 'short' or 'int'
-	statements.Accept(m.updateIntegerConstantTypeVisitor)
+	statements.AcceptStatement(m.updateIntegerConstantTypeVisitor)
 
 	// Change ++i; with i++;
 	m.replacePreOperatorWithPostOperator(statements)

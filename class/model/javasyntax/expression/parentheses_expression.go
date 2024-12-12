@@ -1,7 +1,7 @@
 package expression
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewParenthesesExpression(expression intmod.IExpression) intmod.IParenthesesExpression {

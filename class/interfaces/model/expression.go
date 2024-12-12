@@ -1,8 +1,8 @@
 package model
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/api"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	"github.com/ElectricSaw/go-jd-core/class/api"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 var UnknownLineNumber = api.UnknownLineNumber

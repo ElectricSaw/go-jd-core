@@ -1,8 +1,8 @@
 package _type
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"bytes"
 	"encoding/gob"
 	"hash/fnv"

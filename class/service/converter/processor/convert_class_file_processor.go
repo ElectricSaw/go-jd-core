@@ -1,19 +1,18 @@
 package processor
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
-	srvdecl "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/visitor"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
+	srvdecl "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 var populateBindingsWithTypeParameterVisitor = &CustomPopulateBindingsWithTypeParameterVisitor{}
@@ -196,11 +195,11 @@ func (p *ConvertClassFileProcessor) convertMethods(
 				methodTypes.TypeParameters().AcceptTypeParameterVisitor(p.populateBindingsWithTypeParameterVisitor)
 			}
 
-			code := method.Attributes()["Code"].(*attribute.AttributeCode)
+			code := method.Attributes()["Code"].(intcls.IAttributeCode)
 			firstLineNumber := 0
 
 			if code != nil {
-				lineNumberTable := code.Attribute("LineNumberTable").(*attribute.AttributeLineNumberTable)
+				lineNumberTable := code.Attribute("LineNumberTable").(intcls.IAttributeLineNumberTable)
 				if lineNumberTable != nil {
 					firstLineNumber = lineNumberTable.LineNumberTable()[0].LineNumber()
 				}
@@ -267,30 +266,30 @@ func (p *ConvertClassFileProcessor) convertInnerTypes(
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithClass(
 	converter *utils.AnnotationConverter, classFile intcls.IClassFile) intmod.IAnnotationReference {
-	visibles := classFile.Attribute("RuntimeVisibleAnnotations").(*attribute.Annotations)
-	invisibles := classFile.Attribute("RuntimeInvisibleAnnotations").(*attribute.Annotations)
+	visibles := classFile.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
+	invisibles := classFile.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithField(
 	converter *utils.AnnotationConverter, field intcls.IField) intmod.IAnnotationReference {
-	visibles := field.Attribute("RuntimeVisibleAnnotations").(*attribute.Annotations)
-	invisibles := field.Attribute("RuntimeInvisibleAnnotations").(*attribute.Annotations)
+	visibles := field.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
+	invisibles := field.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithMethod(
 	converter *utils.AnnotationConverter, method intcls.IMethod) intmod.IAnnotationReference {
-	visibles := method.Attribute("RuntimeVisibleAnnotations").(*attribute.Annotations)
-	invisibles := method.Attribute("RuntimeInvisibleAnnotations").(*attribute.Annotations)
+	visibles := method.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
+	invisibles := method.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }
 
 func (p *ConvertClassFileProcessor) convertFieldInitializer(field intcls.IField, typeField intmod.IType) intmod.IExpressionVariableInitializer {
-	acv := field.Attribute("ConstantValue").(*attribute.AttributeConstantValue)
+	acv := field.Attribute("ConstantValue").(intcls.IAttributeConstantValue)
 
 	if acv == nil {
 		return nil
@@ -318,7 +317,7 @@ func (p *ConvertClassFileProcessor) convertFieldInitializer(field intcls.IField,
 }
 
 func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intcls.IClassFile) intmod.IModuleDeclaration {
-	attributeModule := classFile.Attribute("Module").(*attribute.AttributeModule)
+	attributeModule := classFile.Attribute("Module").(intcls.IAttributeModule)
 	requires := p.convertModuleDeclarationModuleInfo(attributeModule.Requires())
 	exports := p.convertModuleDeclarationPackageInfo(attributeModule.Exports())
 	opens := p.convertModuleDeclarationPackageInfo(attributeModule.Opens())

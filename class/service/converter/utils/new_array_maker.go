@@ -1,11 +1,11 @@
 package utils
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"strings"
 )
 

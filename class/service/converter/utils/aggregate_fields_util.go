@@ -1,9 +1,9 @@
 package utils
 
 import (
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/declaration"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 func Aggregate(fields util.IList[intsrv.IClassFileFieldDeclaration]) {

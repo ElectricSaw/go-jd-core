@@ -1,11 +1,11 @@
 package layouter
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/api"
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
-	visitor2 "bitbucket.org/coontec/go-jd-core/class/service/layouter/visitor"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	"github.com/ElectricSaw/go-jd-core/class/api"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
+	visitor2 "github.com/ElectricSaw/go-jd-core/class/service/layouter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"math"
 )
 

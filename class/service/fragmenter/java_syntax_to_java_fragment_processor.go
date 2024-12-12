@@ -1,10 +1,10 @@
 package fragmenter
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/api"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
-	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/api"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
+	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter/visitor"
 )
 
 func NewJavaSyntaxToJavaFragmentProcessor() *JavaSyntaxToJavaFragmentProcessor {

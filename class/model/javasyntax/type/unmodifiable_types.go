@@ -1,7 +1,7 @@
 package _type
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewUnmodifiableTypes(types ...intmod.IType) intmod.IUnmodifiableTypes {

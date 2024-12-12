@@ -1,9 +1,9 @@
 package fragutil
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/javafragment"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/javafragment"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"math"
 )
 

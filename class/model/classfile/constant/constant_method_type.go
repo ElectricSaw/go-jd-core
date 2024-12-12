@@ -1,6 +1,6 @@
 package constant
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewConstantMethodType(descriptorIndex int) intcls.IConstantMethodType {
 	return &ConstantMethodType{

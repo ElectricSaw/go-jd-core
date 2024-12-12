@@ -1,6 +1,6 @@
 package attribute
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewLocalVariableType(startPc int, length int, name string, signature string, index int) intcls.ILocalVariableType {
 	return &LocalVariableType{startPc, length, name, signature, index}

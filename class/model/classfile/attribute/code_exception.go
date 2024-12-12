@@ -1,6 +1,6 @@
 package attribute
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewCodeException(index int, startPc int, endPc int, handlerPc int, catchType int) intcls.ICodeException {
 	return &CodeException{index, startPc, endPc, handlerPc, catchType}

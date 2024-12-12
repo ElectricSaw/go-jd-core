@@ -1,6 +1,6 @@
 package expression
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 
 func NewAbstractLineNumberExpression(lineNumber int) *AbstractLineNumberExpression {
 	return &AbstractLineNumberExpression{

@@ -1,6 +1,6 @@
 package javafragment
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 
 func NewSpaceSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) intmod.ISpaceSpacerFragment {
 	return &SpaceSpacerFragment{

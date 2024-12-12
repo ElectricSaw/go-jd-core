@@ -1,7 +1,7 @@
 package statement
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewTryStatement(tryStatements intmod.IStatement, catchClauses []intmod.ICatchClause, finallyStatement intmod.IStatement) intmod.ITryStatement {

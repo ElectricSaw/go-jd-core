@@ -1,12 +1,14 @@
 package tests
 
 import (
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter"
-	"bitbucket.org/coontec/go-jd-core/class/service/deserializer"
-	"bitbucket.org/coontec/go-jd-core/class/service/fragmenter"
-	"bitbucket.org/coontec/go-jd-core/class/service/layouter"
-	"bitbucket.org/coontec/go-jd-core/class/tests/testutils"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter"
+	"github.com/ElectricSaw/go-jd-core/class/service/deserializer"
+	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter"
+	"github.com/ElectricSaw/go-jd-core/class/service/layouter"
+	"github.com/ElectricSaw/go-jd-core/class/service/tokenizer"
+	"github.com/ElectricSaw/go-jd-core/class/service/writer"
+	"github.com/ElectricSaw/go-jd-core/class/tests/testutils"
 	"strings"
 	"testing"
 )
@@ -28,6 +30,8 @@ func TestLog4j(t *testing.T) {
 	cnv := converter.NewClassFileToJavaSyntaxProcessor()
 	frg := fragmenter.NewJavaSyntaxToJavaFragmentProcessor()
 	lyt := layouter.NewLayoutFragmentProcessor()
+	tkn := tokenizer.NewJavaFragmentToTokenProcessor()
+	wri := writer.NewWriteTokenProcessor()
 
 	for k, _ := range classLoader.Map {
 		if strings.HasSuffix(k, ".class") && (strings.Index(k, "$") == -1) {
@@ -38,6 +42,8 @@ func TestLog4j(t *testing.T) {
 			err = cnv.Process(message)
 			err = frg.Process(message)
 			err = lyt.Process(message)
+			err = tkn.Process(message)
+			err = wri.Process(message)
 			if err != nil {
 				t.Fatal(err)
 			}

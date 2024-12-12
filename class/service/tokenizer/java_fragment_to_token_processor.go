@@ -1,11 +1,15 @@
 package tokenizer
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/message"
-	"bitbucket.org/coontec/go-jd-core/class/service/tokenizer/visitor"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/message"
+	"github.com/ElectricSaw/go-jd-core/class/service/tokenizer/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
+
+func NewJavaFragmentToTokenProcessor() *JavaFragmentToTokenProcessor {
+	return &JavaFragmentToTokenProcessor{}
+}
 
 type JavaFragmentToTokenProcessor struct {
 }

@@ -1,6 +1,6 @@
 package fragment
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 
 func NewStartMovableBlockFragment(typ int) intmod.IStartMovableBlockFragment {
 	return &StartMovableBlockFragment{

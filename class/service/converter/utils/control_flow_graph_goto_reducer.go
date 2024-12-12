@@ -1,6 +1,6 @@
 package utils
 
-import intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+import intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 
 func ReduceControlFlowGraphGotoReducer(cfg intsrv.IControlFlowGraph) {
 	for _, basicBlock := range cfg.BasicBlocks().ToSlice() {

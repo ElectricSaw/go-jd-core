@@ -1,12 +1,12 @@
 package visitor
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/attribute"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	modsts "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
-	"bitbucket.org/coontec/go-jd-core/class/service/converter/utils"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	modsts "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
 	"strings"
 )
 

@@ -1,10 +1,10 @@
 package utils
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	modexpr "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
-	srvexpr "bitbucket.org/coontec/go-jd-core/class/service/converter/model/javasyntax/expression"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	modexpr "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	srvexpr "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/expression"
 )
 
 func NewJavaTypeParametersToTypeArgumentsBinder() intsrv.ITypeParametersToTypeArgumentsBinder {

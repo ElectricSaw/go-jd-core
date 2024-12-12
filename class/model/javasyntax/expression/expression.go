@@ -1,9 +1,9 @@
 package expression
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
-	"bitbucket.org/coontec/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 type AbstractExpression struct {

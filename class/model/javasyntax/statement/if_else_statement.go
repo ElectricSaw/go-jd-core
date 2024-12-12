@@ -1,6 +1,6 @@
 package statement
 
-import intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+import intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 
 func NewIfElseStatement(condition intmod.IExpression, statements intmod.IStatement, elseStatements intmod.IStatement) intmod.IIfElseStatement {
 	return &IfElseStatement{

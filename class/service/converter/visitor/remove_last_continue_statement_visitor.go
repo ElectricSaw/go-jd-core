@@ -1,9 +1,9 @@
 package visitor
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax"
-	modsts "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/statement"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	modsts "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
 	"reflect"
 )
 

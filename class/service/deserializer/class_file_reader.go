@@ -1,7 +1,7 @@
 package deserializer
 
 import (
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"bytes"
 	"encoding/binary"
 	"io"

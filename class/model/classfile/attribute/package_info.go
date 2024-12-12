@@ -1,6 +1,6 @@
 package attribute
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) intcls.IPackageInfo {
 	return &PackageInfo{internalName, flags, moduleInfoNames}

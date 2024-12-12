@@ -1,6 +1,6 @@
 package model
 
-import "bitbucket.org/coontec/go-jd-core/class/util"
+import "github.com/ElectricSaw/go-jd-core/class/util"
 
 const (
 	FlagBoolean = 1 << iota

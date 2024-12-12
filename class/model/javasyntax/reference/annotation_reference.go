@@ -1,7 +1,7 @@
 package reference
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewAnnotationReference(typ intmod.IObjectType) intmod.IAnnotationReference {

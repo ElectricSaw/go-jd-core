@@ -1,8 +1,8 @@
 package visitor
 
 import (
-	intmod "bitbucket.org/coontec/go-jd-core/class/interfaces/model"
-	_type "bitbucket.org/coontec/go-jd-core/class/model/javasyntax/type"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
 func NewSearchInTypeArgumentVisitor() *SearchInTypeArgumentVisitor {

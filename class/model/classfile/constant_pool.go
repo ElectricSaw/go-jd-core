@@ -1,8 +1,8 @@
 package classfile
 
 import (
-	intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
-	"bitbucket.org/coontec/go-jd-core/class/model/classfile/constant"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
+	"github.com/ElectricSaw/go-jd-core/class/model/classfile/constant"
 )
 
 func NewConstantPool(constants []intcls.IConstant) intcls.IConstantPool {

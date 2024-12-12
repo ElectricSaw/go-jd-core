@@ -1,6 +1,6 @@
 package attribute
 
-import intcls "bitbucket.org/coontec/go-jd-core/class/interfaces/classpath"
+import intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 
 func NewInnerClass(innerTypeName string, outerTypeName string, innerName string, innerAccessFlags int) intcls.IInnerClass {
 	return &InnerClass{innerTypeName, outerTypeName, innerName, innerAccessFlags}

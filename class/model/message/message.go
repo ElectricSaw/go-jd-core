@@ -1,9 +1,7 @@
 package message
 
 func NewMessage() *Message {
-	return &Message{
-		Headers: make(map[string]interface{}),
-	}
+	return NewMessageWithBody(nil)
 }
 
 func NewMessageWithBody(body interface{}) *Message {

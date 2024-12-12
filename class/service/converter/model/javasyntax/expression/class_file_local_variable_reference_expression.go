@@ -1,8 +1,8 @@
 package expression
 
 import (
-	intsrv "bitbucket.org/coontec/go-jd-core/class/interfaces/service"
-	"bitbucket.org/coontec/go-jd-core/class/model/javasyntax/expression"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
 )
 
 func NewClassFileLocalVariableReferenceExpression(lineNumber, offset int,
