@@ -9,7 +9,7 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewAnnotationConverter(typeMaker intsrv.ITypeMaker) *AnnotationConverter {
+func NewAnnotationConverter(typeMaker intsrv.ITypeMaker) intsrv.IAnnotationConverter {
 	return &AnnotationConverter{
 		TypeMaker: typeMaker,
 	}

@@ -1,8 +1,8 @@
 package expression
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewNewArray(lineNumber int, typ intmod.IType, dimensionExpressionList intmod.IExpression) intmod.INewArray {

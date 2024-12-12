@@ -1,13 +1,13 @@
 package deserializer
 
 import (
+	"errors"
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/class/api"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	"github.com/ElectricSaw/go-jd-core/class/model/classfile"
 	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/class/model/classfile/constant"
-	"errors"
-	"fmt"
 	"log"
 	"strings"
 	"unicode"

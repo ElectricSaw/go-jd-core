@@ -1,9 +1,9 @@
 package expression
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
-	"fmt"
 )
 
 func NewFloatConstantExpression(value float32) intmod.IFloatConstantExpression {

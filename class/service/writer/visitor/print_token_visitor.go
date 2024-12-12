@@ -1,11 +1,11 @@
 package visitor
 
 import (
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/class/api"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/model/token"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 const UnknownLineNumber = api.UnknownLineNumber

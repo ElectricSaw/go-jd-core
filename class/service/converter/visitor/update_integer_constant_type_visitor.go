@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 	"math"
 )
@@ -30,7 +30,7 @@ func init() {
 	GlobTypes["java/lang/String:lastIndexOf(II)I"] = ci
 }
 
-func NewUpdateIntegerConstantTypeVisitor(returnedType intmod.IType) *UpdateIntegerConstantTypeVisitor {
+func NewUpdateIntegerConstantTypeVisitor(returnedType intmod.IType) intsrv.IUpdateIntegerConstantTypeVisitor {
 	return &UpdateIntegerConstantTypeVisitor{
 		returnedType: returnedType,
 	}
@@ -254,7 +254,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitArrayVariableInitializer(decl in
 func (v *UpdateIntegerConstantTypeVisitor) VisitLocalVariableDeclaration(decl intmod.ILocalVariableDeclaration) {
 	t := v.arrayVariableInitializerType
 	v.arrayVariableInitializerType = decl.Type()
-	decl.LocalVariableDeclarators().Accept(v)
+	decl.LocalVariableDeclarators().AcceptDeclaration(v)
 	v.arrayVariableInitializerType = t
 }
 
@@ -445,44 +445,44 @@ func (v *UpdateIntegerConstantTypeVisitor) updateBooleanExpression(expr intmod.I
 	return expr
 }
 
-func (v *UpdateIntegerConstantTypeVisitor) VisitFloatConstantExpression(expr intmod.IFloatConstantExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitFloatConstantExpression(_ intmod.IFloatConstantExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitIntegerConstantExpression(expr intmod.IIntegerConstantExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitIntegerConstantExpression(_ intmod.IIntegerConstantExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitConstructorReferenceExpression(expr intmod.IConstructorReferenceExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitConstructorReferenceExpression(_ intmod.IConstructorReferenceExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitDoubleConstantExpression(expr intmod.IDoubleConstantExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitDoubleConstantExpression(_ intmod.IDoubleConstantExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitEnumConstantReferenceExpression(expr intmod.IEnumConstantReferenceExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitEnumConstantReferenceExpression(_ intmod.IEnumConstantReferenceExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitLocalVariableReferenceExpression(expr intmod.ILocalVariableReferenceExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitLocalVariableReferenceExpression(_ intmod.ILocalVariableReferenceExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitLongConstantExpression(expr intmod.ILongConstantExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitLongConstantExpression(_ intmod.ILongConstantExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitBreakStatement(state intmod.IBreakStatement)       {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitByteCodeStatement(state intmod.IByteCodeStatement) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitContinueStatement(state intmod.IContinueStatement) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitNullExpression(expr intmod.INullExpression)        {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitObjectTypeReferenceExpression(expr intmod.IObjectTypeReferenceExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitBreakStatement(_ intmod.IBreakStatement)       {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitByteCodeStatement(_ intmod.IByteCodeStatement) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitContinueStatement(_ intmod.IContinueStatement) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitNullExpression(_ intmod.INullExpression)       {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitObjectTypeReferenceExpression(_ intmod.IObjectTypeReferenceExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitSuperExpression(expr intmod.ISuperExpression) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitThisExpression(expr intmod.IThisExpression)   {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitTypeReferenceDotClassExpression(expr intmod.ITypeReferenceDotClassExpression) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitSuperExpression(_ intmod.ISuperExpression) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitThisExpression(_ intmod.IThisExpression)   {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitTypeReferenceDotClassExpression(_ intmod.ITypeReferenceDotClassExpression) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitObjectReference(reference intmod.IObjectReference) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitInnerObjectReference(reference intmod.IInnerObjectReference) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitObjectReference(_ intmod.IObjectReference) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitInnerObjectReference(_ intmod.IInnerObjectReference) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitTypeArguments(t intmod.ITypeArguments) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitWildcardExtendsTypeArgument(t intmod.IWildcardExtendsTypeArgument) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitObjectType(t intmod.IObjectType)           {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitWildcardSuperTypeArgument(t intmod.IWildcardSuperTypeArgument) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitObjectType(_ intmod.IObjectType)           {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitTypes(list intmod.ITypes) {}
-func (v *UpdateIntegerConstantTypeVisitor) VisitTypeParameterWithTypeBounds(t intmod.ITypeParameterWithTypeBounds) {
+func (v *UpdateIntegerConstantTypeVisitor) VisitTypes(_ intmod.ITypes) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitTypeParameterWithTypeBounds(_ intmod.ITypeParameterWithTypeBounds) {
 }
-func (v *UpdateIntegerConstantTypeVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {}
+func (v *UpdateIntegerConstantTypeVisitor) VisitBodyDeclaration(_ intmod.IBodyDeclaration) {}
 
 type DimensionTypes struct {
 	_type.Types
@@ -490,5 +490,5 @@ type DimensionTypes struct {
 
 func (t *DimensionTypes) First() intmod.IType    { return _type.PtTypeInt }
 func (t *DimensionTypes) Last() intmod.IType     { return _type.PtTypeInt }
-func (t *DimensionTypes) Get(i int) intmod.IType { return _type.PtTypeInt }
+func (t *DimensionTypes) Get(_ int) intmod.IType { return _type.PtTypeInt }
 func (t *DimensionTypes) Size() int              { return 0 }

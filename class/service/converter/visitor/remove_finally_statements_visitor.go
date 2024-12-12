@@ -6,14 +6,15 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewRemoveFinallyStatementsVisitor(localVariableMaker intsrv.ILocalVariableMaker) *RemoveFinallyStatementsVisitor {
+func NewRemoveFinallyStatementsVisitor(localVariableMaker intsrv.ILocalVariableMaker) intsrv.IRemoveFinallyStatementsVisitor {
 	return &RemoveFinallyStatementsVisitor{
-		localVariableMaker: localVariableMaker,
+		declaredSyntheticLocalVariableVisitor: NewDeclaredSyntheticLocalVariableVisitor(),
+		localVariableMaker:                    localVariableMaker,
 	}
 }
 
 type RemoveFinallyStatementsVisitor struct {
-	declaredSyntheticLocalVariableVisitor *DeclaredSyntheticLocalVariableVisitor
+	declaredSyntheticLocalVariableVisitor intsrv.IDeclaredSyntheticLocalVariableVisitor
 	localVariableMaker                    intsrv.ILocalVariableMaker
 	statementCountInFinally               int
 	statementCountToRemove                int
@@ -169,7 +170,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitTryStatement(statement intmod.ITry
 	}
 
 	if ts.IsJsr() || (finallyStatements == nil) || (finallyStatements.Size() == 0) {
-		tryStatements.Accept(v)
+		tryStatements.AcceptStatement(v)
 		tmp := make([]intmod.IStatement, 0)
 		for _, stmt := range statement.CatchClauses() {
 			tmp = append(tmp, stmt)
@@ -182,7 +183,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitTryStatement(statement intmod.ITry
 
 		v.statementCountInFinally += finallyStatementsSize
 
-		tryStatements.Accept(v)
+		tryStatements.AcceptStatement(v)
 
 		v.statementCountToRemove = finallyStatementsSize
 
@@ -206,7 +207,7 @@ func (v *RemoveFinallyStatementsVisitor) VisitTryStatement(statement intmod.ITry
 		v.statementCountInFinally += finallyStatementsSize
 		v.statementCountToRemove += finallyStatementsSize
 
-		tryStatements.Accept(v)
+		tryStatements.AcceptStatement(v)
 
 		if catchClauses != nil {
 			for _, cc := range catchClauses.ToSlice() {

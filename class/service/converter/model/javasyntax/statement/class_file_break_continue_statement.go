@@ -1,9 +1,9 @@
 package statement
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
-	"fmt"
 )
 
 func NewClassFileBreakContinueStatement(offset int, targetOffset int) intsrv.IClassFileBreakContinueStatement {

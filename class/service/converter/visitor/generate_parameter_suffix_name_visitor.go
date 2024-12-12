@@ -2,10 +2,11 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewGenerateParameterSuffixNameVisitor() *GenerateParameterSuffixNameVisitor {
+func NewGenerateParameterSuffixNameVisitor() intsrv.IGenerateParameterSuffixNameVisitor {
 	return &GenerateParameterSuffixNameVisitor{}
 }
 

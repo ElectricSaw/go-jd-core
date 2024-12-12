@@ -1,9 +1,9 @@
 package declaration
 
 import (
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
-	"fmt"
 )
 
 func NewMethodDeclaration(flags int, name string, returnedType intmod.IType,

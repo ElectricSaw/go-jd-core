@@ -2,7 +2,6 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
 func NewSearchInTypeArgumentVisitor() *SearchInTypeArgumentVisitor {
@@ -14,8 +13,6 @@ func NewSearchInTypeArgumentVisitor() *SearchInTypeArgumentVisitor {
 }
 
 type SearchInTypeArgumentVisitor struct {
-	_type.AbstractTypeArgumentVisitor
-
 	wildcardFound                   bool
 	wildcardSuperOrExtendsTypeFound bool
 	genericFound                    bool

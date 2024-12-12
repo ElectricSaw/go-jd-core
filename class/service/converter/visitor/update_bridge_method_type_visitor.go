@@ -9,7 +9,7 @@ import (
 	"strings"
 )
 
-func NewUpdateBridgeMethodTypeVisitor(typeMaker intsrv.ITypeMaker) *UpdateBridgeMethodTypeVisitor {
+func NewUpdateBridgeMethodTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateBridgeMethodTypeVisitor {
 	return &UpdateBridgeMethodTypeVisitor{
 		typeMaker: typeMaker,
 	}
@@ -84,9 +84,9 @@ func (v *UpdateBridgeMethodTypeVisitor) VisitMethodDeclaration(declaration intmo
 	}
 }
 
-func (v *UpdateBridgeMethodTypeVisitor) VisitConstructorDeclaration(declaration intmod.IConstructorDeclaration) {
+func (v *UpdateBridgeMethodTypeVisitor) VisitConstructorDeclaration(_ intmod.IConstructorDeclaration) {
 }
-func (v *UpdateBridgeMethodTypeVisitor) VisitStaticInitializerDeclaration(declaration intmod.IStaticInitializerDeclaration) {
+func (v *UpdateBridgeMethodTypeVisitor) VisitStaticInitializerDeclaration(_ intmod.IStaticInitializerDeclaration) {
 }
 
 func (v *UpdateBridgeMethodTypeVisitor) VisitClassDeclaration(declaration intmod.IClassDeclaration) {
@@ -97,9 +97,9 @@ func (v *UpdateBridgeMethodTypeVisitor) VisitInterfaceDeclaration(declaration in
 	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
 }
 
-func (v *UpdateBridgeMethodTypeVisitor) VisitAnnotationDeclaration(declaration intmod.IAnnotationDeclaration) {
+func (v *UpdateBridgeMethodTypeVisitor) VisitAnnotationDeclaration(_ intmod.IAnnotationDeclaration) {
 }
-func (v *UpdateBridgeMethodTypeVisitor) VisitEnumDeclaration(declaration intmod.IEnumDeclaration) {}
+func (v *UpdateBridgeMethodTypeVisitor) VisitEnumDeclaration(_ intmod.IEnumDeclaration) {}
 
 func ConvertMethodDeclarations(list []intsrv.IClassFileConstructorOrMethodDeclaration) []intmod.IDeclaration {
 	ret := make([]intmod.IDeclaration, 0, len(list))

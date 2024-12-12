@@ -1,9 +1,9 @@
 package deserializer
 
 import (
-	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"bytes"
 	"encoding/binary"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"io"
 )
 

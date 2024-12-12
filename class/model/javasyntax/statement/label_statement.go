@@ -1,8 +1,8 @@
 package statement
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewLabelStatement(label string, statement intmod.IStatement) intmod.ILabelStatement {

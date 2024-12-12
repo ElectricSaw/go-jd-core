@@ -1,8 +1,8 @@
 package declaration
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewEnumDeclaration(flags int, internalTypeName, name string, constants []intmod.IConstant,

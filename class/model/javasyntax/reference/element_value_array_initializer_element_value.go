@@ -1,9 +1,9 @@
 package reference
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 func NewElementValueArrayInitializerElementValue(elementValueArrayInitializer intmod.IElementValue) intmod.IElementValueArrayInitializerElementValue {

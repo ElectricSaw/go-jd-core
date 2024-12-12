@@ -2,8 +2,13 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
+
+func NewUpdateClassTypeArgumentsVisitor() intsrv.IUpdateClassTypeArgumentsVisitor {
+	return &UpdateClassTypeArgumentsVisitor{}
+}
 
 type UpdateClassTypeArgumentsVisitor struct {
 	AbstractUpdateExpressionVisitor

@@ -2,18 +2,22 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewBindTypesToTypesVisitor() *BindTypesToTypesVisitor {
-	return &BindTypesToTypesVisitor{}
+func NewBindTypesToTypesVisitor() intsrv.IBindTypesToTypesVisitor {
+	return &BindTypesToTypesVisitor{
+		typeArgumentToTypeVisitor:               NewTypeArgumentToTypeVisitor(),
+		bindTypeArgumentsToTypeArgumentsVisitor: NewBindTypeArgumentsToTypeArgumentsVisitor(),
+	}
 }
 
 type BindTypesToTypesVisitor struct {
 	_type.AbstractNopTypeVisitor
 
-	typeArgumentToTypeVisitor               TypeArgumentToTypeVisitor
-	bindTypeArgumentsToTypeArgumentsVisitor BindTypeArgumentsToTypeArgumentsVisitor
+	typeArgumentToTypeVisitor               intsrv.ITypeArgumentToTypeVisitor
+	bindTypeArgumentsToTypeArgumentsVisitor intsrv.IBindTypeArgumentsToTypeArgumentsVisitor
 	bindings                                map[string]intmod.ITypeArgument
 	result                                  intmod.IType
 }
@@ -42,7 +46,7 @@ func (v *BindTypesToTypesVisitor) VisitObjectType(t intmod.IObjectType) {
 		v.result = t.(intmod.IType)
 	} else {
 		v.bindTypeArgumentsToTypeArgumentsVisitor.Init()
-		typeArguments.AcceptTypeArgumentVisitor(&v.bindTypeArgumentsToTypeArgumentsVisitor)
+		typeArguments.AcceptTypeArgumentVisitor(v.bindTypeArgumentsToTypeArgumentsVisitor)
 		ta := v.bindTypeArgumentsToTypeArgumentsVisitor.TypeArgument()
 		if typeArguments == ta {
 			v.result = t.(intmod.IType)
@@ -61,7 +65,7 @@ func (v *BindTypesToTypesVisitor) VisitInnerObjectType(t intmod.IInnerObjectType
 			v.result = t.(intmod.IType)
 		} else {
 			v.bindTypeArgumentsToTypeArgumentsVisitor.Init()
-			typeArguments.AcceptTypeArgumentVisitor(&v.bindTypeArgumentsToTypeArgumentsVisitor)
+			typeArguments.AcceptTypeArgumentVisitor(v.bindTypeArgumentsToTypeArgumentsVisitor)
 			ta := v.bindTypeArgumentsToTypeArgumentsVisitor.TypeArgument()
 			if typeArguments == ta {
 				v.result = t.(intmod.IType)
@@ -74,7 +78,7 @@ func (v *BindTypesToTypesVisitor) VisitInnerObjectType(t intmod.IInnerObjectType
 
 		if typeArguments != nil {
 			v.bindTypeArgumentsToTypeArgumentsVisitor.Init()
-			typeArguments.AcceptTypeArgumentVisitor(&v.bindTypeArgumentsToTypeArgumentsVisitor)
+			typeArguments.AcceptTypeArgumentVisitor(v.bindTypeArgumentsToTypeArgumentsVisitor)
 			typeArguments = v.bindTypeArgumentsToTypeArgumentsVisitor.TypeArgument()
 
 			if _type.WildcardTypeArgumentEmpty == typeArguments {
@@ -96,7 +100,7 @@ func (v *BindTypesToTypesVisitor) VisitGenericType(t intmod.IGenericType) {
 		v.result = _type.OtTypeObject.CreateType(t.Dimension())
 	} else {
 		v.typeArgumentToTypeVisitor.Init()
-		ta.AcceptTypeArgumentVisitor(&v.typeArgumentToTypeVisitor)
+		ta.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
 		t2 := v.typeArgumentToTypeVisitor.Type()
 		v.result = t2.CreateType(t2.Dimension() + t.Dimension())
 	}

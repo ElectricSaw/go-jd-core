@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewChangeFrameOfLocalVariablesVisitor(localVariableMaker intsrv.ILocalVariableMaker) *ChangeFrameOfLocalVariablesVisitor {
+func NewChangeFrameOfLocalVariablesVisitor(localVariableMaker intsrv.ILocalVariableMaker) intsrv.IChangeFrameOfLocalVariablesVisitor {
 	return &ChangeFrameOfLocalVariablesVisitor{
 		localVariableMaker: localVariableMaker,
 	}
@@ -14,7 +14,7 @@ func NewChangeFrameOfLocalVariablesVisitor(localVariableMaker intsrv.ILocalVaria
 
 type ChangeFrameOfLocalVariablesVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
-	
+
 	localVariableMaker intsrv.ILocalVariableMaker
 }
 

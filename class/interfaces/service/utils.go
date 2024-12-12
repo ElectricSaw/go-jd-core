@@ -6,6 +6,18 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
+type IAnnotationConverter interface {
+	ConvertWithAnnotations2(visibles, invisibles intcls.IAnnotations) intmod.IAnnotationReference
+	ConvertWithAnnotations(annotations intcls.IAnnotations) intmod.IAnnotationReference
+	ConvertWithAnnotation(annotation intcls.IAnnotation) intmod.IAnnotationReference
+	ConvertWithElementValue(ev intcls.IElementValue) intmod.IElementValue
+	VisitPrimitiveType(elementValue intcls.IElementValuePrimitiveType)
+	VisitClassInfo(elementValue intcls.IElementValueClassInfo)
+	VisitAnnotationValue(elementValue intcls.IElementValueAnnotationValue)
+	VisitEnumConstValue(elementValue intcls.IElementValueEnumConstValue)
+	VisitArrayValue(elementValue intcls.IElementValueArrayValue)
+}
+
 type IStatementMaker interface {
 	Make(cfg IControlFlowGraph) intmod.IStatements
 }
@@ -107,4 +119,9 @@ type IMethodTypes interface {
 	SetReturnedType(returnedType intmod.IType)
 	ExceptionTypes() intmod.IType
 	SetExceptionTypes(exceptionTypes intmod.IType)
+}
+
+type IWatchDog interface {
+	Clear()
+	Check(parent, child IBasicBlock)
 }

@@ -2,10 +2,11 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewSearchFirstLineNumberVisitor() *SearchFirstLineNumberVisitor {
+func NewSearchFirstLineNumberVisitor() intsrv.ISearchFirstLineNumberVisitor {
 	return &SearchFirstLineNumberVisitor{
 		lineNumber: -1,
 	}

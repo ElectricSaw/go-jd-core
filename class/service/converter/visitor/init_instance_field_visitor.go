@@ -8,11 +8,11 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewInitInstanceFieldVisitor() *InitInstanceFieldVisitor {
+func NewInitInstanceFieldVisitor() intsrv.IInitInstanceFieldVisitor {
 	return &InitInstanceFieldVisitor{
 		searchFirstLineNumberVisitor:   NewSearchFirstLineNumberVisitor(),
 		fieldDeclarators:               make(map[string]intmod.IFieldDeclarator),
-		datas:                          util.NewDefaultList[IData](),
+		datas:                          util.NewDefaultList[intsrv.IData](),
 		putFields:                      util.NewDefaultList[intmod.IExpression](),
 		lineNumber:                     intmod.UnknownLineNumber,
 		containsLocalVariableReference: false,
@@ -22,9 +22,9 @@ func NewInitInstanceFieldVisitor() *InitInstanceFieldVisitor {
 type InitInstanceFieldVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	searchFirstLineNumberVisitor   *SearchFirstLineNumberVisitor
+	searchFirstLineNumberVisitor   intsrv.ISearchFirstLineNumberVisitor
 	fieldDeclarators               map[string]intmod.IFieldDeclarator
-	datas                          util.IList[IData]
+	datas                          util.IList[intsrv.IData]
 	putFields                      util.IList[intmod.IExpression]
 	lineNumber                     int
 	containsLocalVariableReference bool
@@ -303,21 +303,12 @@ func (v *InitInstanceFieldVisitor) updateFieldsAndConstructors() {
 	}
 }
 
-func NewData(declaration intsrv.IClassFileConstructorDeclaration, statements intmod.IStatements, index int) IData {
+func NewData(declaration intsrv.IClassFileConstructorDeclaration, statements intmod.IStatements, index int) intsrv.IData {
 	return &Data{
 		declaration: declaration,
 		statements:  statements,
 		index:       index,
 	}
-}
-
-type IData interface {
-	Declaration() intsrv.IClassFileConstructorDeclaration
-	SetDeclaration(declaration intsrv.IClassFileConstructorDeclaration)
-	Statements() intmod.IStatements
-	SetStatements(statements intmod.IStatements)
-	Index() int
-	SetIndex(index int)
 }
 
 type Data struct {

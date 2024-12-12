@@ -7,16 +7,17 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewUpdateTypeVisitor(localVariableSet intsrv.ILocalVariableSet) *UpdateTypeVisitor {
+func NewUpdateTypeVisitor(localVariableSet intsrv.ILocalVariableSet) intsrv.IUpdateTypeVisitor {
 	return &UpdateTypeVisitor{
-		localVariableSet: localVariableSet,
+		updateClassTypeArgumentsVisitor: NewUpdateClassTypeArgumentsVisitor(),
+		localVariableSet:                localVariableSet,
 	}
 }
 
 type UpdateTypeVisitor struct {
 	_type.AbstractNopTypeArgumentVisitor
 
-	updateClassTypeArgumentsVisitor UpdateClassTypeArgumentsVisitor
+	updateClassTypeArgumentsVisitor intsrv.IUpdateClassTypeArgumentsVisitor
 	localVariableSet                intsrv.ILocalVariableSet
 	localVariableType               intcls.ILocalVariableType
 }
@@ -42,7 +43,7 @@ func (v *UpdateTypeVisitor) updateType(t intmod.IObjectType) intmod.IObjectType 
 
 	if typeArguments != nil {
 		v.updateClassTypeArgumentsVisitor.Init()
-		typeArguments.AcceptTypeArgumentVisitor(&v.updateClassTypeArgumentsVisitor)
+		typeArguments.AcceptTypeArgumentVisitor(v.updateClassTypeArgumentsVisitor)
 
 		if typeArguments != v.updateClassTypeArgumentsVisitor.TypeArgument() {
 			t = t.CreateTypeWithArgs(v.updateClassTypeArgumentsVisitor.TypeArgument())

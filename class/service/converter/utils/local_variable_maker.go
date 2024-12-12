@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
@@ -9,7 +10,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/localvariable"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker,

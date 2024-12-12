@@ -1,6 +1,7 @@
 package localvariable
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
@@ -10,7 +11,6 @@ import (
 	srvdecl "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 	"math"
 	"sort"
 	"strings"

@@ -1,8 +1,8 @@
 package utils
 
 import (
-	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	"fmt"
+	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 )
 
 /**

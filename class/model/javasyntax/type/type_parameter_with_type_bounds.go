@@ -1,8 +1,8 @@
 package _type
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewTypeParameterWithTypeBounds(identifier string, typeBounds intmod.IType) intmod.ITypeParameterWithTypeBounds {

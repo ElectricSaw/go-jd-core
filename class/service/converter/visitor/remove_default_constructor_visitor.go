@@ -7,7 +7,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewRemoveDefaultConstructorVisitor() *RemoveDefaultConstructorVisitor {
+func NewRemoveDefaultConstructorVisitor() intsrv.IRemoveDefaultConstructorVisitor {
 	return &RemoveDefaultConstructorVisitor{}
 }
 

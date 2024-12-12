@@ -7,7 +7,7 @@ import (
 	"math"
 )
 
-func NewPopulateBindingsWithTypeArgumentVisitor(typeMaker intsrv.ITypeMaker) *PopulateBindingsWithTypeArgumentVisitor {
+func NewPopulateBindingsWithTypeArgumentVisitor(typeMaker intsrv.ITypeMaker) intsrv.IPopulateBindingsWithTypeArgumentVisitor {
 	return &PopulateBindingsWithTypeArgumentVisitor{
 		typeArgumentToTypeVisitor: NewTypeArgumentToTypeVisitor(),
 		typeMaker:                 typeMaker,
@@ -16,7 +16,7 @@ func NewPopulateBindingsWithTypeArgumentVisitor(typeMaker intsrv.ITypeMaker) *Po
 }
 
 type PopulateBindingsWithTypeArgumentVisitor struct {
-	typeArgumentToTypeVisitor *TypeArgumentToTypeVisitor
+	typeArgumentToTypeVisitor intsrv.ITypeArgumentToTypeVisitor
 	typeMaker                 intsrv.ITypeMaker
 	contextualTypeBounds      map[string]intmod.IType
 	bindings                  map[string]intmod.ITypeArgument
@@ -146,11 +146,11 @@ func (v *PopulateBindingsWithTypeArgumentVisitor) VisitInnerObjectType(typ intmo
 	}
 }
 
-func (v *PopulateBindingsWithTypeArgumentVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {
+func (v *PopulateBindingsWithTypeArgumentVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {
 }
-func (v *PopulateBindingsWithTypeArgumentVisitor) VisitWildcardTypeArgument(typ intmod.IWildcardTypeArgument) {
+func (v *PopulateBindingsWithTypeArgumentVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
 }
-func (v *PopulateBindingsWithTypeArgumentVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType) {}
+func (v *PopulateBindingsWithTypeArgumentVisitor) VisitPrimitiveType(_ intmod.IPrimitiveType) {}
 
 func equals(bt1, bt2 intmod.IType) bool {
 	return bt2 == nil || bt2 == bt1

@@ -1,10 +1,10 @@
 package declaration
 
 import (
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 func NewConstructorDeclaration(flags int, formalParameter intmod.IFormalParameter, descriptor string,

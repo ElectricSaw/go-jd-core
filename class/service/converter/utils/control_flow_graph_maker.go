@@ -9,7 +9,6 @@ import (
 )
 
 var Mark = cfg.End
-var GlobalCodeExceptionComparator = NewCodeExceptionComparator()
 
 func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 	attributeCode := method.Attribute("Code").(intcls.IAttributeCode)
@@ -595,19 +594,4 @@ func checkILOADForIINC(code []byte, offset, index int) bool {
 	}
 
 	return false
-}
-
-func NewCodeExceptionComparator() *CodeExceptionComparator {
-	return &CodeExceptionComparator{}
-}
-
-type CodeExceptionComparator struct {
-}
-
-func (c *CodeExceptionComparator) compare(ce1, ce2 intcls.ICodeException) int {
-	comp := ce1.StartPc() - ce2.StartPc()
-	if comp == 0 {
-		comp = ce1.EndPc() - ce2.EndPc()
-	}
-	return comp
 }

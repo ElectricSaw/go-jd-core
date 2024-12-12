@@ -22,21 +22,12 @@ func ReduceControlFlowGraphReducer2(visited util.IBitSet, basicBlock intsrv.IBas
 		visited.Set(basicBlock.Index())
 
 		switch basicBlock.Type() {
-		case intsrv.TypeStart:
-		case intsrv.TypeStatements:
-		case intsrv.TypeIf:
-		case intsrv.TypeIfElse:
-		case intsrv.TypeSwitch:
-		case intsrv.TypeTry:
-		case intsrv.TypeTryJsr:
-		case intsrv.TypeTryEclipse:
-		case intsrv.TypeGotoInTernaryOperator:
+		case intsrv.TypeStart, intsrv.TypeStatements, intsrv.TypeIf, intsrv.TypeIfElse,
+			intsrv.TypeSwitch, intsrv.TypeTry, intsrv.TypeTryJsr, intsrv.TypeTryEclipse,
+			intsrv.TypeGotoInTernaryOperator:
 			return ReduceControlFlowGraphReducer2(visited, basicBlock.Next(), jsrTargets)
-		case intsrv.TypeConditionalBranch:
-		case intsrv.TypeCondition:
-		case intsrv.TypeConditionOr:
-		case intsrv.TypeConditionAnd:
-		case intsrv.TypeConditionTernaryOperator:
+		case intsrv.TypeConditionalBranch, intsrv.TypeCondition, intsrv.TypeConditionOr,
+			intsrv.TypeConditionAnd, intsrv.TypeConditionTernaryOperator:
 			return reduceConditionalBranch(visited, basicBlock, jsrTargets)
 		case intsrv.TypeSwitchDeclaration:
 			return reduceSwitchDeclaration(visited, basicBlock, jsrTargets)

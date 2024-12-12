@@ -2,10 +2,11 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewBindTypeParametersToNonWildcardTypeArgumentsVisitor() *BindTypeParametersToNonWildcardTypeArgumentsVisitor {
+func NewBindTypeParametersToNonWildcardTypeArgumentsVisitor() intsrv.IBindTypeParametersToNonWildcardTypeArgumentsVisitor {
 	return &BindTypeParametersToNonWildcardTypeArgumentsVisitor{}
 }
 
@@ -64,21 +65,21 @@ func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitWildcardSuper
 	v.result = argument.Type()
 }
 
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {
 	v.result = nil
 }
 
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
 	v.result = nil
 }
 
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {
 }
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitPrimitiveType(t intmod.IPrimitiveType) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitPrimitiveType(_ intmod.IPrimitiveType) {
 }
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitObjectType(t intmod.IObjectType) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitObjectType(_ intmod.IObjectType) {
 }
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType) {
 }
-func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitGenericType(t intmod.IGenericType) {
+func (v *BindTypeParametersToNonWildcardTypeArgumentsVisitor) VisitGenericType(_ intmod.IGenericType) {
 }

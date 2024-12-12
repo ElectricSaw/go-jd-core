@@ -2,29 +2,30 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 )
 
-func NewPopulateBindingsWithTypeParameterVisitor() *PopulateBindingsWithTypeParameterVisitor {
+func NewPopulateBindingsWithTypeParameterVisitor() intsrv.IPopulateBindingsWithTypeParameterVisitor {
 	return &PopulateBindingsWithTypeParameterVisitor{}
 }
 
 type PopulateBindingsWithTypeParameterVisitor struct {
-	Bindings   map[string]intmod.ITypeArgument
-	TypeBounds map[string]intmod.IType
+	bindings   map[string]intmod.ITypeArgument
+	typeBounds map[string]intmod.IType
 }
 
 func (v *PopulateBindingsWithTypeParameterVisitor) Init(bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType) {
-	v.Bindings = bindings
-	v.TypeBounds = typeBounds
+	v.bindings = bindings
+	v.typeBounds = typeBounds
 }
 
 func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
-	v.Bindings[parameter.Identifier()] = nil
+	v.bindings[parameter.Identifier()] = nil
 }
 
 func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
-	v.Bindings[parameter.Identifier()] = nil
-	v.TypeBounds[parameter.Identifier()] = parameter.TypeBounds()
+	v.bindings[parameter.Identifier()] = nil
+	v.typeBounds[parameter.Identifier()] = parameter.TypeBounds()
 }
 
 func (v *PopulateBindingsWithTypeParameterVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {

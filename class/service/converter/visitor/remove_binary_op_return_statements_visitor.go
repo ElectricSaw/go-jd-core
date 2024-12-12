@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewRemoveBinaryOpReturnStatementsVisitor(localVariableMaker intsrv.ILocalVariableMaker) *RemoveBinaryOpReturnStatementsVisitor {
+func NewRemoveBinaryOpReturnStatementsVisitor(localVariableMaker intsrv.ILocalVariableMaker) intsrv.IRemoveBinaryOpReturnStatementsVisitor {
 	return &RemoveBinaryOpReturnStatementsVisitor{
 		localVariableMaker: localVariableMaker,
 	}

@@ -7,7 +7,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/localvariable"
 )
 
-func NewCreateParameterVisitor(typeMaker intsrv.ITypeMaker) *CreateParameterVisitor {
+func NewCreateParameterVisitor(typeMaker intsrv.ITypeMaker) intsrv.ICreateParameterVisitor {
 	return &CreateParameterVisitor{
 		typeMaker: typeMaker,
 	}

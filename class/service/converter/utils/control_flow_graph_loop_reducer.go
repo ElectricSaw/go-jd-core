@@ -6,8 +6,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-var GlobalLoopComparator = &LoopComparator{}
-
 func buildDominatorIndexes(cfg intsrv.IControlFlowGraph) []util.IBitSet {
 	list := cfg.BasicBlocks()
 	length := list.Size()
@@ -701,14 +699,4 @@ func ReduceControlFlowGraphLoopReducer(cfg intsrv.IControlFlowGraph) {
 			}
 		}
 	}
-}
-
-/*
- * Smaller loop first
- */
-type LoopComparator struct {
-}
-
-func (c *LoopComparator) compare(loop1, loop2 intsrv.ILoop) int {
-	return loop1.Members().Size() - loop2.Members().Size()
 }

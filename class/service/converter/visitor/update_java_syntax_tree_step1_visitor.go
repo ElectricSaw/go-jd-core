@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewUpdateJavaSyntaxTreeStep1Visitor(typeMaker intsrv.ITypeMaker) *UpdateJavaSyntaxTreeStep1Visitor {
+func NewUpdateJavaSyntaxTreeStep1Visitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateJavaSyntaxTreeStep1Visitor {
 	return &UpdateJavaSyntaxTreeStep1Visitor{
 		createInstructionsVisitor:  NewCreateInstructionsVisitor(typeMaker),
 		initInnerClassStep1Visitor: NewInitInnerClassVisitor(),
@@ -16,8 +16,8 @@ func NewUpdateJavaSyntaxTreeStep1Visitor(typeMaker intsrv.ITypeMaker) *UpdateJav
 type UpdateJavaSyntaxTreeStep1Visitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	createInstructionsVisitor  *CreateInstructionsVisitor
-	initInnerClassStep1Visitor *InitInnerClassVisitor
+	createInstructionsVisitor  intsrv.ICreateInstructionsVisitor
+	initInnerClassStep1Visitor intsrv.IInitInnerClassVisitor
 }
 
 func (v *UpdateJavaSyntaxTreeStep1Visitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {

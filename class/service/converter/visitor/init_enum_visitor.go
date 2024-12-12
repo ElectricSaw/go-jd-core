@@ -8,7 +8,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewInitEnumVisitor() *InitEnumVisitor {
+func NewInitEnumVisitor() intsrv.IInitEnumVisitor {
 	return &InitEnumVisitor{
 		constants: util.NewDefaultList[intsrv.IClassFileConstant](),
 	}

@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	modexp "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
@@ -8,7 +9,6 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvsts "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
-	"fmt"
 	"strings"
 )
 

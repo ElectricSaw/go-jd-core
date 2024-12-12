@@ -1,8 +1,11 @@
 package visitor
 
-import intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+import (
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
+)
 
-func NewGetTypeArgumentVisitor() *GetTypeArgumentVisitor {
+func NewGetTypeArgumentVisitor() intsrv.IGetTypeArgumentVisitor {
 	return &GetTypeArgumentVisitor{}
 }
 

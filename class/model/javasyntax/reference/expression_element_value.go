@@ -1,9 +1,9 @@
 package reference
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 func NewExpressionElementValue(expression intmod.IExpression) intmod.IExpressionElementValue {
@@ -16,7 +16,7 @@ func NewExpressionElementValue(expression intmod.IExpression) intmod.IExpression
 
 type ExpressionElementValue struct {
 	util.DefaultBase[intmod.IExpressionElementValue]
-	
+
 	expression intmod.IExpression
 }
 

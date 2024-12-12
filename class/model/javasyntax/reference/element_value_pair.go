@@ -1,9 +1,9 @@
 package reference
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 func NewElementValuePair(name string, elementValue intmod.IElementValue) intmod.IElementValuePair {

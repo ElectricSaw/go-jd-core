@@ -9,7 +9,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewAddCastExpressionVisitor(typeMaker intsrv.ITypeMaker) *AddCastExpressionVisitor {
+func NewAddCastExpressionVisitor(typeMaker intsrv.ITypeMaker) intsrv.IAddCastExpressionVisitor {
 	return &AddCastExpressionVisitor{
 		searchFirstLineNumberVisitor: NewSearchFirstLineNumberVisitor(),
 		typeMaker:                    typeMaker,
@@ -19,7 +19,7 @@ func NewAddCastExpressionVisitor(typeMaker intsrv.ITypeMaker) *AddCastExpression
 type AddCastExpressionVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	searchFirstLineNumberVisitor *SearchFirstLineNumberVisitor
+	searchFirstLineNumberVisitor intsrv.ISearchFirstLineNumberVisitor
 	typeMaker                    intsrv.ITypeMaker
 	typeBounds                   map[string]intmod.IType
 	returnedType                 intmod.IType
@@ -148,7 +148,7 @@ func (v *AddCastExpressionVisitor) VisitLocalVariableDeclaration(decl intmod.ILo
 	t := v.typ
 
 	v.typ = decl.Type()
-	decl.LocalVariableDeclarators().Accept(v)
+	decl.LocalVariableDeclarators().AcceptDeclaration(v)
 	v.typ = t
 }
 
@@ -168,14 +168,6 @@ func (v *AddCastExpressionVisitor) VisitLocalVariableDeclarator(declarator intmo
 			v.typ = t
 		}
 	}
-}
-
-func ConvertArrayVariable(list []intmod.IVariableInitializer) []intmod.IDeclaration {
-	ret := make([]intmod.IDeclaration, 0, len(list))
-	for _, item := range list {
-		ret = append(ret, item)
-	}
-	return ret
 }
 
 func (v *AddCastExpressionVisitor) VisitArrayVariableInitializer(decl intmod.IArrayVariableInitializer) {
@@ -426,40 +418,48 @@ func (v *AddCastExpressionVisitor) addCastExpression(typ intmod.IType, expr intm
 	}
 }
 
-func (v *AddCastExpressionVisitor) VisitFloatConstantExpression(expression intmod.IFloatConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitFloatConstantExpression(_ intmod.IFloatConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitIntegerConstantExpression(_ intmod.IIntegerConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitConstructorReferenceExpression(expression intmod.IConstructorReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitConstructorReferenceExpression(_ intmod.IConstructorReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitDoubleConstantExpression(expression intmod.IDoubleConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitDoubleConstantExpression(_ intmod.IDoubleConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitEnumConstantReferenceExpression(expression intmod.IEnumConstantReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitEnumConstantReferenceExpression(_ intmod.IEnumConstantReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitLocalVariableReferenceExpression(expression intmod.ILocalVariableReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitLocalVariableReferenceExpression(_ intmod.ILocalVariableReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitLongConstantExpression(expression intmod.ILongConstantExpression) {
+func (v *AddCastExpressionVisitor) VisitLongConstantExpression(_ intmod.ILongConstantExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitBreakStatement(statement intmod.IBreakStatement)       {}
-func (v *AddCastExpressionVisitor) VisitByteCodeStatement(statement intmod.IByteCodeStatement) {}
-func (v *AddCastExpressionVisitor) VisitContinueStatement(statement intmod.IContinueStatement) {}
-func (v *AddCastExpressionVisitor) VisitNullExpression(expression intmod.INullExpression)      {}
-func (v *AddCastExpressionVisitor) VisitObjectTypeReferenceExpression(expression intmod.IObjectTypeReferenceExpression) {
+func (v *AddCastExpressionVisitor) VisitBreakStatement(_ intmod.IBreakStatement)       {}
+func (v *AddCastExpressionVisitor) VisitByteCodeStatement(_ intmod.IByteCodeStatement) {}
+func (v *AddCastExpressionVisitor) VisitContinueStatement(_ intmod.IContinueStatement) {}
+func (v *AddCastExpressionVisitor) VisitNullExpression(_ intmod.INullExpression)       {}
+func (v *AddCastExpressionVisitor) VisitObjectTypeReferenceExpression(_ intmod.IObjectTypeReferenceExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitSuperExpression(expression intmod.ISuperExpression) {}
-func (v *AddCastExpressionVisitor) VisitThisExpression(expression intmod.IThisExpression)   {}
-func (v *AddCastExpressionVisitor) VisitTypeReferenceDotClassExpression(expression intmod.ITypeReferenceDotClassExpression) {
+func (v *AddCastExpressionVisitor) VisitSuperExpression(_ intmod.ISuperExpression) {}
+func (v *AddCastExpressionVisitor) VisitThisExpression(_ intmod.IThisExpression)   {}
+func (v *AddCastExpressionVisitor) VisitTypeReferenceDotClassExpression(_ intmod.ITypeReferenceDotClassExpression) {
 }
-func (v *AddCastExpressionVisitor) VisitObjectReference(reference intmod.IObjectReference) {}
-func (v *AddCastExpressionVisitor) VisitInnerObjectReference(reference intmod.IInnerObjectReference) {
+func (v *AddCastExpressionVisitor) VisitObjectReference(_ intmod.IObjectReference) {}
+func (v *AddCastExpressionVisitor) VisitInnerObjectReference(_ intmod.IInnerObjectReference) {
 }
-func (v *AddCastExpressionVisitor) VisitTypeArguments(typ intmod.ITypeArguments) {}
-func (v *AddCastExpressionVisitor) VisitWildcardExtendsTypeArgument(typ intmod.IWildcardExtendsTypeArgument) {
+func (v *AddCastExpressionVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {}
+func (v *AddCastExpressionVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
 }
-func (v *AddCastExpressionVisitor) VisitObjectType(typ intmod.IObjectType)           {}
-func (v *AddCastExpressionVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {}
-func (v *AddCastExpressionVisitor) VisitWildcardSuperTypeArgument(typ intmod.IWildcardSuperTypeArgument) {
+func (v *AddCastExpressionVisitor) VisitObjectType(_ intmod.IObjectType)           {}
+func (v *AddCastExpressionVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType) {}
+func (v *AddCastExpressionVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
 }
-func (v *AddCastExpressionVisitor) VisitTypes(list intmod.ITypes) {}
-func (v *AddCastExpressionVisitor) VisitTypeParameterWithTypeBounds(typ intmod.ITypeParameterWithTypeBounds) {
+func (v *AddCastExpressionVisitor) VisitTypes(_ intmod.ITypes) {}
+func (v *AddCastExpressionVisitor) VisitTypeParameterWithTypeBounds(_ intmod.ITypeParameterWithTypeBounds) {
+}
+
+func ConvertArrayVariable(list []intmod.IVariableInitializer) []intmod.IDeclaration {
+	ret := make([]intmod.IDeclaration, 0, len(list))
+	for _, item := range list {
+		ret = append(ret, item)
+	}
+	return ret
 }

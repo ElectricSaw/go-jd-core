@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewSearchLocalVariableVisitor() *SearchLocalVariableVisitor {
+func NewSearchLocalVariableVisitor() intsrv.ISearchLocalVariableVisitor {
 	return &SearchLocalVariableVisitor{
 		variables: make([]intsrv.ILocalVariable, 0),
 	}
@@ -38,18 +38,18 @@ func (v *SearchLocalVariableVisitor) VisitLocalVariableReferenceExpression(expre
 	}
 }
 
-func (v *SearchLocalVariableVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
+func (v *SearchLocalVariableVisitor) VisitIntegerConstantExpression(_ intmod.IIntegerConstantExpression) {
 }
 
-func (v *SearchLocalVariableVisitor) VisitTypeArguments(arguments intmod.ITypeArguments)            {}
-func (v *SearchLocalVariableVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {}
-func (v *SearchLocalVariableVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
+func (v *SearchLocalVariableVisitor) VisitTypeArguments(_ intmod.ITypeArguments)             {}
+func (v *SearchLocalVariableVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {}
+func (v *SearchLocalVariableVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
 }
-func (v *SearchLocalVariableVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
+func (v *SearchLocalVariableVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
 }
-func (v *SearchLocalVariableVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {
+func (v *SearchLocalVariableVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
 }
-func (v *SearchLocalVariableVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType)     {}
-func (v *SearchLocalVariableVisitor) VisitObjectType(typ intmod.IObjectType)           {}
-func (v *SearchLocalVariableVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {}
-func (v *SearchLocalVariableVisitor) VisitGenericType(typ intmod.IGenericType)         {}
+func (v *SearchLocalVariableVisitor) VisitPrimitiveType(_ intmod.IPrimitiveType)     {}
+func (v *SearchLocalVariableVisitor) VisitObjectType(_ intmod.IObjectType)           {}
+func (v *SearchLocalVariableVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType) {}
+func (v *SearchLocalVariableVisitor) VisitGenericType(_ intmod.IGenericType)         {}

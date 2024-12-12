@@ -5,7 +5,7 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 )
 
-func NewMergeTryWithResourcesStatementVisitor() *MergeTryWithResourcesStatementVisitor {
+func NewMergeTryWithResourcesStatementVisitor() intsrv.IMergeTryWithResourcesStatementVisitor {
 	return &MergeTryWithResourcesStatementVisitor{}
 }
 
@@ -26,9 +26,9 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatement(statement i
 func (v *MergeTryWithResourcesStatementVisitor) VisitTryStatement(statement intmod.ITryStatement) {
 	tryStatements := statement.TryStatements()
 
-	v.SafeAcceptListStatement(statement.ResourceList())
+	v.SafeAcceptSlice(statement.ResourceList())
 	tryStatements.AcceptStatement(v)
-	v.SafeAcceptListStatement(statement.CatchClauseList())
+	v.SafeAcceptSlice(statement.CatchClauseList())
 	v.SafeAccept(statement.FinallyStatements())
 
 	if tryStatements.Size() == 1 {
@@ -60,7 +60,7 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitIfStatement(statement intmo
 	v.SafeAccept(statement.Statements())
 }
 func (v *MergeTryWithResourcesStatementVisitor) VisitStatements(list intmod.IStatements) {
-	v.AcceptListStatement(list.ToSlice())
+	v.AcceptSlice(list.ToSlice())
 }
 func (v *MergeTryWithResourcesStatementVisitor) VisitSynchronizedStatement(statement intmod.ISynchronizedStatement) {
 	v.SafeAccept(statement.Statements())
@@ -79,38 +79,38 @@ func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementMultiLabelsB
 	statement.Statements().AcceptStatement(v)
 }
 
-func (v *MergeTryWithResourcesStatementVisitor) VisitAssertStatement(statement intmod.IAssertStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitAssertStatement(_ intmod.IAssertStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitBreakStatement(statement intmod.IBreakStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitBreakStatement(_ intmod.IBreakStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitByteCodeStatement(statement intmod.IByteCodeStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitByteCodeStatement(_ intmod.IByteCodeStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitCommentStatement(statement intmod.ICommentStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitCommentStatement(_ intmod.ICommentStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitContinueStatement(statement intmod.IContinueStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitContinueStatement(_ intmod.IContinueStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitExpressionStatement(statement intmod.IExpressionStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitExpressionStatement(_ intmod.IExpressionStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitLabelStatement(statement intmod.ILabelStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitLabelStatement(_ intmod.ILabelStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitLambdaExpressionStatement(statement intmod.ILambdaExpressionStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitLambdaExpressionStatement(_ intmod.ILambdaExpressionStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitLocalVariableDeclarationStatement(statement intmod.ILocalVariableDeclarationStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitLocalVariableDeclarationStatement(_ intmod.ILocalVariableDeclarationStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitNoStatement(statement intmod.INoStatement) {}
-func (v *MergeTryWithResourcesStatementVisitor) VisitReturnExpressionStatement(statement intmod.IReturnExpressionStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitNoStatement(_ intmod.INoStatement) {}
+func (v *MergeTryWithResourcesStatementVisitor) VisitReturnExpressionStatement(_ intmod.IReturnExpressionStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitReturnStatement(statement intmod.IReturnStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitReturnStatement(_ intmod.IReturnStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementDefaultLabel(statement intmod.IDefaultLabel) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementDefaultLabel(_ intmod.IDefaultLabel) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementExpressionLabel(statement intmod.IExpressionLabel) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitSwitchStatementExpressionLabel(_ intmod.IExpressionLabel) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitThrowStatement(statement intmod.IThrowStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitThrowStatement(_ intmod.IThrowStatement) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitTryStatementResource(statement intmod.IResource) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitTryStatementResource(_ intmod.IResource) {
 }
-func (v *MergeTryWithResourcesStatementVisitor) VisitTypeDeclarationStatement(statement intmod.ITypeDeclarationStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) VisitTypeDeclarationStatement(_ intmod.ITypeDeclarationStatement) {
 }
 
 func (v *MergeTryWithResourcesStatementVisitor) SafeAccept(list intmod.IStatement) {
@@ -119,13 +119,13 @@ func (v *MergeTryWithResourcesStatementVisitor) SafeAccept(list intmod.IStatemen
 	}
 }
 
-func (v *MergeTryWithResourcesStatementVisitor) AcceptListStatement(list []intmod.IStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) AcceptSlice(list []intmod.IStatement) {
 	for _, state := range list {
 		state.AcceptStatement(v)
 	}
 }
 
-func (v *MergeTryWithResourcesStatementVisitor) SafeAcceptListStatement(list []intmod.IStatement) {
+func (v *MergeTryWithResourcesStatementVisitor) SafeAcceptSlice(list []intmod.IStatement) {
 	if list != nil {
 		for _, state := range list {
 			state.AcceptStatement(v)

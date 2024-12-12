@@ -1,10 +1,10 @@
 package statement
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
-	"fmt"
 )
 
 func NewClassFileForEachStatement(localVariable intsrv.ILocalVariable, expr intmod.IExpression,

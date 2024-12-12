@@ -10,7 +10,7 @@ import (
 	"strings"
 )
 
-func NewCreateInstructionsVisitor(typeMaker intsrv.ITypeMaker) *CreateInstructionsVisitor {
+func NewCreateInstructionsVisitor(typeMaker intsrv.ITypeMaker) intsrv.ICreateInstructionsVisitor {
 	return &CreateInstructionsVisitor{
 		typeMaker: typeMaker,
 	}

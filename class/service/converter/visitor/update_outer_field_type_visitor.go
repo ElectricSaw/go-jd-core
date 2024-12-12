@@ -9,9 +9,10 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewUpdateOuterFieldTypeVisitor(typeMaker intsrv.ITypeMaker) *UpdateOuterFieldTypeVisitor {
+func NewUpdateOuterFieldTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateOuterFieldTypeVisitor {
 	return &UpdateOuterFieldTypeVisitor{
-		typeMaker: typeMaker,
+		typeMaker:          typeMaker,
+		searchFieldVisitor: NewSearchFieldVisitor(),
 	}
 }
 
@@ -19,7 +20,7 @@ type UpdateOuterFieldTypeVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
 	typeMaker          intsrv.ITypeMaker
-	searchFieldVisitor SearchFieldVisitor
+	searchFieldVisitor intsrv.ISearchFieldVisitor
 }
 
 func (v *UpdateOuterFieldTypeVisitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {
@@ -75,7 +76,7 @@ func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IC
 				v.searchFieldVisitor.Init(name)
 
 				for _, field := range cfcd.BodyDeclaration().FieldDeclarations() {
-					field.FieldDeclarators().AcceptDeclaration(&v.searchFieldVisitor)
+					field.FieldDeclarators().AcceptDeclaration(v.searchFieldVisitor)
 					if v.searchFieldVisitor.Found() {
 						var typeArguments intmod.ITypeArgument
 
@@ -117,6 +118,10 @@ func (v *UpdateOuterFieldTypeVisitor) VisitAnnotationDeclaration(_ intmod.IAnnot
 }
 
 func (v *UpdateOuterFieldTypeVisitor) VisitEnumDeclaration(_ intmod.IEnumDeclaration) {
+}
+
+func NewSearchFieldVisitor() intsrv.ISearchFieldVisitor {
+	return &SearchFieldVisitor{}
 }
 
 type SearchFieldVisitor struct {

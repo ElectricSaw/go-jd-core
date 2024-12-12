@@ -1,8 +1,8 @@
 package token
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 var UnknownLineNumber = NewLineNumberToken(intmod.UnknownLineNumberToken)

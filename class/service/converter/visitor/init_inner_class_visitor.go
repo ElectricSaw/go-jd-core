@@ -14,7 +14,7 @@ import (
 	"unicode"
 )
 
-func NewInitInnerClassVisitor() *InitInnerClassVisitor {
+func NewInitInnerClassVisitor() intsrv.IInitInnerClassVisitor {
 	v := &InitInnerClassVisitor{}
 	v.updateFieldDeclarationsAndReferencesVisitor.parent = v
 	return v
@@ -294,14 +294,13 @@ func (v *UpdateFieldDeclarationsAndReferencesVisitor) updateExpression(expr intm
 	return expr
 }
 
-func NewUpdateNewExpressionVisitor(typeMaker intsrv.ITypeMaker) *UpdateNewExpressionVisitor {
+func NewUpdateNewExpressionVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateNewExpressionVisitor {
 	return &UpdateNewExpressionVisitor{
 		typeMaker:                 typeMaker,
 		finalLocalVariableNameMap: make(map[string]string),
 		localClassDeclarations:    util.NewDefaultList[intsrv.IClassFileClassDeclaration](),
 		newExpressions:            util.NewSet[intmod.INewExpression](),
 	}
-
 }
 
 type UpdateNewExpressionVisitor struct {
@@ -334,7 +333,7 @@ func (v *UpdateNewExpressionVisitor) VisitConstructorDeclaration(decl intmod.ICo
 		decl.Statements().AcceptStatement(visitor)
 
 		if decl.FormalParameters() != nil {
-			decl.FormalParameters().Accept(visitor)
+			decl.FormalParameters().AcceptDeclaration(visitor)
 		}
 	}
 
@@ -357,7 +356,7 @@ func (v *UpdateNewExpressionVisitor) VisitMethodDeclaration(decl intmod.IMethodD
 		decl.Statements().AcceptStatement(visitor)
 
 		if decl.FormalParameters() != nil {
-			decl.FormalParameters().Accept(visitor)
+			decl.FormalParameters().AcceptDeclaration(visitor)
 		}
 	}
 
@@ -384,7 +383,7 @@ func (v *UpdateNewExpressionVisitor) VisitStaticInitializerDeclaration(decl intm
 			return v.localClassDeclarations.Get(i).FirstLineNumber() <
 				v.localClassDeclarations.Get(j).FirstLineNumber()
 		})
-		decl.Accept(NewAddLocalClassDeclarationVisitor(v))
+		decl.AcceptDeclaration(NewAddLocalClassDeclarationVisitor(v))
 	}
 }
 
@@ -615,7 +614,7 @@ func (v *UpdateNewExpressionVisitor) removeLastSyntheticParameter(parameters int
 	return parameters
 }
 
-func NewUpdateParametersAndLocalVariablesVisitor(parent *UpdateNewExpressionVisitor) *UpdateParametersAndLocalVariablesVisitor {
+func NewUpdateParametersAndLocalVariablesVisitor(parent *UpdateNewExpressionVisitor) intsrv.IUpdateParametersAndLocalVariablesVisitor {
 	return &UpdateParametersAndLocalVariablesVisitor{
 		parent: parent,
 	}
@@ -637,13 +636,13 @@ func (v *UpdateParametersAndLocalVariablesVisitor) VisitFormalParameter(decl int
 
 func (v *UpdateParametersAndLocalVariablesVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
 	v.final = false
-	stat.LocalVariableDeclarators().Accept(v)
+	stat.LocalVariableDeclarators().AcceptDeclaration(v)
 	stat.SetFinal(v.final)
 }
 
 func (v *UpdateParametersAndLocalVariablesVisitor) VisitLocalVariableDeclaration(decl intmod.ILocalVariableDeclaration) {
 	v.final = false
-	decl.LocalVariableDeclarators().Accept(v)
+	decl.LocalVariableDeclarators().AcceptDeclaration(v)
 	decl.SetFinal(v.final)
 }
 
@@ -654,7 +653,7 @@ func (v *UpdateParametersAndLocalVariablesVisitor) VisitLocalVariableDeclarator(
 	}
 }
 
-func NewAddLocalClassDeclarationVisitor(parent *UpdateNewExpressionVisitor) *AddLocalClassDeclarationVisitor {
+func NewAddLocalClassDeclarationVisitor(parent *UpdateNewExpressionVisitor) intsrv.IAddLocalClassDeclarationVisitor {
 	return &AddLocalClassDeclarationVisitor{
 		parent:                       parent,
 		searchFirstLineNumberVisitor: NewSearchFirstLineNumberVisitor(),
@@ -666,7 +665,7 @@ type AddLocalClassDeclarationVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
 	parent                       *UpdateNewExpressionVisitor
-	searchFirstLineNumberVisitor *SearchFirstLineNumberVisitor
+	searchFirstLineNumberVisitor intsrv.ISearchFirstLineNumberVisitor
 	lineNumber                   int
 }
 
@@ -760,11 +759,4 @@ func (v *AddLocalClassDeclarationVisitor) VisitStatements(list intmod.IStatement
 			}
 		}
 	}
-}
-
-type MemberDeclarationComparator struct {
-}
-
-func (c *MemberDeclarationComparator) Compare(md1, md2 intsrv.IClassFileMemberDeclaration) int {
-	return md1.FirstLineNumber() - md2.FirstLineNumber()
 }

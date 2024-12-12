@@ -269,7 +269,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitLongConstantExpression(expr intmod.ILon
 
 func (v *AbstractJavaSyntaxVisitor) VisitMethodInvocationExpression(expr intmod.IMethodInvocationExpression) {
 	expr.Expression().Accept(v)
-	v.SafeAcceptTypeArgumentVisitable(expr.NonWildcardTypeArguments().(*_type.WildcardSuperTypeArgument))
+	v.SafeAcceptTypeArgumentVisitable(expr.NonWildcardTypeArguments().(intmod.IWildcardSuperTypeArgument))
 	v.SafeAcceptExpression(expr.Parameters())
 }
 
@@ -589,25 +589,25 @@ func (v *AbstractJavaSyntaxVisitor) VisitTypeParameters(parameters intmod.ITypeP
 
 // --- ITypeArgumentVisitor ---
 
-//func (v *AbstractJavaSyntaxVisitor) VisitTypeArguments(arguments *_type.TypeArguments) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitDiamondTypeArgument(argument *_type.DiamondTypeArgument) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitWildcardExtendsTypeArgument(argument *_type.WildcardExtendsTypeArgument) {
+//func (v *AbstractJavaSyntaxVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
 //}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitWildcardSuperTypeArgument(argument *_type.WildcardSuperTypeArgument) {
+//func (v *AbstractJavaSyntaxVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
 //}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitWildcardTypeArgument(argument *_type.WildcardTypeArgument) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitPrimitiveType(t *_type.PrimitiveType) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitPrimitiveType(t intmod.IPrimitiveType) {}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitObjectType(t *_type.ObjectType) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitObjectType(t intmod.IObjectType) {}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitInnerObjectType(t *_type.InnerObjectType) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {}
 //
-//func (v *AbstractJavaSyntaxVisitor) VisitGenericType(t *_type.GenericType) {}
+//func (v *AbstractJavaSyntaxVisitor) VisitGenericType(t intmod.IGenericType) {}
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclaration(decl intmod.ITypeDeclaration) {
 	v.SafeAcceptReference(decl.AnnotationReferences())
@@ -684,7 +684,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptListDeclaration(list []intmod.IDec
 func (v *AbstractJavaSyntaxVisitor) SafeAcceptListConstant(list []intmod.IConstant) {
 	if list != nil {
 		for _, value := range list {
-			value.Accept(v)
+			value.AcceptDeclaration(v)
 		}
 	}
 }

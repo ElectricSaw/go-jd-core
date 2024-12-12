@@ -1,8 +1,8 @@
 package fragment
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewFixedFragment(firstLineNumber, lastLineNumber int) intmod.IFixedFragment {

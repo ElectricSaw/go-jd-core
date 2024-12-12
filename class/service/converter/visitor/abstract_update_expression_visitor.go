@@ -87,7 +87,7 @@ func (v *AbstractUpdateExpressionVisitor) VisitInterfaceDeclaration(declaration 
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableDeclaration(declaration intmod.ILocalVariableDeclaration) {
-	declaration.LocalVariableDeclarators().Accept(v)
+	declaration.LocalVariableDeclarators().AcceptDeclaration(v)
 }
 
 func (v *AbstractUpdateExpressionVisitor) VisitLocalVariableDeclarator(declarator intmod.ILocalVariableDeclarator) {

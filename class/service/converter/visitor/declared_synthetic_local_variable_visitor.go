@@ -7,7 +7,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewDeclaredSyntheticLocalVariableVisitor() *DeclaredSyntheticLocalVariableVisitor {
+func NewDeclaredSyntheticLocalVariableVisitor() intsrv.IDeclaredSyntheticLocalVariableVisitor {
 	return &DeclaredSyntheticLocalVariableVisitor{
 		localVariableReferenceExpressions: util.NewDefaultList[intmod.ILocalVariableReferenceExpression](),
 	}
@@ -33,7 +33,7 @@ func (v *DeclaredSyntheticLocalVariableVisitor) VisitFormalParameter(decl intmod
 }
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitLocalVariableDeclaration(decl intmod.ILocalVariableDeclaration) {
-	decl.LocalVariableDeclarators().Accept(v)
+	decl.LocalVariableDeclarators().AcceptDeclaration(v)
 }
 
 func (v *DeclaredSyntheticLocalVariableVisitor) VisitMethodDeclaration(decl intmod.IMethodDeclaration) {

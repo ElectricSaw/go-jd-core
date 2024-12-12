@@ -1,11 +1,11 @@
 package declaration
 
 import (
+	"fmt"
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
-	"fmt"
 )
 
 func NewClassFileStaticInitializerDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration,

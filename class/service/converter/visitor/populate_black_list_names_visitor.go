@@ -2,11 +2,12 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewPopulateBlackListNamesVisitor(names util.ISet[string]) *PopulateBlackListNamesVisitor {
+func NewPopulateBlackListNamesVisitor(names util.ISet[string]) intsrv.IPopulateBlackListNamesVisitor {
 	return &PopulateBlackListNamesVisitor{
 		blackListNames: names,
 	}

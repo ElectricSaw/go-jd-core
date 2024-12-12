@@ -1,9 +1,9 @@
 package cfg
 
 import (
+	"fmt"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 var TypeNames = []string{"DELETED", "START", "END", "STATEMENTS", "THROW", "RETURN", "RETURN_VALUE", "SWITCH_DECLARATION", "SWITCH",

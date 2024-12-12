@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewRenameLocalVariablesVisitor() *RenameLocalVariablesVisitor {
+func NewRenameLocalVariablesVisitor() intsrv.IRenameLocalVariablesVisitor {
 	return &RenameLocalVariablesVisitor{}
 }
 

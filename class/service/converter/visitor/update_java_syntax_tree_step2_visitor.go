@@ -10,7 +10,7 @@ var aggregateFieldsVisitor = NewAggregateFieldsVisitor()
 var sortMembersVisitor = NewSortMembersVisitor()
 var autoboxingVisitor = NewAutoboxingVisitor()
 
-func NewUpdateJavaSyntaxTreeStep2Visitor(typeMaker intsrv.ITypeMaker) *UpdateJavaSyntaxTreeStep2Visitor {
+func NewUpdateJavaSyntaxTreeStep2Visitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateJavaSyntaxTreeStep2Visitor {
 	return &UpdateJavaSyntaxTreeStep2Visitor{
 		initStaticFieldVisitor:          NewInitStaticFieldVisitor(),
 		initInstanceFieldVisitor:        NewInitInstanceFieldVisitor(),
@@ -25,15 +25,14 @@ func NewUpdateJavaSyntaxTreeStep2Visitor(typeMaker intsrv.ITypeMaker) *UpdateJav
 type UpdateJavaSyntaxTreeStep2Visitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	initStaticFieldVisitor          *InitStaticFieldVisitor
-	initInstanceFieldVisitor        *InitInstanceFieldVisitor
-	initEnumVisitor                 *InitEnumVisitor
-	removeDefaultConstructorVisitor *RemoveDefaultConstructorVisitor
-	replaceBridgeMethodVisitor      *UpdateBridgeMethodVisitor
-	initInnerClassStep2Visitor      *UpdateNewExpressionVisitor
-	addCastExpressionVisitor        *AddCastExpressionVisitor
-
-	typeDeclaration intmod.ITypeDeclaration
+	initStaticFieldVisitor          intsrv.IInitStaticFieldVisitor
+	initInstanceFieldVisitor        intsrv.IInitInstanceFieldVisitor
+	initEnumVisitor                 intsrv.IInitEnumVisitor
+	removeDefaultConstructorVisitor intsrv.IRemoveDefaultConstructorVisitor
+	replaceBridgeMethodVisitor      intsrv.IUpdateBridgeMethodVisitor
+	initInnerClassStep2Visitor      intsrv.IUpdateNewExpressionVisitor
+	addCastExpressionVisitor        intsrv.IAddCastExpressionVisitor
+	typeDeclaration                 intmod.ITypeDeclaration
 }
 
 func (v *UpdateJavaSyntaxTreeStep2Visitor) VisitBodyDeclaration(declaration intmod.IBodyDeclaration) {

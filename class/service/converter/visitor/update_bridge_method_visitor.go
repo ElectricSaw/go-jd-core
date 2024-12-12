@@ -1,26 +1,24 @@
 package visitor
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/expression"
-	"fmt"
 	"strings"
 )
 
-func NewUpdateBridgeMethodVisitor(typeMaker intsrv.ITypeMaker) *UpdateBridgeMethodVisitor {
+func NewUpdateBridgeMethodVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateBridgeMethodVisitor {
 	v := &UpdateBridgeMethodVisitor{
-		bodyDeclarationsVisitor: &BodyDeclarationsVisitor{
-			mapped: make(map[string]intsrv.IClassFileMethodDeclaration),
-		},
+		bodyDeclarationsVisitor:  NewBodyDeclarationsVisitor(),
 		bridgeMethodDeclarations: make(map[string]map[string]intsrv.IClassFileMethodDeclaration),
 		typeMaker:                typeMaker,
 	}
 
-	v.bodyDeclarationsVisitor.bridgeMethodDeclarationsLink = v.bridgeMethodDeclarations
+	v.bodyDeclarationsVisitor.SetBridgeMethodDeclarationsLink(v.bridgeMethodDeclarations)
 
 	return v
 }
@@ -28,14 +26,14 @@ func NewUpdateBridgeMethodVisitor(typeMaker intsrv.ITypeMaker) *UpdateBridgeMeth
 type UpdateBridgeMethodVisitor struct {
 	AbstractUpdateExpressionVisitor
 
-	bodyDeclarationsVisitor  *BodyDeclarationsVisitor
+	bodyDeclarationsVisitor  intsrv.IBodyDeclarationsVisitor
 	bridgeMethodDeclarations map[string]map[string]intsrv.IClassFileMethodDeclaration
 	typeMaker                intsrv.ITypeMaker
 }
 
 func (v *UpdateBridgeMethodVisitor) Init(bodyDeclaration intsrv.IClassFileBodyDeclaration) bool {
 	v.bridgeMethodDeclarations = make(map[string]map[string]intsrv.IClassFileMethodDeclaration)
-	v.bodyDeclarationsVisitor.bridgeMethodDeclarationsLink = v.bridgeMethodDeclarations
+	v.bodyDeclarationsVisitor.SetBridgeMethodDeclarationsLink(v.bridgeMethodDeclarations)
 	v.bodyDeclarationsVisitor.VisitBodyDeclaration(bodyDeclaration)
 	return len(v.bridgeMethodDeclarations) != 0
 }
@@ -173,11 +171,34 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 	return expr
 }
 
+func NewBodyDeclarationsVisitor() intsrv.IBodyDeclarationsVisitor {
+	return &BodyDeclarationsVisitor{
+		bridgeMethodDeclarationsLink: make(map[string]map[string]intsrv.IClassFileMethodDeclaration),
+		mapped:                       make(map[string]intsrv.IClassFileMethodDeclaration),
+	}
+}
+
 type BodyDeclarationsVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
 	bridgeMethodDeclarationsLink map[string]map[string]intsrv.IClassFileMethodDeclaration
 	mapped                       map[string]intsrv.IClassFileMethodDeclaration
+}
+
+func (v *BodyDeclarationsVisitor) BridgeMethodDeclarationsLink() map[string]map[string]intsrv.IClassFileMethodDeclaration {
+	return v.bridgeMethodDeclarationsLink
+}
+
+func (v *BodyDeclarationsVisitor) SetBridgeMethodDeclarationsLink(bridgeMethodDeclarationsLink map[string]map[string]intsrv.IClassFileMethodDeclaration) {
+	v.bridgeMethodDeclarationsLink = bridgeMethodDeclarationsLink
+}
+
+func (v *BodyDeclarationsVisitor) Mapped() map[string]intsrv.IClassFileMethodDeclaration {
+	return v.mapped
+}
+
+func (v *BodyDeclarationsVisitor) SetMapped(mapped map[string]intsrv.IClassFileMethodDeclaration) {
+	v.mapped = mapped
 }
 
 func (v *BodyDeclarationsVisitor) VisitClassDeclaration(decl intmod.IClassDeclaration) {

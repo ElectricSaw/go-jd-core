@@ -1,9 +1,9 @@
 package statement
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 var DefaultLabe1 = NewDefaultLabel()

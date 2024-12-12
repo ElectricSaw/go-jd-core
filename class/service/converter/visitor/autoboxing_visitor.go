@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func NewAutoboxingVisitor() *AutoboxingVisitor {
+func NewAutoboxingVisitor() intmod.IJavaSyntaxVisitor {
 	return &AutoboxingVisitor{}
 }
 

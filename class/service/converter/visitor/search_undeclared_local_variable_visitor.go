@@ -4,9 +4,10 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 )
 
-func NewSearchUndeclaredLocalVariableVisitor() *SearchUndeclaredLocalVariableVisitor {
+func NewSearchUndeclaredLocalVariableVisitor() intsrv.ISearchUndeclaredLocalVariableVisitor {
 	return &SearchUndeclaredLocalVariableVisitor{
 		variables: make([]intsrv.ILocalVariable, 0),
 	}
@@ -35,7 +36,7 @@ func (v *SearchUndeclaredLocalVariableVisitor) RemoveAll(removal []intsrv.ILocal
 	copy(variables, v.variables)
 
 	for _, item := range removal {
-		v.variables = SliceInItemRemove(variables, item)
+		v.variables = utils.SliceInItemRemove(variables, item)
 	}
 }
 
@@ -92,16 +93,4 @@ func (v *SearchUndeclaredLocalVariableVisitor) VisitTryStatement(statement intmo
 
 func (v *SearchUndeclaredLocalVariableVisitor) VisitWhileStatement(statement intmod.IWhileStatement) {
 	statement.Condition().Accept(v)
-}
-
-func SliceInItemRemove(list []intsrv.ILocalVariable, item intsrv.ILocalVariable) []intsrv.ILocalVariable {
-	for i := 0; i < len(list); i++ {
-		if list[i] == item {
-			newList := make([]intsrv.ILocalVariable, 0, len(list)-1)
-			newList = append(newList, list[:i]...)
-			newList = append(newList, list[i+1:]...)
-			return newList
-		}
-	}
-	return list
 }

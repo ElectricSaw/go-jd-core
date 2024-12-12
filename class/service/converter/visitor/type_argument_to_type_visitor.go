@@ -2,10 +2,11 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
-func NewTypeArgumentToTypeVisitor() *TypeArgumentToTypeVisitor {
+func NewTypeArgumentToTypeVisitor() intsrv.ITypeArgumentToTypeVisitor {
 	return &TypeArgumentToTypeVisitor{}
 }
 
@@ -23,7 +24,7 @@ func (v *TypeArgumentToTypeVisitor) Type() intmod.IType {
 	return v.typ
 }
 
-func (v *TypeArgumentToTypeVisitor) VisitTypes(types intmod.ITypes) {
+func (v *TypeArgumentToTypeVisitor) VisitTypes(_ intmod.ITypes) {
 
 }
 

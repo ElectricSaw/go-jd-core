@@ -11,7 +11,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-func NewInitStaticFieldVisitor() *InitStaticFieldVisitor {
+func NewInitStaticFieldVisitor() intsrv.IInitStaticFieldVisitor {
 	return &InitStaticFieldVisitor{
 		searchFirstLineNumberVisitor:        NewSearchFirstLineNumberVisitor(),
 		searchLocalVariableReferenceVisitor: NewSearchLocalVariableReferenceVisitor(),
@@ -22,8 +22,8 @@ func NewInitStaticFieldVisitor() *InitStaticFieldVisitor {
 type InitStaticFieldVisitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	searchFirstLineNumberVisitor        *SearchFirstLineNumberVisitor
-	searchLocalVariableReferenceVisitor *SearchLocalVariableReferenceVisitor
+	searchFirstLineNumberVisitor        intsrv.ISearchFirstLineNumberVisitor
+	searchLocalVariableReferenceVisitor intsrv.ISearchLocalVariableReferenceVisitor
 	internalTypeName                    string
 	fields                              map[string]intmod.IFieldDeclarator
 	methods                             util.IList[intsrv.IClassFileConstructorOrMethodDeclaration]

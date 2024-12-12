@@ -6,18 +6,18 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewUpdateJavaSyntaxTreeStep0Visitor(typeMaker intsrv.ITypeMaker) *UpdateJavaSyntaxTreeStep0Visitor {
+func NewUpdateJavaSyntaxTreeStep0Visitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateJavaSyntaxTreeStep0Visitor {
 	return &UpdateJavaSyntaxTreeStep0Visitor{
-		updateOuterFieldTypeVisitor:   *NewUpdateOuterFieldTypeVisitor(typeMaker),
-		updateBridgeMethodTypeVisitor: *NewUpdateBridgeMethodTypeVisitor(typeMaker),
+		updateOuterFieldTypeVisitor:   NewUpdateOuterFieldTypeVisitor(typeMaker),
+		updateBridgeMethodTypeVisitor: NewUpdateBridgeMethodTypeVisitor(typeMaker),
 	}
 }
 
 type UpdateJavaSyntaxTreeStep0Visitor struct {
 	javasyntax.AbstractJavaSyntaxVisitor
 
-	updateOuterFieldTypeVisitor   UpdateOuterFieldTypeVisitor
-	updateBridgeMethodTypeVisitor UpdateBridgeMethodTypeVisitor
+	updateOuterFieldTypeVisitor   intsrv.IUpdateOuterFieldTypeVisitor
+	updateBridgeMethodTypeVisitor intsrv.IUpdateBridgeMethodTypeVisitor
 }
 
 func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitBodyDeclaration(decl intmod.IBodyDeclaration) {
@@ -39,6 +39,6 @@ func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitInterfaceDeclaration(decl intmod
 	v.SafeAcceptDeclaration(decl.BodyDeclaration())
 }
 
-func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitAnnotationDeclaration(decl intmod.IAnnotationDeclaration) {
+func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitAnnotationDeclaration(_ intmod.IAnnotationDeclaration) {
 }
-func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitEnumDeclaration(decl intmod.IEnumDeclaration) {}
+func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitEnumDeclaration(_ intmod.IEnumDeclaration) {}

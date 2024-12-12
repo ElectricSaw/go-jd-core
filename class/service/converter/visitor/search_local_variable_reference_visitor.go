@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 )
 
-func NewSearchLocalVariableReferenceVisitor() *SearchLocalVariableReferenceVisitor {
+func NewSearchLocalVariableReferenceVisitor() intsrv.ISearchLocalVariableReferenceVisitor {
 	return &SearchLocalVariableReferenceVisitor{}
 }
 

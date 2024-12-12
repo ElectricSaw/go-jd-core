@@ -1,21 +1,16 @@
 package utils
 
 import (
+	"fmt"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 	"log"
 )
 
-func NewWatchDog() IWatchDog {
+func NewWatchDog() intsrv.IWatchDog {
 	return &WatchDog{
 		links: util.NewSet[ILink](),
 	}
-}
-
-type IWatchDog interface {
-	Clear()
-	Check(parent, child intsrv.IBasicBlock)
 }
 
 type WatchDog struct {

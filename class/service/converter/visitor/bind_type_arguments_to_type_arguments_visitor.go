@@ -2,21 +2,28 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 )
 
+func NewBindTypeArgumentsToTypeArgumentsVisitor() intsrv.IBindTypeArgumentsToTypeArgumentsVisitor {
+	return &BindTypeArgumentsToTypeArgumentsVisitor{
+		typeArgumentToTypeVisitor: NewTypeArgumentToTypeVisitor(),
+	}
+}
+
 type BindTypeArgumentsToTypeArgumentsVisitor struct {
-	typeArgumentToTypeVisitor TypeArgumentToTypeVisitor
+	typeArgumentToTypeVisitor intsrv.ITypeArgumentToTypeVisitor
 	bindings                  map[string]intmod.ITypeArgument
 	result                    intmod.ITypeArgument
 }
 
-func (v *BindTypeArgumentsToTypeArgumentsVisitor) SetBindings(bindings map[string]intmod.ITypeArgument) {
-	v.bindings = bindings
-}
-
 func (v *BindTypeArgumentsToTypeArgumentsVisitor) Init() {
 	v.result = nil
+}
+
+func (v *BindTypeArgumentsToTypeArgumentsVisitor) SetBindings(bindings map[string]intmod.ITypeArgument) {
+	v.bindings = bindings
 }
 
 func (v *BindTypeArgumentsToTypeArgumentsVisitor) TypeArgument() intmod.ITypeArgument {
@@ -76,7 +83,7 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitWildcardExtendsTypeArgume
 		v.result = _type.WildcardTypeArgumentEmpty
 	} else if v.result != nil {
 		v.typeArgumentToTypeVisitor.Init()
-		v.result.AcceptTypeArgumentVisitor(&v.typeArgumentToTypeVisitor)
+		v.result.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
 		bt := v.typeArgumentToTypeVisitor.Type()
 
 		if _type.OtTypeObject.(intmod.IType) == bt {
@@ -145,7 +152,7 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitWildcardSuperTypeArgument
 		v.result = argument
 	} else if v.result != nil {
 		v.typeArgumentToTypeVisitor.Init()
-		v.result.AcceptTypeArgumentVisitor(&v.typeArgumentToTypeVisitor)
+		v.result.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
 		v.result = _type.NewWildcardSuperTypeArgument(v.typeArgumentToTypeVisitor.Type())
 	}
 }

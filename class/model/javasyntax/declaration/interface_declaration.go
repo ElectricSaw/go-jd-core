@@ -1,8 +1,8 @@
 package declaration
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"fmt"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
 func NewInterfaceDeclaration(flags int, internalTypeName, name string, interfaces intmod.IType) intmod.IInterfaceDeclaration {

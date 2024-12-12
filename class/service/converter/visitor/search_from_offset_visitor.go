@@ -7,7 +7,7 @@ import (
 	"math"
 )
 
-func NewSearchFromOffsetVisitor() *SearchFromOffsetVisitor {
+func NewSearchFromOffsetVisitor() intsrv.ISearchFromOffsetVisitor {
 	return &SearchFromOffsetVisitor{offset: math.MaxInt}
 }
 
@@ -33,17 +33,17 @@ func (v *SearchFromOffsetVisitor) VisitLocalVariableReferenceExpression(expressi
 	}
 }
 
-func (v *SearchFromOffsetVisitor) VisitIntegerConstantExpression(expression intmod.IIntegerConstantExpression) {
+func (v *SearchFromOffsetVisitor) VisitIntegerConstantExpression(_ intmod.IIntegerConstantExpression) {
 }
 
-func (v *SearchFromOffsetVisitor) VisitTypeArguments(arguments intmod.ITypeArguments)            {}
-func (v *SearchFromOffsetVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {}
-func (v *SearchFromOffsetVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
+func (v *SearchFromOffsetVisitor) VisitTypeArguments(_ intmod.ITypeArguments)             {}
+func (v *SearchFromOffsetVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {}
+func (v *SearchFromOffsetVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
 }
-func (v *SearchFromOffsetVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
+func (v *SearchFromOffsetVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
 }
-func (v *SearchFromOffsetVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {}
-func (v *SearchFromOffsetVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType)                    {}
-func (v *SearchFromOffsetVisitor) VisitObjectType(typ intmod.IObjectType)                          {}
-func (v *SearchFromOffsetVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType)                {}
-func (v *SearchFromOffsetVisitor) VisitGenericType(typ intmod.IGenericType)                        {}
+func (v *SearchFromOffsetVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {}
+func (v *SearchFromOffsetVisitor) VisitPrimitiveType(_ intmod.IPrimitiveType)               {}
+func (v *SearchFromOffsetVisitor) VisitObjectType(_ intmod.IObjectType)                     {}
+func (v *SearchFromOffsetVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType)           {}
+func (v *SearchFromOffsetVisitor) VisitGenericType(_ intmod.IGenericType)                   {}

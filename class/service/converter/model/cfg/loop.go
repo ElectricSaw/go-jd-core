@@ -1,9 +1,9 @@
 package cfg
 
 import (
+	"fmt"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
 
 func NewLoop(start intsrv.IBasicBlock,

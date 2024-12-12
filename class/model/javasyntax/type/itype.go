@@ -1,10 +1,10 @@
 package _type
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/class/util"
 	"bytes"
 	"encoding/gob"
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 	"hash/fnv"
 )
 

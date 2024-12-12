@@ -1,6 +1,8 @@
 package utils
 
 import (
+	"errors"
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/class/api"
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
@@ -9,8 +11,6 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/service/deserializer"
-	"errors"
-	"fmt"
 	"hash/fnv"
 	"os"
 	"strings"
@@ -122,7 +122,10 @@ func (m *TypeMaker) ParseClassFileSignature(classFile intcls.IClassFile) intsrv.
 				for _, interfaceTypeName := range interfaceTypeNames {
 					list.Add(m.MakeFromInternalTypeName(interfaceTypeName).(intmod.IType))
 				}
-				typeTypes.SetInterfaces(list.(intmod.IType))
+
+				if cast, ok := list.(intmod.IType); ok {
+					typeTypes.SetInterfaces(cast)
+				}
 			}
 		}
 	} else {
