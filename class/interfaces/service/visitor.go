@@ -66,6 +66,7 @@ type ICreateInstructionsVisitor interface {
 
 type ICreateLocalVariableVisitor interface {
 	intmod.ITypeArgumentVisitor
+	ILocalVariableVisitor
 
 	Init(index, offset int)
 	LocalVariable() ILocalVariable

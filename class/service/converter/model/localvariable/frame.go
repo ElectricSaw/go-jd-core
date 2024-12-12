@@ -368,7 +368,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 	}
 }
 
-func (f *Frame) createNewLocalVariable(createLocalVariableVisitor *visitor.CreateLocalVariableVisitor,
+func (f *Frame) createNewLocalVariable(createLocalVariableVisitor intsrv.ICreateLocalVariableVisitor,
 	fs intsrv.IClassFileForStatement, lv intsrv.ILocalVariable) {
 	fromOffset := fs.FromOffset()
 	toOffset := fs.ToOffset()
