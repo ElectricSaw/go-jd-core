@@ -1,6 +1,7 @@
 package visitor
 
 import (
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/class/api"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/model/javafragment"
@@ -8,17 +9,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/token"
 	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"fmt"
 )
-
-var Class = token.NewKeywordToken("class")
-var False = token.NewKeywordToken("false")
-var InstanceOf = token.NewKeywordToken("instanceof")
-var Length = token.NewKeywordToken("length")
-var New = token.NewKeywordToken("new")
-var Null = token.NewKeywordToken("null")
-var This = token.NewKeywordToken("this")
-var True = token.NewKeywordToken("true")
 
 func NewExpressionVisitor(loader api.Loader, mainInternalTypeName string, majorVersion int,
 	importsFragment intmod.IImportsFragment) *ExpressionVisitor {
@@ -83,9 +74,9 @@ func (v *ExpressionVisitor) VisitBinaryOperatorExpression(expr intmod.IBinaryOpe
 
 func (v *ExpressionVisitor) VisitBooleanExpression(expr intmod.IBooleanExpression) {
 	if expr.IsTrue() {
-		v.tokens.Add(True)
+		v.tokens.Add(token.True)
 	} else {
-		v.tokens.Add(False)
+		v.tokens.Add(token.False)
 	}
 }
 
@@ -109,7 +100,7 @@ func (v *ExpressionVisitor) VisitCommentExpression(expr intmod.ICommentExpressio
 
 func (v *ExpressionVisitor) VisitConstructorInvocationExpression(expr intmod.IConstructorInvocationExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(This)
+	v.tokens.Add(token.This)
 	v.tokens.Add(token.StartParametersBlock)
 
 	parameters := expr.Parameters()
@@ -128,7 +119,7 @@ func (v *ExpressionVisitor) VisitConstructorReferenceExpression(expr intmod.ICon
 	v.tokens.Add(v.newTypeReferenceToken(ot, v.currentInternalTypeName))
 	v.tokens.Add(token.ColonColon)
 	//v.tokens.Add(new ReferenceToken(ReferenceToken.CONSTRUCTOR, ot.InternalName(), "new", expr.Descriptor(), currentInternalTypeName));
-	v.tokens.Add(New)
+	v.tokens.Add(token.New)
 }
 
 func (v *ExpressionVisitor) VisitDoubleConstantExpression(expr intmod.IDoubleConstantExpression) {
@@ -216,7 +207,7 @@ func (v *ExpressionVisitor) VisitIntegerConstantExpression(expr intmod.IIntegerC
 func (v *ExpressionVisitor) VisitInstanceOfExpression(expr intmod.IInstanceOfExpression) {
 	expr.Expression().Accept(v)
 	v.tokens.Add(token.Space)
-	v.tokens.Add(InstanceOf)
+	v.tokens.Add(token.InstanceOf)
 	v.tokens.Add(token.Space)
 
 	typ := expr.InstanceOfType()
@@ -236,15 +227,15 @@ func (v *ExpressionVisitor) VisitLambdaFormalParametersExpression(expr intmod.IL
 			v.tokens.Add(token.LeftRightRoundBrackets)
 			break
 		case 1:
-			parameters.First().Accept(v)
+			parameters.First().AcceptDeclaration(v)
 			break
 		default:
 			v.tokens.Add(token.LeftRoundBracket)
 			iterator := parameters.Iterator()
-			iterator.Next().Accept(v)
+			iterator.Next().AcceptDeclaration(v)
 			for iterator.HasNext() {
 				v.tokens.Add(token.CommaSpace)
-				iterator.Next().Accept(v)
+				iterator.Next().AcceptDeclaration(v)
 			}
 
 			v.tokens.Add(token.RightRoundBracket)
@@ -313,7 +304,7 @@ func (v *ExpressionVisitor) visitLambdaBody(statementList intmod.IStatement) {
 func (v *ExpressionVisitor) VisitLengthExpression(expr intmod.ILengthExpression) {
 	v.visit(expr, expr.Expression())
 	v.tokens.Add(token.Dot)
-	v.tokens.Add(Length)
+	v.tokens.Add(token.Length)
 }
 
 func (v *ExpressionVisitor) VisitLocalVariableReferenceExpression(expr intmod.ILocalVariableReferenceExpression) {
@@ -386,7 +377,7 @@ func (v *ExpressionVisitor) VisitMethodReferenceExpression(expr intmod.IMethodRe
 
 func (v *ExpressionVisitor) VisitNewArray(expr intmod.INewArray) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(New)
+	v.tokens.Add(token.New)
 	v.tokens.Add(token.Space)
 
 	typ := expr.Type()
@@ -422,7 +413,7 @@ func (v *ExpressionVisitor) VisitNewArray(expr intmod.INewArray) {
 
 func (v *ExpressionVisitor) VisitNewInitializedArray(expr intmod.INewInitializedArray) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(New)
+	v.tokens.Add(token.New)
 	v.tokens.Add(token.Space)
 
 	typ := expr.Type()
@@ -435,7 +426,7 @@ func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
 	bodyDeclaration := expr.BodyDeclaration()
 
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(New)
+	v.tokens.Add(token.New)
 	v.tokens.Add(token.Space)
 
 	objectType := expr.ObjectType()

@@ -13,7 +13,7 @@ func NewEndSingleStatementBlockFragment(minimalLineCount, lineCount, maximalLine
 		start: start,
 	}
 
-	f.start.SetEndSingleStatementBlockFragment(f)
+	f.start.SetEnd(f)
 
 	return f
 }
@@ -62,6 +62,6 @@ func (f *EndSingleStatementBlockFragment) DecLineCount(force bool) bool {
 	return false
 }
 
-func (f *EndSingleStatementBlockFragment) Accept(visitor IJavaFragmentVisitor) {
+func (f *EndSingleStatementBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
 	visitor.VisitEndSingleStatementBlockFragment(f)
 }

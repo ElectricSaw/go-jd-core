@@ -22,7 +22,7 @@ func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker,
 		localVariableSet:           localvariable.NewLocalVariableSet(),
 		names:                      util.NewSet[string](),
 		blackListNames:             util.NewSet[string](),
-		currentFrame:               localvariable.NewRootFrame(),
+		currentFrame:               NewRootFrame(),
 		typeMaker:                  typeMaker,
 		typeBounds:                 comd.TypeBounds(),
 		createParameterVisitor:     NewCreateParameterVisitor(typeMaker),
@@ -543,7 +543,7 @@ func (m *LocalVariableMaker) FormalParameters() intmod.IFormalParameter {
 
 func (m *LocalVariableMaker) PushFrame(statements intmod.IStatements) {
 	parent := m.currentFrame
-	m.currentFrame = localvariable.NewFrame(m.currentFrame, statements)
+	m.currentFrame = NewFrame(m.currentFrame, statements)
 	parent.AddChild(m.currentFrame)
 }
 

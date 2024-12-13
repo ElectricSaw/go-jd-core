@@ -5,13 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
-var StartBlock = NewStartBlockToken("{")
-var StartArrayBlock = NewStartBlockToken("[")
-var StartArrayInitializerBlock = NewStartBlockToken("{")
-var StartParametersBlock = NewStartBlockToken("(")
-var StartResourcesBlock = NewStartBlockToken("(")
-var StartDeclarationOrStatementBlock = NewStartBlockToken("")
-
 func NewStartBlockToken(text string) intmod.IStartBlockToken {
 	return &StartBlockToken{text}
 }

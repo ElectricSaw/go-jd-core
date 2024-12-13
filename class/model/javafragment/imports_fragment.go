@@ -6,8 +6,6 @@ import (
 	"sort"
 )
 
-var CountComparator = ImportsCountComparator{}
-
 func NewImportsFragment(weight int) intmod.IImportsFragment {
 	return &ImportsFragment{
 		FlexibleFragment: *fragment.NewFlexibleFragment(0, -1,
@@ -130,15 +128,4 @@ func (i *Import) SetCounter(counter int) {
 
 func (i *Import) IncCounter() {
 	i.counter++
-}
-
-type Comparator interface {
-	Compare(a, b Import) int
-}
-
-type ImportsCountComparator struct {
-}
-
-func (c ImportsCountComparator) Compare(tr1 Import, tr2 Import) int {
-	return tr2.counter - tr1.counter
 }

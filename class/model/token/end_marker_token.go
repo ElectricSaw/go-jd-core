@@ -5,18 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
-const (
-	CommentToken          = 1
-	JavaDocToken          = 2
-	ErrorToken            = 3
-	ImportStatementsToken = 4
-)
-
-var EndComment = NewEndMarkerToken(CommentToken)
-var EndJavaDoc = NewEndMarkerToken(JavaDocToken)
-var EndError = NewEndMarkerToken(ErrorToken)
-var EndImportStatements = NewEndMarkerToken(ImportStatementsToken)
-
 func NewEndMarkerToken(typ int) intmod.IEndMarkerToken {
 	return &EndMarkerToken{typ}
 }

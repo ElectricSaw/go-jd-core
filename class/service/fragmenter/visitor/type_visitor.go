@@ -9,28 +9,6 @@ import (
 	"strings"
 )
 
-var Boolean = token.NewKeywordToken("boolean")
-var Byte = token.NewKeywordToken("byte")
-var Char = token.NewKeywordToken("char")
-var Double = token.NewKeywordToken("double")
-var Exports = token.NewKeywordToken("exports")
-var Extends = token.NewKeywordToken("extends")
-var Float = token.NewKeywordToken("float")
-var Int = token.NewKeywordToken("int")
-var Long = token.NewKeywordToken("long")
-var Module = token.NewKeywordToken("module")
-var Open = token.NewKeywordToken("open")
-var Opens = token.NewKeywordToken("opens")
-var Provides = token.NewKeywordToken("provides")
-var Requires = token.NewKeywordToken("requires")
-var Short = token.NewKeywordToken("short")
-var Super = token.NewKeywordToken("super")
-var To = token.NewKeywordToken("to")
-var Transitive = token.NewKeywordToken("transitive")
-var Uses = token.NewKeywordToken("uses")
-var Void = token.NewKeywordToken("void")
-var With = token.NewKeywordToken("with")
-
 var UnknownLineNumber = api.UnknownLineNumber
 
 func NewTypeVisitor(loader api.Loader, mainInternalTypeName string, majorVersion int,
@@ -82,7 +60,7 @@ func (v *TypeVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {}
 
 func (v *TypeVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
 	v.tokens.Add(token.QuestionMarkSpace)
-	v.tokens.Add(Extends)
+	v.tokens.Add(token.Extends)
 	v.tokens.Add(token.Space)
 
 	typ := argument.Type()
@@ -92,31 +70,31 @@ func (v *TypeVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcard
 func (v *TypeVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType) {
 	switch typ.JavaPrimitiveFlags() {
 	case intmod.FlagBoolean:
-		v.tokens.Add(Boolean)
+		v.tokens.Add(token.Boolean)
 		break
 	case intmod.FlagChar:
-		v.tokens.Add(Char)
+		v.tokens.Add(token.Char)
 		break
 	case intmod.FlagFloat:
-		v.tokens.Add(Float)
+		v.tokens.Add(token.Float)
 		break
 	case intmod.FlagDouble:
-		v.tokens.Add(Double)
+		v.tokens.Add(token.Double)
 		break
 	case intmod.FlagByte:
-		v.tokens.Add(Byte)
+		v.tokens.Add(token.Byte)
 		break
 	case intmod.FlagShort:
-		v.tokens.Add(Short)
+		v.tokens.Add(token.Short)
 		break
 	case intmod.FlagInt:
-		v.tokens.Add(Int)
+		v.tokens.Add(token.Int)
 		break
 	case intmod.FlagLong:
-		v.tokens.Add(Long)
+		v.tokens.Add(token.Long)
 		break
 	case intmod.FlagVoid:
-		v.tokens.Add(Void)
+		v.tokens.Add(token.Void)
 		break
 	}
 
@@ -197,7 +175,7 @@ func (v *TypeVisitor) visitDimension(dimension int) {
 
 func (v *TypeVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
 	v.tokens.Add(token.QuestionMarkSpace)
-	v.tokens.Add(Super)
+	v.tokens.Add(token.Super)
 	v.tokens.Add(token.Space)
 
 	typ := argument.Type()
@@ -219,7 +197,7 @@ func (v *TypeVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
 func (v *TypeVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
 	v.tokens.Add(v.newTextToken(parameter.Identifier()))
 	v.tokens.Add(token.Space)
-	v.tokens.Add(Extends)
+	v.tokens.Add(token.Extends)
 	v.tokens.Add(token.Space)
 
 	types := parameter.TypeBounds()

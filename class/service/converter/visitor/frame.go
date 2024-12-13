@@ -1,4 +1,4 @@
-package localvariable
+package visitor
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvdecl "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/localvariable"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 	"math"
 	"sort"
@@ -128,9 +128,9 @@ func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVari
 
 		if lv.IsAssignableFromWithVariable(typeBounds, alvToMerge) || localVariableMaker.IsCompatible(lv, alvToMerge.Type()) {
 			if typ.IsPrimitiveType() {
-				plv := lv.(*PrimitiveLocalVariable)
-				plvToMerype := alvToMerge.(*PrimitiveLocalVariable)
-				t := GetCommonPrimitiveType(plv.Type().(intmod.IPrimitiveType), plvToMerype.Type().(intmod.IPrimitiveType))
+				plv := lv.(*localvariable.PrimitiveLocalVariable)
+				plvToMerype := alvToMerge.(*localvariable.PrimitiveLocalVariable)
+				t := localvariable.GetCommonPrimitiveType(plv.Type().(intmod.IPrimitiveType), plvToMerype.Type().(intmod.IPrimitiveType))
 
 				if t == nil {
 					t = _type.PtTypeInt
@@ -140,7 +140,7 @@ func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVari
 			}
 		} else {
 			if typ.IsPrimitiveType() {
-				plv := lv.(*PrimitiveLocalVariable)
+				plv := lv.(*localvariable.PrimitiveLocalVariable)
 
 				if alvToMerge.IsAssignableFromWithVariable(typeBounds, lv) || localVariableMaker.IsCompatible(alvToMerge, lv.Type()) {
 					plv.SetType(alvToMerype.(intmod.IPrimitiveType))
@@ -148,7 +148,7 @@ func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVari
 					plv.SetType(_type.PtTypeInt)
 				}
 			} else if typ.IsObjectType() {
-				olv := lv.(*ObjectLocalVariable)
+				olv := lv.(*localvariable.ObjectLocalVariable)
 
 				if alvToMerge.IsAssignableFromWithVariable(typeBounds, lv) || localVariableMaker.IsCompatible(alvToMerge, lv.Type()) {
 					olv.SetType(typeBounds, alvToMerype)
@@ -281,7 +281,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 	}
 
 	// Split local variable ranges in init 'for' statements
-	searchLocalVariableVisitor := visitor.NewSearchLocalVariableVisitor()
+	searchLocalVariableVisitor := NewSearchLocalVariableVisitor()
 	undeclaredInExpressionStatements := make([]intsrv.ILocalVariable, 0)
 
 	for _, stat := range f.stat.Statements().ToSlice() {
@@ -318,7 +318,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 		}
 	}
 
-	searchUndeclaredLocalVariableVisitor := visitor.NewSearchUndeclaredLocalVariableVisitor()
+	searchUndeclaredLocalVariableVisitor := NewSearchUndeclaredLocalVariableVisitor()
 	undeclaredInForStatements := make(map[intsrv.ILocalVariable][]intsrv.IClassFileForStatement)
 
 	for _, stat := range f.stat.Statements().ToSlice() {
@@ -343,7 +343,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 	}
 
 	if len(undeclaredInForStatements) != 0 {
-		createLocalVariableVisitor := visitor.NewCreateLocalVariableVisitor(typeMaker)
+		createLocalVariableVisitor := NewCreateLocalVariableVisitor(typeMaker)
 
 		for lv, listFS := range undeclaredInForStatements {
 			// Split local variable range
@@ -416,7 +416,7 @@ func (f *Frame) createInlineDeclarations() {
 	mapped := f.createMapForInlineDeclarations()
 
 	if len(mapped) != 0 {
-		searchUndeclaredLocalVariableVisitor := visitor.NewSearchUndeclaredLocalVariableVisitor()
+		searchUndeclaredLocalVariableVisitor := NewSearchUndeclaredLocalVariableVisitor()
 
 		for key, value := range mapped {
 			statements := key.Statements()
@@ -683,7 +683,7 @@ func (f *Frame) updateForStatement2(
 			type2 := localVariable.Type()
 
 			if type1.IsPrimitiveType() && type2.IsPrimitiveType() {
-				typ := GetCommonPrimitiveType(type1.(intmod.IPrimitiveType), type2.(intmod.IPrimitiveType))
+				typ := localvariable.GetCommonPrimitiveType(type1.(intmod.IPrimitiveType), type2.(intmod.IPrimitiveType))
 
 				if typ == nil {
 					return
@@ -842,7 +842,7 @@ func (f *Frame) mergeDeclarations() {
 					type2 := lvds2.Type()
 
 					if type1.IsPrimitiveType() && type2.IsPrimitiveType() {
-						t := GetCommonPrimitiveType(type1.(intmod.IPrimitiveType), type2.(intmod.IPrimitiveType))
+						t := localvariable.GetCommonPrimitiveType(type1.(intmod.IPrimitiveType), type2.(intmod.IPrimitiveType))
 
 						if t == nil {
 							iterator.Previous()

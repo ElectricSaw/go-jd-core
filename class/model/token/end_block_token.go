@@ -5,13 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
-var EndBlock = NewEndBlockToken("}")
-var EndArrayBlock = NewEndBlockToken("]")
-var EndArrayInitializerBlock = NewEndBlockToken("}")
-var EndParametersBlock = NewEndBlockToken(")")
-var EndResourcesBlock = NewEndBlockToken(")")
-var EndDeclarationOrStatementBlock = NewEndBlockToken("")
-
 func NewEndBlockToken(text string) intmod.IEndBlockToken {
 	return &EndBlockToken{text}
 }

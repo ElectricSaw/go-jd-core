@@ -80,6 +80,6 @@ func (v *SearchLineNumberVisitor) VisitLineNumberToken(token intmod.ILineNumberT
 	v.lineNumber = token.LineNumber()
 }
 
-func (v *SearchLineNumberVisitor) VisitNewLineToken(token *token.NewLineToken) {
+func (v *SearchLineNumberVisitor) VisitNewLineToken(_ intmod.INewLineToken) {
 	v.newLineCounter++
 }

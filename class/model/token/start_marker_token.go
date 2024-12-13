@@ -5,11 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
-var StartComment = NewStartMarkerToken(CommentToken)
-var StartJavaDocToken = NewStartMarkerToken(JavaDocToken)
-var StartErrorToken = NewStartMarkerToken(ErrorToken)
-var StartImportStatementsToken = NewStartMarkerToken(ImportStatementsToken)
-
 func NewStartMarkerToken(typ int) intmod.IStartMarkerToken {
 	return &StartMarkerToken{typ}
 }

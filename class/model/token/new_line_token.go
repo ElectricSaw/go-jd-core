@@ -5,9 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 )
 
-var NewLine1 = NewNewLineToken(1)
-var NewLine2 = NewNewLineToken(2)
-
 func NewNewLineToken(count int) intmod.INewLineToken {
 	return &NewLineToken{count}
 }

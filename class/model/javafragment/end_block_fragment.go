@@ -12,7 +12,7 @@ func NewEndBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight i
 		start: start,
 	}
 
-	f.start.SetEndArrayInitializerBlockFragment(f)
+	f.start.SetEnd(f)
 
 	return f
 }

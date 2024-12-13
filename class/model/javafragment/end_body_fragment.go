@@ -13,7 +13,7 @@ func NewEndBodyFragment(minimalLineCount, lineCount, maximalLineCount, weight in
 		start: start,
 	}
 
-	f.start.SetEndBodyFragment(f)
+	f.start.SetEnd(f)
 
 	return f
 }
@@ -24,11 +24,11 @@ type EndBodyFragment struct {
 	start intmod.IStartBodyFragment
 }
 
-func (f *EndBodyFragment) Start() intmod.IStartBlockFragment {
+func (f *EndBodyFragment) Start() intmod.IStartBodyFragment {
 	return f.start
 }
 
-func (f *EndBodyFragment) SetStart(start intmod.IStartBlockFragment) {
+func (f *EndBodyFragment) SetStart(start intmod.IStartBodyFragment) {
 	f.start = start
 }
 

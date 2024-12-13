@@ -9,28 +9,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
-var Assert = token.NewKeywordToken("assert")
-var Break = token.NewKeywordToken("break")
-var Case = token.NewKeywordToken("case")
-var Catch = token.NewKeywordToken("catch")
-var Continue = token.NewKeywordToken("continue")
-var Default = token.NewKeywordToken("default")
-var Do = token.NewKeywordToken("do")
-var Else = token.NewKeywordToken("else")
-var Final = token.NewKeywordToken("final")
-var Finally = token.NewKeywordToken("finally")
-var For = token.NewKeywordToken("for")
-var If = token.NewKeywordToken("if")
-var Return = token.NewKeywordToken("return")
-var Strict = token.NewKeywordToken("strictfp")
-var Synchronized = token.NewKeywordToken("synchronized")
-var Switch = token.NewKeywordToken("switch")
-var Throw = token.NewKeywordToken("throw")
-var Transient = token.NewKeywordToken("transient")
-var Try = token.NewKeywordToken("try")
-var Volatile = token.NewKeywordToken("volatile")
-var While = token.NewKeywordToken("while")
-
 func NewStatementVisitor(loader api.Loader, mainInternalTypeName string, majorVersion int,
 	importsFragment intmod.IImportsFragment) *StatementVisitor {
 	return &StatementVisitor{
@@ -45,7 +23,7 @@ type StatementVisitor struct {
 func (v *StatementVisitor) VisitAssertStatement(state intmod.IAssertStatement) {
 	v.tokens = NewTokens(v)
 	v.tokens.Add(token.StartDeclarationOrStatementBlock)
-	v.tokens.Add(Assert)
+	v.tokens.Add(token.Assert)
 	v.tokens.Add(token.Space)
 	state.Condition().Accept(v)
 
@@ -63,7 +41,7 @@ func (v *StatementVisitor) VisitAssertStatement(state intmod.IAssertStatement) {
 
 func (v *StatementVisitor) VisitBreakStatement(state intmod.IBreakStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Break)
+	v.tokens.Add(token.Break)
 
 	if state.Text() != "" {
 		v.tokens.Add(token.Space)
@@ -99,7 +77,7 @@ func (v *StatementVisitor) visitComment(text string) {
 
 func (v *StatementVisitor) VisitContinueStatement(state intmod.IContinueStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Continue)
+	v.tokens.Add(token.Continue)
 
 	if state.Text() != "" {
 		v.tokens.Add(token.Space)
@@ -118,7 +96,7 @@ func (v *StatementVisitor) VisitDoWhileStatement(state intmod.IDoWhileStatement)
 	fragutil.AddEndStatementsBlock(v.fragments, group)
 
 	v.tokens = NewTokens(v)
-	v.tokens.Add(For)
+	v.tokens.Add(token.For)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -142,7 +120,7 @@ func (v *StatementVisitor) VisitExpressionStatement(state intmod.IExpressionStat
 
 func (v *StatementVisitor) VisitForStatement(state intmod.IForStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(For)
+	v.tokens.Add(token.For)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -168,7 +146,7 @@ func (v *StatementVisitor) VisitForStatement(state intmod.IForStatement) {
 
 func (v *StatementVisitor) VisitForEachStatement(state intmod.IForEachStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(For)
+	v.tokens.Add(token.For)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -215,7 +193,7 @@ func (v *StatementVisitor) visitLoopStatements(state intmod.IStatement) {
 
 func (v *StatementVisitor) VisitIfStatement(state intmod.IIfStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(If)
+	v.tokens.Add(token.If)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -252,7 +230,7 @@ func (v *StatementVisitor) VisitIfStatement(state intmod.IIfStatement) {
 
 func (v *StatementVisitor) VisitIfElseStatement(state intmod.IIfElseStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(If)
+	v.tokens.Add(token.If)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -277,11 +255,11 @@ func (v *StatementVisitor) visitElseStatements(elseStatements intmod.IStatement,
 	}
 
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Else)
+	v.tokens.Add(token.Else)
 
 	if statementList.IsIfElseStatement() {
 		v.tokens.Add(token.Space)
-		v.tokens.Add(If)
+		v.tokens.Add(token.If)
 		v.tokens.Add(token.Space)
 		v.tokens.Add(token.StartParametersBlock)
 
@@ -296,7 +274,7 @@ func (v *StatementVisitor) visitElseStatements(elseStatements intmod.IStatement,
 		v.visitElseStatements(statementList.ElseStatements(), group)
 	} else if statementList.IsIfStatement() {
 		v.tokens.Add(token.Space)
-		v.tokens.Add(If)
+		v.tokens.Add(token.If)
 		v.tokens.Add(token.Space)
 		v.tokens.Add(token.StartParametersBlock)
 
@@ -344,7 +322,7 @@ func (v *StatementVisitor) VisitLocalVariableDeclarationStatement(state intmod.I
 	v.tokens.Add(token.StartDeclarationOrStatementBlock)
 
 	if state.IsFinal() {
-		v.tokens.Add(Final)
+		v.tokens.Add(token.Final)
 		v.tokens.Add(token.Space)
 	}
 
@@ -353,7 +331,7 @@ func (v *StatementVisitor) VisitLocalVariableDeclarationStatement(state intmod.I
 
 	v.tokens.Add(token.Space)
 
-	state.LocalVariableDeclarators().Accept(v)
+	state.LocalVariableDeclarators().AcceptDeclaration(v)
 
 	v.tokens.Add(token.Semicolon)
 	v.tokens.Add(token.EndDeclarationOrStatementBlock)
@@ -364,7 +342,7 @@ func (v *StatementVisitor) VisitReturnExpressionStatement(state intmod.IReturnEx
 	v.tokens = NewTokens(v)
 	v.tokens.Add(token.StartDeclarationOrStatementBlock)
 	v.tokens.AddLineNumberTokenAt(state.LineNumber())
-	v.tokens.Add(Return)
+	v.tokens.Add(token.Return)
 	v.tokens.Add(token.Space)
 
 	state.Expression().Accept(v)
@@ -394,7 +372,7 @@ func (v *StatementVisitor) VisitStatements(list intmod.IStatements) {
 
 func (v *StatementVisitor) VisitSwitchStatement(state intmod.ISwitchStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Switch)
+	v.tokens.Add(token.Switch)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -428,14 +406,14 @@ func (v *StatementVisitor) VisitSwitchStatementLabelBlock(state intmod.ILabelBlo
 
 func (v *StatementVisitor) VisitSwitchStatementDefaultLabel(state intmod.IDefaultLabel) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Default)
+	v.tokens.Add(token.Default)
 	v.tokens.Add(token.Colon)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitSwitchStatementExpressionLabel(state intmod.IExpressionLabel) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Case)
+	v.tokens.Add(token.Case)
 	v.tokens.Add(token.Space)
 
 	state.Expression().Accept(v)
@@ -463,7 +441,7 @@ func (v *StatementVisitor) VisitSwitchStatementMultiLabelsBlock(state intmod.IMu
 
 func (v *StatementVisitor) VisitSynchronizedStatement(state intmod.ISynchronizedStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(Synchronized)
+	v.tokens.Add(token.Synchronized)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 
@@ -488,7 +466,7 @@ func (v *StatementVisitor) VisitSynchronizedStatement(state intmod.ISynchronized
 func (v *StatementVisitor) VisitThrowStatement(state intmod.IThrowStatement) {
 	v.tokens = NewTokens(v)
 	v.tokens.Add(token.StartDeclarationOrStatementBlock)
-	v.tokens.Add(Throw)
+	v.tokens.Add(token.Throw)
 	v.tokens.Add(token.Space)
 
 	state.Expression().Accept(v)
@@ -508,7 +486,7 @@ func (v *StatementVisitor) VisitTryStatement(state intmod.ITryStatement) {
 		size := resources.Size()
 
 		v.tokens = NewTokens(v)
-		v.tokens.Add(Try)
+		v.tokens.Add(token.Try)
 		if size == 1 {
 			v.tokens.Add(token.Space)
 		}
@@ -555,7 +533,7 @@ func (v *StatementVisitor) visitTryStatement(state intmod.ITryStatement, group i
 			typ := cc.Type()
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(Catch)
+			v.tokens.Add(token.Catch)
 			v.tokens.Add(token.SpaceLeftRoundBracket)
 			typ.AcceptTypeVisitor(v)
 
@@ -590,7 +568,7 @@ func (v *StatementVisitor) visitTryStatement(state intmod.ITryStatement, group i
 		fragutil.AddEndStatementsBlock(v.fragments, group)
 
 		v.tokens = NewTokens(v)
-		v.tokens.Add(Finally)
+		v.tokens.Add(token.Finally)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		fragmentCount1 = v.fragments.Size()
@@ -615,7 +593,7 @@ func (v *StatementVisitor) VisitTypeDeclarationStatement(state intmod.ITypeDecla
 
 func (v *StatementVisitor) VisitWhileStatement(state intmod.IWhileStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(For)
+	v.tokens.Add(token.For)
 	v.tokens.Add(token.Space)
 	v.tokens.Add(token.StartParametersBlock)
 

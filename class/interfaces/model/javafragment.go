@@ -50,8 +50,8 @@ type IEndBlockInParameterFragment interface {
 type IEndBodyFragment interface {
 	IEndFlexibleBlockFragment
 
-	Start() IStartBlockFragment
-	SetStart(start IStartBlockFragment)
+	Start() IStartBodyFragment
+	SetStart(start IStartBodyFragment)
 
 	IncLineCount(force bool) bool
 	DecLineCount(force bool) bool

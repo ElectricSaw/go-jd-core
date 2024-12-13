@@ -12,7 +12,7 @@ func NewEndStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount
 			lineCount, maximalLineCount, weight, label).(*fragment.EndFlexibleBlockFragment),
 		group: group,
 	}
-	f.group.add(f)
+	f.group.Add(f)
 	return f
 }
 

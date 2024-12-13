@@ -4,15 +4,7 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/model/fragment"
 	"github.com/ElectricSaw/go-jd-core/class/model/token"
-	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter/visitor"
 )
-
-var Comma = NewTokensFragment(token.Comma)
-var Semicolon = NewTokensFragment(token.Semicolon)
-var StartDeclarationOrStatementBlock = NewTokensFragment(token.StartDeclarationOrStatementBlock)
-var EndDeclarationOrStatementBlock = NewTokensFragment(token.EndDeclarationOrStatementBlock)
-var EndDeclarationOrStatementBlockSemicolon = NewTokensFragment(token.EndDeclarationOrStatementBlock, token.Semicolon)
-var ReturnSemicolon = NewTokensFragment(visitor.Return, token.Semicolon)
 
 func NewTokensFragment(tokens ...intmod.IToken) intmod.ITokensFragment {
 	return NewTokensFragmentWithSlice(tokens)
@@ -62,6 +54,10 @@ type LineCountVisitor struct {
 
 func (v *LineCountVisitor) LineCount() int {
 	return v.lineCount
+}
+
+func (v *LineCountVisitor) SetLineCount(lineCount int) {
+	v.lineCount = lineCount
 }
 
 func (v *LineCountVisitor) VisitLineNumberToken(_ intmod.ILineNumberToken) {
