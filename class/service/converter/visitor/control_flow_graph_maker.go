@@ -1,9 +1,10 @@
-package utils
+package visitor
 
 import (
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/cfg"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 	"sort"
 )
@@ -77,7 +78,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				lastStatementOffset = offset
 				break
 			case 182, 183, 184: // INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC
-				value, offset = PrefixReadInt16(code, offset)
+				value, offset = utils.PrefixReadInt16(code, offset)
 				constantMemberRef := constants.Constant(value).(intcls.IConstantMemberRef)
 				constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 				descriptor, _ := constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
@@ -86,7 +87,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				}
 				break
 			case 185, 186: // INVOKEINTERFACE, INVOKEDYNAMIC
-				value, offset = PrefixReadInt16(code, offset)
+				value, offset = utils.PrefixReadInt16(code, offset)
 				constantMemberRef := constants.Constant(value).(intcls.IConstantMemberRef)
 				constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 				descriptor, _ := constants.ConstantUtf8(constantNameAndType.DescriptorIndex())
@@ -123,7 +124,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				}
 				// The target of a conditional or an unconditional goto/jump instruction is a leader
 				types[offset] = typ // TODO debug, remove this line
-				value, offset = PrefixReadInt16(code, offset)
+				value, offset = utils.PrefixReadInt16(code, offset)
 				branchOffset := offset + value
 				mapped[branchOffset] = Mark
 				types[offset] = typ
@@ -140,7 +141,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				}
 				types[offset] = 'j' // TODO debug, remove this line
 				// The target of a conditional or an unconditional goto/jump instruction is a leader
-				value, offset = PrefixReadInt16(code, offset)
+				value, offset = utils.PrefixReadInt16(code, offset)
 				branchOffset := offset + value
 				mapped[branchOffset] = Mark
 				types[offset] = 'j'
@@ -158,7 +159,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 					mapped[lastStatementOffset+1] = Mark
 				}
 				// The target of a conditional or an unconditional goto/jump instruction is a leader
-				value, offset = PrefixReadInt16(code, offset)
+				value, offset = utils.PrefixReadInt16(code, offset)
 				branchOffset := offset + value
 				mapped[branchOffset] = Mark
 				types[offset] = 'c'
@@ -172,12 +173,12 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 			case 170: // TABLESWITCH
 				// Skip padding
 				i := (offset + 4) & 0xFFFC
-				value, i = SuffixReadInt32(code, i)
+				value, i = utils.SuffixReadInt32(code, i)
 				defaultOffset := offset + value
 				mapped[defaultOffset] = Mark
 				var low, high int
-				low, i = SuffixReadInt32(code, i)
-				high, i = SuffixReadInt32(code, i)
+				low, i = utils.SuffixReadInt32(code, i)
+				high, i = utils.SuffixReadInt32(code, i)
 				values := make([]int, high-low+2)
 				offsets := make([]int, high-low+2)
 
@@ -185,7 +186,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				length = high - low + 2
 				for j := 1; j < length; j++ {
 					values[j] = low + j - 1
-					value, i = SuffixReadInt32(code, i)
+					value, i = utils.SuffixReadInt32(code, i)
 					branchOffset := offset + value
 					offsets[j] = branchOffset
 					mapped[branchOffset] = Mark
@@ -200,10 +201,10 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 			case 171: // LOOKUPSWITCH
 				// Skip padding
 				i := (offset + 4) & 0xFFFC
-				value, i = SuffixReadInt32(code, i)
+				value, i = utils.SuffixReadInt32(code, i)
 				defaultOffset := offset + value
 				mapped[defaultOffset] = Mark
-				value, i = SuffixReadInt32(code, i)
+				value, i = utils.SuffixReadInt32(code, i)
 				npairs := value
 
 				values := make([]int, npairs+1)
@@ -211,9 +212,9 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 
 				offsets[0] = defaultOffset
 				for j := 1; j <= npairs; j++ {
-					value, i = SuffixReadInt32(code, i)
+					value, i = utils.SuffixReadInt32(code, i)
 					values[j] = value
-					value, i = SuffixReadInt32(code, i)
+					value, i = utils.SuffixReadInt32(code, i)
 					branchOffset := offset + value
 					offsets[j] = branchOffset
 					mapped[branchOffset] = Mark
@@ -287,7 +288,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				}
 
 				types[offset] = typ // TODO debug, remove this line
-				value, offset = PrefixReadInt32(code, offset)
+				value, offset = utils.PrefixReadInt32(code, offset)
 				branchOffset := offset + value
 				mapped[branchOffset] = Mark
 				types[offset] = typ
@@ -304,7 +305,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				}
 				types[offset] = 'j' // TODO debug, remove this line
 				// The target of a conditional or an unconditional goto/jump instruction is a leader
-				value, offset = PrefixReadInt32(code, offset)
+				value, offset = utils.PrefixReadInt32(code, offset)
 				branchOffset := offset + value
 				mapped[branchOffset] = Mark
 				types[offset] = 'j'
@@ -549,7 +550,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 			var predecessors util.ISet[intsrv.IBasicBlock]
 
 			if (bb.Type() == intsrv.TypeStatements) && (next.Predecessors().Size() == 1) {
-				if (next.Type() == intsrv.TypeGoto) && (EvalStackDepth2(constants, code, bb) > 0) {
+				if (next.Type() == intsrv.TypeGoto) && (utils.EvalStackDepth2(constants, code, bb) > 0) {
 					// Transform STATEMENTS and GOTO to GOTO_IN_TERNARY_OPERATOR
 					bb.SetType(intsrv.TypeGotoInTernaryOperator)
 					bb.SetToOffset(next.ToOffset())
@@ -558,7 +559,7 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 					predecessors.Remove(next)
 					predecessors.Add(bb)
 					next.SetType(intsrv.TypeDeleted)
-				} else if (next.Type() == intsrv.TypeConditionalBranch) && (EvalStackDepth2(constants, code, bb) > 0) {
+				} else if (next.Type() == intsrv.TypeConditionalBranch) && (utils.EvalStackDepth2(constants, code, bb) > 0) {
 					// Merge STATEMENTS and CONDITIONAL_BRANCH
 					bb.SetType(intsrv.TypeConditionalBranch)
 					bb.SetToOffset(next.ToOffset())

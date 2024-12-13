@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
@@ -11,7 +11,7 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/expression"
 	srvsts "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/statement"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 	"log"
 	"math"
@@ -28,10 +28,10 @@ func NewByteCodeParser(typeMaker intsrv.ITypeMaker,
 	comd intsrv.IClassFileConstructorOrMethodDeclaration) intsrv.IByteCodeParser {
 	p := &ByteCodeParser{
 		memberVisitor:                NewByteCodeParserMemberVisitor(),
-		searchFirstLineNumberVisitor: visitor.NewSearchFirstLineNumberVisitor(),
-		eraseTypeArgumentVisitor:     visitor.NewEraseTypeArgumentVisitor(),
+		searchFirstLineNumberVisitor: NewSearchFirstLineNumberVisitor(),
+		eraseTypeArgumentVisitor:     NewEraseTypeArgumentVisitor(),
 		lambdaParameterNamesVisitor:  NewLambdaParameterNamesVisitor(),
-		renameLocalVariablesVisitor:  visitor.NewRenameLocalVariablesVisitor(),
+		renameLocalVariablesVisitor:  NewRenameLocalVariablesVisitor(),
 
 		typeMaker:                 typeMaker,
 		localVariableMaker:        localVariableMaker,
@@ -113,27 +113,27 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 14, 15: // DCONST_0, DCONST_1
 			stack.Push(modexp.NewDoubleConstantExpressionWithAll(lineNumber, float64(opcode-14)))
 		case 16: // BIPUSH
-			value, offset = PrefixReadInt8(code, offset)
-			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, GetPrimitiveTypeFromValue(value), value))
+			value, offset = utils.PrefixReadInt8(code, offset)
+			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, utils.GetPrimitiveTypeFromValue(value), value))
 		case 17: // SIPUSH
-			value, offset = PrefixReadInt16(code, offset)
-			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, GetPrimitiveTypeFromValue(value), value))
+			value, offset = utils.PrefixReadInt16(code, offset)
+			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, utils.GetPrimitiveTypeFromValue(value), value))
 		case 18: // LDC
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			p.parseLDC(stack, constants, lineNumber, constants.Constant(value))
 		case 19, 20: // LDC_W, LDC2_W
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parseLDC(stack, constants, lineNumber, constants.Constant(value))
 		case 21: // ILOAD
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			localVariable = p.localVariableMaker.LocalVariable(value, offset)
 			parseILOAD(statements, stack, lineNumber, offset, localVariable)
 		case 22, 23, 24: // LLOAD, FLOAD, DLOAD
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			localVariable = p.localVariableMaker.LocalVariable(value, offset)
 			stack.Push(srvexp.NewClassFileLocalVariableReferenceExpression(lineNumber, offset, localVariable))
 		case 25: // ALOAD
-			i, offset = PrefixReadInt8(code, offset)
+			i, offset = utils.PrefixReadInt8(code, offset)
 			localVariable = p.localVariableMaker.LocalVariable(i, offset)
 			if (i == 0) && ((method.AccessFlags() & intmod.FlagStatic) == 0) {
 				stack.Push(modexp.NewThisExpressionWithAll(lineNumber, localVariable.Type()))
@@ -170,13 +170,13 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			stack.Push(modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef))
 			break
 		case 54, 55, 56, 57: // ISTORE, LSTORE, FSTORE, DSTORE
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(value, offset+2, valueRef)
 			p.parseSTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
 			break
 		case 58: // ASTORE
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(value, offset+1, valueRef)
 			p.parseASTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
@@ -563,9 +563,9 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "^", expression2, 11))
 			break
 		case 132: // IINC
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			localVariable = p.localVariableMaker.LocalVariable(value, offset)
-			value, offset = PrefixReadInt8(code, offset)
+			value, offset = utils.PrefixReadInt8(code, offset)
 			p.parseIINC(statements, stack, lineNumber, offset, localVariable, value)
 			break
 		case 133: // I2L
@@ -717,15 +717,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			offset += 4                    // Skip default offset
 
 			var low, high int
-			low, offset = SuffixReadInt32(code, offset)
-			high, offset = SuffixReadInt32(code, offset)
+			low, offset = utils.SuffixReadInt32(code, offset)
+			high, offset = utils.SuffixReadInt32(code, offset)
 			offset += (4 * (high - low + 1)) - 1
 			statements.Add(modsts.NewSwitchStatement(stack.Pop(),
 				util.NewDefaultListWithCapacity[intmod.IBlock](high-low+2)))
 		case 171: // LOOKUPSWITCH
 			offset = (offset + 4) & 0xFFFC // Skip padding
 			offset += 4                    // Skip default offset
-			count, offset = SuffixReadInt32(code, offset)
+			count, offset = utils.SuffixReadInt32(code, offset)
 			offset += (8 * count) - 1
 			statements.Add(modsts.NewSwitchStatement(stack.Pop(),
 				util.NewDefaultListWithCapacity[intmod.IBlock](count+1)))
@@ -734,22 +734,22 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 177: // RETURN
 			statements.Add(modsts.Return)
 		case 178: // GETSTATIC
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parseGetStatic(stack, constants, lineNumber, value)
 		case 179: // PUTSTATIC
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parsePutStatic(statements, stack, constants, lineNumber, value)
 			break
 		case 180: // GETFIELD
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parseGetField(stack, constants, lineNumber, value)
 			break
 		case 181: // PUTFIELD
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parsePutField(statements, stack, constants, lineNumber, value)
 			break
 		case 182, 183, 184, 185: // INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC, INVOKEINTERFACE
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			constantMemberRef = constants.Constant(value).(intcls.IConstantMemberRef)
 			typeName, _ = constants.ConstantTypeName(constantMemberRef.ClassIndex())
 			ot = p.typeMaker.MakeFromDescriptorOrInternalTypeName(typeName)
@@ -805,7 +805,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 						if "toString" == name && "()Ljava/lang/String;" == descriptor {
 							typeName, _ = constants.ConstantTypeName(constantMemberRef.ClassIndex())
 							if "java/lang/StringBuilder" == typeName || "java/lang/StringBuffer" == typeName {
-								stack.Push(StringConcatenationUtilCreate1(expression1, lineNumber, typeName))
+								stack.Push(utils.StringConcatenationUtilCreate1(expression1, lineNumber, typeName))
 								break
 							}
 						}
@@ -818,22 +818,22 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			break
 		case 186: // INVOKEDYNAMIC
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parseInvokeDynamic(statements, stack, constants, lineNumber, value)
 			offset += 2 // Skip 2 bytes
 			break
 		case 187: // NEW
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
 			stack.Push(p.newNewExpression(lineNumber, typeName))
 			break
 		case 188: // NEWARRAY
-			value, offset = PrefixReadInt8(code, offset)
-			type1 = GetPrimitiveTypeFromTag(value).CreateType(1)
+			value, offset = utils.PrefixReadInt8(code, offset)
+			type1 = utils.GetPrimitiveTypeFromTag(value).CreateType(1)
 			stack.Push(modexp.NewNewArray(lineNumber, type1, stack.Pop()))
 			break
 		case 189: // ANEWARRAY
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
 			if typeName[0] == '[' {
 				type1 = p.typeMaker.MakeFromDescriptor(typeName).(intmod.IType)
@@ -856,7 +856,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewThrowStatement(stack.Pop()))
 			break
 		case 192: // CHECKCAST
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
 			type1 = p.typeMaker.MakeFromDescriptorOrInternalTypeName(typeName)
 			expression1 = stack.Peek()
@@ -874,11 +874,11 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 					type1, forceExplicitCastExpression(stack.Pop())))
 			}
 		case 193: // INSTANCEOF
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
 			type1 = p.typeMaker.MakeFromDescriptorOrInternalTypeName(typeName)
 			if type1 == nil {
-				type1 = GetPrimitiveTypeFromDescriptor(typeName)
+				type1 = utils.GetPrimitiveTypeFromDescriptor(typeName)
 			}
 			stack.Push(modexp.NewInstanceOfExpressionWithAll(lineNumber, stack.Pop(), type1.(intmod.IObjectType)))
 		case 194: // MONITORENTER
@@ -886,11 +886,11 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 195: // MONITOREXIT
 			statements.Add(srvsts.NewClassFileMonitorExitStatement(stack.Pop()))
 		case 196: // WIDE
-			opcode, offset = PrefixReadInt8(code, offset)
-			i, offset = PrefixReadInt16(code, offset)
+			opcode, offset = utils.PrefixReadInt8(code, offset)
+			i, offset = utils.PrefixReadInt16(code, offset)
 
 			if opcode == 132 { // IINC
-				count, offset = PrefixReadInt16(code, offset)
+				count, offset = utils.PrefixReadInt16(code, offset)
 				p.parseIINC(statements, stack, lineNumber, offset, p.localVariableMaker.LocalVariable(i, offset), count)
 			} else {
 				switch opcode {
@@ -936,10 +936,10 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				}
 			}
 		case 197: // MULTIANEWARRAY
-			value, offset = PrefixReadInt16(code, offset)
+			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
 			type1 = p.typeMaker.MakeFromDescriptor(typeName)
-			i, offset = PrefixReadInt8(code, offset)
+			i, offset = utils.PrefixReadInt8(code, offset)
 
 			dimensions := modexp.NewExpressions()
 			for ; i > 0; i-- {
@@ -990,7 +990,7 @@ func (p *ByteCodeParser) extractParametersFromStack(statements intmod.IStatement
 	case 1:
 		parameter := stack.Pop()
 		if parameter.IsNewArray() {
-			parameter = MakeNewArrayMaker(statements, parameter)
+			parameter = utils.MakeNewArrayMaker(statements, parameter)
 		}
 		return p.checkIfLastStatementIsAMultiAssignment(statements, parameter)
 	default:
@@ -999,7 +999,7 @@ func (p *ByteCodeParser) extractParametersFromStack(statements intmod.IStatement
 		for i := count; i >= 0; i-- {
 			parameter := stack.Pop()
 			if parameter.IsNewArray() {
-				parameter = MakeNewArrayMaker(statements, parameter)
+				parameter = utils.MakeNewArrayMaker(statements, parameter)
 			}
 			parameters.Add(p.checkIfLastStatementIsAMultiAssignment(statements, parameter))
 		}
@@ -1053,7 +1053,7 @@ func (p *ByteCodeParser) parseLDC(stack util.IStack[intmod.IExpression], constan
 	switch constant.Tag() {
 	case intcls.ConstTagInteger:
 		i := constant.(intcls.IConstantInteger).Value()
-		stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, GetPrimitiveTypeFromValue(i), i))
+		stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, utils.GetPrimitiveTypeFromValue(i), i))
 	case intcls.ConstTagFloat:
 		f := constant.(intcls.IConstantFloat).Value()
 		if f == -math.MaxFloat32 {
@@ -1084,7 +1084,7 @@ func (p *ByteCodeParser) parseLDC(stack util.IStack[intmod.IExpression], constan
 		typeName := constants.Constant(typeNameIndex).(intcls.IConstantUtf8).Value()
 		typ := p.typeMaker.MakeFromDescriptorOrInternalTypeName(typeName).(intmod.IType)
 		if typ == nil {
-			typ = GetPrimitiveTypeFromDescriptor(typeName)
+			typ = utils.GetPrimitiveTypeFromDescriptor(typeName)
 		}
 		stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, typ))
 	case intcls.ConstTagLong:
@@ -1269,7 +1269,7 @@ func stackContainsLocalVariableReference(stack util.IStack[intmod.IExpression], 
 func (p *ByteCodeParser) parsePUT(statements intmod.IStatements, stack util.IStack[intmod.IExpression],
 	lineNumber int, fr intmod.IFieldReferenceExpression, valueRef intmod.IExpression) {
 	if valueRef.IsNewArray() {
-		valueRef = MakeNewArrayMaker(statements, valueRef)
+		valueRef = utils.MakeNewArrayMaker(statements, valueRef)
 	}
 
 	p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(fr.Type(), valueRef)
@@ -1389,11 +1389,11 @@ func (p *ByteCodeParser) parseInvokeDynamic(statements intmod.IStatements, stack
 	if "makeConcatWithConstants" == indyMethodName {
 		// Create Java 9+ string concatenation
 		recipe, _ := constants.ConstantString(bootstrapArguments[0])
-		stack.Push(StringConcatenationUtilCreate2(recipe, indyParameters))
+		stack.Push(utils.StringConcatenationUtilCreate2(recipe, indyParameters))
 		return
 	} else if "makeConcat" == indyMethodName {
 		// Create Java 9+ string concatenation
-		stack.Push(StringConcatenationUtilCreate3(indyParameters))
+		stack.Push(utils.StringConcatenationUtilCreate3(indyParameters))
 		return
 	}
 
@@ -1453,7 +1453,7 @@ func (p *ByteCodeParser) prepareLambdaParameterNames(formalParameters intmod.IFo
 		return nil
 	} else {
 		p.lambdaParameterNamesVisitor.Init()
-		formalParameters.Accept(p.lambdaParameterNamesVisitor)
+		formalParameters.AcceptDeclaration(p.lambdaParameterNamesVisitor)
 		names := p.lambdaParameterNamesVisitor.Names()
 
 		if names.Size() == parameterCount {
@@ -1575,7 +1575,7 @@ func (p *ByteCodeParser) parseASTORE(statements intmod.IStatements, stack util.I
 	oldValueRef := valueRef
 
 	if valueRef.IsNewArray() {
-		valueRef = MakeNewArrayMaker(statements, valueRef)
+		valueRef = utils.MakeNewArrayMaker(statements, valueRef)
 	}
 
 	if oldValueRef != valueRef {
@@ -1775,7 +1775,7 @@ func (p *ByteCodeParser) parseXRETURN(statements intmod.IStatements, stack util.
 	valueRef := stack.Pop()
 
 	if valueRef.IsNewArray() {
-		valueRef = MakeNewArrayMaker(statements, valueRef)
+		valueRef = utils.MakeNewArrayMaker(statements, valueRef)
 	}
 
 	p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(p.returnedType, valueRef)
@@ -2019,7 +2019,7 @@ func (p *ByteCodeParser) newIntegerOrBooleanBinaryOperatorExpression(lineNumber 
 				commonflags &= ^intmod.FlagBoolean
 			}
 
-			typ = GetPrimitiveTypeFromFlags(commonflags)
+			typ = utils.GetPrimitiveTypeFromFlags(commonflags)
 
 			if typ == nil {
 				typ = _type.PtTypeInt
@@ -2191,7 +2191,7 @@ func IsAssertCondition(internalTypeName string, basicBlock intsrv.IBasicBlock) b
 	}
 
 	constants := method.Constants()
-	value, offset = PrefixReadInt16(code, offset)
+	value, offset = utils.PrefixReadInt16(code, offset)
 	constantMemberRef := constants.Constant(value).(intcls.IConstantMemberRef)
 	constantNameAndType := constants.Constant(constantMemberRef.NameAndTypeIndex()).(intcls.IConstantNameAndType)
 	name, _ := constants.ConstantUtf8(constantNameAndType.NameIndex())
@@ -2228,7 +2228,7 @@ func GetExceptionLocalVariableIndex(basicBlock intsrv.IBasicBlock) int {
 
 	switch opcode {
 	case 58: // ASTORE
-		value, offset = PrefixReadInt8(code, offset)
+		value, offset = utils.PrefixReadInt8(code, offset)
 		return value
 	case 75, 76, 77, 78: // ASTORE_0 ... ASTORE_3
 		return opcode - 75
@@ -2348,7 +2348,7 @@ func (v *LambdaParameterNamesVisitor) VisitFormalParameter(decl intmod.IFormalPa
 func (v *LambdaParameterNamesVisitor) VisitFormalParameters(decls intmod.IFormalParameters) {
 	iterator := decls.Iterator()
 	for iterator.HasNext() {
-		iterator.Next().Accept(v)
+		iterator.Next().AcceptDeclaration(v)
 	}
 }
 

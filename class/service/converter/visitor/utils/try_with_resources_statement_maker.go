@@ -37,7 +37,7 @@ func MakeTryWithResourcesStatementMaker(localVariableMaker intsrv.ILocalVariable
 		return nil
 	}
 
-	lv1 := convertTo(expr)
+	lv1 := ConvertTo(expr)
 	state = statements.Get(size - 1)
 	if !state.IsExpressionStatement() {
 		return nil
@@ -53,7 +53,7 @@ func MakeTryWithResourcesStatementMaker(localVariableMaker intsrv.ILocalVariable
 		return nil
 	}
 
-	lv2 := convertTo(expr)
+	lv2 := ConvertTo(expr)
 	state = finallyStatements.First()
 	if state.IsIfStatement() && (lv1 == getLocalVariable(state.Condition())) {
 		state = state.Statements().First()
@@ -146,7 +146,7 @@ func parsePatternAddSuppressed(localVariableMaker intsrv.ILocalVariableMaker,
 	if !expression.IsLocalVariableReferenceExpression() {
 		return nil
 	}
-	if convertTo(expression) != lv2 {
+	if ConvertTo(expression) != lv2 {
 		return nil
 	}
 
@@ -168,14 +168,14 @@ func getLocalVariable(condition intmod.IExpression) intsrv.ILocalVariable {
 		return nil
 	}
 
-	return convertTo(condition.LeftExpression())
+	return ConvertTo(condition.LeftExpression())
 }
 
 func checkCloseInvocation(mie intmod.IMethodInvocationExpression, lv intsrv.ILocalVariable) bool {
 	if mie.Name() == "close" && mie.Descriptor() == "()V" {
 		expression := mie.Expression()
 		if expression.IsLocalVariableReferenceExpression() {
-			return convertTo(expression) == lv
+			return ConvertTo(expression) == lv
 		}
 	}
 
@@ -203,7 +203,7 @@ func parsePatternCloseResource(localVariableMaker intsrv.ILocalVariableMaker,
 	if !parameter0.IsLocalVariableReferenceExpression() {
 		return nil
 	}
-	if convertTo(parameter0) != lv2 {
+	if ConvertTo(parameter0) != lv2 {
 		return nil
 	}
 
@@ -212,7 +212,7 @@ func parsePatternCloseResource(localVariableMaker intsrv.ILocalVariableMaker,
 		return nil
 	}
 
-	if convertTo(parameter1) != lv1 {
+	if ConvertTo(parameter1) != lv1 {
 		return nil
 	}
 

@@ -125,3 +125,12 @@ type IWatchDog interface {
 	Clear()
 	Check(parent, child IBasicBlock)
 }
+
+type ILink interface {
+	ParentIndex() int
+	SetParentIndex(parentIndex int)
+	ChildIndex() int
+	SetChildIndex(childIndex int)
+	HashCode() int
+	Equals(o ILink) bool
+}

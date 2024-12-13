@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	"errors"
@@ -9,7 +9,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/service/deserializer"
 	"hash/fnv"
 	"os"
@@ -707,7 +706,7 @@ func (m *TypeMaker) searchSuperParameterizedType(leftHashCode int, leftInternalT
 	rightTypeTypes := m.MakeTypeTypes(rightInternalTypeName)
 
 	if rightTypeTypes != nil {
-		bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
+		bindTypesToTypesVisitor := NewBindTypesToTypesVisitor()
 		bindings := make(map[string]intmod.ITypeArgument)
 
 		if (rightTypeTypes.TypeParameters() == nil) || (right.TypeArguments() == nil) {
@@ -1001,7 +1000,7 @@ func (m *TypeMaker) loadFieldType2(objectType intmod.IObjectType, fieldName, des
 		typeTypes := m.MakeTypeTypes(internalTypeName)
 
 		if (typeTypes != nil) && (typeTypes.TypeParameters() != nil) {
-			bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
+			bindTypesToTypesVisitor := NewBindTypesToTypesVisitor()
 			bindings := make(map[string]intmod.ITypeArgument)
 
 			if typeTypes.TypeParameters().IsList() && typeArguments.IsTypeArgumentList() {
@@ -1096,7 +1095,7 @@ func (m *TypeMaker) loadMethodTypes2(objectType intmod.IObjectType, methodName, 
 		typeTypes := m.MakeTypeTypes(internalTypeName)
 
 		if (typeTypes != nil) && (typeTypes.TypeParameters() != nil) {
-			bindTypesToTypesVisitor := visitor.NewBindTypesToTypesVisitor()
+			bindTypesToTypesVisitor := NewBindTypesToTypesVisitor()
 			bindings := make(map[string]intmod.ITypeArgument)
 			newMethodTypes := &MethodTypes{}
 

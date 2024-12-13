@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
@@ -6,7 +6,6 @@ import (
 	modexp "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/expression"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
@@ -16,18 +15,18 @@ func NewJava5TypeParametersToTypeArgumentsBinder(typeMaker intsrv.ITypeMaker,
 	internalTypeName string,
 	comd intsrv.IClassFileConstructorOrMethodDeclaration) intsrv.ITypeParametersToTypeArgumentsBinder {
 	b := &Java5TypeParametersToTypeArgumentsBinder{
-		populateBindingsWithTypeParameterVisitor:            visitor.NewPopulateBindingsWithTypeParameterVisitor(),
-		bindTypesToTypesVisitor:                             visitor.NewBindTypesToTypesVisitor(),
-		searchInTypeArgumentVisitor:                         visitor.NewSearchInTypeArgumentVisitor(),
-		typeArgumentToTypeVisitor:                           visitor.NewTypeArgumentToTypeVisitor(),
-		baseTypeToTypeArgumentVisitor:                       visitor.NewBaseTypeToTypeArgumentVisitor(),
-		getTypeArgumentVisitor:                              visitor.NewGetTypeArgumentVisitor(),
-		bindTypeParametersToNonWildcardTypeArgumentsVisitor: visitor.NewBindTypeParametersToNonWildcardTypeArgumentsVisitor(),
+		populateBindingsWithTypeParameterVisitor:            NewPopulateBindingsWithTypeParameterVisitor(),
+		bindTypesToTypesVisitor:                             NewBindTypesToTypesVisitor(),
+		searchInTypeArgumentVisitor:                         NewSearchInTypeArgumentVisitor(),
+		typeArgumentToTypeVisitor:                           NewTypeArgumentToTypeVisitor(),
+		baseTypeToTypeArgumentVisitor:                       NewBaseTypeToTypeArgumentVisitor(),
+		getTypeArgumentVisitor:                              NewGetTypeArgumentVisitor(),
+		bindTypeParametersToNonWildcardTypeArgumentsVisitor: NewBindTypeParametersToNonWildcardTypeArgumentsVisitor(),
 
 		typeMaker:                               typeMaker,
 		internalTypeName:                        internalTypeName,
 		staticMethod:                            comd.Flags()&intmod.FlagStatic != 0,
-		populateBindingsWithTypeArgumentVisitor: visitor.NewPopulateBindingsWithTypeArgumentVisitor(typeMaker),
+		populateBindingsWithTypeArgumentVisitor: NewPopulateBindingsWithTypeArgumentVisitor(typeMaker),
 		contextualBindings:                      comd.Bindings(),
 		contextualTypeBounds:                    comd.TypeBounds(),
 	}

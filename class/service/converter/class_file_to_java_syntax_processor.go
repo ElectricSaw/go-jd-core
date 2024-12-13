@@ -5,7 +5,7 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/message"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/processor"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 )
 
 var ConvertClassFileProcessor = processor.NewConvertClassFileProcessor()
@@ -23,17 +23,17 @@ func (p *ClassFileToJavaSyntaxProcessor) Process(message *message.Message) error
 	configuration := message.Headers["configuration"].(map[string]interface{})
 
 	if configuration == nil {
-		message.Headers["typeMaker"] = utils.NewTypeMaker(loader)
+		message.Headers["typeMaker"] = visitor.NewTypeMaker(loader)
 	} else {
 		typeMaker := configuration["typeMaker"].(intsrv.ITypeMaker)
 
 		if typeMaker == nil {
 			// Store the heavy weight object 'typeMaker' in 'configuration' to reuse it
-			typeMaker = utils.NewTypeMaker(loader)
+			typeMaker = visitor.NewTypeMaker(loader)
 			configuration["typeMaker"] = typeMaker
 		}
 		if typeMaker == nil {
-			typeMaker = utils.NewTypeMaker(loader)
+			typeMaker = visitor.NewTypeMaker(loader)
 		}
 
 		message.Headers["typeMaker"] = typeMaker

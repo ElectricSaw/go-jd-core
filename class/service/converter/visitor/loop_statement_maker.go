@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	"fmt"
@@ -8,11 +8,10 @@ import (
 	modsts "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvsts "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/statement"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"strings"
 )
 
-var GlobalRemoveLastContinueStatementVisitor = visitor.NewRemoveLastContinueStatementVisitor()
+var GlobalRemoveLastContinueStatementVisitor = NewRemoveLastContinueStatementVisitor()
 
 func MakeLoopStatementMaker(
 	majorVersion int, typeBounds map[string]intmod.IType, localVariableMaker intsrv.ILocalVariableMaker,
@@ -95,7 +94,7 @@ func makeLoopStatementMaker(majorVersion int, typeBounds map[string]intmod.IType
 	default:
 		if lineNumber > 0 {
 			// Known line numbers
-			visit := visitor.NewSearchFirstLineNumberVisitor()
+			visit := NewSearchFirstLineNumberVisitor()
 
 			subStatements.First().AcceptStatement(visit)
 
@@ -163,7 +162,7 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 		}
 		break
 	default:
-		visit := visitor.NewSearchFirstLineNumberVisitor()
+		visit := NewSearchFirstLineNumberVisitor()
 		subStatements.Get(0).AcceptStatement(visit)
 		firstLineNumber := visit.LineNumber()
 		if firstLineNumber > 0 {
@@ -547,7 +546,7 @@ func makeForEachList(
 	}
 
 	// Check if 'i$' is not used in sub-statements
-	visitor1 := visitor.NewSearchLocalVariableReferenceVisitor()
+	visitor1 := NewSearchLocalVariableReferenceVisitor()
 	visitor1.Init(syntheticIterator.Index())
 
 	length := subStatements.Size()
@@ -586,7 +585,7 @@ func makeForEachList(
 				}
 			}
 		} else {
-			visitor2 := visitor.NewCreateTypeFromTypeArgumentVisitor()
+			visitor2 := NewCreateTypeFromTypeArgumentVisitor()
 			listType.TypeArguments().AcceptTypeArgumentVisitor(visitor2)
 			typ = visitor2.Type()
 
@@ -651,7 +650,7 @@ func newClassFileForStatement(localVariableMaker intsrv.ILocalVariableMaker, fro
 	init intmod.IExpression, condition intmod.IExpression, update intmod.IExpression,
 	statements intmod.IStatement) intsrv.IClassFileForStatement {
 	if init != nil {
-		visit := visitor.NewSearchFromOffsetVisitor()
+		visit := NewSearchFromOffsetVisitor()
 		init.Accept(visit)
 		offset := visit.Offset()
 		if fromOffset > offset {
@@ -659,7 +658,7 @@ func newClassFileForStatement(localVariableMaker intsrv.ILocalVariableMaker, fro
 		}
 	}
 
-	visit := visitor.NewChangeFrameOfLocalVariablesVisitor(localVariableMaker)
+	visit := NewChangeFrameOfLocalVariablesVisitor(localVariableMaker)
 
 	if condition != nil {
 		condition.Accept(visit)
@@ -669,8 +668,4 @@ func newClassFileForStatement(localVariableMaker intsrv.ILocalVariableMaker, fro
 	}
 
 	return srvsts.NewClassFileForStatement(fromOffset, toOffset, init, condition, update, statements)
-}
-
-func convertTo(expr intmod.IExpression) intsrv.ILocalVariable {
-	return expr.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
 }

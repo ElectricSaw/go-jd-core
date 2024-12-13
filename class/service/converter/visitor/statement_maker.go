@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/cfg"
 	srvsts "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/statement"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 	"strings"
 )
@@ -19,7 +19,7 @@ import (
 var GlobalFinallyExceptionExpression = modexp.NewNullExpression(
 	_type.NewObjectType("java/lang/Exception",
 		"java.lang.Exception", "Exception"))
-var GlobalMergeTryWithResourcesStatementVisitor = visitor.NewMergeTryWithResourcesStatementVisitor()
+var GlobalMergeTryWithResourcesStatementVisitor = NewMergeTryWithResourcesStatementVisitor()
 
 func NewStatementMaker(typeMaker intsrv.ITypeMaker, localVariableMaker intsrv.ILocalVariableMaker,
 	comd intsrv.IClassFileConstructorOrMethodDeclaration) intsrv.IStatementMaker {
@@ -34,10 +34,10 @@ func NewStatementMaker(typeMaker intsrv.ITypeMaker, localVariableMaker intsrv.IL
 		bodyDeclaration:                       comd.BodyDeclaration(),
 		stack:                                 util.NewDefaultStack[intmod.IExpression](),
 		byteCodeParser:                        NewByteCodeParser(typeMaker, localVariableMaker, classFile, comd.BodyDeclaration(), comd),
-		removeFinallyStatementsVisitor:        visitor.NewRemoveFinallyStatementsVisitor(localVariableMaker),
-		removeBinaryOpReturnStatementsVisitor: visitor.NewRemoveBinaryOpReturnStatementsVisitor(localVariableMaker),
-		updateIntegerConstantTypeVisitor:      visitor.NewUpdateIntegerConstantTypeVisitor(comd.ReturnedType()),
-		searchFirstLineNumberVisitor:          visitor.NewSearchFirstLineNumberVisitor(),
+		removeFinallyStatementsVisitor:        NewRemoveFinallyStatementsVisitor(localVariableMaker),
+		removeBinaryOpReturnStatementsVisitor: NewRemoveBinaryOpReturnStatementsVisitor(localVariableMaker),
+		updateIntegerConstantTypeVisitor:      NewUpdateIntegerConstantTypeVisitor(comd.ReturnedType()),
+		searchFirstLineNumberVisitor:          NewSearchFirstLineNumberVisitor(),
 		memberVisitor:                         NewStatementMakerMemberVisitor(),
 		removeFinallyStatementsFlag:           false,
 		mergeTryWithResourcesStatementFlag:    false,
@@ -67,7 +67,7 @@ type StatementMaker struct {
 func (m *StatementMaker) Make(cfg intsrv.IControlFlowGraph) intmod.IStatements {
 	statements := modsts.NewStatements()
 	jumps := modsts.NewStatements()
-	watchdog := NewWatchDog()
+	watchdog := utils.NewWatchDog()
 
 	m.localVariableMaker.PushFrame(statements)
 
@@ -314,7 +314,7 @@ func (m *StatementMaker) makeExpression(watchdog intsrv.IWatchDog, basicBlock in
 					statements.RemoveLast()
 					expression = boe
 				} else if expression.IsNewArray() {
-					expression = MakeNewArrayMaker(statements, expression)
+					expression = utils.MakeNewArrayMaker(statements, expression)
 				}
 			}
 		}
@@ -382,10 +382,10 @@ func (m *StatementMaker) parseSwitch(watchdog intsrv.IWatchDog, basicBlock intsr
 	if (size > 3) && condition.IsLocalVariableReferenceExpression() &&
 		statements.Get(size-2).IsSwitchStatement() {
 		// Check pattern & make 'switch-string'
-		MakeSwitchString(m.localVariableMaker, statements, switchStatement)
+		utils.MakeSwitchString(m.localVariableMaker, statements, switchStatement)
 	} else if condition.IsArrayExpression() {
 		// Check pattern & make 'switch-enum'
-		MakeSwitchEnum(m.bodyDeclaration, switchStatement)
+		utils.MakeSwitchEnum(m.bodyDeclaration, switchStatement)
 	}
 
 	m.makeStatements(watchdog, basicBlock.Next(), statements, jumps)
@@ -491,11 +491,11 @@ func (m *StatementMaker) parseTry(watchdog intsrv.IWatchDog, basicBlock intsrv.I
 
 	if (finallyStatements != nil) && (finallyStatements.Size() > 0) &&
 		finallyStatements.First().IsMonitorExitStatement() {
-		statement = MakeSynchronizedStatementMaker(m.localVariableMaker, statements, tryStatements)
+		statement = utils.MakeSynchronizedStatementMaker(m.localVariableMaker, statements, tryStatements)
 	} else {
 		if m.majorVersion >= 51 { // (majorVersion >= Java 7)
 			// assert jsr == false;
-			statement = MakeTryWithResourcesStatementMaker(m.localVariableMaker,
+			statement = utils.MakeTryWithResourcesStatementMaker(m.localVariableMaker,
 				statements, tryStatements, catchClauses, finallyStatements)
 		}
 		if statement == nil {

@@ -6,7 +6,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 	modsts "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 	"strings"
 )
 
@@ -102,15 +102,15 @@ func (v *CreateInstructionsVisitor) createParametersVariablesAndStatements(comd 
 	classFile := comd.ClassFile()
 	method := comd.Method()
 	attributeCode := method.Attribute("Code").(*attribute.AttributeCode)
-	localVariableMaker := utils.NewLocalVariableMaker(v.typeMaker, comd, constructor)
+	localVariableMaker := NewLocalVariableMaker(v.typeMaker, comd, constructor)
 
 	if attributeCode == nil {
 		localVariableMaker.Make(false, v.typeMaker)
 	} else {
-		statementMaker := utils.NewStatementMaker(v.typeMaker, localVariableMaker, comd)
+		statementMaker := NewStatementMaker(v.typeMaker, localVariableMaker, comd)
 		containsLineNumber := attributeCode.Attribute("LineNumberTable") != nil
 
-		cfg := utils.MakeControlFlowGraph(method)
+		cfg := MakeControlFlowGraph(method)
 
 		if cfg != nil {
 			utils.ReduceControlFlowGraphGotoReducer(cfg)

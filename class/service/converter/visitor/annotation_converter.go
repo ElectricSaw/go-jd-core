@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"

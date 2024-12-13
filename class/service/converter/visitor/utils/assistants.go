@@ -1,6 +1,7 @@
 package utils
 
 import (
+	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
@@ -39,4 +40,8 @@ func ConvertTypes(list []intsrv.IClassFileTypeDeclaration) util.IList[intsrv.ICl
 		ret.Add(item)
 	}
 	return ret
+}
+
+func ConvertTo(expr intmod.IExpression) intsrv.ILocalVariable {
+	return expr.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
 }

@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
@@ -14,31 +14,31 @@ type AbstractTypeParametersToTypeArgumentsBinder struct {
 }
 
 func (b *AbstractTypeParametersToTypeArgumentsBinder) NewConstructorInvocationExpression(
-	lineNumber int, objectType intmod.IObjectType, descriptor string,
-	methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression {
+	_ int, _ intmod.IObjectType, _ string, _ intsrv.IMethodTypes,
+	_ intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression {
 	return nil
 }
 
 func (b *AbstractTypeParametersToTypeArgumentsBinder) NewSuperConstructorInvocationExpression(
-	lineNumber int, objectType intmod.IObjectType, descriptor string,
-	methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileSuperConstructorInvocationExpression {
+	_ int, _ intmod.IObjectType, _ string,
+	_ intsrv.IMethodTypes, _ intmod.IExpression) intsrv.IClassFileSuperConstructorInvocationExpression {
 	return nil
 }
 
 func (b *AbstractTypeParametersToTypeArgumentsBinder) NewMethodInvocationExpression(
-	lineNumber int, expression intmod.IExpression, objectType intmod.IObjectType, name, descriptor string,
-	methodTypes intsrv.IMethodTypes, parameters intmod.IExpression) intsrv.IClassFileMethodInvocationExpression {
+	_ int, _ intmod.IExpression, _ intmod.IObjectType, _, _ string,
+	_ intsrv.IMethodTypes, _ intmod.IExpression) intsrv.IClassFileMethodInvocationExpression {
 	return nil
 }
 
 func (b *AbstractTypeParametersToTypeArgumentsBinder) NewFieldReferenceExpression(
-	lineNumber int, typ intmod.IType, expression intmod.IExpression,
-	objectType intmod.IObjectType, name, descriptor string) intmod.IFieldReferenceExpression {
+	_ int, _ intmod.IType, _ intmod.IExpression,
+	_ intmod.IObjectType, _, _ string) intmod.IFieldReferenceExpression {
 	return nil
 }
 
 func (b *AbstractTypeParametersToTypeArgumentsBinder) BindParameterTypesWithArgumentTypes(
-	typ intmod.IType, expression intmod.IExpression) {
+	_ intmod.IType, _ intmod.IExpression) {
 }
 
 func (b *AbstractTypeParametersToTypeArgumentsBinder) UpdateNewExpression(ne intsrv.IClassFileNewExpression,

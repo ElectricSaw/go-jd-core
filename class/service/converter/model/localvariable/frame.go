@@ -17,7 +17,6 @@ import (
 	"unicode"
 )
 
-var GlobalAbstractLocalVariableComparator = NewAbstractLocalVariableComparator()
 var CapitalizedJavaLanguageKeywords = []string{
 	"Abstract", "Continue", "For", "New", "Switch", "Assert", "Default", "Goto", "Package", "Synchronized",
 	"Boolean", "Do", "If", "Private", "This", "Break", "Double", "Implements", "Protected", "Throw", "Byte", "Else",
@@ -1055,29 +1054,18 @@ func (c *GenerateLocalVariableNameVisitor) VisitGenericType(t intmod.IGenericTyp
 	c.Visit(t.(intmod.IType), t.Name())
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {}
+func (c *GenerateLocalVariableNameVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {}
 
-func (c *GenerateLocalVariableNameVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {
-}
-
-func NewAbstractLocalVariableComparator() *AbstractLocalVariableComparator {
-	return &AbstractLocalVariableComparator{}
-}
-
-type AbstractLocalVariableComparator struct {
-}
-
-func (c *AbstractLocalVariableComparator) Compare(alv1, alv2 intsrv.ILocalVariable) int {
-	return alv1.Index() - alv2.Index()
+func (c *GenerateLocalVariableNameVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
 }
 
 func contains(list []string, value string) bool {

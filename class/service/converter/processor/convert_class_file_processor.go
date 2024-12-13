@@ -10,7 +10,6 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/model/message"
 	srvdecl "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/utils"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
@@ -31,7 +30,7 @@ func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
 	typeMaker := message.Headers["typeMaker"].(intsrv.ITypeMaker)
 	classFile := message.Body.(intcls.IClassFile)
 
-	annotationConverter := utils.NewAnnotationConverter(typeMaker)
+	annotationConverter := visitor.NewAnnotationConverter(typeMaker)
 
 	var typeDeclaration intmod.ITypeDeclaration
 

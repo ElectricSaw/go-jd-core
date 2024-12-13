@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"

@@ -1,4 +1,4 @@
-package utils
+package visitor
 
 import (
 	"fmt"
@@ -8,7 +8,6 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/model/localvariable"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
@@ -26,12 +25,12 @@ func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker,
 		currentFrame:               localvariable.NewRootFrame(),
 		typeMaker:                  typeMaker,
 		typeBounds:                 comd.TypeBounds(),
-		createParameterVisitor:     visitor.NewCreateParameterVisitor(typeMaker),
-		createLocalVariableVisitor: visitor.NewCreateLocalVariableVisitor(typeMaker),
+		createParameterVisitor:     NewCreateParameterVisitor(typeMaker),
+		createLocalVariableVisitor: NewCreateLocalVariableVisitor(typeMaker),
 	}
 
-	m.populateBlackListNamesVisitor = visitor.NewPopulateBlackListNamesVisitor(m.blackListNames)
-	m.searchInTypeArgumentVisitor = visitor.NewSearchInTypeArgumentVisitor()
+	m.populateBlackListNamesVisitor = NewPopulateBlackListNamesVisitor(m.blackListNames)
+	m.searchInTypeArgumentVisitor = NewSearchInTypeArgumentVisitor()
 
 	if classFile.Fields() != nil {
 		for _, field := range classFile.Fields() {
@@ -223,7 +222,7 @@ func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intcls.IMet
 		localVariableTypeTable := code.Attribute("LocalVariableTypeTable").(intcls.IAttributeLocalVariableTypeTable)
 
 		if localVariableTypeTable != nil {
-			updateTypeVisitor := visitor.NewUpdateTypeVisitor(m.localVariableSet)
+			updateTypeVisitor := NewUpdateTypeVisitor(m.localVariableSet)
 
 			for _, lv := range localVariableTypeTable.LocalVariableTypeTable() {
 				updateTypeVisitor.SetLocalVariableType(lv)
@@ -259,7 +258,7 @@ func (m *LocalVariableMaker) initLocalVariablesFromParameterTypes(classFile intc
 	}
 
 	sb := ""
-	generateParameterSuffixNameVisitor := visitor.NewGenerateParameterSuffixNameVisitor()
+	generateParameterSuffixNameVisitor := NewGenerateParameterSuffixNameVisitor()
 
 	variableIndex := firstVariableIndex
 	for parameterIndex := 0; parameterIndex <= lastParameterIndex; parameterIndex++ {
