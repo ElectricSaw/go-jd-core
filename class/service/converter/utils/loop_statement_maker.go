@@ -33,7 +33,7 @@ func makeLoopStatementMaker(majorVersion int, typeBounds map[string]intmod.IType
 	loopBasicBlock intsrv.IBasicBlock, statements intmod.IStatements, condition intmod.IExpression, subStatements intmod.IStatements) intmod.IStatement {
 	forEachSupported := (majorVersion >= 49) // (majorVersion >= Java 5)
 
-	subStatements.Accept(GlobalRemoveLastContinueStatementVisitor)
+	subStatements.AcceptStatement(GlobalRemoveLastContinueStatementVisitor)
 
 	if forEachSupported {
 		statement := makeForEachArray(typeBounds, localVariableMaker, statements, condition, subStatements)
@@ -121,7 +121,7 @@ func makeLoopStatementMaker(majorVersion int, typeBounds map[string]intmod.IType
 
 func MakeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loopBasicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, subStatements intmod.IStatements, jumps intmod.IStatements) intmod.IStatement {
-	subStatements.Accept(GlobalRemoveLastContinueStatementVisitor)
+	subStatements.AcceptStatement(GlobalRemoveLastContinueStatementVisitor)
 
 	loop := makeLoopStatementMaker2(localVariableMaker, loopBasicBlock, statements, subStatements)
 	continueOffset := loopBasicBlock.Sub1().FromOffset()
@@ -193,7 +193,7 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 
 func MakeDoWhileLoop(loopBasicBlock intsrv.IBasicBlock, condition intmod.IExpression,
 	subStatements intmod.IStatements, jumps intmod.IStatements) intmod.IStatement {
-	subStatements.Accept(GlobalRemoveLastContinueStatementVisitor)
+	subStatements.AcceptStatement(GlobalRemoveLastContinueStatementVisitor)
 
 	loop := modsts.NewDoWhileStatement(condition, subStatements)
 	continueOffset := loopBasicBlock.Sub1().FromOffset()

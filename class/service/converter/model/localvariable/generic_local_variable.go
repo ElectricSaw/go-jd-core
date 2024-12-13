@@ -1,10 +1,10 @@
 package localvariable
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
-	"fmt"
 )
 
 func NewGenericLocalVariable(index, offset int, typ intmod.IGenericType) intsrv.IGenericLocalVariable {
@@ -63,22 +63,22 @@ func (v *GenericLocalVariable) String() string {
 	return sb
 }
 
-func (v *GenericLocalVariable) IsAssignableFrom(typeBounds map[string]intmod.IType, otherType intmod.IType) bool {
+func (v *GenericLocalVariable) IsAssignableFrom(_ map[string]intmod.IType, otherType intmod.IType) bool {
 	return v.typ.Equals(otherType.(*_type.GenericType))
 }
 
-func (v *GenericLocalVariable) TypeOnRight(typeBounds map[string]intmod.IType, typ intmod.IType) {
+func (v *GenericLocalVariable) TypeOnRight(_ map[string]intmod.IType, _ intmod.IType) {
 }
 
-func (v *GenericLocalVariable) TypeOnLeft(typeBounds map[string]intmod.IType, typ intmod.IType) {
+func (v *GenericLocalVariable) TypeOnLeft(_ map[string]intmod.IType, _ intmod.IType) {
 }
 
 func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) bool {
 	return v.IsAssignableFrom(typeBounds, variable.Type())
 }
 
-func (v *GenericLocalVariable) VariableOnRight(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
+func (v *GenericLocalVariable) VariableOnRight(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
 }
 
-func (v *GenericLocalVariable) VariableOnLeft(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
+func (v *GenericLocalVariable) VariableOnLeft(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
 }

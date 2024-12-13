@@ -53,10 +53,10 @@ func NewByteCodeParser(typeMaker intsrv.ITypeMaker,
 
 type ByteCodeParser struct {
 	memberVisitor                *ByteCodeParserMemberVisitor
-	searchFirstLineNumberVisitor *visitor.SearchFirstLineNumberVisitor
-	eraseTypeArgumentVisitor     *visitor.EraseTypeArgumentVisitor
+	searchFirstLineNumberVisitor intsrv.ISearchFirstLineNumberVisitor
+	eraseTypeArgumentVisitor     intsrv.IEraseTypeArgumentVisitor
 	lambdaParameterNamesVisitor  *LambdaParameterNamesVisitor
-	renameLocalVariablesVisitor  *visitor.RenameLocalVariablesVisitor
+	renameLocalVariablesVisitor  intsrv.IRenameLocalVariablesVisitor
 
 	typeMaker                           intsrv.ITypeMaker
 	localVariableMaker                  intsrv.ILocalVariableMaker

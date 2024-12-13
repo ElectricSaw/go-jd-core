@@ -174,10 +174,10 @@ type LocalVariableMaker struct {
 	typeMaker                     intsrv.ITypeMaker
 	typeBounds                    map[string]intmod.IType
 	formalParameters              intmod.IFormalParameters
-	populateBlackListNamesVisitor *visitor.PopulateBlackListNamesVisitor
-	searchInTypeArgumentVisitor   *visitor.SearchInTypeArgumentVisitor
-	createParameterVisitor        *visitor.CreateParameterVisitor
-	createLocalVariableVisitor    *visitor.CreateLocalVariableVisitor
+	populateBlackListNamesVisitor intsrv.IPopulateBlackListNamesVisitor
+	searchInTypeArgumentVisitor   intsrv.ISearchInTypeArgumentVisitor
+	createParameterVisitor        intsrv.ICreateParameterVisitor
+	createLocalVariableVisitor    intsrv.ICreateLocalVariableVisitor
 }
 
 func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intcls.IMethod) {

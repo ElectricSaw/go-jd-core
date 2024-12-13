@@ -55,10 +55,10 @@ type StatementMaker struct {
 	internalTypeName                      string
 	bodyDeclaration                       intsrv.IClassFileBodyDeclaration
 	stack                                 util.IStack[intmod.IExpression]
-	removeFinallyStatementsVisitor        *visitor.RemoveFinallyStatementsVisitor
-	removeBinaryOpReturnStatementsVisitor *visitor.RemoveBinaryOpReturnStatementsVisitor
-	updateIntegerConstantTypeVisitor      *visitor.UpdateIntegerConstantTypeVisitor
-	searchFirstLineNumberVisitor          *visitor.SearchFirstLineNumberVisitor
+	removeFinallyStatementsVisitor        intsrv.IRemoveFinallyStatementsVisitor
+	removeBinaryOpReturnStatementsVisitor intsrv.IRemoveBinaryOpReturnStatementsVisitor
+	updateIntegerConstantTypeVisitor      intsrv.IUpdateIntegerConstantTypeVisitor
+	searchFirstLineNumberVisitor          intsrv.ISearchFirstLineNumberVisitor
 	memberVisitor                         *StatementMakerMemberVisitor
 	removeFinallyStatementsFlag           bool
 	mergeTryWithResourcesStatementFlag    bool
@@ -114,7 +114,7 @@ func (m *StatementMaker) Make(cfg intsrv.IControlFlowGraph) intmod.IStatements {
  * @param basicBlock Current basic block
  * @param statements List to populate
  */
-func (m *StatementMaker) makeStatements(watchdog IWatchDog, basicBlock intsrv.IBasicBlock,
+func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements) {
 	var subStatements, elseStatements intmod.IStatements
 	var condition, exp1, exp2 intmod.IExpression
@@ -259,7 +259,7 @@ func (m *StatementMaker) makeStatements(watchdog IWatchDog, basicBlock intsrv.IB
 	}
 }
 
-func (m *StatementMaker) makeSubStatements(watchdog IWatchDog, basicBlock intsrv.IBasicBlock,
+func (m *StatementMaker) makeSubStatements(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements, updateBasicBlock intsrv.IBasicBlock) intmod.IStatements {
 	subStatements := m.makeSubStatements2(watchdog, basicBlock, statements, jumps)
 
@@ -270,7 +270,7 @@ func (m *StatementMaker) makeSubStatements(watchdog IWatchDog, basicBlock intsrv
 	return subStatements
 }
 
-func (m *StatementMaker) makeSubStatements2(watchdog IWatchDog, basicBlock intsrv.IBasicBlock,
+func (m *StatementMaker) makeSubStatements2(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements) intmod.IStatements {
 	subStatements := modsts.NewStatements()
 
@@ -290,7 +290,7 @@ func (m *StatementMaker) makeSubStatements2(watchdog IWatchDog, basicBlock intsr
 	return subStatements
 }
 
-func (m *StatementMaker) makeExpression(watchdog IWatchDog, basicBlock intsrv.IBasicBlock,
+func (m *StatementMaker) makeExpression(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements) intmod.IExpression {
 	initialStatementCount := statements.Size()
 
@@ -323,7 +323,7 @@ func (m *StatementMaker) makeExpression(watchdog IWatchDog, basicBlock intsrv.IB
 	}
 }
 
-func (m *StatementMaker) parseSwitch(watchdog IWatchDog, basicBlock intsrv.IBasicBlock, statements intmod.IStatements, jumps intmod.IStatements) {
+func (m *StatementMaker) parseSwitch(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock, statements intmod.IStatements, jumps intmod.IStatements) {
 	m.parseByteCode(basicBlock, statements)
 
 	switchCases := basicBlock.SwitchCases()
@@ -391,7 +391,7 @@ func (m *StatementMaker) parseSwitch(watchdog IWatchDog, basicBlock intsrv.IBasi
 	m.makeStatements(watchdog, basicBlock.Next(), statements, jumps)
 }
 
-func (m *StatementMaker) parseTry(watchdog IWatchDog, basicBlock intsrv.IBasicBlock,
+func (m *StatementMaker) parseTry(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements, jsr, eclipse bool) {
 	var tryStatements intmod.IStatements
 	catchClauses := util.NewDefaultList[intmod.ICatchClause]()
@@ -525,7 +525,7 @@ func (m *StatementMaker) removeExceptionReference(catchStatements intmod.IStatem
 	}
 }
 
-func (m *StatementMaker) parseJSR(watchdog IWatchDog, basicBlock intsrv.IBasicBlock,
+func (m *StatementMaker) parseJSR(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements) {
 	statementCount := statements.Size()
 
@@ -543,7 +543,7 @@ func (m *StatementMaker) parseJSR(watchdog IWatchDog, basicBlock intsrv.IBasicBl
 	statements.RemoveAt(statementCount)
 }
 
-func (m *StatementMaker) parseIf(watchdog IWatchDog, basicBlock intsrv.IBasicBlock, statements intmod.IStatements, jumps intmod.IStatements) {
+func (m *StatementMaker) parseIf(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock, statements intmod.IStatements, jumps intmod.IStatements) {
 	condition := basicBlock.Condition()
 
 	if condition.Type() == intsrv.TypeConditionAnd {
@@ -609,7 +609,8 @@ func (m *StatementMaker) parseIf(watchdog IWatchDog, basicBlock intsrv.IBasicBlo
 	}
 }
 
-func (m *StatementMaker) parseLoop(watchdog IWatchDog, basicBlock intsrv.IBasicBlock, statements intmod.IStatements, jumps intmod.IStatements) {
+func (m *StatementMaker) parseLoop(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
+	statements intmod.IStatements, jumps intmod.IStatements) {
 	sub1 := basicBlock.Sub1()
 	var updateBasicBlock intsrv.IBasicBlock = nil
 

@@ -104,7 +104,7 @@ func (v *AbstractLocalVariable) SetName(name string) {
 	v.name = name
 }
 
-func (v *AbstractLocalVariable) Accept(visitor intsrv.ILocalVariableVisitor) {
+func (v *AbstractLocalVariable) Accept(_ intsrv.ILocalVariableVisitor) {
 }
 
 func (v *AbstractLocalVariable) References() []intsrv.ILocalVariable {
@@ -115,24 +115,24 @@ func (v *AbstractLocalVariable) AddReference(reference intsrv.ILocalVariableRefe
 	v.references = append(v.references, reference.(intsrv.ILocalVariable))
 }
 
-func (v *AbstractLocalVariable) IsAssignableFrom(typeBounds map[string]intmod.IType, otherType intmod.IType) bool {
+func (v *AbstractLocalVariable) IsAssignableFrom(_ map[string]intmod.IType, _ intmod.IType) bool {
 	return false
 }
 
-func (v *AbstractLocalVariable) TypeOnRight(typeBounds map[string]intmod.IType, typ intmod.IType) {
+func (v *AbstractLocalVariable) TypeOnRight(_ map[string]intmod.IType, _ intmod.IType) {
 }
 
-func (v *AbstractLocalVariable) TypeOnLeft(typeBounds map[string]intmod.IType, typ intmod.IType) {
+func (v *AbstractLocalVariable) TypeOnLeft(_ map[string]intmod.IType, _ intmod.IType) {
 }
 
-func (v *AbstractLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) bool {
+func (v *AbstractLocalVariable) IsAssignableFromWithVariable(_ map[string]intmod.IType, _ intsrv.ILocalVariable) bool {
 	return false
 }
 
-func (v *AbstractLocalVariable) VariableOnRight(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
+func (v *AbstractLocalVariable) VariableOnRight(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
 }
 
-func (v *AbstractLocalVariable) VariableOnLeft(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) {
+func (v *AbstractLocalVariable) VariableOnLeft(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
 }
 
 func (v *AbstractLocalVariable) FireChangeEvent(typeBounds map[string]intmod.IType) {
@@ -178,18 +178,18 @@ func (v *AbstractLocalVariable) LocalVariable() intsrv.ILocalVariableReference {
 	return nil
 }
 
-func (v *AbstractLocalVariable) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
+func (v *AbstractLocalVariable) SetLocalVariable(_ intsrv.ILocalVariableReference) {
 
 }
 
 type AbstractNopLocalVariableVisitor struct {
 }
 
-func (v *AbstractNopLocalVariableVisitor) VisitGenericLocalVariable(localVariable intsrv.IGenericLocalVariable) {
+func (v *AbstractNopLocalVariableVisitor) VisitGenericLocalVariable(_ intsrv.IGenericLocalVariable) {
 }
-func (v *AbstractNopLocalVariableVisitor) VisitObjectLocalVariable(localVariable intsrv.IObjectLocalVariable) {
+func (v *AbstractNopLocalVariableVisitor) VisitObjectLocalVariable(_ intsrv.IObjectLocalVariable) {
 }
-func (v *AbstractNopLocalVariableVisitor) VisitPrimitiveLocalVariable(localVariable intsrv.IPrimitiveLocalVariable) {
+func (v *AbstractNopLocalVariableVisitor) VisitPrimitiveLocalVariable(_ intsrv.IPrimitiveLocalVariable) {
 }
 
 func containsLv(variables []intsrv.ILocalVariable, variable intsrv.ILocalVariable) bool {

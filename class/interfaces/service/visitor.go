@@ -83,6 +83,7 @@ type ICreateTypeFromTypeArgumentVisitor interface {
 	intmod.ITypeArgumentVisitor
 
 	Init()
+	Type() intmod.IType
 }
 
 type IDeclaredSyntheticLocalVariableVisitor interface {

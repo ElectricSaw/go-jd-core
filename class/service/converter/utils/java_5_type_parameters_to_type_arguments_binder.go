@@ -37,18 +37,18 @@ func NewJava5TypeParametersToTypeArgumentsBinder(typeMaker intsrv.ITypeMaker,
 type Java5TypeParametersToTypeArgumentsBinder struct {
 	AbstractTypeParametersToTypeArgumentsBinder
 
-	populateBindingsWithTypeParameterVisitor            *visitor.PopulateBindingsWithTypeParameterVisitor
-	bindTypesToTypesVisitor                             *visitor.BindTypesToTypesVisitor
-	searchInTypeArgumentVisitor                         *visitor.SearchInTypeArgumentVisitor
-	typeArgumentToTypeVisitor                           *visitor.TypeArgumentToTypeVisitor
-	baseTypeToTypeArgumentVisitor                       *visitor.BaseTypeToTypeArgumentVisitor
-	getTypeArgumentVisitor                              *visitor.GetTypeArgumentVisitor
-	bindTypeParametersToNonWildcardTypeArgumentsVisitor *visitor.BindTypeParametersToNonWildcardTypeArgumentsVisitor
+	populateBindingsWithTypeParameterVisitor            intsrv.IPopulateBindingsWithTypeParameterVisitor
+	bindTypesToTypesVisitor                             intsrv.IBindTypesToTypesVisitor
+	searchInTypeArgumentVisitor                         intsrv.ISearchInTypeArgumentVisitor
+	typeArgumentToTypeVisitor                           intsrv.ITypeArgumentToTypeVisitor
+	baseTypeToTypeArgumentVisitor                       intsrv.IBaseTypeToTypeArgumentVisitor
+	getTypeArgumentVisitor                              intsrv.IGetTypeArgumentVisitor
+	bindTypeParametersToNonWildcardTypeArgumentsVisitor intsrv.IBindTypeParametersToNonWildcardTypeArgumentsVisitor
 
 	typeMaker                               intsrv.ITypeMaker
 	internalTypeName                        string
 	staticMethod                            bool
-	populateBindingsWithTypeArgumentVisitor *visitor.PopulateBindingsWithTypeArgumentVisitor
+	populateBindingsWithTypeArgumentVisitor intsrv.IPopulateBindingsWithTypeArgumentVisitor
 	contextualBindings                      map[string]intmod.ITypeArgument
 	contextualTypeBounds                    map[string]intmod.IType
 	typ                                     intmod.IType
