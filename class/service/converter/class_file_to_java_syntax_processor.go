@@ -2,7 +2,6 @@ package converter
 
 import (
 	"github.com/ElectricSaw/go-jd-core/class/api"
-	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/message"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/processor"
 	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
@@ -25,9 +24,9 @@ func (p *ClassFileToJavaSyntaxProcessor) Process(message *message.Message) error
 	if configuration == nil {
 		message.Headers["typeMaker"] = visitor.NewTypeMaker(loader)
 	} else {
-		typeMaker := configuration["typeMaker"].(intsrv.ITypeMaker)
+		typeMaker, ok := configuration["typeMaker"]
 
-		if typeMaker == nil {
+		if !ok {
 			// Store the heavy weight object 'typeMaker' in 'configuration' to reuse it
 			typeMaker = visitor.NewTypeMaker(loader)
 			configuration["typeMaker"] = typeMaker

@@ -20,6 +20,8 @@ func TestLog4j(t *testing.T) {
 	//statistics := make(map[string]int)
 	configuration := make(map[string]interface{})
 
+	configuration["realignLineNumbers"] = true
+
 	message := message.NewMessage()
 	message.Headers["loader"] = classLoader
 	message.Headers["printer"] = printer
