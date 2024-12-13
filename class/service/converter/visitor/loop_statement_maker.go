@@ -8,6 +8,7 @@ import (
 	modsts "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvsts "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor/utils"
 	"strings"
 )
 
@@ -296,7 +297,7 @@ func createForStatementWithoutLineNumber(localVariableMaker intsrv.ILocalVariabl
 		init := statements.Last().Expression()
 
 		if init.LeftExpression().IsLocalVariableReferenceExpression() {
-			localVariable := convertTo(init.LeftExpression())
+			localVariable := utils.ConvertTo(init.LeftExpression())
 			update := subStatements.Last().Expression()
 			var expression intmod.IExpression
 
@@ -312,7 +313,7 @@ func createForStatementWithoutLineNumber(localVariableMaker intsrv.ILocalVariabl
 				return modsts.NewWhileStatement(condition, subStatements)
 			}
 
-			if expression.IsLocalVariableReferenceExpression() && convertTo(expression) == localVariable {
+			if expression.IsLocalVariableReferenceExpression() && utils.ConvertTo(expression) == localVariable {
 				statements.RemoveLast()
 				subStatements.RemoveLast()
 
@@ -367,8 +368,8 @@ func makeForEachArray(
 		return nil
 	}
 
-	syntheticArray := convertTo(expression)
-	syntheticLength := convertTo(boe.LeftExpression())
+	syntheticArray := utils.ConvertTo(expression)
+	syntheticLength := utils.ConvertTo(boe.LeftExpression())
 
 	if (syntheticArray.Name() != "") && strings.Index(syntheticArray.Name(), "$") == -1 {
 		return nil
@@ -389,12 +390,12 @@ func makeForEachArray(
 		!arrayExpression.Index().IsLocalVariableReferenceExpression() {
 		return nil
 	}
-	if convertTo(arrayExpression.Expression()) != syntheticArray {
+	if utils.ConvertTo(arrayExpression.Expression()) != syntheticArray {
 		return nil
 	}
 
-	syntheticIndex := convertTo(arrayExpression.Index())
-	item := convertTo(expression.LeftExpression())
+	syntheticIndex := utils.ConvertTo(arrayExpression.Index())
+	item := utils.ConvertTo(expression.LeftExpression())
 
 	if syntheticIndex.Name() != "" && strings.Index(syntheticIndex.Name(), "$") == -1 {
 		return nil
@@ -406,7 +407,7 @@ func makeForEachArray(
 	if !expression.LeftExpression().IsLocalVariableReferenceExpression() {
 		return nil
 	}
-	if convertTo(expression.LeftExpression()) != syntheticArray {
+	if utils.ConvertTo(expression.LeftExpression()) != syntheticArray {
 		return nil
 	}
 
@@ -422,7 +423,7 @@ func makeForEachArray(
 		return nil
 	}
 	if (expression.RightExpression().IntegerValue() != 0) ||
-		convertTo(expression.LeftExpression()) != syntheticIndex {
+		utils.ConvertTo(expression.LeftExpression()) != syntheticIndex {
 		return nil
 	}
 
@@ -432,8 +433,8 @@ func makeForEachArray(
 		return nil
 	}
 
-	if convertTo(condition.LeftExpression()) != syntheticIndex ||
-		convertTo(condition.RightExpression()) != syntheticLength {
+	if utils.ConvertTo(condition.LeftExpression()) != syntheticIndex ||
+		utils.ConvertTo(condition.RightExpression()) != syntheticLength {
 		return nil
 	}
 
@@ -492,7 +493,7 @@ func makeForEachList(
 		return nil
 	}
 
-	syntheticIterator := convertTo(mie.Expression())
+	syntheticIterator := utils.ConvertTo(mie.Expression())
 
 	// Iterator i$ = list.Iterator();
 	boe := statements.Last().Expression()
@@ -509,7 +510,7 @@ func makeForEachList(
 	if mie.Name() != "iterator" || mie.Descriptor() != "()Ljava/util/Iterator;" {
 		return nil
 	}
-	if convertTo(boe.LeftExpression()) != syntheticIterator {
+	if utils.ConvertTo(boe.LeftExpression()) != syntheticIterator {
 		return nil
 	}
 
@@ -541,7 +542,7 @@ func makeForEachList(
 		return nil
 	}
 
-	if convertTo(mie.Expression()) != syntheticIterator {
+	if utils.ConvertTo(mie.Expression()) != syntheticIterator {
 		return nil
 	}
 
@@ -559,7 +560,7 @@ func makeForEachList(
 	}
 
 	// Found
-	item := convertTo(boe.LeftExpression())
+	item := utils.ConvertTo(boe.LeftExpression())
 
 	statements.RemoveLast()
 	subStatements.RemoveAt(0)

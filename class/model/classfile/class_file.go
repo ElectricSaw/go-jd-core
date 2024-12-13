@@ -102,8 +102,16 @@ func (cf ClassFile) OuterClassFile() intcls.IClassFile {
 	return cf.outerClassFile
 }
 
+func (cf ClassFile) SetOuterClassFile(outerClassFile intcls.IClassFile) {
+	cf.outerClassFile = outerClassFile
+}
+
 func (cf ClassFile) InnerClassFiles() []intcls.IClassFile {
 	return cf.innerClassFiles
+}
+
+func (cf ClassFile) SetInnerClassFiles(innerClassFiles []intcls.IClassFile) {
+	cf.innerClassFiles = innerClassFiles
 }
 
 func (cf ClassFile) String() string {

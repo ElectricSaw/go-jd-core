@@ -184,6 +184,8 @@ type IElementValueClassInfo interface {
 }
 
 type IElementValueEnumConstValue interface {
+	IElementValue
+	
 	Descriptor() string
 	ConstName() string
 }

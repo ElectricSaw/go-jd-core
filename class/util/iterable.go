@@ -1,9 +1,5 @@
 package util
 
-import (
-	"fmt"
-)
-
 // IIterable 인터페이스: Java의 Iterable<T>에 해당
 type IIterable[T comparable] interface {
 	Iterator() IIterator[T] // Iterator 반환
@@ -35,23 +31,4 @@ func (s *Iterable[T]) ForEach(action func(T)) {
 	for _, v := range s.data {
 		action(v)
 	}
-}
-
-// 사용 예제
-func main() {
-	// 슬라이스를 Iterable로 감싸기
-	data := []int{1, 2, 3, 4, 5}
-	iterable := &Iterable[int]{data: data}
-
-	// Iterator를 사용해 수동 반복
-	iterator := iterable.Iterator()
-	for iterator.HasNext() {
-		value := iterator.Next()
-		fmt.Println(value)
-	}
-
-	// ForEach로 각 요소에 대해 작업 수행
-	iterable.ForEach(func(value int) {
-		fmt.Printf("Value: %d\n", value)
-	})
 }

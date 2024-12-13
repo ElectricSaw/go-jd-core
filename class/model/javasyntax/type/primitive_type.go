@@ -22,16 +22,16 @@ var PtMaybeNegativeShortType = NewPrimitiveType("maybe_negative_short", intmod.F
 var PtMaybeIntType = NewPrimitiveType("maybe_int", intmod.FlagInt, intmod.FlagInt, intmod.FlagInt)                                                                                                                                                                                                                     // Otherwise
 var PtMaybeNegativeBooleanType = NewPrimitiveType("maybe_negative_boolean", intmod.FlagBoolean|intmod.FlagByte|intmod.FlagShort|intmod.FlagInt, intmod.FlagBoolean|intmod.FlagByte|intmod.FlagShort|intmod.FlagInt, intmod.FlagBoolean|intmod.FlagByte|intmod.FlagShort|intmod.FlagInt)                                // Boolean or negative
 
-var descriptorToType = []intmod.IPrimitiveType{
-	PtTypeByte,
-	PtTypeChar,
-	PtTypeDouble,
-	PtTypeFloat,
-	PtTypeInt,
-	PtTypeLong,
-	PtTypeShort,
-	PtTypeVoid,
-	PtTypeBoolean,
+var descriptorToType = map[int]intmod.IPrimitiveType{
+	int('B') - int('B'): PtTypeByte,
+	int('C') - int('B'): PtTypeChar,
+	int('D') - int('B'): PtTypeDouble,
+	int('F') - int('B'): PtTypeFloat,
+	int('I') - int('B'): PtTypeInt,
+	int('J') - int('B'): PtTypeLong,
+	int('S') - int('B'): PtTypeShort,
+	int('V') - int('B'): PtTypeVoid,
+	int('Z') - int('B'): PtTypeBoolean,
 }
 
 func GetPrimitiveType(primitiveDescriptor int) intmod.IPrimitiveType {

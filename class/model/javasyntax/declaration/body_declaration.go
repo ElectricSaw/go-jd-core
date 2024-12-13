@@ -2,7 +2,6 @@ package declaration
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMemberDeclaration) intmod.IBodyDeclaration {
@@ -10,13 +9,10 @@ func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMembe
 		internalTypeName:   internalTypeName,
 		memberDeclarations: memberDeclaration,
 	}
-	d.SetValue(d)
 	return d
 }
 
 type BodyDeclaration struct {
-	util.DefaultBase[intmod.IBodyDeclaration]
-
 	internalTypeName   string
 	memberDeclarations intmod.IMemberDeclaration
 }

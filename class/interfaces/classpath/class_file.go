@@ -36,6 +36,7 @@ type IClassFile interface {
 	IsModule() bool
 	IsStatic() bool
 	AccessFlags() int
+	SetAccessFlags(accessFlags int)
 	InternalTypeName() string
 	SuperTypeName() string
 	InterfaceTypeNames() []string
@@ -44,7 +45,9 @@ type IClassFile interface {
 	Attributes() map[string]IAttribute
 	Attribute(name string) IAttribute
 	OuterClassFile() IClassFile
+	SetOuterClassFile(outerClassFile IClassFile)
 	InnerClassFiles() []IClassFile
+	SetInnerClassFiles(innerClassFiles []IClassFile)
 }
 
 type IField interface {

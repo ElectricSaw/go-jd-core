@@ -54,7 +54,6 @@ type IArrayVariableInitializer interface {
 
 type IBodyDeclaration interface {
 	IDeclaration
-	util.IBase[IBodyDeclaration]
 
 	InternalTypeName() string
 	MemberDeclarations() IMemberDeclaration

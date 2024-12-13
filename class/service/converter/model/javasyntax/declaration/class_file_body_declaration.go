@@ -6,6 +6,7 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/class/util"
 )
 
 func NewClassFileBodyDeclaration(classFile intcls.IClassFile, bindings map[string]intmod.ITypeArgument,
@@ -23,6 +24,7 @@ func NewClassFileBodyDeclaration(classFile intcls.IClassFile, bindings map[strin
 
 type ClassFileBodyDeclaration struct {
 	declaration.BodyDeclaration
+	util.DefaultBase[intmod.IMemberDeclaration]
 
 	classFile                intcls.IClassFile
 	fieldDeclarations        []intsrv.IClassFileFieldDeclaration

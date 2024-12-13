@@ -512,7 +512,7 @@ func (v *ExpressionVisitor) VisitStringConstantExpression(expr intmod.IStringCon
 
 func (v *ExpressionVisitor) VisitSuperConstructorInvocationExpression(expr intmod.ISuperConstructorInvocationExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(Super)
+	v.tokens.Add(token.Super)
 	v.tokens.Add(token.StartParametersBlock)
 
 	parameters := expr.Parameters()
@@ -526,7 +526,7 @@ func (v *ExpressionVisitor) VisitSuperConstructorInvocationExpression(expr intmo
 
 func (v *ExpressionVisitor) VisitSuperExpression(expr intmod.ISuperExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(Super)
+	v.tokens.Add(token.Super)
 }
 
 func (v *ExpressionVisitor) VisitTernaryOperatorExpression(expr intmod.ITernaryOperatorExpression) {
@@ -568,7 +568,7 @@ func (v *ExpressionVisitor) printTernaryOperatorExpression(expr intmod.IExpressi
 func (v *ExpressionVisitor) VisitThisExpression(expr intmod.IThisExpression) {
 	if expr.IsExplicit() {
 		v.tokens.AddLineNumberToken(expr)
-		v.tokens.Add(This)
+		v.tokens.Add(token.This)
 	}
 }
 
@@ -579,7 +579,7 @@ func (v *ExpressionVisitor) VisitTypeReferenceDotClassExpression(expr intmod.ITy
 
 	typ.AcceptTypeVisitor(v)
 	v.tokens.Add(token.Dot)
-	v.tokens.Add(Class)
+	v.tokens.Add(token.Class)
 }
 
 func (v *ExpressionVisitor) storeContext() {

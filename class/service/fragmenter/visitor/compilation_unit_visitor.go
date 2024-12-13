@@ -195,7 +195,7 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 			fragutil.AddSpacerBeforeExtends(v.fragments)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(Exports)
+			v.tokens.Add(token.Exports)
 			v.tokens.Add(token.Space)
 			superType.AcceptTypeVisitor(v)
 			v.fragments.AddTokensFragment(v.tokens)
@@ -446,7 +446,7 @@ func (v *CompilationUnitVisitor) VisitEnumDeclaration(declaration intmod.IEnumDe
 	if (declaration.Flags() & intmod.FlagSynthetic) == 0 {
 		v.fragments.Add(javafragment.StartMovableTypeBlock)
 
-		v.buildFragmentsForTypeDeclaration(declaration, declaration.Flags(), Enum)
+		v.buildFragmentsForTypeDeclaration(declaration, declaration.Flags(), token.Enum)
 
 		// Build v.fragments for interfaces
 		interfaces := declaration.Interfaces()
@@ -458,7 +458,7 @@ func (v *CompilationUnitVisitor) VisitEnumDeclaration(declaration intmod.IEnumDe
 			fragutil.AddSpacerBeforeImplements(v.fragments)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(Implements)
+			v.tokens.Add(token.Implements)
 			v.tokens.Add(token.Space)
 			interfaces.AcceptTypeVisitor(v)
 			v.fragments.AddTokensFragment(v.tokens)

@@ -18,7 +18,7 @@ var SwitchBreak = NewImmutableBasicBlock(intsrv.TypeSwitchBreak).(intsrv.IBasicB
 var LoopStart = NewImmutableBasicBlock(intsrv.TypeLoopStart).(intsrv.IBasicBlock)
 var LoopContinue = NewImmutableBasicBlock(intsrv.TypeLoopContinue).(intsrv.IBasicBlock)
 var LoopEnd = NewImmutableBasicBlock(intsrv.TypeLoopEnd).(intsrv.IBasicBlock)
-var End = NewImmutableBasicBlock(intsrv.TypeEnd).(intsrv.IBasicBlock)
+var End = newImmutableBasicBlockEnd(intsrv.TypeEnd).(intsrv.IBasicBlock)
 var Return = NewImmutableBasicBlock(intsrv.TypeReturn).(intsrv.IBasicBlock)
 
 func NewBasicBlock(controlFlowGraph intsrv.IControlFlowGraph, index int, original intsrv.IBasicBlock) intsrv.IBasicBlock {
@@ -44,11 +44,14 @@ func NewBasicBlockWithBasicBlocks(controlFlowGraph intsrv.IControlFlowGraph, ind
 	}
 }
 
-func NewBasicBlockWithRaw(controlFlowGraph *ControlFlowGraph, index, typ, fromOffset, toOffset int, inverseCondition bool) *BasicBlock {
-	return NewBasicBlockWithRawBasicBlock(controlFlowGraph, index, typ, fromOffset, toOffset, inverseCondition, util.NewSet[intsrv.IBasicBlock]())
+func NewBasicBlockWithRaw(controlFlowGraph *ControlFlowGraph, index, typ, fromOffset, toOffset int,
+	inverseCondition bool) *BasicBlock {
+	return NewBasicBlockWithRawBasicBlock(controlFlowGraph, index, typ, fromOffset,
+		toOffset, inverseCondition, util.NewSet[intsrv.IBasicBlock]())
 }
 
-func NewBasicBlockWithRawBasicBlock(controlFlowGraph *ControlFlowGraph, index, typ, fromOffset, toOffset int, inverseCondition bool, predecessors util.ISet[intsrv.IBasicBlock]) *BasicBlock {
+func NewBasicBlockWithRawBasicBlock(controlFlowGraph *ControlFlowGraph, index, typ, fromOffset, toOffset int,
+	inverseCondition bool, predecessors util.ISet[intsrv.IBasicBlock]) *BasicBlock {
 	return &BasicBlock{
 		controlFlowGraph: controlFlowGraph,
 		index:            index,
@@ -491,8 +494,36 @@ func (c *SwitchCase) String() string {
 
 func NewImmutableBasicBlock(typ int) intsrv.IImmutableBasicBlock {
 	return &ImmutableBasicBlock{
-		BasicBlock: *NewBasicBlockWithRawBasicBlock(nil, -1, typ, 0, 0, true, util.NewSet[intsrv.IBasicBlock]()),
+		BasicBlock: *NewBasicBlockWithRawBasicBlock(nil, -1, typ,
+			0, 0, true, util.NewSet[intsrv.IBasicBlock]()),
 	}
+}
+
+func newImmutableBasicBlockEnd(typ int) intsrv.IImmutableBasicBlock {
+	end := &ImmutableBasicBlock{
+		BasicBlock: BasicBlock{
+			controlFlowGraph: nil,
+			index:            -1,
+			typ:              typ,
+			fromOffset:       0,
+			toOffset:         0,
+			next:             nil,
+			branch:           nil,
+			condition:        nil,
+			sub1:             nil,
+			sub2:             nil,
+			predecessors:     util.NewSet[intsrv.IBasicBlock](),
+			inverseCondition: true,
+		},
+	}
+
+	end.next = end
+	end.branch = end
+	end.condition = end
+	end.sub1 = end
+	end.sub2 = end
+
+	return end
 }
 
 type ImmutableBasicBlock struct {

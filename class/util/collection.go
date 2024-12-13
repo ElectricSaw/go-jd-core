@@ -1,9 +1,5 @@
 package util
 
-import (
-	"fmt"
-)
-
 // ICollection 인터페이스: Java Collection을 Go 스타일로 변환
 type ICollection[T comparable] interface {
 	Size() int                     // 요소 개수 반환
@@ -130,27 +126,4 @@ func (c *Collection[T]) ToSlice() []T {
 func (c *Collection[T]) Iterator() IIterator[T] {
 	elements := c.ToSlice()
 	return &Iterator[T]{data: elements, index: 0}
-}
-
-// 사용 예제
-func main() {
-	collection := NewCollection[int]()
-	collection.Add(1)
-	collection.Add(2)
-	collection.Add(3)
-
-	fmt.Println("Size:", collection.Size())            // Size: 3
-	fmt.Println("Contains 2:", collection.Contains(2)) // Contains 2: true
-
-	collection.Remove(2)
-	fmt.Println("Contains 2 after removal:", collection.Contains(2)) // Contains 2 after removal: false
-
-	collection.AddAll([]int{4, 5, 6})
-	fmt.Println("All elements:", collection.ToSlice()) // All elements: [1 3 4 5 6]
-
-	collection.RetainAll([]int{1, 4})
-	fmt.Println("After retain only [1, 4]:", collection.ToSlice()) // After retain only [1, 4]: [1 4]
-
-	collection.Clear()
-	fmt.Println("Size after clear:", collection.Size()) // Size after clear: 0
 }
