@@ -93,6 +93,10 @@ func (d *ClassFileStaticInitializerDeclaration) SetFirstLineNumber(lineNumber in
 	d.firstLineNumber = lineNumber
 }
 
+func (d *ClassFileStaticInitializerDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitStaticInitializerDeclaration(d)
+}
+
 func (d *ClassFileStaticInitializerDeclaration) String() string {
 	return fmt.Sprintf("ClassFileStaticInitializerDeclaration{%s, firstLineNumber=%d}", d.Description(), d.firstLineNumber)
 }

@@ -14,23 +14,49 @@ func NewDirectoryLoader(path string) *DirectoryLoader {
 		Map:  make(map[string][]byte),
 	}
 
-	files, err := os.ReadDir(loader.Path)
+	absPath, err := filepath.Abs(path)
+	if err != nil {
+		fmt.Println(err)
+	}
+	loader.Map = findFiles(absPath, path, loader.Map)
+
+	return loader
+}
+
+func findFiles(root, path string, m map[string][]byte) map[string][]byte {
+	files, err := os.ReadDir(path)
 	if err != nil {
 		return nil
 	}
 
 	for _, file := range files {
 		if !file.IsDir() {
-			contents, err := os.ReadFile(filepath.Join(loader.Path, file.Name()))
+			contents, err := os.ReadFile(filepath.Join(path, file.Name()))
 			if err != nil {
 				fmt.Println(err)
 				continue
 			}
-			loader.Map[file.Name()] = contents
+
+			absPath, err := filepath.Abs(filepath.Join(path, file.Name()))
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+
+			relPath, err := filepath.Rel(root, absPath)
+			if err != nil {
+				fmt.Println(err)
+				continue
+			}
+
+			relPath = filepath.ToSlash(relPath)
+			m[relPath] = contents
+		} else {
+			m = findFiles(root, filepath.Join(path, file.Name()), m)
 		}
 	}
 
-	return loader
+	return m
 }
 
 type DirectoryLoader struct {

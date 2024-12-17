@@ -2,13 +2,14 @@ package visitor
 
 import (
 	"fmt"
+	"strings"
+
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/class/service/converter/model/javasyntax/expression"
-	"strings"
 )
 
 func NewUpdateBridgeMethodVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateBridgeMethodVisitor {
@@ -399,4 +400,443 @@ func getFieldReferenceExpression(expression intmod.IExpression) intmod.IFieldRef
 	}
 
 	return fre
+}
+
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+// $$$                                 $$$
+// $$$ AbstractUpdateExpressionVisitor $$$
+// $$$                                 $$$
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+func (v *UpdateBridgeMethodVisitor) UpdateExpression(_ intmod.IExpression) intmod.IExpression {
+	return nil
+}
+
+func (v *UpdateBridgeMethodVisitor) UpdateBaseExpression(baseExpression intmod.IExpression) intmod.IExpression {
+	if baseExpression == nil {
+		return nil
+	}
+
+	if baseExpression.IsList() {
+		iterator := baseExpression.ToList().ListIterator()
+
+		for iterator.HasNext() {
+			value := iterator.Next()
+			_ = iterator.Set(v.UpdateExpression(value))
+		}
+
+		return baseExpression
+	}
+
+	return v.UpdateExpression(baseExpression.First())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitAnnotationDeclaration(decl intmod.IAnnotationDeclaration) {
+	v.SafeAcceptDeclaration(decl.AnnotationDeclarators())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitClassDeclaration(declaration intmod.IClassDeclaration) {
+	v.VisitInterfaceDeclaration(declaration)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitConstructorInvocationExpression(expression intmod.IConstructorInvocationExpression) {
+	if expression.Parameters() != nil {
+		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
+		expression.Parameters().Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitConstructorDeclaration(declaration intmod.IConstructorDeclaration) {
+	v.SafeAcceptStatement(declaration.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitEnumDeclaration(declaration intmod.IEnumDeclaration) {
+	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitEnumDeclarationConstant(declaration intmod.IConstant) {
+	if declaration.Arguments() != nil {
+		declaration.SetArguments(v.UpdateBaseExpression(declaration.Arguments()))
+		declaration.Arguments().Accept(v)
+	}
+	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitExpressionVariableInitializer(declaration intmod.IExpressionVariableInitializer) {
+	if declaration.Expression() != nil {
+		declaration.SetExpression(v.UpdateExpression(declaration.Expression()))
+		declaration.Expression().Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitFieldDeclaration(declaration intmod.IFieldDeclaration) {
+	declaration.FieldDeclarators().AcceptDeclaration(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitFieldDeclarator(declaration intmod.IFieldDeclarator) {
+	v.SafeAcceptDeclaration(declaration.VariableInitializer())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitFormalParameter(_ intmod.IFormalParameter) {
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitInterfaceDeclaration(declaration intmod.IInterfaceDeclaration) {
+	v.SafeAcceptDeclaration(declaration.BodyDeclaration())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitLocalVariableDeclaration(declaration intmod.ILocalVariableDeclaration) {
+	declaration.LocalVariableDeclarators().AcceptDeclaration(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitLocalVariableDeclarator(declarator intmod.ILocalVariableDeclarator) {
+	v.SafeAcceptDeclaration(declarator.VariableInitializer())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitMethodDeclaration(declaration intmod.IMethodDeclaration) {
+	v.SafeAcceptReference(declaration.AnnotationReferences())
+	v.SafeAcceptStatement(declaration.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitArrayExpression(expression intmod.IArrayExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.SetIndex(v.UpdateExpression(expression.Index()))
+	expression.Expression().Accept(v)
+	expression.Index().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitBinaryOperatorExpression(expression intmod.IBinaryOperatorExpression) {
+	expression.SetLeftExpression(v.UpdateExpression(expression.LeftExpression()))
+	expression.SetRightExpression(v.UpdateExpression(expression.RightExpression()))
+	expression.LeftExpression().Accept(v)
+	expression.RightExpression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitCastExpression(expression intmod.ICastExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitFieldReferenceExpression(expression intmod.IFieldReferenceExpression) {
+	if expression.Expression() != nil {
+		expression.SetExpression(v.UpdateExpression(expression.Expression()))
+		expression.Expression().Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitInstanceOfExpression(expression intmod.IInstanceOfExpression) {
+	if expression.Expression() != nil {
+		expression.SetExpression(v.UpdateExpression(expression.Expression()))
+		expression.Expression().Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitLambdaFormalParametersExpression(expression intmod.ILambdaFormalParametersExpression) {
+	expression.Statements().AcceptStatement(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitLengthExpression(expression intmod.ILengthExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitMethodReferenceExpression(expression intmod.IMethodReferenceExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitNewArray(expression intmod.INewArray) {
+	if expression.DimensionExpressionList() != nil {
+		expression.SetDimensionExpressionList(v.UpdateBaseExpression(expression.DimensionExpressionList()))
+		expression.DimensionExpressionList().Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitNewExpression(expression intmod.INewExpression) {
+	if expression.Parameters() != nil {
+		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
+		expression.Parameters().Accept(v)
+	}
+	// v.SafeAccept(expression.BodyDeclaration());
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitNewInitializedArray(expression intmod.INewInitializedArray) {
+	v.SafeAcceptDeclaration(expression.ArrayInitializer())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitParenthesesExpression(expression intmod.IParenthesesExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitPostOperatorExpression(expression intmod.IPostOperatorExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitPreOperatorExpression(expression intmod.IPreOperatorExpression) {
+	expression.SetExpression(v.UpdateExpression(expression.Expression()))
+	expression.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitSuperConstructorInvocationExpression(expression intmod.ISuperConstructorInvocationExpression) {
+	if expression.Parameters() != nil {
+		expression.SetParameters(v.UpdateBaseExpression(expression.Parameters()))
+		expression.Parameters().Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitTernaryOperatorExpression(expression intmod.ITernaryOperatorExpression) {
+	expression.SetCondition(v.UpdateExpression(expression.Condition()))
+	expression.SetTrueExpression(v.UpdateExpression(expression.TrueExpression()))
+	expression.SetFalseExpression(v.UpdateExpression(expression.FalseExpression()))
+	expression.Condition().Accept(v)
+	expression.TrueExpression().Accept(v)
+	expression.FalseExpression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitExpressionElementValue(reference intmod.IExpressionElementValue) {
+	reference.SetExpression(v.UpdateExpression(reference.Expression()))
+	reference.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitAssertStatement(statement intmod.IAssertStatement) {
+	statement.SetCondition(v.UpdateExpression(statement.Condition()))
+	statement.Condition().Accept(v)
+	v.SafeAcceptExpression(statement.Message())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitDoWhileStatement(statement intmod.IDoWhileStatement) {
+	statement.SetCondition(v.UpdateExpression(statement.Condition()))
+	v.SafeAcceptExpression(statement.Condition())
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitExpressionStatement(statement intmod.IExpressionStatement) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitForEachStatement(statement intmod.IForEachStatement) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitForStatement(statement intmod.IForStatement) {
+	v.SafeAcceptDeclaration(statement.Declaration())
+	if statement.Init() != nil {
+		statement.SetInit(v.UpdateBaseExpression(statement.Init()))
+		statement.Init().Accept(v)
+	}
+	if statement.Condition() != nil {
+		statement.SetCondition(v.UpdateExpression(statement.Condition()))
+		statement.Condition().Accept(v)
+	}
+	if statement.Update() != nil {
+		statement.SetUpdate(v.UpdateBaseExpression(statement.Update()))
+		statement.Update().Accept(v)
+	}
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitIfStatement(statement intmod.IIfStatement) {
+	statement.SetCondition(v.UpdateExpression(statement.Condition()))
+	statement.Condition().Accept(v)
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitIfElseStatement(statement intmod.IIfElseStatement) {
+	statement.SetCondition(v.UpdateExpression(statement.Condition()))
+	statement.Condition().Accept(v)
+	v.SafeAcceptStatement(statement.Statements())
+	statement.ElseStatements().AcceptStatement(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitLambdaExpressionStatement(statement intmod.ILambdaExpressionStatement) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitReturnExpressionStatement(statement intmod.IReturnExpressionStatement) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitSwitchStatement(statement intmod.ISwitchStatement) {
+	statement.SetCondition(v.UpdateExpression(statement.Condition()))
+	statement.Condition().Accept(v)
+	v.AcceptListStatement(statement.List())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitSwitchStatementExpressionLabel(statement intmod.IExpressionLabel) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitSynchronizedStatement(statement intmod.ISynchronizedStatement) {
+	statement.SetMonitor(v.UpdateExpression(statement.Monitor()))
+	statement.Monitor().Accept(v)
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitThrowStatement(statement intmod.IThrowStatement) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitTryStatementCatchClause(statement intmod.ICatchClause) {
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitTryStatementResource(statement intmod.IResource) {
+	statement.SetExpression(v.UpdateExpression(statement.Expression()))
+	statement.Expression().Accept(v)
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitWhileStatement(statement intmod.IWhileStatement) {
+	statement.SetCondition(v.UpdateExpression(statement.Condition()))
+	statement.Condition().Accept(v)
+	v.SafeAcceptStatement(statement.Statements())
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitConstructorReferenceExpression(_ intmod.IConstructorReferenceExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitDoubleConstantExpression(_ intmod.IDoubleConstantExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitEnumConstantReferenceExpression(_ intmod.IEnumConstantReferenceExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitFloatConstantExpression(_ intmod.IFloatConstantExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitIntegerConstantExpression(_ intmod.IIntegerConstantExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitLocalVariableReferenceExpression(_ intmod.ILocalVariableReferenceExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitLongConstantExpression(_ intmod.ILongConstantExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitNullExpression(_ intmod.INullExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitTypeReferenceDotClassExpression(_ intmod.ITypeReferenceDotClassExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitObjectTypeReferenceExpression(_ intmod.IObjectTypeReferenceExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitStringConstantExpression(_ intmod.IStringConstantExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitSuperExpression(_ intmod.ISuperExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitThisExpression(_ intmod.IThisExpression) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitAnnotationReference(_ intmod.IAnnotationReference) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitElementValueArrayInitializerElementValue(_ intmod.IElementValueArrayInitializerElementValue) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitAnnotationElementValue(_ intmod.IAnnotationElementValue) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitObjectReference(_ intmod.IObjectReference) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitBreakStatement(_ intmod.IBreakStatement) {}
+func (v *UpdateBridgeMethodVisitor) VisitByteCodeStatement(_ intmod.IByteCodeStatement) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitContinueStatement(_ intmod.IContinueStatement) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitReturnStatement(_ intmod.IReturnStatement) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitSwitchStatementDefaultLabel(_ intmod.IDefaultLabel) {
+}
+
+func (v *UpdateBridgeMethodVisitor) VisitInnerObjectReference(_ intmod.IInnerObjectReference) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {}
+func (v *UpdateBridgeMethodVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitObjectType(_ intmod.IObjectType)           {}
+func (v *UpdateBridgeMethodVisitor) VisitInnerObjectType(_ intmod.IInnerObjectType) {}
+func (v *UpdateBridgeMethodVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
+}
+func (v *UpdateBridgeMethodVisitor) VisitTypes(_ intmod.ITypes) {}
+func (v *UpdateBridgeMethodVisitor) VisitTypeParameterWithTypeBounds(_ intmod.ITypeParameterWithTypeBounds) {
+}
+
+func (v *UpdateBridgeMethodVisitor) AcceptListDeclaration(list []intmod.IDeclaration) {
+	for _, value := range list {
+		value.AcceptDeclaration(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) AcceptListExpression(list []intmod.IExpression) {
+	for _, value := range list {
+		value.Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) AcceptListReference(list []intmod.IReference) {
+	for _, value := range list {
+		value.Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) AcceptListStatement(list []intmod.IStatement) {
+	for _, value := range list {
+		value.AcceptStatement(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptDeclaration(decl intmod.IDeclaration) {
+	if decl != nil {
+		decl.AcceptDeclaration(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptExpression(expr intmod.IExpression) {
+	if expr != nil {
+		expr.Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptReference(ref intmod.IReference) {
+	if ref != nil {
+		ref.Accept(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptStatement(list intmod.IStatement) {
+	if list != nil {
+		list.AcceptStatement(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptType(list intmod.IType) {
+	if list != nil {
+		list.AcceptTypeVisitor(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptTypeParameter(list intmod.ITypeParameter) {
+	if list != nil {
+		list.AcceptTypeParameterVisitor(v)
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptListDeclaration(list []intmod.IDeclaration) {
+	if list != nil {
+		for _, value := range list {
+			value.AcceptDeclaration(v)
+		}
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptListConstant(list []intmod.IConstant) {
+	if list != nil {
+		for _, value := range list {
+			value.AcceptDeclaration(v)
+		}
+	}
+}
+
+func (v *UpdateBridgeMethodVisitor) SafeAcceptListStatement(list []intmod.IStatement) {
+	if list != nil {
+		for _, value := range list {
+			value.AcceptStatement(v)
+		}
+	}
 }

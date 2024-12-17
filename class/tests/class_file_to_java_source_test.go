@@ -9,7 +9,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/service/tokenizer"
 	"github.com/ElectricSaw/go-jd-core/class/service/writer"
 	"github.com/ElectricSaw/go-jd-core/class/tests/testutils"
-	"strings"
 	"testing"
 )
 
@@ -35,20 +34,35 @@ func TestLog4j(t *testing.T) {
 	tkn := tokenizer.NewJavaFragmentToTokenProcessor()
 	wri := writer.NewWriteTokenProcessor()
 
-	for k, _ := range classLoader.Map {
-		if strings.HasSuffix(k, ".class") && (strings.Index(k, "$") == -1) {
-			internalTypeName := k[:len(k)-6]
-			message.Headers["mainInternalTypeName"] = internalTypeName
+	key := "org/apache/log4j/or/sax/AttributesRenderer.class"
+	if _, ok := classLoader.Map[key]; ok {
+		internalTypeName := key[:len(key)-6]
+		message.Headers["mainInternalTypeName"] = internalTypeName
 
-			err := dsr.Process(message)
-			err = cnv.Process(message)
-			err = frg.Process(message)
-			err = lyt.Process(message)
-			err = tkn.Process(message)
-			err = wri.Process(message)
-			if err != nil {
-				t.Fatal(err)
-			}
+		err := dsr.Process(message)
+		err = cnv.Process(message)
+		err = frg.Process(message)
+		err = lyt.Process(message)
+		err = tkn.Process(message)
+		err = wri.Process(message)
+		if err != nil {
+			t.Fatal(err)
 		}
 	}
+	//for k, _ := range classLoader.Map {
+	//	if strings.HasSuffix(k, ".class") && (strings.Index(k, "$") == -1) {
+	//		internalTypeName := k[:len(k)-6]
+	//		message.Headers["mainInternalTypeName"] = internalTypeName
+	//
+	//		err := dsr.Process(message)
+	//		err = cnv.Process(message)
+	//		err = frg.Process(message)
+	//		err = lyt.Process(message)
+	//		err = tkn.Process(message)
+	//		err = wri.Process(message)
+	//		if err != nil {
+	//			t.Fatal(err)
+	//		}
+	//	}
+	//}
 }

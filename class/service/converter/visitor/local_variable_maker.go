@@ -219,7 +219,10 @@ func (m *LocalVariableMaker) initLocalVariablesFromAttributes(method intcls.IMet
 			}
 		}
 
-		localVariableTypeTable := code.Attribute("LocalVariableTypeTable").(intcls.IAttributeLocalVariableTypeTable)
+		var localVariableTypeTable intcls.IAttributeLocalVariableTypeTable
+		if tmp := code.Attribute("LocalVariableTypeTable"); tmp != nil {
+			localVariableTypeTable = tmp.(intcls.IAttributeLocalVariableTypeTable)
+		}
 
 		if localVariableTypeTable != nil {
 			updateTypeVisitor := NewUpdateTypeVisitor(m.localVariableSet)

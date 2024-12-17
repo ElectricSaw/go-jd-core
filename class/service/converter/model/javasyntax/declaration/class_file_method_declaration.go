@@ -84,6 +84,10 @@ func (d *ClassFileMethodDeclaration) FirstLineNumber() int {
 	return d.firstLineNumber
 }
 
+func (d *ClassFileMethodDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitMethodDeclaration(d)
+}
+
 func (d *ClassFileMethodDeclaration) String() string {
 	return fmt.Sprintf("ClassFileMethodDeclaration{%s %s, firstLineNumber=%d}", d.Name(), d.Descriptor(), d.FirstLineNumber())
 }

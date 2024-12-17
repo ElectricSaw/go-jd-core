@@ -26,7 +26,7 @@ var CapitalizedJavaLanguageKeywords = []string{
 
 func NewFrame(parent intsrv.IFrame, stat intmod.IStatements) intsrv.IFrame {
 	return &Frame{
-		localVariableArray: make([]intsrv.ILocalVariable, 0),
+		localVariableArray: make([]intsrv.ILocalVariable, 10),
 		newExpressions:     make(map[intmod.INewExpression]intsrv.ILocalVariable),
 		children:           make([]intsrv.IFrame, 0),
 		parent:             parent,

@@ -34,6 +34,10 @@ func (d *ClassFileClassDeclaration) FirstLineNumber() int {
 	return d.firstLineNumber
 }
 
+func (d *ClassFileClassDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitClassDeclaration(d)
+}
+
 func (d *ClassFileClassDeclaration) String() string {
 	return fmt.Sprintf("ClassFileClassDeclaration{%s, firstLineNumber=%d}", d.InternalTypeName(), d.firstLineNumber)
 }

@@ -178,6 +178,10 @@ func (d *ClassFileBodyDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
+func (d *ClassFileBodyDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitBodyDeclaration(d)
+}
+
 func (d *ClassFileBodyDeclaration) String() string {
 	return fmt.Sprintf("ClassFileBodyDeclaration{firstLineNumber=%d}", d.firstLineNumber)
 }

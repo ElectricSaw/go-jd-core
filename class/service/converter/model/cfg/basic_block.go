@@ -25,7 +25,8 @@ func NewBasicBlock(controlFlowGraph intsrv.IControlFlowGraph, index int, origina
 	return NewBasicBlockWithBasicBlocks(controlFlowGraph, index, original, util.NewSet[intsrv.IBasicBlock]())
 }
 
-func NewBasicBlockWithBasicBlocks(controlFlowGraph intsrv.IControlFlowGraph, index int, original intsrv.IBasicBlock, predecessors util.ISet[intsrv.IBasicBlock]) intsrv.IBasicBlock {
+func NewBasicBlockWithBasicBlocks(controlFlowGraph intsrv.IControlFlowGraph, index int,
+	original intsrv.IBasicBlock, predecessors util.ISet[intsrv.IBasicBlock]) intsrv.IBasicBlock {
 	return &BasicBlock{
 		controlFlowGraph:  controlFlowGraph,
 		index:             index,

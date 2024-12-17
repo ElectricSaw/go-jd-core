@@ -7,7 +7,6 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/class/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/class/model/classfile/attribute"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/service/deserializer"
 	"hash/fnv"
@@ -101,13 +100,16 @@ func (m *TypeMaker) ParseClassFileSignature(classFile intcls.IClassFile) intsrv.
 	internalTypeName := classFile.InternalTypeName()
 
 	typeTypes.SetThisType(m.MakeFromInternalTypeName(internalTypeName))
-	attributeSignature := classFile.Attributes()["Signature"].(*attribute.AttributeSignature)
+	var attributeSignature intcls.IAttributeSignature
+	if tmp := classFile.Attributes()["Signature"]; tmp != nil {
+		attributeSignature = tmp.(intcls.IAttributeSignature)
+	}
 
 	if attributeSignature == nil {
 		superTypeName := classFile.SuperTypeName()
 		interfaceTypeNames := classFile.InterfaceTypeNames()
 
-		if superTypeName != "class/lang/Object" {
+		if superTypeName != "java/lang/Object" {
 			typeTypes.SetSuperType(m.MakeFromInternalTypeName(superTypeName))
 		}
 
@@ -144,7 +146,11 @@ func (m *TypeMaker) ParseMethodSignature(classFile intcls.IClassFile, method int
 }
 
 func (m *TypeMaker) parseMethodSignature(method intcls.IMethod, key string) intsrv.IMethodTypes {
-	attributeSignature := method.Attributes()["Signature"].(*attribute.AttributeSignature)
+	var attributeSignature intcls.IAttributeSignature
+	if tmp := method.Attributes()["Signature"]; tmp != nil {
+		attributeSignature = tmp.(intcls.IAttributeSignature)
+	}
+
 	exceptionTypeNames := getExceptionTypeNames(method)
 	var methodTypes intsrv.IMethodTypes
 
@@ -161,7 +167,10 @@ func (m *TypeMaker) parseMethodSignature(method intcls.IMethod, key string) ints
 
 func (m *TypeMaker) ParseFieldSignature(classFile intcls.IClassFile, field intcls.IField) intmod.IType {
 	key := classFile.InternalTypeName() + ":" + field.Name()
-	attributeSignature := field.Attributes()["Signature"].(*attribute.AttributeSignature)
+	var attributeSignature intcls.IAttributeSignature
+	if tmp := field.Attributes()["Signature"]; tmp != nil {
+		attributeSignature = tmp.(intcls.IAttributeSignature)
+	}
 	signature := ""
 
 	if attributeSignature == nil {
@@ -219,7 +228,7 @@ func (m *TypeMaker) parseMethodSignature2(signature string, exceptionTypeNames [
 			methodTypes.SetParameterTypes(nil)
 		} else {
 			nextParameterType := m.parseReferenceTypeSignature(reader)
-			types := &_type.UnmodifiableTypes{}
+			types := _type.NewUnmodifiableTypes()
 			types.Add(firstParameterType)
 
 			for nextParameterType != nil {
@@ -1146,9 +1155,11 @@ func (m *TypeMaker) loadType(internalTypeName string) intmod.IObjectType {
 		if m.loader.CanLoad(internalTypeName) {
 			data, _ := m.loader.Load(internalTypeName)
 			ot = m.loadType2(internalTypeName, data)
-		} else if m.classPathLoader.CanLoad(internalTypeName) {
+			m.internalTypeNameToObjectType[internalTypeName] = ot
+		} else if m.classPathLoader != nil && m.classPathLoader.CanLoad(internalTypeName) {
 			data, _ := m.classPathLoader.Load(internalTypeName)
 			ot = m.loadType2(internalTypeName, data)
+			m.internalTypeNameToObjectType[internalTypeName] = ot
 		}
 	}
 	return ot
@@ -1216,7 +1227,7 @@ func (m *TypeMaker) loadType2(internalTypeName string, data []byte) intmod.IObje
 	if outerObjectType == nil {
 		lastSlash := strings.LastIndex(internalTypeName, "/")
 		qualifiedName := strings.ReplaceAll(internalTypeName, "/", ".")
-		name := internalTypeName[lastSlash:]
+		name := internalTypeName[lastSlash+1:]
 
 		return _type.NewObjectType(internalTypeName, qualifiedName, name)
 	} else {
@@ -1228,7 +1239,7 @@ func (m *TypeMaker) loadType2(internalTypeName string, data []byte) intmod.IObje
 			index = strings.LastIndex(internalTypeName, "$")
 		}
 
-		innerName := internalTypeName[index:]
+		innerName := internalTypeName[index+1:]
 
 		if unicode.IsDigit(rune(innerName[0])) {
 			return _type.NewInnerObjectType(internalTypeName, "",
@@ -1408,7 +1419,7 @@ func (m *TypeMaker) loadClassFile(internalTypeName string, reader intsrv.IClassF
 	}
 
 	count := reader.ReadUnsignedShort()
-	superClassAndInterfaceNames := make([]string, 0, count+1)
+	superClassAndInterfaceNames := make([]string, count+1)
 	superClassAndInterfaceNames[0] = superClassName
 
 	for i := 1; i <= count; i++ {
@@ -1681,7 +1692,7 @@ func (r *SignatureReader) Available() bool {
 }
 
 func (r *SignatureReader) Substring(beginIndex int) string {
-	return string(r.array[beginIndex : r.index-beginIndex])
+	return string(r.array[beginIndex:r.index])
 }
 
 func (r *SignatureReader) String() string {
@@ -1805,7 +1816,10 @@ func CountDimension(descriptor string) int {
 
 func getExceptionTypeNames(method intcls.IMethod) []string {
 	if method != nil {
-		attributeExceptions := method.Attributes()["Exceptions"].(*attribute.AttributeExceptions)
+		var attributeExceptions intcls.IAttributeExceptions
+		if tmp := method.Attributes()["Exceptions"]; tmp != nil {
+			attributeExceptions = tmp.(intcls.IAttributeExceptions)
+		}
 
 		if attributeExceptions != nil {
 			return attributeExceptions.ExceptionTypeNames()

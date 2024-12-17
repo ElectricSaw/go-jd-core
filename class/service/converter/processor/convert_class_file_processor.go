@@ -36,6 +36,14 @@ func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
 
 	if classFile.IsEnum() {
 		typeDeclaration = p.convertEnumDeclaration(typeMaker, annotationConverter, classFile, nil)
+	} else if classFile.IsAnnotation() {
+		typeDeclaration = p.convertAnnotationDeclaration(typeMaker, annotationConverter, classFile, nil)
+	} else if classFile.IsModule() {
+		typeDeclaration = p.convertModuleDeclaration(classFile)
+	} else if classFile.IsInterface() {
+		typeDeclaration = p.convertInterfaceDeclaration(typeMaker, annotationConverter, classFile, nil)
+	} else {
+		typeDeclaration = p.convertClassDeclaration(typeMaker, annotationConverter, classFile, nil)
 	}
 
 	message.Headers["majorVersion"] = classFile.MajorVersion()
@@ -170,7 +178,10 @@ func (p *ConvertClassFileProcessor) convertMethods(
 		for _, method := range methods {
 			name := method.Name()
 			annotationReferences := p.convertAnnotationReferencesWithMethod(converter, method)
-			annotationDefault := method.Attributes()["AnnotationDefault"].(intcls.IAttributeAnnotationDefault)
+			var annotationDefault intcls.IAttributeAnnotationDefault
+			if tmp := method.Attributes()["AnnotationDefault"]; tmp != nil {
+				annotationDefault = tmp.(intcls.IAttributeAnnotationDefault)
+			}
 			var defaultAnnotationValue intmod.IElementValue
 
 			if annotationDefault != nil {
@@ -194,11 +205,17 @@ func (p *ConvertClassFileProcessor) convertMethods(
 				methodTypes.TypeParameters().AcceptTypeParameterVisitor(p.populateBindingsWithTypeParameterVisitor)
 			}
 
-			code := method.Attributes()["Code"].(intcls.IAttributeCode)
+			var code intcls.IAttributeCode
+			if tmp := method.Attribute("Code"); tmp != nil {
+				code = tmp.(intcls.IAttributeCode)
+			}
 			firstLineNumber := 0
 
 			if code != nil {
-				lineNumberTable := code.Attribute("LineNumberTable").(intcls.IAttributeLineNumberTable)
+				var lineNumberTable intcls.IAttributeLineNumberTable
+				if tmp := code.Attribute("LineNumberTable"); tmp != nil {
+					lineNumberTable = tmp.(intcls.IAttributeLineNumberTable)
+				}
 				if lineNumberTable != nil {
 					firstLineNumber = lineNumberTable.LineNumberTable()[0].LineNumber()
 				}
@@ -265,24 +282,39 @@ func (p *ConvertClassFileProcessor) convertInnerTypes(
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithClass(
 	converter intsrv.IAnnotationConverter, classFile intcls.IClassFile) intmod.IAnnotationReference {
-	visibles := classFile.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
-	invisibles := classFile.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
+	var visibles, invisibles intcls.IAnnotations = nil, nil
+	if tmp := classFile.Attribute("RuntimeVisibleAnnotations"); tmp != nil {
+		visibles = tmp.(intcls.IAnnotations)
+	}
+	if tmp := classFile.Attribute("RuntimeInvisibleAnnotations"); tmp != nil {
+		invisibles = tmp.(intcls.IAnnotations)
+	}
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithField(
 	converter intsrv.IAnnotationConverter, field intcls.IField) intmod.IAnnotationReference {
-	visibles := field.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
-	invisibles := field.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
+	var visibles, invisibles intcls.IAnnotations = nil, nil
+	if tmp := field.Attribute("RuntimeVisibleAnnotations"); tmp != nil {
+		visibles = tmp.(intcls.IAnnotations)
+	}
+	if tmp := field.Attribute("RuntimeInvisibleAnnotations"); tmp != nil {
+		invisibles = tmp.(intcls.IAnnotations)
+	}
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }
 
 func (p *ConvertClassFileProcessor) convertAnnotationReferencesWithMethod(
 	converter intsrv.IAnnotationConverter, method intcls.IMethod) intmod.IAnnotationReference {
-	visibles := method.Attribute("RuntimeVisibleAnnotations").(intcls.IAnnotations)
-	invisibles := method.Attribute("RuntimeInvisibleAnnotations").(intcls.IAnnotations)
+	var visibles, invisibles intcls.IAnnotations = nil, nil
+	if tmp := method.Attribute("RuntimeVisibleAnnotations"); tmp != nil {
+		visibles = tmp.(intcls.IAnnotations)
+	}
+	if tmp := method.Attribute("RuntimeInvisibleAnnotations"); tmp != nil {
+		invisibles = tmp.(intcls.IAnnotations)
+	}
 
 	return converter.ConvertWithAnnotations2(visibles, invisibles)
 }

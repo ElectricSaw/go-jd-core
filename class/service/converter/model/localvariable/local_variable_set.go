@@ -7,7 +7,7 @@ import (
 
 func NewLocalVariableSet() intsrv.ILocalVariableSet {
 	return &LocalVariableSet{
-		array: make([]intsrv.ILocalVariable, 0, 10),
+		array: make([]intsrv.ILocalVariable, 10),
 		size:  0,
 	}
 }
@@ -157,7 +157,7 @@ func (s *LocalVariableSet) Update2(index, offset int, typ intmod.IGenericType) {
 }
 
 func (s *LocalVariableSet) Initialize(rootFrame intsrv.IFrame) []intsrv.ILocalVariable {
-	cache := make([]intsrv.ILocalVariable, 0, s.size)
+	cache := make([]intsrv.ILocalVariable, len(s.array))
 
 	for index := len(s.array) - 1; index >= 0; index-- {
 		lv := s.array[index]
@@ -180,7 +180,7 @@ func (s *LocalVariableSet) Initialize(rootFrame intsrv.IFrame) []intsrv.ILocalVa
 				s.size--
 				lv.SetNext(nil)
 				rootFrame.AddLocalVariable(lv)
-				cache = append(cache, lv)
+				cache[index] = lv
 			}
 		}
 	}

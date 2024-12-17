@@ -12,7 +12,7 @@ func buildDominatorIndexes(cfg intsrv.IControlFlowGraph) []util.IBitSet {
 	arrayOfDominatorIndexes := make([]util.IBitSet, length)
 
 	initial := util.NewBitSetWithSize(length)
-	initial.Set(0)
+	_ = initial.Set(0)
 	arrayOfDominatorIndexes[0] = initial
 
 	for i := 0; i < length; i++ {
@@ -23,7 +23,7 @@ func buildDominatorIndexes(cfg intsrv.IControlFlowGraph) []util.IBitSet {
 
 	initial = arrayOfDominatorIndexes[0]
 	initial.ClearAll()
-	initial.Set(0)
+	_ = initial.Set(0)
 
 	change := false
 
@@ -39,7 +39,7 @@ func buildDominatorIndexes(cfg intsrv.IControlFlowGraph) []util.IBitSet {
 				dominatorIndexes.And(arrayOfDominatorIndexes[predecessorBB.Index()])
 			}
 
-			dominatorIndexes.Set(index)
+			_ = dominatorIndexes.Set(index)
 			change = change || (initial != dominatorIndexes)
 		}
 
@@ -126,7 +126,7 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 					}
 				}
 
-				memberIndexes.Clear(start.Index())
+				_ = memberIndexes.Clear(start.Index())
 				arrayOfMemberIndexes[newStart.Index()] = memberIndexes
 				arrayOfMemberIndexes[i] = nil
 			}
@@ -146,7 +146,7 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 			searchZoneIndexes := util.NewBitSetWithSize(length)
 			searchZoneIndexes.Or(startDominatorIndexes)
 			searchZoneIndexes.FlipRange(0, length)
-			searchZoneIndexes.Set(start.Index())
+			_ = searchZoneIndexes.Set(start.Index())
 
 			if start.Type() == intsrv.TypeConditionalBranch {
 				if (start.Next() != start) &&
@@ -164,7 +164,7 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 					commonMemberIndexes.And(branchIndexes)
 
 					onlyLoopHeaderIndex := util.NewBitSetWithSize(length)
-					onlyLoopHeaderIndex.Set(i)
+					_ = onlyLoopHeaderIndex.Set(i)
 
 					if commonMemberIndexes == onlyLoopHeaderIndex {
 						// Only 'start' is the common basic block -> Split loop
@@ -172,7 +172,7 @@ func IdentifyNaturalLoops(cfg intsrv.IControlFlowGraph, arrayOfDominatorIndexes 
 
 						branchIndexes.FlipRange(0, length)
 						searchZoneIndexes.And(branchIndexes)
-						searchZoneIndexes.Set(start.Index())
+						_ = searchZoneIndexes.Set(start.Index())
 
 						loops.Add(makeCfgLoopReducerLoop(list, start, searchZoneIndexes, nextIndexes))
 					} else {
@@ -209,7 +209,7 @@ func searchLoopMemberIndexes(length int, memberIndexes util.IBitSet, current, st
 
 func recursiveBackwardSearchLoopMemberIndexes(visited util.IBitSet, current, start intsrv.IBasicBlock) {
 	if visited.Get(current.Index()) == false {
-		visited.Set(current.Index())
+		_ = visited.Set(current.Index())
 
 		if current != start {
 			for _, predecessor := range current.Predecessors().ToSlice() {
@@ -275,7 +275,7 @@ func makeCfgLoopReducerLoop(list util.IList[intsrv.IBasicBlock], start intsrv.IB
 
 				for _, member := range set.ToSlice() {
 					if member.Index() >= 0 {
-						memberIndexes.Set(member.Index())
+						_ = memberIndexes.Set(member.Index())
 					}
 				}
 
@@ -404,7 +404,7 @@ func checkThrowBlockOffset(basicBlock intsrv.IBasicBlock) int {
 	watchdog := util.NewBitSet()
 
 	for !basicBlock.MatchType(intsrv.GroupEnd) && !watchdog.Get(basicBlock.Index()) {
-		watchdog.Set(basicBlock.Index())
+		_ = watchdog.Set(basicBlock.Index())
 		basicBlock = basicBlock.Next()
 	}
 
@@ -417,7 +417,7 @@ func checkThrowBlockOffset(basicBlock intsrv.IBasicBlock) int {
 
 func recursiveForwardSearchLoopMemberIndexes2(visited, searchZoneIndexes util.IBitSet, current, target intsrv.IBasicBlock) {
 	if !current.MatchType(intsrv.GroupEnd) && (visited.Get(current.Index()) == false) && (searchZoneIndexes.Get(current.Index()) == true) {
-		visited.Set(current.Index())
+		_ = visited.Set(current.Index())
 
 		if current != target {
 			recursiveForwardSearchLoopMemberIndexes2(visited, searchZoneIndexes, current.Next(), target)
@@ -432,7 +432,7 @@ func recursiveForwardSearchLoopMemberIndexes2(visited, searchZoneIndexes util.IB
 			}
 
 			if current.Type() == intsrv.TypeGotoInTernaryOperator {
-				visited.Set(current.Next().Index())
+				_ = visited.Set(current.Next().Index())
 			}
 		}
 	}
@@ -443,7 +443,7 @@ func recursiveForwardSearchLoopMemberIndexes3(visited, searchZoneIndexes util.IB
 		(visited.Get(current.Index()) == false) &&
 		(searchZoneIndexes.Get(current.Index()) == true) &&
 		(current.FromOffset() <= maxOffset) {
-		visited.Set(current.Index())
+		_ = visited.Set(current.Index())
 
 		recursiveForwardSearchLoopMemberIndexes3(visited, searchZoneIndexes, current.Next(), maxOffset)
 		recursiveForwardSearchLoopMemberIndexes3(visited, searchZoneIndexes, current.Branch(), maxOffset)
@@ -457,7 +457,7 @@ func recursiveForwardSearchLoopMemberIndexes3(visited, searchZoneIndexes util.IB
 		}
 
 		if current.Type() == intsrv.TypeGotoInTernaryOperator {
-			visited.Set(current.Next().Index())
+			_ = visited.Set(current.Next().Index())
 		}
 	}
 }
@@ -468,7 +468,7 @@ func recursiveForwardSearchLastLoopMemberIndexes(members util.ISet[intsrv.IBasic
 		return true
 	} else if current.MatchType(intsrv.GroupSingleSuccessor) {
 		if !inSearchZone(current.Next(), searchZoneIndexes) || !predecessorsInSearchZone(current, searchZoneIndexes) {
-			searchZoneIndexes.Clear(current.Index())
+			_ = searchZoneIndexes.Clear(current.Index())
 			return true
 		} else {
 			set.Add(current)
@@ -478,7 +478,7 @@ func recursiveForwardSearchLastLoopMemberIndexes(members util.ISet[intsrv.IBasic
 		if !inSearchZone(current.Next(), searchZoneIndexes) ||
 			!inSearchZone(current.Branch(), searchZoneIndexes) ||
 			!predecessorsInSearchZone(current, searchZoneIndexes) {
-			searchZoneIndexes.Clear(current.Index())
+			_ = searchZoneIndexes.Clear(current.Index())
 			return true
 		} else {
 			set.Add(current)
@@ -488,7 +488,7 @@ func recursiveForwardSearchLastLoopMemberIndexes(members util.ISet[intsrv.IBasic
 	} else if current.MatchType(intsrv.GroupEnd) {
 		if !predecessorsInSearchZone(current, searchZoneIndexes) {
 			if current.Index() >= 0 {
-				searchZoneIndexes.Clear(current.Index())
+				_ = searchZoneIndexes.Clear(current.Index())
 			}
 		} else {
 			set.Add(current)
@@ -594,7 +594,7 @@ func reduceLoop(loop intsrv.ILoop) intsrv.IBasicBlock {
 		if !members.Contains(predecessor) {
 			predecessor.Replace(start, loopBB)
 			loopBB.Predecessors().Add(predecessor)
-			startPredecessorIterator.Remove()
+			_ = startPredecessorIterator.Remove()
 		}
 	}
 

@@ -81,3 +81,7 @@ func (d *ClassFileConstructorDeclaration) FirstLineNumber() int {
 func (d *ClassFileConstructorDeclaration) SetFirstLineNumber(firstLineNumber int) {
 	d.firstLineNumber = firstLineNumber
 }
+
+func (d *ClassFileConstructorDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitConstructorDeclaration(d)
+}

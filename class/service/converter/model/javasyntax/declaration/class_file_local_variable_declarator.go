@@ -38,6 +38,10 @@ func (d *ClassFileLocalVariableDeclarator) LocalVariable() intsrv.ILocalVariable
 	return d.localVariable
 }
 
+func (d *ClassFileLocalVariableDeclarator) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitLocalVariableDeclarator(d)
+}
+
 func (d *ClassFileLocalVariableDeclarator) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
 	d.localVariable = localVariable.(intsrv.ILocalVariable)
 }

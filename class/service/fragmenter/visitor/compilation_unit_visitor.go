@@ -2,6 +2,8 @@ package visitor
 
 import (
 	"fmt"
+	"strings"
+
 	"github.com/ElectricSaw/go-jd-core/class/api"
 	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/class/model/javafragment"
@@ -10,7 +12,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/class/model/token"
 	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/class/util"
-	"strings"
 )
 
 func NewCompilationUnitVisitor(loader api.Loader, mainInternalTypeName string, majorVersion int,

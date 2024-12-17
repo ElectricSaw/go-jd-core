@@ -31,6 +31,10 @@ func (d *ClassFileEnumDeclaration) FirstLineNumber() int {
 	return d.firstLineNumber
 }
 
+func (d *ClassFileEnumDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitEnumDeclaration(d)
+}
+
 func (d *ClassFileEnumDeclaration) String() string {
 	return fmt.Sprintf("ClassFileEnumDeclaration{%s, firstLineNumber:%d}", d.InternalTypeName(), d.firstLineNumber)
 }
@@ -53,6 +57,10 @@ type ClassFileConstant struct {
 
 func (d *ClassFileConstant) Index() int {
 	return d.index
+}
+
+func (d *ClassFileConstant) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitEnumDeclarationConstant(d)
 }
 
 func (d *ClassFileConstant) String() string {

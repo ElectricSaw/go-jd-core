@@ -47,6 +47,10 @@ func (p *ClassFileFormalParameter) SetLocalVariable(localVariable intsrv.ILocalV
 	p.localVariable = localVariable.(intsrv.ILocalVariable)
 }
 
+func (d *ClassFileFormalParameter) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitFormalParameter(d)
+}
+
 func (p *ClassFileFormalParameter) String() string {
 	s := "ClassFileFormalParameter{"
 

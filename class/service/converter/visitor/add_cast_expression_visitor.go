@@ -5,6 +5,7 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax/statement"
 	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/class/util"
 )
@@ -462,4 +463,466 @@ func ConvertArrayVariable(list []intmod.IVariableInitializer) []intmod.IDeclarat
 		ret = append(ret, item)
 	}
 	return ret
+}
+
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+// $$$                           $$$
+// $$$ AbstractJavaSyntaxVisitor $$$
+// $$$                           $$$
+// $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+
+func (v *AddCastExpressionVisitor) VisitCompilationUnit(compilationUnit intmod.ICompilationUnit) {
+	compilationUnit.TypeDeclarations().AcceptDeclaration(v)
+}
+
+// --- DeclarationVisitor ---
+
+func (v *AddCastExpressionVisitor) VisitAnnotationDeclaration(decl intmod.IAnnotationDeclaration) {
+	v.SafeAcceptDeclaration(decl.AnnotationDeclarators())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+}
+
+func (v *AddCastExpressionVisitor) VisitClassDeclaration(decl intmod.IClassDeclaration) {
+	superType := decl.SuperType()
+
+	if superType != nil {
+		superType.AcceptTypeVisitor(v)
+	}
+
+	v.SafeAcceptTypeParameter(decl.TypeParameters())
+	v.SafeAcceptType(decl.Interfaces())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+}
+
+func (v *AddCastExpressionVisitor) VisitEnumDeclaration(decl intmod.IEnumDeclaration) {
+	v.VisitTypeDeclaration(decl.(intmod.ITypeDeclaration))
+	v.SafeAcceptType(decl.Interfaces())
+	v.SafeAcceptListConstant(decl.Constants())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+}
+
+func (v *AddCastExpressionVisitor) VisitEnumDeclarationConstant(decl intmod.IConstant) {
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptExpression(decl.Arguments())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+}
+
+func (v *AddCastExpressionVisitor) VisitFieldDeclarators(decl intmod.IFieldDeclarators) {
+	list := make([]intmod.IDeclaration, 0, decl.Size())
+	for _, element := range decl.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListDeclaration(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitFormalParameter(decl intmod.IFormalParameter) {
+	t := decl.Type()
+	t.AcceptTypeVisitor(v)
+	v.SafeAcceptReference(decl.AnnotationReferences())
+}
+
+func (v *AddCastExpressionVisitor) VisitFormalParameters(decl intmod.IFormalParameters) {
+	list := make([]intmod.IDeclaration, 0, decl.Size())
+	for _, element := range decl.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListDeclaration(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitInstanceInitializerDeclaration(decl intmod.IInstanceInitializerDeclaration) {
+	v.SafeAcceptStatement(decl.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitInterfaceDeclaration(decl intmod.IInterfaceDeclaration) {
+	v.SafeAcceptType(decl.Interfaces())
+	v.SafeAcceptReference(decl.AnnotationReferences())
+	v.SafeAcceptDeclaration(decl.BodyDeclaration())
+}
+
+func (v *AddCastExpressionVisitor) VisitLocalVariableDeclarators(decl intmod.ILocalVariableDeclarators) {
+	list := make([]intmod.IDeclaration, 0, decl.Size())
+	for _, element := range decl.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListDeclaration(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitMemberDeclarations(decl intmod.IMemberDeclarations) {
+	list := make([]intmod.IDeclaration, 0, decl.Size())
+	for _, element := range decl.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListDeclaration(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitModuleDeclaration(_ intmod.IModuleDeclaration) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitTypeDeclarations(decl intmod.ITypeDeclarations) {
+	list := make([]intmod.IDeclaration, 0, decl.Size())
+	for _, element := range decl.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListDeclaration(list)
+}
+
+// --- IExpressionVisitor ---
+func (v *AddCastExpressionVisitor) VisitArrayExpression(expr intmod.IArrayExpression) {
+	t := expr.Type()
+	t.AcceptTypeVisitor(v)
+
+	expr.Expression().Accept(v)
+	expr.Index().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitBooleanExpression(_ intmod.IBooleanExpression) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitCastExpression(expr intmod.ICastExpression) {
+	t := expr.Type()
+	t.AcceptTypeVisitor(v)
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitCommentExpression(_ intmod.ICommentExpression) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitExpressions(expr intmod.IExpressions) {
+	list := make([]intmod.IExpression, 0, expr.Size())
+	for _, element := range expr.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListExpression(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitInstanceOfExpression(expr intmod.IInstanceOfExpression) {
+	t := expr.Type()
+	t.AcceptTypeVisitor(v)
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitLambdaFormalParametersExpression(expr intmod.ILambdaFormalParametersExpression) {
+	v.SafeAcceptDeclaration(expr.FormalParameters())
+	expr.Statements().AcceptStatement(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitLengthExpression(expr intmod.ILengthExpression) {
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitMethodReferenceExpression(expr intmod.IMethodReferenceExpression) {
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitNewArray(expr intmod.INewArray) {
+	t := expr.Type()
+	t.AcceptTypeVisitor(v)
+	v.SafeAcceptExpression(expr.DimensionExpressionList())
+}
+
+func (v *AddCastExpressionVisitor) VisitNoExpression(_ intmod.INoExpression) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitParenthesesExpression(expr intmod.IParenthesesExpression) {
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitPostOperatorExpression(expr intmod.IPostOperatorExpression) {
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitPreOperatorExpression(expr intmod.IPreOperatorExpression) {
+	expr.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitStringConstantExpression(_ intmod.IStringConstantExpression) {
+	// Empty
+}
+
+// --- IReferenceVisitor ---
+
+func (v *AddCastExpressionVisitor) VisitAnnotationElementValue(ref intmod.IAnnotationElementValue) {
+	v.SafeAcceptReference(ref.ElementValue())
+	v.SafeAcceptReference(ref.ElementValuePairs())
+}
+
+func (v *AddCastExpressionVisitor) VisitAnnotationReference(ref intmod.IAnnotationReference) {
+	v.SafeAcceptReference(ref.ElementValue())
+	v.SafeAcceptReference(ref.ElementValuePairs())
+}
+
+func (v *AddCastExpressionVisitor) VisitAnnotationReferences(ref intmod.IAnnotationReferences) {
+	list := make([]intmod.IReference, 0, ref.Size())
+	for _, element := range ref.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListReference(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitElementValueArrayInitializerElementValue(ref intmod.IElementValueArrayInitializerElementValue) {
+	v.SafeAcceptReference(ref.ElementValueArrayInitializer())
+}
+
+func (v *AddCastExpressionVisitor) VisitElementValues(ref intmod.IElementValues) {
+	list := make([]intmod.IReference, 0, ref.Size())
+	for _, element := range ref.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListReference(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitElementValuePair(ref intmod.IElementValuePair) {
+	ref.ElementValue().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitElementValuePairs(ref intmod.IElementValuePairs) {
+	list := make([]intmod.IReference, 0, ref.Size())
+	for _, element := range ref.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListReference(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitExpressionElementValue(ref intmod.IExpressionElementValue) {
+	ref.Expression().Accept(v)
+}
+
+// --- IStatementVisitor ---
+
+func (v *AddCastExpressionVisitor) VisitAssertStatement(stat intmod.IAssertStatement) {
+	stat.Condition().Accept(v)
+	v.SafeAcceptExpression(stat.Message())
+}
+
+func (v *AddCastExpressionVisitor) VisitCommentStatement(_ intmod.ICommentStatement) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitDoWhileStatement(stat intmod.IDoWhileStatement) {
+	v.SafeAcceptExpression(stat.Condition())
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitExpressionStatement(stat intmod.IExpressionStatement) {
+	stat.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitForEachStatement(stat intmod.IForEachStatement) {
+	t := stat.Type()
+	t.AcceptTypeVisitor(v)
+	stat.Expression().Accept(v)
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitForStatement(stat intmod.IForStatement) {
+	v.SafeAcceptDeclaration(stat.Declaration())
+	v.SafeAcceptExpression(stat.Init())
+	v.SafeAcceptExpression(stat.Condition())
+	v.SafeAcceptExpression(stat.Update())
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitIfStatement(stat intmod.IIfStatement) {
+	stat.Condition().Accept(v)
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitIfElseStatement(stat intmod.IIfElseStatement) {
+	stat.Condition().Accept(v)
+	v.SafeAcceptStatement(stat.Statements())
+	stat.ElseStatements().AcceptStatement(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitLabelStatement(stat intmod.ILabelStatement) {
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitLambdaExpressionStatement(stat intmod.ILambdaExpressionStatement) {
+	stat.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
+	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+}
+
+func (v *AddCastExpressionVisitor) VisitNoStatement(_ intmod.INoStatement) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitReturnStatement(_ intmod.IReturnStatement) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitStatements(stat intmod.IStatements) {
+	list := make([]intmod.IStatement, 0, stat.Size())
+	for _, element := range stat.ToSlice() {
+		list = append(list, element)
+	}
+	v.AcceptListStatement(list)
+}
+
+func (v *AddCastExpressionVisitor) VisitSwitchStatement(stat intmod.ISwitchStatement) {
+	stat.Condition().Accept(v)
+	v.AcceptListStatement(stat.List())
+}
+
+func (v *AddCastExpressionVisitor) VisitSwitchStatementDefaultLabel(_ intmod.IDefaultLabel) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitSwitchStatementExpressionLabel(stat intmod.IExpressionLabel) {
+	stat.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitSwitchStatementLabelBlock(stat intmod.ILabelBlock) {
+	stat.Label().AcceptStatement(v)
+	stat.Statements().AcceptStatement(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitSwitchStatementMultiLabelsBlock(stat intmod.IMultiLabelsBlock) {
+	v.SafeAcceptListStatement(stat.ToSlice())
+	stat.Statements().AcceptStatement(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitSynchronizedStatement(stat intmod.ISynchronizedStatement) {
+	stat.Monitor().Accept(v)
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitTryStatement(stat intmod.ITryStatement) {
+	v.SafeAcceptListStatement(stat.ResourceList())
+	stat.TryStatements().AcceptStatement(v)
+	v.SafeAcceptListStatement(stat.CatchClauseList())
+	v.SafeAcceptStatement(stat.FinallyStatements())
+}
+
+func (v *AddCastExpressionVisitor) VisitTryStatementResource(stat intmod.IResource) {
+	t := stat.Type()
+	t.AcceptTypeVisitor(v)
+	stat.Expression().Accept(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitTryStatementCatchClause(stat intmod.ICatchClause) {
+	t := stat.Type()
+	t.AcceptTypeVisitor(v)
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+func (v *AddCastExpressionVisitor) VisitTypeDeclarationStatement(stat intmod.ITypeDeclarationStatement) {
+	stat.TypeDeclaration().AcceptDeclaration(v)
+}
+
+func (v *AddCastExpressionVisitor) VisitWhileStatement(stat intmod.IWhileStatement) {
+	stat.Condition().Accept(v)
+	v.SafeAcceptStatement(stat.Statements())
+}
+
+// --- ITypeVisitor ---
+
+// --- ITypeParameterVisitor --- //
+
+func (v *AddCastExpressionVisitor) VisitTypeParameter(_ intmod.ITypeParameter) {
+	// Empty
+}
+
+func (v *AddCastExpressionVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
+	for _, param := range parameters.ToSlice() {
+		param.AcceptTypeParameterVisitor(v)
+	}
+}
+
+// --- ITypeArgumentVisitor ---
+
+func (v *AddCastExpressionVisitor) VisitTypeDeclaration(decl intmod.ITypeDeclaration) {
+	v.SafeAcceptReference(decl.AnnotationReferences())
+}
+
+func (v *AddCastExpressionVisitor) AcceptListDeclaration(list []intmod.IDeclaration) {
+	for _, value := range list {
+		value.AcceptDeclaration(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) AcceptListExpression(list []intmod.IExpression) {
+	for _, value := range list {
+		value.Accept(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) AcceptListReference(list []intmod.IReference) {
+	for _, value := range list {
+		value.Accept(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) AcceptListStatement(list []intmod.IStatement) {
+	for _, value := range list {
+		value.AcceptStatement(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptDeclaration(decl intmod.IDeclaration) {
+	if decl != nil {
+		decl.AcceptDeclaration(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptExpression(expr intmod.IExpression) {
+	if expr != nil {
+		expr.Accept(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptReference(ref intmod.IReference) {
+	if ref != nil {
+		ref.Accept(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptStatement(list intmod.IStatement) {
+	if list != nil {
+		list.AcceptStatement(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptType(list intmod.IType) {
+	if list != nil {
+		list.AcceptTypeVisitor(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptTypeParameter(list intmod.ITypeParameter) {
+	if list != nil {
+		list.AcceptTypeParameterVisitor(v)
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptListDeclaration(list []intmod.IDeclaration) {
+	if list != nil {
+		for _, value := range list {
+			value.AcceptDeclaration(v)
+		}
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptListConstant(list []intmod.IConstant) {
+	if list != nil {
+		for _, value := range list {
+			value.AcceptDeclaration(v)
+		}
+	}
+}
+
+func (v *AddCastExpressionVisitor) SafeAcceptListStatement(list []intmod.IStatement) {
+	if list != nil {
+		for _, value := range list {
+			value.AcceptStatement(v)
+		}
+	}
 }

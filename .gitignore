@@ -212,3 +212,6 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/go,goland,windows,linux,macos
+
+# test-features
+./class/tests/test-features/**

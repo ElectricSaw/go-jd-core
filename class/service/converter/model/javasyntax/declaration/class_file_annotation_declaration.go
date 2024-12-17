@@ -33,6 +33,10 @@ func (d *ClassFileAnnotationDeclaration) FirstLineNumber() int {
 	return d.firstLineNumber
 }
 
+func (d *ClassFileAnnotationDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+	visitor.VisitAnnotationDeclaration(d)
+}
+
 func (d *ClassFileAnnotationDeclaration) String() string {
 	return fmt.Sprintf("ClassFileAnnotationDeclaration{%s, firstLineNumber=%d}", d.InternalTypeName(), d.firstLineNumber)
 }

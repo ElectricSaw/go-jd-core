@@ -213,6 +213,6 @@ func AddStartStatementsBlock2(fragments util.IList[intmod.IFragment], group intm
 	fragments.Add(javafragment.NewSpacerFragment(0, 0, math.MaxInt32, 19, "Start statements block post spacer"))
 }
 
-func newImportsFragment() intmod.IImportsFragment {
+func NewImportsFragment() intmod.IImportsFragment {
 	return javafragment.NewImportsFragment(0)
 }

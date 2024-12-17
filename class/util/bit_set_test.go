@@ -14,7 +14,7 @@ func TestBitSet(t *testing.T) {
 	fmt.Println("BitSet:", bs.String())
 	fmt.Println("Cardinality:", bs.Cardinality())
 
-	bs.Clear(64)
+	bs.ClearAll(64)
 	fmt.Println("After clearing bit 64:")
 	fmt.Println("BitSet:", bs.String())
 	fmt.Println("Cardinality:", bs.Cardinality())

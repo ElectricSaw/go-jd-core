@@ -26,6 +26,11 @@ func NewByteCodeParser(typeMaker intsrv.ITypeMaker,
 	classFile intcls.IClassFile,
 	bodyDeclaration intsrv.IClassFileBodyDeclaration,
 	comd intsrv.IClassFileConstructorOrMethodDeclaration) intsrv.IByteCodeParser {
+	var attributeBootstrapMethods intcls.IAttributeBootstrapMethods
+	if tmp := classFile.Attribute("BootstrapMethods"); tmp != nil {
+		attributeBootstrapMethods = tmp.(intcls.IAttributeBootstrapMethods)
+	}
+
 	p := &ByteCodeParser{
 		memberVisitor:                NewByteCodeParserMemberVisitor(),
 		searchFirstLineNumberVisitor: NewSearchFirstLineNumberVisitor(),
@@ -37,7 +42,7 @@ func NewByteCodeParser(typeMaker intsrv.ITypeMaker,
 		localVariableMaker:        localVariableMaker,
 		genericTypesSupported:     classFile.MajorVersion() >= 49,
 		internalTypeName:          classFile.InternalTypeName(),
-		attributeBootstrapMethods: classFile.Attribute("BootstrapMethods").(intcls.IAttributeBootstrapMethods),
+		attributeBootstrapMethods: attributeBootstrapMethods,
 		bodyDeclaration:           bodyDeclaration,
 		returnedType:              comd.ReturnedType(),
 		typeBounds:                comd.TypeBounds(),
