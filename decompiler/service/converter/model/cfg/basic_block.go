@@ -345,7 +345,7 @@ func (b *BasicBlock) numberOfTrailingZeros(n int) int {
 }
 
 func (b *BasicBlock) String() string {
-	s := fmt.Sprintf("BasicBlock{index=%d, from=%d, to=%d, type=%s, inverseCondition=", b.Index, b.FromOffset, b.toOffset, b.TypeName())
+	s := fmt.Sprintf("BasicBlock{index=%d, from=%d, to=%d, type=%s, inverseCondition=", b.index, b.fromOffset, b.toOffset, b.TypeName())
 
 	if b.inverseCondition {
 		s += "true"

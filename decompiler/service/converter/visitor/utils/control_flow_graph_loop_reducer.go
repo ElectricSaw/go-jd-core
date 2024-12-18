@@ -40,7 +40,7 @@ func buildDominatorIndexes(cfg intsrv.IControlFlowGraph) []util.IBitSet {
 			}
 
 			_ = dominatorIndexes.Set(index)
-			change = change || (initial != dominatorIndexes)
+			change = change || !initial.Equals(dominatorIndexes)
 		}
 
 		if !change {

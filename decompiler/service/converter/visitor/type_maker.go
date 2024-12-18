@@ -41,6 +41,7 @@ func NewTypeMaker(loader api.Loader) intsrv.ITypeMaker {
 		assignableRawTypes:            make(map[int64]bool),
 		superParameterizedObjectTypes: make(map[int64]intmod.IObjectType),
 		hierarchy:                     make(map[string][]string),
+		classPathLoader:               NewClassPathLoader(),
 		loader:                        loader,
 	}
 
@@ -1564,9 +1565,9 @@ func (m *TypeMaker) match2(typeBounds map[string]intmod.IType, leftType intmod.I
 	return false
 }
 
-func NewClassPathLoader(buffer []byte) intsrv.IClassPathLoader {
+func NewClassPathLoader() intsrv.IClassPathLoader {
 	return &ClassPathLoader{
-		buffer: buffer,
+		buffer: make([]byte, 1024*5),
 	}
 }
 

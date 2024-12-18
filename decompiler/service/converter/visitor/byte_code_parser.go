@@ -164,53 +164,43 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			} else {
 				stack.Push(srvexp.NewClassFileLocalVariableReferenceExpression(lineNumber, offset, localVariable))
 			}
-			break
 		case 43, 44, 45: // ALOAD_1 ... ALOAD_3
 			localVariable = p.localVariableMaker.LocalVariable(opcode-42, offset)
 			stack.Push(srvexp.NewClassFileLocalVariableReferenceExpression(lineNumber, offset, localVariable))
-			break
 		case 46, 47, 48, 49, 50, 51, 52, 53: // IALOAD, LALOAD, FALOAD, DALOAD, AALOAD, BALOAD, CALOAD, SALOAD
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			stack.Push(modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef))
-			break
 		case 54, 55, 56, 57: // ISTORE, LSTORE, FSTORE, DSTORE
 			value, offset = utils.PrefixReadInt8(code, offset)
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(value, offset+2, valueRef)
 			p.parseSTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 58: // ASTORE
 			value, offset = utils.PrefixReadInt8(code, offset)
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(value, offset+1, valueRef)
 			p.parseASTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 59, 60, 61, 62: // ISTORE_0 ... ISTORE_3
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(opcode-59, offset+1, valueRef)
 			p.parseSTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 63, 64, 65, 66: // LSTORE_0 ... LSTORE_3
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(opcode-63, offset+1, valueRef)
 			p.parseSTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 67, 68, 69, 70: // FSTORE_0 ... FSTORE_3
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(opcode-67, offset+1, valueRef)
 			p.parseSTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 71, 72, 73, 74: // DSTORE_0 ... DSTORE_3
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(opcode-71, offset+1, valueRef)
 			p.parseSTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 75, 76, 77, 78: // ASTORE_0 ... ASTORE_3
 			valueRef = stack.Pop()
 			localVariable = p.getLocalVariableInAssignment(opcode-75, offset+1, valueRef)
 			p.parseASTORE(statements, stack, lineNumber, offset, localVariable, valueRef)
-			break
 		case 79: // IASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -219,7 +209,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, type1.CreateType(type1.Dimension()-1),
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 80: // LASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -227,7 +216,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 81: // FASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -235,7 +223,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 82: // DASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -243,7 +230,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 83: // AASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -258,7 +244,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, type2,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 84: // BASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -266,7 +251,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeByte,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 85: // CASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -274,7 +258,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeChar,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 86: // SASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
@@ -282,26 +265,22 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			statements.Add(modsts.NewExpressionStatement(
 				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeShort,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
-			break
 		case 87, 88: // POP, POP2
 			expression1 = stack.Pop()
 			if !expression1.IsLocalVariableReferenceExpression() && !expression1.IsFieldReferenceExpression() {
 				p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(_type.OtTypeObject, expression1)
 				statements.Add(modsts.NewExpressionStatement(expression1))
 			}
-			break
 		case 89: // DUP : ..., value => ..., value, value
 			expression1 = stack.Pop()
 			stack.Push(expression1)
 			stack.Push(expression1)
-			break
 		case 90: // DUP_X1 : ..., value2, value1 => ..., value1, value2, value1
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
 			stack.Push(expression1)
 			stack.Push(expression2)
 			stack.Push(expression1)
-			break
 		case 91: // DUP_X2
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
@@ -319,7 +298,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				stack.Push(expression2)
 				stack.Push(expression1)
 			}
-			break
 		case 92: // DUP2
 			expression1 = stack.Pop()
 			type1 = expression1.Type()
@@ -335,7 +313,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				stack.Push(expression2)
 				stack.Push(expression1)
 			}
-			break
 		case 93: // DUP2_X1
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
@@ -354,7 +331,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				stack.Push(expression2)
 				stack.Push(expression1)
 			}
-			break
 		case 94: // DUP2_X2
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
@@ -397,256 +373,198 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 					stack.Push(expression1)
 				}
 			}
-			break
 		case 95: // SWAP : ..., value2, value1 => ..., value1, value2
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
 			stack.Push(expression1)
 			stack.Push(expression2)
-			break
 		case 96: // IADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, "+", expression2, 6))
-			break
 		case 97: // LADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "+", expression2, 6))
-			break
 		case 98: // FADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "+", expression2, 6))
-			break
 		case 99: // DADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "+", expression2, 6))
-			break
 		case 100: // ISUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, "-", expression2, 6))
-			break
 		case 101: // LSUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "-", expression2, 6))
-			break
 		case 102: // FSUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "-", expression2, 6))
-			break
 		case 103: // DSUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "-", expression2, 6))
-			break
 		case 104: // IMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, "*", expression2, 5))
-			break
 		case 105: // LMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "*", expression2, 5))
-			break
 		case 106: // FMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "*", expression2, 5))
-			break
 		case 107: // DMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "*", expression2, 5))
-			break
 		case 108: // IDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, "/", expression2, 5))
-			break
 		case 109: // LDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "/", expression2, 5))
-			break
 		case 110: // FDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "/", expression2, 5))
-			break
 		case 111: // DDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "/", expression2, 5))
-			break
 		case 112: // IREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, "%", expression2, 5))
-			break
 		case 113: // LREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "%", expression2, 5))
-			break
 		case 114: // FREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "%", expression2, 5))
-			break
 		case 115: // DREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "%", expression2, 5))
-			break
 		case 116, 117, 118, 119: // INEG, LNEG, FNEG, DNEG
 			stack.Push(p.newPreArithmeticOperatorExpression(lineNumber, "-", stack.Pop()))
-			break
 		case 120: // ISHL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, "<<", expression2, 7))
-			break
 		case 121: // LSHL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "<<", expression2, 7))
-			break
 		case 122: // ISHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeInt, expression1, ">>", expression2, 7))
-			break
 		case 123: // LSHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, ">>", expression2, 7))
-			break
 		case 124: // IUSHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerBinaryOperatorExpression(lineNumber, expression1, ">>>", expression2, 7))
-			break
 		case 125: // LUSHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, ">>>", expression2, 7))
-			break
 		case 126: // IAND
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerOrBooleanBinaryOperatorExpression(lineNumber, expression1, "&", expression2, 10))
-			break
 		case 127: // LAND
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "&", expression2, 10))
-			break
 		case 128: // IOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerOrBooleanBinaryOperatorExpression(lineNumber, expression1, "|", expression2, 12))
-			break
 		case 129: // LOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "|", expression2, 12))
-			break
 		case 130: // IXOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(p.newIntegerOrBooleanBinaryOperatorExpression(lineNumber, expression1, "^", expression2, 11))
-			break
 		case 131: // LXOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "^", expression2, 11))
-			break
 		case 132: // IINC
 			value, offset = utils.PrefixReadInt8(code, offset)
 			localVariable = p.localVariableMaker.LocalVariable(value, offset)
 			value, offset = utils.PrefixReadInt8(code, offset)
 			p.parseIINC(statements, stack, lineNumber, offset, localVariable, value)
-			break
 		case 133: // I2L
 			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeLong, stack.Pop(), false))
-			break
 		case 134: // I2F
 			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeFloat, stack.Pop(), false))
-			break
 		case 135: // I2D
 			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeDouble, stack.Pop(), false))
-			break
 		case 136: // L2I
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 137: // L2F
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeFloat, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 138: // L2D
 			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeDouble, stack.Pop(), false))
-			break
 		case 139: // F2I
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 140: // F2L
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeLong, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 141: // F2D
 			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeDouble, stack.Pop(), false))
-			break
 		case 142: // D2I
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 143: // D2L
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeLong, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 144: // D2F
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeFloat, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 145: // I2B
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeByte, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 146: // I2C
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeChar, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 147: // I2S
 			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeShort, forceExplicitCastExpression(stack.Pop())))
-			break
 		case 148, 149, 150, 151, 152: // LCMP, FCMPL, FCMPG, DCMPL, DCMPG
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
 			stack.Push(srvexp.NewClassFileCmpExpression(lineNumber, expression1, expression2))
-			break
 		case 153: // IFEQ
 			p.parseIF(stack, lineNumber, basicBlock, "!=", "==", 8)
 			offset += 2 // Skip branch offset
-			break
 		case 154: // IFNE
 			p.parseIF(stack, lineNumber, basicBlock, "==", "!=", 8)
 			offset += 2 // Skip branch offset
-			break
 		case 155: // IFLT
 			p.parseIF(stack, lineNumber, basicBlock, ">=", "<", 7)
 			offset += 2 // Skip branch offset
-			break
 		case 156: // IFGE
 			p.parseIF(stack, lineNumber, basicBlock, "<", ">=", 7)
 			offset += 2 // Skip branch offset
-			break
 		case 157: // IFGT
 			p.parseIF(stack, lineNumber, basicBlock, "<=", ">", 7)
 			offset += 2 // Skip branch offset
-			break
 		case 158: // IFLE
 			p.parseIF(stack, lineNumber, basicBlock, ">", "<=", 7)
 			offset += 2 // Skip branch offset
-			break
 		case 159: // IF_ICMPEQ
 		case 165: // IF_ACMPEQ
 			expression2 = stack.Pop()
@@ -657,7 +575,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			stack.Push(p.newIntegerOrBooleanComparisonOperatorExpression(lineNumber, expression1, op, expression2, 9))
 			offset += 2 // Skip branch offset
-			break
 		case 160: // IF_ICMPNE
 		case 166: // IF_ACMPNE
 			expression2 = stack.Pop()
@@ -668,7 +585,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			stack.Push(p.newIntegerOrBooleanComparisonOperatorExpression(lineNumber, expression1, op, expression2, 9))
 			offset += 2 // Skip branch offset
-			break
 		case 161: // IF_ICMPLT
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -678,7 +594,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			stack.Push(p.newIntegerComparisonOperatorExpression(lineNumber, expression1, op, expression2, 8))
 			offset += 2 // Skip branch offset
-			break
 		case 162: // IF_ICMPGE
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -688,7 +603,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			stack.Push(p.newIntegerComparisonOperatorExpression(lineNumber, expression1, op, expression2, 8))
 			offset += 2 // Skip branch offset
-			break
 		case 163: // IF_ICMPGT
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -698,7 +612,6 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			stack.Push(p.newIntegerComparisonOperatorExpression(lineNumber, expression1, op, expression2, 8))
 			offset += 2 // Skip branch offset
-			break
 		case 164: // IF_ICMPLE
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -708,15 +621,12 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			}
 			stack.Push(p.newIntegerComparisonOperatorExpression(lineNumber, expression1, op, expression2, 8))
 			offset += 2 // Skip branch offset
-			break
 		case 168: // JSR
 			stack.Push(GlobalJsrReturnAddressExpression)
 		case 167: // GOTO
 			offset += 2 // Skip branch offset
-			break
 		case 169: // RET
 			offset++ // Skip index
-			break
 		case 170: // TABLESWITCH
 			offset = (offset + 4) & 0xFFFC // Skip padding
 			offset += 4                    // Skip default offset
@@ -744,15 +654,12 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 179: // PUTSTATIC
 			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parsePutStatic(statements, stack, constants, lineNumber, value)
-			break
 		case 180: // GETFIELD
 			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parseGetField(stack, constants, lineNumber, value)
-			break
 		case 181: // PUTFIELD
 			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parsePutField(statements, stack, constants, lineNumber, value)
-			break
 		case 182, 183, 184, 185: // INVOKEVIRTUAL, INVOKESPECIAL, INVOKESTATIC, INVOKEINTERFACE
 			value, offset = utils.PrefixReadInt16(code, offset)
 			constantMemberRef = constants.Constant(value).(intcls.IConstantMemberRef)
@@ -821,22 +728,18 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 							ot, name, descriptor, methodTypes, parameters))
 				}
 			}
-			break
 		case 186: // INVOKEDYNAMIC
 			value, offset = utils.PrefixReadInt16(code, offset)
 			p.parseInvokeDynamic(statements, stack, constants, lineNumber, value)
 			offset += 2 // Skip 2 bytes
-			break
 		case 187: // NEW
 			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
 			stack.Push(p.newNewExpression(lineNumber, typeName))
-			break
 		case 188: // NEWARRAY
 			value, offset = utils.PrefixReadInt8(code, offset)
 			type1 = utils.GetPrimitiveTypeFromTag(value).CreateType(1)
 			stack.Push(modexp.NewNewArray(lineNumber, type1, stack.Pop()))
-			break
 		case 189: // ANEWARRAY
 			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
@@ -853,13 +756,10 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				}
 			}
 			stack.Push(modexp.NewNewArray(lineNumber, type1, stack.Pop()))
-			break
 		case 190: // ARRAYLENGTH
 			stack.Push(modexp.NewLengthExpressionWithAll(lineNumber, stack.Pop()))
-			break
 		case 191: // ATHROW
 			statements.Add(modsts.NewThrowStatement(stack.Pop()))
-			break
 		case 192: // CHECKCAST
 			value, offset = utils.PrefixReadInt16(code, offset)
 			typeName, _ = constants.ConstantTypeName(value)
@@ -1748,23 +1648,18 @@ func (p *ByteCodeParser) parseIF(stack util.IStack[intmod.IExpression], lineNumb
 			} else {
 				stack.Push(modexp.NewPreOperatorExpressionWithAll(lineNumber, "!", expression))
 			}
-			break
 		case intmod.FlagFloat:
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
 				operator, modexp.NewFloatConstantExpressionWithAll(lineNumber, 0), 9))
-			break
 		case intmod.FlagDouble:
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
 				operator, modexp.NewDoubleConstantExpressionWithAll(lineNumber, 0), 9))
-			break
 		case intmod.FlagLong:
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
 				operator, modexp.NewLongConstantExpressionWithAll(lineNumber, 0), 9))
-			break
 		default:
 			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
 				operator, modexp.NewIntegerConstantExpressionWithAll(lineNumber, pt, 0), 9))
-			break
 		}
 	} else {
 		operator := operator2

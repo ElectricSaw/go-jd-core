@@ -566,17 +566,74 @@ func (m *LocalVariableMaker) ChangeFrame(localVariable intsrv.ILocalVariable) {
 }
 
 func searchCommonParentFrame(frame1, frame2 intsrv.IFrame) intsrv.IFrame {
-	if frame1 == frame2 {
+	var err error
+	var f1, f2, fp1, fp2 uint64 = 0, 0, 0, 0
+
+	if frame1 != nil {
+		f1, err = strconv.ParseUint(fmt.Sprintf("%p", frame1), 0, 64)
+		if err != nil {
+			f1 = 0
+		}
+	}
+	if frame2 != nil {
+		f2, err = strconv.ParseUint(fmt.Sprintf("%p", frame2), 0, 64)
+		if err != nil {
+			f1 = 0
+		}
+	}
+	if frame1.Parent() != nil {
+		fp1, err = strconv.ParseUint(fmt.Sprintf("%p", frame1.Parent()), 0, 64)
+		if err != nil {
+			f1 = 0
+		}
+	}
+	if frame2.Parent() != nil {
+		fp2, err = strconv.ParseUint(fmt.Sprintf("%p", frame2.Parent()), 0, 64)
+		if err != nil {
+			f1 = 0
+		}
+	}
+	//
+	//f1 := *(*uintptr)(unsafe.Pointer(frame1.(*Frame)))
+	//f2 := *(*uintptr)(unsafe.Pointer(frame2.(*Frame)))
+	//p1 := frame1.Parent()
+	//p2 := frame2.Parent()
+	//fp1 := *(*uintptr)(unsafe.Pointer(&p1))
+	//fp2 := *(*uintptr)(unsafe.Pointer(&p2))
+	//
+	//fmt.Printf("frame1 address       : 0x%016X\n", f1)
+	//fmt.Printf("frame1 parent address: 0x%016X\n", fp1)
+	//fmt.Printf("frame2 address       : 0x%016X\n", f2)
+	//fmt.Printf("frame2 parent address: 0x%016X\n", fp2)
+	//
+	//fmt.Printf("frame1 address       : %p\n", frame1)
+	//fmt.Printf("frame1 parent address: %p\n", frame1.Parent())
+	//fmt.Printf("frame2 address       : %p\n", frame2)
+	//fmt.Printf("frame2 parent address: %p\n", frame2.Parent())
+
+	if f1 == f2 {
 		return frame1
 	}
 
-	if frame2.Parent() == frame1 {
+	if fp2 == f1 {
 		return frame1
 	}
 
-	if frame1.Parent() == frame2 {
+	if fp1 == f2 {
 		return frame2
 	}
+
+	//if frame1 == frame2 {
+	//	return frame1
+	//}
+	//
+	//if frame2.Parent() == frame1 {
+	//	return frame1
+	//}
+	//
+	//if frame1.Parent() == frame2 {
+	//	return frame2
+	//}
 
 	set := util.NewDefaultList[intsrv.IFrame]()
 
