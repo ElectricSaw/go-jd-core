@@ -365,7 +365,7 @@ func writeLDC(sb *string, constants intcls.IConstantPool, cont intcls.IConstant)
 		*sb += " '"
 		stringIndex := cont.(intcls.IConstantString).StringIndex()
 		str, _ := constants.ConstantUtf8(stringIndex)
-		*sb += fmt.Sprintf(" %d", cont.(intcls.IConstantInteger).Value())
+
 		for _, c := range str {
 			switch c {
 			case '\b':
@@ -418,7 +418,10 @@ func writeLocalVariableTable(linePrefix string, sb *string, attributeCode intcls
 		}
 	}
 
-	localVariableTypeTable := attributeCode.Attribute("LocalVariableTypeTable").(intcls.IAttributeLocalVariableTypeTable)
+	var localVariableTypeTable intcls.IAttributeLocalVariableTypeTable
+	if tmp := attributeCode.Attribute("LocalVariableTypeTable"); tmp != nil {
+		localVariableTypeTable = tmp.(intcls.IAttributeLocalVariableTypeTable)
+	}
 
 	if localVariableTypeTable != nil {
 		*sb += fmt.Sprintf("%sLocal variable type table:\n", linePrefix)

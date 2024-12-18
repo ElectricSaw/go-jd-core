@@ -23,21 +23,23 @@ type ISet[T comparable] interface {
 
 // Set 인터페이스의 기본 구현체
 type Set[T comparable] struct {
-	data map[T]Store[T]
-}
-
-type Store[T comparable] struct {
-	index int
-	data  T
+	validate map[T]bool
+	list     []T
 }
 
 // NewSet AbstractSet 생성자
 func NewSet[T comparable]() ISet[T] {
-	return &Set[T]{data: make(map[T]Store[T])}
+	return &Set[T]{
+		validate: make(map[T]bool),
+		list:     make([]T, 0),
+	}
 }
 
 func NewSetWithSlice[T comparable](data []T) ISet[T] {
-	s := &Set[T]{data: make(map[T]Store[T])}
+	s := &Set[T]{
+		validate: make(map[T]bool),
+		list:     make([]T, 0),
+	}
 	for _, v := range data {
 		s.Add(v)
 	}
@@ -46,28 +48,26 @@ func NewSetWithSlice[T comparable](data []T) ISet[T] {
 
 // Size Set의 크기 반환
 func (s *Set[T]) Size() int {
-	return len(s.data)
+	return len(s.list)
 }
 
 // IsEmpty Set이 비어 있는지 확인
 func (s *Set[T]) IsEmpty() bool {
-	return len(s.data) == 0
+	return len(s.list) == 0
 }
 
 // Contains 특정 요소 포함 여부 확인
 func (s *Set[T]) Contains(element T) bool {
-	_, exists := s.data[element]
+	_, exists := s.validate[element]
 	return exists
 }
 
 func (s *Set[T]) Get(index int) T {
-	for k, v := range s.data {
-		if v.index == index {
-			return k
-		}
+	if index > s.Size() {
+		var zero T
+		return zero
 	}
-	var zero T
-	return zero
+	return s.list[index]
 }
 
 // AddAll 모든 요소 추가
@@ -81,17 +81,20 @@ func (s *Set[T]) AddAll(element []T) bool {
 
 // Add Set에 요소 추가
 func (s *Set[T]) Add(element T) bool {
-	if _, exists := s.data[element]; exists {
+	if _, exists := s.validate[element]; exists {
 		return false
 	}
-	s.data[element] = Store[T]{index: len(s.data), data: element}
+
+	s.validate[element] = true
+	s.list = append(s.list, element)
+
 	return true
 }
 
 // Remove Set에서 요소 제거
 func (s *Set[T]) Remove(element T) bool {
-	if _, exists := s.data[element]; exists {
-		delete(s.data, element)
+	if _, exists := s.validate[element]; exists {
+		delete(s.validate, element)
 		return true
 	}
 	return false
@@ -99,7 +102,8 @@ func (s *Set[T]) Remove(element T) bool {
 
 // Clear 모든 요소 제거
 func (s *Set[T]) Clear() {
-	s.data = make(map[T]Store[T])
+	s.validate = make(map[T]bool)
+	s.list = make([]T, 0)
 }
 
 // ContainsAll 여러 요소 포함 여부 확인
@@ -125,8 +129,8 @@ func (s *Set[T]) RemoveAll(elements []T) bool {
 
 // ToSlice Set을 슬라이스로 변환
 func (s *Set[T]) ToSlice() []T {
-	slice := make([]T, 0, len(s.data))
-	for element := range s.data {
+	slice := make([]T, 0, len(s.validate))
+	for element := range s.validate {
 		slice = append(slice, element)
 	}
 	return slice
@@ -145,7 +149,7 @@ func (s *Set[T]) RetainAll(elements []T) bool {
 	for _, element := range elements {
 		elementsSet[element] = struct{}{}
 	}
-	for element := range s.data {
+	for element := range s.validate {
 		if _, exists := elementsSet[element]; !exists {
 			s.Remove(element)
 			changed = true

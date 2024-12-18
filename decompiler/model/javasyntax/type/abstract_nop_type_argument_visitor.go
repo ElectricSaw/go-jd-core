@@ -26,9 +26,7 @@ func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t intmod.IPrimitiveType
 }
 
 func (v *AbstractTypeArgumentVisitor) VisitObjectType(t intmod.IObjectType) {
-	if visitable, ok := t.TypeArguments().(intmod.ITypeArgumentVisitable); ok {
-		v.SafeAcceptTypeArgumentVisitable(visitable)
-	}
+	v.SafeAcceptTypeArgumentVisitable(t.TypeArguments())
 }
 
 func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {

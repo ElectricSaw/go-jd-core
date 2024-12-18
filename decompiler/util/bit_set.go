@@ -645,7 +645,7 @@ func numberOfTrailingZeros(i long) int {
 //
 //// BitSet is a simple implementation of a bit set in Go.
 //type BitSet struct {
-//	data []uint64
+//	validate []uint64
 //}
 //
 //// NewBitSet creates a new BitSet with a specified size.
@@ -656,7 +656,7 @@ func numberOfTrailingZeros(i long) int {
 //// NewBitSetWithSize creates a new BitSet with a specified size.
 //func NewBitSetWithSize(size int) IBitSet {
 //	return &BitSet{
-//		data: make([]uint64, (size+63)/64),
+//		validate: make([]uint64, (size+63)/64),
 //	}
 //}
 //
@@ -664,9 +664,9 @@ func numberOfTrailingZeros(i long) int {
 //func (b *BitSet) And(other IBitSet) {
 //	for i := 0; i < b.Size(); i++ {
 //		if i < other.Size() {
-//			b.data[i] &= other.Data()[i]
+//			b.validate[i] &= other.Data()[i]
 //		} else {
-//			b.data[i] = 0
+//			b.validate[i] = 0
 //		}
 //	}
 //}
@@ -675,7 +675,7 @@ func numberOfTrailingZeros(i long) int {
 //func (b *BitSet) Or(other IBitSet) {
 //	b.ensureCapacity(other.Size() - 1)
 //	for i := 0; i < other.Size(); i++ {
-//		b.data[i] |= other.Data()[i]
+//		b.validate[i] |= other.Data()[i]
 //	}
 //}
 //
@@ -683,7 +683,7 @@ func numberOfTrailingZeros(i long) int {
 //func (b *BitSet) Xor(other IBitSet) {
 //	b.ensureCapacity(other.Size() - 1)
 //	for i := 0; i < other.Size(); i++ {
-//		b.data[i] ^= other.Data()[i]
+//		b.validate[i] ^= other.Data()[i]
 //	}
 //}
 //
@@ -691,42 +691,42 @@ func numberOfTrailingZeros(i long) int {
 //func (b *BitSet) AndNot(other IBitSet) {
 //	for i := 0; i < other.Size(); i++ {
 //		if i < other.Size() {
-//			b.data[i] &^= other.Data()[i]
+//			b.validate[i] &^= other.Data()[i]
 //		}
 //	}
 //}
 //
 //func (b *BitSet) Size() int {
-//	return len(b.data)
+//	return len(b.validate)
 //}
 //
 //// Cardinality returns the number of bits set to 1 in the BitSet.
 //func (b *BitSet) Cardinality() int {
 //	count := 0
-//	for _, word := range b.data {
+//	for _, word := range b.validate {
 //		count += bits.OnesCount64(word)
 //	}
 //	return count
 //}
 //
 //func (b *BitSet) Data() []uint64 {
-//	return b.data
+//	return b.validate
 //}
 //
 //// Get returns the value of the bit at the specified index.
 //func (b *BitSet) Get(index int) bool {
 //	word, bit := index/64, uint(index%64)
-//	if word >= len(b.data) {
+//	if word >= len(b.validate) {
 //		return false
 //	}
-//	return b.data[word]&(1<<bit) != 0
+//	return b.validate[word]&(1<<bit) != 0
 //}
 //
 //// Set sets the bit at the specified index to 1.
 //func (b *BitSet) Set(index int) {
 //	word, bit := index/64, uint(index%64)
 //	b.ensureCapacity(word)
-//	b.data[word] |= 1 << bit
+//	b.validate[word] |= 1 << bit
 //}
 //
 //// Flip toggles the bit at the specified index.
@@ -734,7 +734,7 @@ func numberOfTrailingZeros(i long) int {
 //func (b *BitSet) Flip(index int) {
 //	word, bit := index/64, uint(index%64)
 //	b.ensureCapacity(word)
-//	b.data[word] ^= 1 << bit
+//	b.validate[word] ^= 1 << bit
 //}
 //
 //// FlipRange toggles all bits in the specified range [start, end).
@@ -750,58 +750,58 @@ func numberOfTrailingZeros(i long) int {
 //
 //	// Flip bits in the first word
 //	if startWord == endWord {
-//		b.data[startWord] ^= (1<<endBit - 1) &^ (1<<startBit - 1)
+//		b.validate[startWord] ^= (1<<endBit - 1) &^ (1<<startBit - 1)
 //		return
 //	}
-//	b.data[startWord] ^= ^uint64(0) &^ (1<<startBit - 1)
+//	b.validate[startWord] ^= ^uint64(0) &^ (1<<startBit - 1)
 //
 //	// Flip bits in the intermediate words
 //	for i := startWord + 1; i < endWord; i++ {
-//		b.data[i] ^= ^uint64(0)
+//		b.validate[i] ^= ^uint64(0)
 //	}
 //
 //	// Flip bits in the last word
-//	b.data[endWord] ^= (1<<endBit - 1)
+//	b.validate[endWord] ^= (1<<endBit - 1)
 //}
 //
 //// ClearWithIndex sets the bit at the specified index to 0.
 //func (b *BitSet) ClearWithIndex(index int) {
 //	word, bit := index/64, uint(index%64)
-//	if word < len(b.data) {
-//		b.data[word] &^= 1 << bit
+//	if word < len(b.validate) {
+//		b.validate[word] &^= 1 << bit
 //	}
 //}
 //
 //// ClearWithIndex sets the bit at the specified index to 0.
 //func (b *BitSet) ClearAll() {
-//	for i := 0; i < len(b.data); i++ {
-//		b.data[i] = 0
+//	for i := 0; i < len(b.validate); i++ {
+//		b.validate[i] = 0
 //	}
 //}
 //
 //func (b *BitSet) Clone() IBitSet {
 //	c := &BitSet{
-//		data: make([]uint64, len(b.data)),
+//		validate: make([]uint64, len(b.validate)),
 //	}
-//	for i := 0; i < len(b.data); i++ {
-//		c.data[i] = b.data[i]
+//	for i := 0; i < len(b.validate); i++ {
+//		c.validate[i] = b.validate[i]
 //	}
 //	return c
 //}
 //
 //// ensureCapacity ensures the BitSet can hold the specified word index.
 //func (b *BitSet) ensureCapacity(word int) {
-//	if word >= len(b.data) {
+//	if word >= len(b.validate) {
 //		newData := make([]uint64, word+1)
-//		copy(newData, b.data)
-//		b.data = newData
+//		copy(newData, b.validate)
+//		b.validate = newData
 //	}
 //}
 //
 //// String returns a string representation of the BitSet.
 //func (b *BitSet) String() string {
 //	result := "BitSet{ "
-//	for i := len(b.data)*64 - 1; i >= 0; i-- {
+//	for i := len(b.validate)*64 - 1; i >= 0; i-- {
 //		if b.Get(i) {
 //			result += "1 "
 //		} else {

@@ -679,28 +679,28 @@ func countMethodParameters(descriptor string) int {
 
 func PrefixReadInt8(code []byte, offset int) (int, int) {
 	offset++
-	deltaOffset := int(code[offset]&255) << 8
-	return deltaOffset, offset
+	deltaOffset := int8(code[offset] & 255)
+	return int(deltaOffset), offset
 }
 
 func PrefixReadInt16(code []byte, offset int) (int, int) {
 	offset++
-	deltaOffset := int(code[offset]&255) << 8
+	deltaOffset := int16(code[offset]&255) << 8
 	offset++
-	deltaOffset |= int(code[offset] & 255)
-	return deltaOffset, offset
+	deltaOffset |= int16(code[offset] & 255)
+	return int(deltaOffset), offset
 }
 
 func PrefixReadInt32(code []byte, offset int) (int, int) {
 	offset++
-	deltaOffset := int(code[offset]&255) << 24
+	deltaOffset := int32(code[offset]&255) << 24
 	offset++
-	deltaOffset |= int(code[offset]&255) << 16
+	deltaOffset |= int32(code[offset]&255) << 16
 	offset++
-	deltaOffset |= int(code[offset]&255) << 8
+	deltaOffset |= int32(code[offset]&255) << 8
 	offset++
-	deltaOffset |= int(code[offset] & 255)
-	return deltaOffset, offset
+	deltaOffset |= int32(code[offset] & 255)
+	return int(deltaOffset), offset
 }
 
 func SuffixReadInt8(code []byte, offset int) (int, int) {

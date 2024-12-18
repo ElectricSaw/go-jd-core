@@ -113,7 +113,6 @@ func MakeControlFlowGraph(method intcls.IMethod) intsrv.IControlFlowGraph {
 				offset += 2
 				break
 			case 167: // GOTO
-
 				typ = 'G'
 				if lastStatementOffset+1 == offset {
 					typ = 'g'

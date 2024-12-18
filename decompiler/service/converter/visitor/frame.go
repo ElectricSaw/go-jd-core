@@ -255,6 +255,7 @@ func (f *Frame) CreateNames(parentNames []string) {
 					lv.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
 					lv.SetName(visit0r.Name())
 				}
+				lv = lv.Next()
 			}
 		}
 
@@ -482,7 +483,8 @@ func (f *Frame) createMapForInlineDeclarations() map[intsrv.IFrame][]intsrv.ILoc
 	mapped := make(map[intsrv.IFrame][]intsrv.ILocalVariable)
 	i := len(f.localVariableArray)
 
-	for ; i > 0; i-- {
+	for i > 0 {
+		i--
 		lv := f.localVariableArray[i]
 		for lv != nil {
 			if lv.Frame() == f && !lv.IsDeclared() {
@@ -753,7 +755,8 @@ func (f *Frame) createStartBlockDeclarations() {
 	addIndex := -1
 	i := len(f.localVariableArray)
 
-	for ; i > 0; i-- {
+	for i > 0 {
+		i--
 		lv := f.localVariableArray[i]
 		for lv != nil {
 			if lv.IsDeclared() {

@@ -1,6 +1,8 @@
 package visitor
 
 import (
+	"archive/zip"
+	"bytes"
 	"errors"
 	"fmt"
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
@@ -10,7 +12,10 @@ import (
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/deserializer"
 	"hash/fnv"
+	"io"
+	"log"
 	"os"
+	"path/filepath"
 	"strings"
 	"unicode"
 )
@@ -69,12 +74,12 @@ func NewTypeMaker(loader api.Loader) intsrv.ITypeMaker {
 	t.descriptorToObjectType["Ljava/lang/String;"] = _type.OtTypeString
 	t.descriptorToObjectType["Ljava/lang/System;"] = _type.OtTypeSystem
 
-	t.internalTypeNameToObjectType["Ljava/lang/Class;"] = _type.OtTypeClass
-	t.internalTypeNameToObjectType["Ljava/lang/Exception;"] = _type.OtTypeException
-	t.internalTypeNameToObjectType["Ljava/lang/Object;"] = _type.OtTypeObject
-	t.internalTypeNameToObjectType["Ljava/lang/Throwable;"] = _type.OtTypeThrowable
-	t.internalTypeNameToObjectType["Ljava/lang/String;"] = _type.OtTypeString
-	t.internalTypeNameToObjectType["Ljava/lang/System;"] = _type.OtTypeSystem
+	t.internalTypeNameToObjectType["java/lang/Class"] = _type.OtTypeClass
+	t.internalTypeNameToObjectType["java/lang/Exception"] = _type.OtTypeException
+	t.internalTypeNameToObjectType["java/lang/Object"] = _type.OtTypeObject
+	t.internalTypeNameToObjectType["java/lang/Throwable"] = _type.OtTypeThrowable
+	t.internalTypeNameToObjectType["java/lang/String"] = _type.OtTypeString
+	t.internalTypeNameToObjectType["java/lang/System"] = _type.OtTypeSystem
 
 	return t
 }
@@ -124,10 +129,7 @@ func (m *TypeMaker) ParseClassFileSignature(classFile intcls.IClassFile) intsrv.
 				for _, interfaceTypeName := range interfaceTypeNames {
 					list.Add(m.MakeFromInternalTypeName(interfaceTypeName).(intmod.IType))
 				}
-
-				if cast, ok := list.(intmod.IType); ok {
-					typeTypes.SetInterfaces(cast)
-				}
+				typeTypes.SetInterfaces(list)
 			}
 		}
 	} else {
@@ -136,7 +138,30 @@ func (m *TypeMaker) ParseClassFileSignature(classFile intcls.IClassFile) intsrv.
 		typeTypes.SetTypeParameters(m.parseTypeParameters(reader))
 		typeTypes.SetSuperType(m.parseClassTypeSignature(reader, 0))
 
+		firstInterface := m.parseClassTypeSignature(reader, 0)
+
+		if firstInterface != nil {
+			nextInterface := m.parseClassTypeSignature(reader, 0)
+
+			if nextInterface == nil {
+				typeTypes.SetInterfaces(firstInterface)
+			} else {
+				list := _type.NewUnmodifiableTypes()
+				list.Add(firstInterface)
+
+				for {
+					list.Add(nextInterface)
+					nextInterface = m.parseClassTypeSignature(reader, 0)
+					if nextInterface == nil {
+						break
+					}
+				}
+				typeTypes.SetInterfaces(list)
+			}
+		}
 	}
+
+	m.internalTypeNameToTypeTypes[internalTypeName] = typeTypes
 
 	return typeTypes
 }
@@ -1339,7 +1364,7 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 				case "Exceptions":
 					exceptionCount := reader.ReadUnsignedShort()
 					if exceptionCount > 0 {
-						exceptionTypeNames = make([]string, 0, exceptionCount)
+						exceptionTypeNames = make([]string, exceptionCount)
 
 						for k := 0; k < exceptionCount; k++ {
 							exceptionClassIndex := reader.ReadUnsignedShort()
@@ -1347,10 +1372,8 @@ func (m *TypeMaker) loadFieldsAndMethods2(internalTypeName string, data []byte) 
 							exceptionTypeNames[k] = constants[cc].(string)
 						}
 					}
-					break
 				default:
 					reader.Skip(attributeLength)
-					break
 				}
 			}
 
@@ -1566,29 +1589,88 @@ func (m *TypeMaker) match2(typeBounds map[string]intmod.IType, leftType intmod.I
 }
 
 func NewClassPathLoader() intsrv.IClassPathLoader {
-	return &ClassPathLoader{
-		buffer: make([]byte, 1024*5),
+	workingDir, err := os.Getwd()
+	if err != nil {
+		log.Fatalln("error:", err)
+		return nil
 	}
+
+	jdkZipPath := filepath.Join(workingDir, "resources", "jre-21.0.5.11-hotspot.zip")
+	reader, err := zip.OpenReader(jdkZipPath)
+	if err != nil {
+		log.Fatalln("error open jdk zip file:", err)
+		return nil
+	}
+	defer func(reader *zip.ReadCloser) {
+		err := reader.Close()
+		if err != nil {
+			log.Fatalln("error close jdk zip file: ", err)
+		}
+	}(reader)
+
+	l := &ClassPathLoader{
+		jdkZipPath: jdkZipPath,
+		zipEntries: make(map[string][]byte),
+	}
+
+	for _, zipEntry := range reader.File {
+		if !strings.HasSuffix(zipEntry.Name, ".class") {
+			continue
+		}
+		rc, err := zipEntry.Open()
+		if err != nil {
+			log.Println("error open zip entry:", err)
+			continue
+		}
+		defer func(rc io.ReadCloser) {
+			err := rc.Close()
+			if err != nil {
+				log.Println("error close zip entry:", err)
+			}
+		}(rc)
+
+		var buffer bytes.Buffer
+		_, err = io.Copy(&buffer, rc)
+		if err != nil {
+			log.Println("error read zip entry:", err)
+			continue
+		}
+
+		l.zipEntries[zipEntry.Name] = buffer.Bytes()
+	}
+
+	return l
 }
 
 type ClassPathLoader struct {
-	buffer []byte
+	jdkZipPath string
+	zipEntries map[string][]byte
 }
 
 func (l *ClassPathLoader) Load(internalName string) ([]byte, error) {
-	data, err := os.ReadFile(internalName)
-	if err != nil {
-		return nil, err
+	originalName := internalName
+	if !strings.HasSuffix(internalName, ".class") {
+		originalName = internalName + ".class"
 	}
 
-	return data, nil
+	if contents, ok := l.zipEntries[originalName]; ok {
+		return contents, nil
+	}
+
+	return nil, nil
 }
 
 func (l *ClassPathLoader) CanLoad(internalName string) bool {
-	if _, err := os.Stat(internalName); errors.Is(err, os.ErrNotExist) {
-		return false
+	originalName := internalName
+	if !strings.HasSuffix(internalName, ".class") {
+		originalName = internalName + ".class"
 	}
-	return true
+
+	if _, ok := l.zipEntries[originalName]; ok {
+		return true
+	}
+
+	return false
 }
 
 func NewSignatureReader(signature string) intsrv.ISignatureReader {

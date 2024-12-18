@@ -12,7 +12,7 @@ var TypeNames = []string{"DELETED", "START", "END", "STATEMENTS", "THROW", "RETU
 	"LOOP_START", "LOOP_CONTINUE", "LOOP_END", "GOTO", "INFINITE_GOTO", "GOTO_IN_TERNARY_OP", "TERNARY_OP", "JUMP"}
 
 var EmptyExceptionHandlers = util.NewDefaultList[intsrv.IExceptionHandler]()
-var EmptySwitchCases = make([]SwitchCase, 0)
+var EmptySwitchCases = util.NewDefaultList[intsrv.ISwitchCase]()
 
 var SwitchBreak = NewImmutableBasicBlock(intsrv.TypeSwitchBreak).(intsrv.IBasicBlock)
 var LoopStart = NewImmutableBasicBlock(intsrv.TypeLoopStart).(intsrv.IBasicBlock)
@@ -27,7 +27,7 @@ func NewBasicBlock(controlFlowGraph intsrv.IControlFlowGraph, index int, origina
 
 func NewBasicBlockWithBasicBlocks(controlFlowGraph intsrv.IControlFlowGraph, index int,
 	original intsrv.IBasicBlock, predecessors util.ISet[intsrv.IBasicBlock]) intsrv.IBasicBlock {
-	return &BasicBlock{
+	b := &BasicBlock{
 		controlFlowGraph:  controlFlowGraph,
 		index:             index,
 		typ:               original.Type(),
@@ -43,6 +43,13 @@ func NewBasicBlockWithBasicBlocks(controlFlowGraph intsrv.IControlFlowGraph, ind
 		switchCases:       original.SwitchCases(),
 		predecessors:      predecessors,
 	}
+	if b.exceptionHandlers == nil {
+		b.exceptionHandlers = EmptyExceptionHandlers
+	}
+	if b.switchCases == nil {
+		b.switchCases = EmptySwitchCases
+	}
+	return b
 }
 
 func NewBasicBlockWithRaw(controlFlowGraph *ControlFlowGraph, index, typ, fromOffset, toOffset int,
@@ -54,18 +61,20 @@ func NewBasicBlockWithRaw(controlFlowGraph *ControlFlowGraph, index, typ, fromOf
 func NewBasicBlockWithRawBasicBlock(controlFlowGraph *ControlFlowGraph, index, typ, fromOffset, toOffset int,
 	inverseCondition bool, predecessors util.ISet[intsrv.IBasicBlock]) *BasicBlock {
 	return &BasicBlock{
-		controlFlowGraph: controlFlowGraph,
-		index:            index,
-		typ:              typ,
-		fromOffset:       fromOffset,
-		toOffset:         toOffset,
-		next:             End,
-		branch:           End,
-		condition:        End,
-		sub1:             End,
-		sub2:             End,
-		predecessors:     predecessors,
-		inverseCondition: inverseCondition,
+		controlFlowGraph:  controlFlowGraph,
+		index:             index,
+		typ:               typ,
+		fromOffset:        fromOffset,
+		toOffset:          toOffset,
+		next:              End,
+		branch:            End,
+		condition:         End,
+		sub1:              End,
+		sub2:              End,
+		exceptionHandlers: EmptyExceptionHandlers,
+		switchCases:       EmptySwitchCases,
+		predecessors:      predecessors,
+		inverseCondition:  inverseCondition,
 	}
 }
 
@@ -227,6 +236,44 @@ func (b *BasicBlock) Contains(basicBlock intsrv.IBasicBlock) bool {
 }
 
 func (b *BasicBlock) Replace(old, nevv intsrv.IBasicBlock) {
+	fmt.Println("Old: ", old.String())
+	fmt.Println("New: ", nevv.String())
+	fmt.Println("Next: ", b.next.String())
+	fmt.Println("Branch", b.branch.String())
+	//var err error
+	//var bn, o, bb, s1, s2 uint64 = 0, 0, 0, 0, 0
+	//
+	//if b.next != nil {
+	//	bn, err = strconv.ParseUint(fmt.Sprintf("%p", b.next), 0, 64)
+	//	if err != nil {
+	//		bn = 0
+	//	}
+	//}
+	//if old != nil {
+	//	o, err = strconv.ParseUint(fmt.Sprintf("%p", old), 0, 64)
+	//	if err != nil {
+	//		o = 0
+	//	}
+	//}
+	//if b.branch != nil {
+	//	bb, err = strconv.ParseUint(fmt.Sprintf("%p", b.branch), 0, 64)
+	//	if err != nil {
+	//		bb = 0
+	//	}
+	//}
+	//if b.sub1 != nil {
+	//	s1, err = strconv.ParseUint(fmt.Sprintf("%p", b.sub1), 0, 64)
+	//	if err != nil {
+	//		s1 = 0
+	//	}
+	//}
+	//if b.sub2 != nil {
+	//	s2, err = strconv.ParseUint(fmt.Sprintf("%p", b.sub2), 0, 64)
+	//	if err != nil {
+	//		s2 = 0
+	//	}
+	//}
+
 	if b.next == old {
 		b.next = nevv
 	}
@@ -234,6 +281,14 @@ func (b *BasicBlock) Replace(old, nevv intsrv.IBasicBlock) {
 	if b.branch == old {
 		b.branch = nevv
 	}
+
+	//if bn == o {
+	//	b.next = nevv
+	//}
+	//
+	//if bb == o {
+	//	b.branch = nevv
+	//}
 
 	for _, exceptionHandler := range b.exceptionHandlers.ToSlice() {
 		exceptionHandler.Replace(old, nevv)
@@ -503,18 +558,20 @@ func NewImmutableBasicBlock(typ int) intsrv.IImmutableBasicBlock {
 func newImmutableBasicBlockEnd(typ int) intsrv.IImmutableBasicBlock {
 	end := &ImmutableBasicBlock{
 		BasicBlock: BasicBlock{
-			controlFlowGraph: nil,
-			index:            -1,
-			typ:              typ,
-			fromOffset:       0,
-			toOffset:         0,
-			next:             nil,
-			branch:           nil,
-			condition:        nil,
-			sub1:             nil,
-			sub2:             nil,
-			predecessors:     util.NewSet[intsrv.IBasicBlock](),
-			inverseCondition: true,
+			controlFlowGraph:  nil,
+			index:             -1,
+			typ:               typ,
+			fromOffset:        0,
+			toOffset:          0,
+			next:              nil,
+			branch:            nil,
+			condition:         nil,
+			sub1:              nil,
+			sub2:              nil,
+			exceptionHandlers: EmptyExceptionHandlers,
+			switchCases:       EmptySwitchCases,
+			predecessors:      util.NewSet[intsrv.IBasicBlock](),
+			inverseCondition:  true,
 		},
 	}
 

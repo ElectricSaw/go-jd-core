@@ -5,6 +5,7 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	moddec "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
@@ -100,9 +101,15 @@ func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker,
 		varargs := method.AccessFlags()&intmod.FlagVarArgs != 0
 
 		m.initLocalVariablesFromParameterTypes(classFile, parameterTypes, varargs, firstVariableIndex, lastParameterIndex)
+		m.formalParameters = moddec.NewFormalParameters()
 
-		rvpa := method.Attribute("RuntimeVisibleParameterAnnotations").(intcls.IAttributeParameterAnnotations)
-		ripa := method.Attribute("RuntimeInvisibleParameterAnnotations").(intcls.IAttributeParameterAnnotations)
+		var rvpa, ripa intcls.IAttributeParameterAnnotations
+		if tmp := method.Attribute("RuntimeVisibleParameterAnnotations"); tmp != nil {
+			rvpa = tmp.(intcls.IAttributeParameterAnnotations)
+		}
+		if tmp := method.Attribute("RuntimeInvisibleParameterAnnotations"); tmp != nil {
+			ripa = tmp.(intcls.IAttributeParameterAnnotations)
+		}
 
 		if rvpa == nil && ripa == nil {
 			variableIndex := firstVariableIndex
@@ -578,19 +585,19 @@ func searchCommonParentFrame(frame1, frame2 intsrv.IFrame) intsrv.IFrame {
 	if frame2 != nil {
 		f2, err = strconv.ParseUint(fmt.Sprintf("%p", frame2), 0, 64)
 		if err != nil {
-			f1 = 0
+			f2 = 0
 		}
 	}
 	if frame1.Parent() != nil {
 		fp1, err = strconv.ParseUint(fmt.Sprintf("%p", frame1.Parent()), 0, 64)
 		if err != nil {
-			f1 = 0
+			fp1 = 0
 		}
 	}
 	if frame2.Parent() != nil {
 		fp2, err = strconv.ParseUint(fmt.Sprintf("%p", frame2.Parent()), 0, 64)
 		if err != nil {
-			f1 = 0
+			fp2 = 0
 		}
 	}
 	//

@@ -31,9 +31,6 @@ func (p *ClassFileToJavaSyntaxProcessor) Process(message *message.Message) error
 			typeMaker = visitor.NewTypeMaker(loader)
 			configuration["typeMaker"] = typeMaker
 		}
-		if typeMaker == nil {
-			typeMaker = visitor.NewTypeMaker(loader)
-		}
 
 		message.Headers["typeMaker"] = typeMaker
 	}
