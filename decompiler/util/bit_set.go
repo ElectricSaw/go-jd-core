@@ -8,19 +8,22 @@ import (
 	"math/bits"
 )
 
+type long int64
+
 const (
-	AddressBitsPerWord       = 6
-	BitsPerWord              = 1 << AddressBitsPerWord
-	BitIndexMask             = BitsPerWord - 1
-	WordMask           int64 = -1
+	AddressBitsPerWord = 6
+	BitsPerWord        = 1 << AddressBitsPerWord
+	BitIndexMask       = BitsPerWord - 1
 )
+
+const WordMask long = -1 // 0xFFFFFFFFFFFFFFFF
 
 type IBitSet interface {
 	And(other IBitSet)
 	Or(other IBitSet)
 	Xor(other IBitSet)
 	AndNot(other IBitSet)
-	Data() []uint64
+	Data() []long
 	Size() int
 	ClearAll()
 	Clear(bitIndex int) error
@@ -63,7 +66,7 @@ func NewBitSetWithSize(nbits int) IBitSet {
 }
 
 type BitSet struct {
-	words        []int64
+	words        []long
 	wordsInUse   int
 	sizeIsSticky bool
 }
@@ -173,7 +176,7 @@ func (b *BitSet) AndNot(other IBitSet) {
 	b.recalculateWordsInUse()
 }
 
-func (b *BitSet) Data() []uint64 {
+func (b *BitSet) Data() []long {
 	return b.words
 }
 
@@ -233,28 +236,26 @@ func (b *BitSet) FlipRange(fromIndex, toIndex int) {
 	endWordIndex := wordIndex(toIndex - 1)
 	b.expandTo(endWordIndex)
 
-	firstWordMask := WordMask << fromIndex
+	//firstWordMask := WordMask << fromIndex
 	//lastWordMask := WordMask >> -toIndex
-	lastWordMask := UnsignedRightShift(WordMask, uint(-toIndex))
+
+	firstWordMask := WordMask << uint(fromIndex%BitsPerWord)
+	lastWordMask := long(uint64(0xFFFFFFFFFFFFFFFF) >> uint((-toIndex%64+64)%64))
 
 	if startWordIndex == endWordIndex {
-		b.words[startWordIndex] ^= uint64(firstWordMask & lastWordMask)
+		b.words[startWordIndex] ^= firstWordMask & lastWordMask
 	} else {
-		b.words[startWordIndex] ^= uint64(firstWordMask)
+		b.words[startWordIndex] ^= firstWordMask
 
 		for i := startWordIndex; i < endWordIndex; i++ {
-			b.words[i] ^= uint64(WordMask)
+			b.words[i] ^= WordMask
 		}
 
-		b.words[endWordIndex] ^= uint64(lastWordMask)
+		b.words[endWordIndex] ^= lastWordMask
 	}
 
 	b.recalculateWordsInUse()
 	_ = b.checkInvariants()
-}
-
-func UnsignedRightShift(value int64, shift uint) int64 {
-	return int64(value) >> shift
 }
 
 // Set a bit
@@ -273,7 +274,7 @@ func (b *BitSet) SetWithValue(bitIndex int, value bool) error {
 	if value {
 		return b.Set(bitIndex)
 	} else {
-		b.Clear(bitIndex)
+		_ = b.Clear(bitIndex)
 	}
 
 	return nil
@@ -296,14 +297,14 @@ func (b *BitSet) Length() int {
 	if b.wordsInUse == 0 {
 		return 0
 	}
-	return BitsPerWord*(b.wordsInUse-1) + (BitsPerWord - bits.LeadingZeros64(b.words[b.wordsInUse-1]))
+	return BitsPerWord*(b.wordsInUse-1) + (BitsPerWord - bits.LeadingZeros64(uint64(b.words[b.wordsInUse-1])))
 }
 
 // Calculate cardinality
 func (b *BitSet) Cardinality() int {
 	sum := 0
 	for i := 0; i < b.wordsInUse; i++ {
-		sum += bits.OnesCount64(b.words[i])
+		sum += bits.OnesCount64(uint64(b.words[i]))
 	}
 	return sum
 }
@@ -371,7 +372,7 @@ func (b *BitSet) Clone() IBitSet {
 	}
 
 	clone := &BitSet{}
-	clone.words = make([]uint64, len(b.words))
+	clone.words = make([]long, len(b.words))
 	copy(clone.words, b.words)
 	clone.sizeIsSticky = b.sizeIsSticky
 	clone.wordsInUse = b.wordsInUse
@@ -440,8 +441,8 @@ func (b *BitSet) Equals(other IBitSet) bool {
 }
 
 func (b *BitSet) HashCode() int {
-	h := uint64(1234)
-	for i := uint64(b.wordsInUse) - 1; i >= 0; i-- {
+	h := long(1234)
+	for i := long(b.wordsInUse) - 1; i >= 0; i-- {
 		h ^= b.words[i] * (i + 1)
 	}
 	return int((h >> 32) ^ h)
@@ -469,24 +470,25 @@ func (b *BitSet) checkInvariants() error {
 
 // Recalculate words in use
 func (b *BitSet) recalculateWordsInUse() {
-	for i := b.wordsInUse - 1; i >= 0; i-- {
+	var i int
+	for i = b.wordsInUse - 1; i >= 0; i-- {
 		if b.words[i] != 0 {
-			b.wordsInUse = i + 1
 			break
 		}
 	}
+	b.wordsInUse = i + 1
 }
 
 // Recalculate words in use
 func (b *BitSet) initWords(nbits int) {
-	b.words = make([]uint64, wordIndex(nbits-1)+1)
+	b.words = make([]long, wordIndex(nbits-1)+1)
 }
 
 // Ensure capacity for words
 func (b *BitSet) ensureCapacity(wordsRequired int) {
 	if len(b.words) < wordsRequired {
 		newSize := max(2*len(b.words), wordsRequired)
-		newWords := make([]uint64, newSize)
+		newWords := make([]long, newSize)
 		copy(newWords, b.words)
 		b.words = newWords
 		b.sizeIsSticky = false
@@ -504,7 +506,7 @@ func (b *BitSet) expandTo(wordIndex int) {
 
 // Convert from byte array
 func BitSetFromByteArray(data []byte) *BitSet {
-	words := make([]uint64, (len(data)+7)/8)
+	words := make([]long, (len(data)+7)/8)
 	buf := bytes.NewReader(data)
 	_ = binary.Read(buf, binary.LittleEndian, &words)
 	return &BitSet{
@@ -531,42 +533,90 @@ func checkRange(fromIndex, toIndex int) error {
 	return nil
 }
 
-func numberOfTrailingZeros(i uint64) int {
-	// HD, Figure 5-14
-	var x, y, n int
+func numberOfTrailingZeros(i long) int {
 	if i == 0 {
 		return 64
 	}
-	n = 63
-	y = int(i)
+
+	var x, y int32
+	n := 63
+
+	y = int32(i)
 	if y != 0 {
-		n = n - 32
+		n -= 32
 		x = y
 	} else {
-		x = int(i >> 32)
+		x = int32(uint64(i) >> 32) // Cast to uint64 to avoid sign extension
 	}
+
 	y = x << 16
 	if y != 0 {
-		n = n - 16
+		n -= 16
 		x = y
 	}
+
 	y = x << 8
 	if y != 0 {
-		n = n - 8
+		n -= 8
 		x = y
 	}
+
 	y = x << 4
 	if y != 0 {
-		n = n - 4
+		n -= 4
 		x = y
 	}
+
 	y = x << 2
 	if y != 0 {
-		n = n - 2
+		n -= 2
 		x = y
 	}
-	return n - ((x << 1) >> 31)
+
+	return n - int(uint32(x<<1)>>31)
 }
+
+//func numberOfTrailingZeros(i long) int {
+//	// HD, Figure 5-14
+//	var x, y, n int
+//	if i == 0 {
+//		return 64
+//	}
+//	n = 63
+//	y = int(i)
+//	if y != 0 {
+//		n = n - 32
+//		x = y
+//	} else {
+//		x = int(i >> 32)
+//	}
+//	y = x << 16
+//	if y != 0 {
+//		n = n - 16
+//		x = y
+//	}
+//	y = x << 8
+//	if y != 0 {
+//		n = n - 8
+//		x = y
+//	}
+//	y = x << 4
+//	if y != 0 {
+//		n = n - 4
+//		x = y
+//	}
+//	y = x << 2
+//	if y != 0 {
+//		n = n - 2
+//		x = y
+//	}
+//	tmp1 := x << 1
+//	tmp2 := (31%64 + 64) % 64
+//	tmp3 := tmp1 >> tmp2
+//
+//	return n - tmp3
+//	//return n - ((x << 1) >> 31)
+//}
 
 //const (
 //	AddressBitsPerWord = 6

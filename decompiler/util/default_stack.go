@@ -21,7 +21,7 @@ type IStack[T comparable] interface {
 // NewDefaultStack 기본 생성자 함수
 func NewDefaultStack[T comparable]() IStack[T] {
 	return &DefaultStack[T]{
-		elements: make([]T, 0, 16),
+		elements: make([]T, 16),
 		head:     0,
 	}
 }
