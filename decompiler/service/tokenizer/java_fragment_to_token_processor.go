@@ -1,10 +1,10 @@
 package tokenizer
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/class/model/message"
-	"github.com/ElectricSaw/go-jd-core/class/service/tokenizer/visitor"
-	"github.com/ElectricSaw/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/tokenizer/visitor"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
 func NewJavaFragmentToTokenProcessor() *JavaFragmentToTokenProcessor {

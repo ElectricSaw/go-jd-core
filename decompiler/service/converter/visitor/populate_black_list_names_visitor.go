@@ -1,10 +1,10 @@
 package visitor
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/class/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/class/model/javasyntax/type"
-	"github.com/ElectricSaw/go-jd-core/class/util"
+	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
 func NewPopulateBlackListNamesVisitor(names util.ISet[string]) intsrv.IPopulateBlackListNamesVisitor {

@@ -1,10 +1,10 @@
 package processor
 
 import (
-	intsrv "github.com/ElectricSaw/go-jd-core/class/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/class/model/javasyntax"
-	"github.com/ElectricSaw/go-jd-core/class/model/message"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter/visitor"
+	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 )
 
 func NewUpdateJavaSyntaxTreeProcessor() *UpdateJavaSyntaxTreeProcessor {

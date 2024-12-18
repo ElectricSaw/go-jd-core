@@ -1,14 +1,14 @@
-package class
+package decompiler
 
 import (
-	"github.com/ElectricSaw/go-jd-core/class/api"
-	"github.com/ElectricSaw/go-jd-core/class/model/message"
-	"github.com/ElectricSaw/go-jd-core/class/service/converter"
-	"github.com/ElectricSaw/go-jd-core/class/service/deserializer"
-	"github.com/ElectricSaw/go-jd-core/class/service/fragmenter"
-	"github.com/ElectricSaw/go-jd-core/class/service/layouter"
-	"github.com/ElectricSaw/go-jd-core/class/service/tokenizer"
-	"github.com/ElectricSaw/go-jd-core/class/service/writer"
+	"github.com/ElectricSaw/go-jd-core/decompiler/api"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/deserializer"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/layouter"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/tokenizer"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/writer"
 )
 
 func NewClassFileToJavaSourceDecompiler() *ClassFileToJavaSourceDecompiler {
