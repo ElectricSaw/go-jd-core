@@ -1,52 +1,45 @@
 package javafragment
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
-)
+import "fmt"
 
-func NewEndBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string, start intmod.IStartBlockFragment) intmod.IEndBlockFragment {
-	f := &EndBlockFragment{
-		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount,
-			lineCount, maximalLineCount, weight, label).(*fragment.EndFlexibleBlockFragment),
-		start: start,
+func NewEndBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string, start *StartBlockFragment) EndBlockFragment {
+	f := EndBlockFragment{
+		EndFlexibleBlockFragment: NewEndFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label),
+		Start: start,
 	}
 
-	f.start.SetEnd(f)
+	f.Start.End = &f
 
 	return f
 }
 
 type EndBlockFragment struct {
-	fragment.EndFlexibleBlockFragment
+	EndFlexibleBlockFragment
 
-	start intmod.IStartBlockFragment
-}
-
-func (f *EndBlockFragment) Start() intmod.IStartBlockFragment {
-	return f.start
-}
-
-func (f *EndBlockFragment) SetStart(start intmod.IStartBlockFragment) {
-	f.start = start
+	Start *StartBlockFragment
 }
 
 func (f *EndBlockFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount() {
-		f.SetLineCount(f.LineCount() + 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount = f.LineCount + 1
 		return true
 	}
 	return false
 }
 
 func (f *EndBlockFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount() {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount = f.LineCount - 1
 		return true
 	}
 	return false
 }
 
-func (f *EndBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *EndBlockFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitEndBlockFragment(f)
+}
+
+func (f *EndBlockFragment) String() string {
+	return fmt.Sprintf("EndBlockFragment { start: %s, end: %s", f.Start.String(), f.EndFlexibleBlockFragment.String())
 }

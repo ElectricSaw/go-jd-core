@@ -1,18 +1,16 @@
 package javafragment
 
-import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-
 func NewStartStatementsInfiniteForBlockFragment(minimalLineCount, lineCount, maximalLineCount,
-	weight int, label string) intmod.IStartStatementsInfiniteForBlockFragment {
+	weight int, label string) StartStatementsInfiniteForBlockFragment {
 	return NewStartStatementsInfiniteForBlockFragmentWithGroup(minimalLineCount, lineCount,
 		maximalLineCount, weight, label, NewStartStatementsBlockFragmentGroup())
 }
 
 func NewStartStatementsInfiniteForBlockFragmentWithGroup(minimalLineCount, lineCount, maximalLineCount, weight int,
-	label string, group intmod.IStartStatementsBlockFragmentGroup) intmod.IStartStatementsInfiniteForBlockFragment {
-	return &StartStatementsInfiniteForBlockFragment{
-		StartStatementsBlockFragment: *NewStartStatementsBlockFragmentWithGroup(minimalLineCount,
-			lineCount, maximalLineCount, weight, label, group).(*StartStatementsBlockFragment),
+	label string, group StartStatementsBlockFragmentGroup) StartStatementsInfiniteForBlockFragment {
+	return StartStatementsInfiniteForBlockFragment{
+		StartStatementsBlockFragment: NewStartStatementsBlockFragmentWithGroup(minimalLineCount,
+			lineCount, maximalLineCount, weight, label, group),
 	}
 }
 
@@ -20,6 +18,6 @@ type StartStatementsInfiniteForBlockFragment struct {
 	StartStatementsBlockFragment
 }
 
-func (f *StartStatementsInfiniteForBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *StartStatementsInfiniteForBlockFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitStartStatementsInfiniteForBlockFragment(f)
 }

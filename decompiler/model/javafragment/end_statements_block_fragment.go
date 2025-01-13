@@ -1,35 +1,24 @@
 package javafragment
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
-)
-
 func NewEndStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
-	label string, group intmod.IStartStatementsBlockFragmentGroup) intmod.IEndStatementsBlockFragment {
-	f := &EndStatementsBlockFragment{
-		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount,
-			lineCount, maximalLineCount, weight, label).(*fragment.EndFlexibleBlockFragment),
-		group: group,
+	label string, group StartStatementsBlockFragmentGroup) EndStatementsBlockFragment {
+	f := EndStatementsBlockFragment{
+		EndFlexibleBlockFragment: NewEndFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label),
+		Group: group,
 	}
-	f.group.Add(f)
+
+	f.Group.Add(&f)
+
 	return f
 }
 
 type EndStatementsBlockFragment struct {
-	fragment.EndFlexibleBlockFragment
+	EndFlexibleBlockFragment
 
-	group intmod.IStartStatementsBlockFragmentGroup
+	Group StartStatementsBlockFragmentGroup
 }
 
-func (f *EndStatementsBlockFragment) Group() intmod.IStartStatementsBlockFragmentGroup {
-	return f.group
-}
-
-func (f *EndStatementsBlockFragment) SetGroup(group intmod.IStartStatementsBlockFragmentGroup) {
-	f.group = group
-}
-
-func (f *EndStatementsBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *EndStatementsBlockFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitEndStatementsBlockFragment(f)
 }

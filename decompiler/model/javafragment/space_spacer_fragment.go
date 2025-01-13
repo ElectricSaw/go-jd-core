@@ -1,10 +1,8 @@
 package javafragment
 
-import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-
-func NewSpaceSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) intmod.ISpaceSpacerFragment {
-	return &SpaceSpacerFragment{
-		SpacerFragment: *NewSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight, label).(*SpacerFragment),
+func NewSpaceSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) SpaceSpacerFragment {
+	return SpaceSpacerFragment{
+		SpacerFragment: NewSpacerFragment(minimalLineCount, lineCount, maximalLineCount, weight, label),
 	}
 }
 
@@ -12,6 +10,6 @@ type SpaceSpacerFragment struct {
 	SpacerFragment
 }
 
-func (f *SpaceSpacerFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *SpaceSpacerFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitSpaceSpacerFragment(f)
 }

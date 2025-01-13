@@ -2,24 +2,41 @@ package javafragment
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewLineNumberTokensFragment(tokens []intmod.IToken) intmod.ILineNumberTokensFragment {
-	return &LineNumberTokensFragment{
-		tokens: tokens,
+func NewLineNumberTokensFragment(tokens ...intmod.IToken) LineNumberTokensFragment {
+	frag := LineNumberTokensFragment{
+		Tokens: util.NewDefaultListWithElements[intmod.IToken](tokens...),
 	}
+	return frag
 }
 
-func SearchFirstLineNumber(tokens []intmod.IToken) int {
+func SearchFirstLineNumber(tokens util.IList[intmod.IToken]) int {
 	visitor := NewSearchLineNumberVisitor()
 
-	for _, tkn := range tokens {
-		tkn.Accept(visitor)
+	for _, tkn := range tokens.ToSlice() {
+		tkn.Accept(&visitor)
 
-		if visitor.LineNumber() != intmod.UnknownLineNumberToken {
-			return visitor.LineNumber() - visitor.NewLineNumber()
+		if visitor.LineNumber != intmod.UnknownLineNumberToken {
+			return visitor.LineNumber - visitor.NewLineCounter
+		}
+	}
+
+	return intmod.UnknownLineNumberToken
+}
+
+func searchLastLineNumber(tokens util.IList[intmod.IToken]) int {
+	visitor := NewSearchLineNumberVisitor()
+	index := tokens.Size()
+
+	for index > 0 {
+		index--
+		tokens.Get(index).Accept(&visitor)
+
+		if visitor.LineNumber != intmod.UnknownLineNumberToken {
+			return visitor.LineNumber + visitor.NewLineCounter
 		}
 	}
 
@@ -27,59 +44,63 @@ func SearchFirstLineNumber(tokens []intmod.IToken) int {
 }
 
 type LineNumberTokensFragment struct {
-	fragment.FixedFragment
+	FixedFragment
 
-	tokens []intmod.IToken
+	Tokens util.IList[intmod.IToken]
 }
 
 func (f *LineNumberTokensFragment) TokenAt(index int) intmod.IToken {
-	return f.tokens[index]
+	return f.Tokens.Get(index)
 }
 
-func (f *LineNumberTokensFragment) Tokens() []intmod.IToken {
-	return f.tokens
-}
-
-func (f *LineNumberTokensFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *LineNumberTokensFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitLineNumberTokensFragment(f)
 }
 
-func NewSearchLineNumberVisitor() intmod.ISearchLineNumberVisitor {
-	return &SearchLineNumberVisitor{}
+func NewSearchLineNumberVisitor() SearchLineNumberVisitor {
+	return SearchLineNumberVisitor{}
 }
 
 type SearchLineNumberVisitor struct {
 	token.AbstractNopTokenVisitor
 
-	lineNumber     int
-	newLineCounter int
-}
-
-func (v *SearchLineNumberVisitor) LineNumber() int {
-	return v.lineNumber
-}
-
-func (v *SearchLineNumberVisitor) SetLineNumber(lineNumber int) {
-	v.lineNumber = lineNumber
-}
-
-func (v *SearchLineNumberVisitor) NewLineNumber() int {
-	return v.newLineCounter
-}
-
-func (v *SearchLineNumberVisitor) SetNewLineNumber(newLineCounter int) {
-	v.newLineCounter = newLineCounter
+	LineNumber     int
+	NewLineCounter int
 }
 
 func (v *SearchLineNumberVisitor) Reset() {
-	v.lineNumber = intmod.UnknownLineNumberToken
-	v.newLineCounter = 0
+	v.LineNumber = intmod.UnknownLineNumberToken
+	v.NewLineCounter = 0
 }
 
+func (v *SearchLineNumberVisitor) VisitBooleanConstantToken(_ intmod.IBooleanConstantToken) {}
+
+func (v *SearchLineNumberVisitor) VisitCharacterConstantToken(_ intmod.ICharacterConstantToken) {}
+
+func (v *SearchLineNumberVisitor) VisitDeclarationToken(_ intmod.IDeclarationToken) {}
+
+func (v *SearchLineNumberVisitor) VisitEndBlockToken(_ intmod.IEndBlockToken) {}
+
+func (v *SearchLineNumberVisitor) VisitEndMarkerToken(_ intmod.IEndMarkerToken) {}
+
+func (v *SearchLineNumberVisitor) VisitKeywordToken(_ intmod.IKeywordToken) {}
+
 func (v *SearchLineNumberVisitor) VisitLineNumberToken(token intmod.ILineNumberToken) {
-	v.lineNumber = token.LineNumber()
+	v.LineNumber = token.LineNumber()
 }
 
 func (v *SearchLineNumberVisitor) VisitNewLineToken(_ intmod.INewLineToken) {
-	v.newLineCounter++
+	v.NewLineCounter++
 }
+
+func (v *SearchLineNumberVisitor) VisitNumericConstantToken(_ intmod.INumericConstantToken) {}
+
+func (v *SearchLineNumberVisitor) VisitReferenceToken(_ intmod.IReferenceToken) {}
+
+func (v *SearchLineNumberVisitor) VisitStartBlockToken(_ intmod.IStartBlockToken) {}
+
+func (v *SearchLineNumberVisitor) VisitStartMarkerToken(_ intmod.IStartMarkerToken) {}
+
+func (v *SearchLineNumberVisitor) VisitStringConstantToken(_ intmod.IStringConstantToken) {}
+
+func (v *SearchLineNumberVisitor) VisitTextToken(_ intmod.ITextToken) {}

@@ -2,74 +2,62 @@ package javafragment
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewTokensFragment(tokens ...intmod.IToken) intmod.ITokensFragment {
+func NewTokensFragment(tokens ...intmod.IToken) TokensFragment {
 	return NewTokensFragmentWithSlice(tokens)
 }
 
-func NewTokensFragmentWithSlice(tokens []intmod.IToken) intmod.ITokensFragment {
+func NewTokensFragmentWithSlice(tokens []intmod.IToken) TokensFragment {
 	return newTokensFragment(getLineCount(tokens), tokens)
 }
 
-func newTokensFragment(lineCount int, tokens []intmod.IToken) intmod.ITokensFragment {
-	return &TokensFragment{
-		FlexibleFragment: *fragment.NewFlexibleFragment(lineCount, lineCount, lineCount,
-			0, "Tokens").(*fragment.FlexibleFragment),
-		tokens: tokens,
+func newTokensFragment(lineCount int, tokens []intmod.IToken) TokensFragment {
+	return TokensFragment{
+		FlexibleFragment: NewFlexibleFragment(lineCount, lineCount, lineCount,
+			0, "Tokens"),
+		Tokens: util.NewDefaultListWithElements[intmod.IToken](tokens...),
 	}
 }
 
 type TokensFragment struct {
-	fragment.FlexibleFragment
+	FlexibleFragment
 
-	tokens []intmod.IToken
+	Tokens util.IList[intmod.IToken]
 }
 
 func (f *TokensFragment) TokenAt(index int) intmod.IToken {
-	return f.tokens[index]
+	return f.Tokens.Get(index)
 }
 
-func (f *TokensFragment) Tokens() []intmod.IToken {
-	return f.tokens
-}
-
-func (f *TokensFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *TokensFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitTokensFragment(f)
 }
 
-func NewLineCountVisitor() intmod.ILineCountVisitor {
-	return &LineCountVisitor{
-		lineCount: 0,
+func NewLineCountVisitor() LineCountVisitor {
+	return LineCountVisitor{
+		LineCount: 0,
 	}
 }
 
 type LineCountVisitor struct {
 	token.AbstractNopTokenVisitor
 
-	lineCount int
-}
-
-func (v *LineCountVisitor) LineCount() int {
-	return v.lineCount
-}
-
-func (v *LineCountVisitor) SetLineCount(lineCount int) {
-	v.lineCount = lineCount
+	LineCount int
 }
 
 func (v *LineCountVisitor) VisitLineNumberToken(_ intmod.ILineNumberToken) {
-	v.lineCount++
+	v.LineCount++
 }
 
 func getLineCount(tokens []intmod.IToken) int {
 	visitor := NewLineCountVisitor()
 
 	for _, tkn := range tokens {
-		tkn.Accept(visitor)
+		tkn.Accept(&visitor)
 	}
 
-	return visitor.LineCount()
+	return visitor.LineCount
 }

@@ -1,39 +1,26 @@
 package javafragment
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
-)
-
 func NewStartBodyFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
-	label string) intmod.IStartBodyFragment {
-	return &StartBodyFragment{
-		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount,
-			lineCount, maximalLineCount, weight, label).(*fragment.StartFlexibleBlockFragment),
+	label string) StartBodyFragment {
+	return StartBodyFragment{
+		StartFlexibleBlockFragment: NewStartFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label),
 	}
 }
 
 type StartBodyFragment struct {
-	fragment.StartFlexibleBlockFragment
+	StartFlexibleBlockFragment
 
-	end intmod.IEndBodyFragment
-}
-
-func (f *StartBodyFragment) End() intmod.IEndBodyFragment {
-	return f.end
-}
-
-func (f *StartBodyFragment) SetEnd(end intmod.IEndBodyFragment) {
-	f.end = end
+	End *EndBodyFragment
 }
 
 func (f *StartBodyFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount() {
-		f.SetLineCount(f.LineCount() + 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount = f.LineCount + 1
 
 		if !force {
-			if f.LineCount() == 1 && f.end.LineCount() == 0 {
-				f.end.SetLineCount(f.LineCount())
+			if f.LineCount == 1 && f.End.LineCount == 0 {
+				f.End.LineCount = f.LineCount
 			}
 		}
 
@@ -43,12 +30,12 @@ func (f *StartBodyFragment) IncLineCount(force bool) bool {
 }
 
 func (f *StartBodyFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount() {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount = f.LineCount - 1
 
 		if !force {
-			if f.LineCount() == 1 {
-				f.end.SetLineCount(f.LineCount())
+			if f.LineCount == 1 {
+				f.End.LineCount = f.LineCount
 			}
 		}
 
@@ -57,6 +44,6 @@ func (f *StartBodyFragment) DecLineCount(force bool) bool {
 	return false
 }
 
-func (f *StartBodyFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *StartBodyFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitStartBodyFragment(f)
 }

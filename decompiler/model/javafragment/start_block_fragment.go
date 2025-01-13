@@ -1,39 +1,30 @@
 package javafragment
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
+	"fmt"
 )
 
 func NewStartBlockFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
-	label string) intmod.IStartBlockFragment {
-	return &StartBlockFragment{
-		StartFlexibleBlockFragment: *fragment.NewStartFlexibleBlockFragment(minimalLineCount,
-			lineCount, maximalLineCount, weight, label).(*fragment.StartFlexibleBlockFragment),
+	label string) StartBlockFragment {
+	return StartBlockFragment{
+		StartFlexibleBlockFragment: NewStartFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label),
 	}
 }
 
 type StartBlockFragment struct {
-	fragment.StartFlexibleBlockFragment
+	StartFlexibleBlockFragment
 
-	end intmod.IEndBlockFragment
-}
-
-func (f *StartBlockFragment) End() intmod.IEndBlockFragment {
-	return f.end
-}
-
-func (f *StartBlockFragment) SetEnd(end intmod.IEndBlockFragment) {
-	f.end = end
+	End *EndBlockFragment
 }
 
 func (f *StartBlockFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount() {
-		f.SetLineCount(f.LineCount() + 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount = f.LineCount + 1
 
 		if !force {
-			if f.LineCount() == 1 && f.end.LineCount() == 0 {
-				f.end.SetLineCount(f.LineCount())
+			if f.LineCount == 1 && f.End.LineCount == 0 {
+				f.End.LineCount = f.LineCount
 			}
 		}
 
@@ -43,12 +34,12 @@ func (f *StartBlockFragment) IncLineCount(force bool) bool {
 }
 
 func (f *StartBlockFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount() {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount = f.LineCount - 1
 
 		if !force {
-			if f.LineCount() == 1 {
-				f.end.SetLineCount(f.LineCount())
+			if f.LineCount == 1 {
+				f.End.LineCount = f.LineCount
 			}
 		}
 
@@ -57,6 +48,10 @@ func (f *StartBlockFragment) DecLineCount(force bool) bool {
 	return false
 }
 
-func (f *StartBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *StartBlockFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitStartBlockFragment(f)
+}
+
+func (f *StartBlockFragment) String() string {
+	return fmt.Sprintf("StartBlockFragment { start: %s, end: %s", f.StartFlexibleBlockFragment.String(), f.End.String())
 }

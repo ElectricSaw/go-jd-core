@@ -1,21 +1,16 @@
 package javafragment
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
-)
-
-func NewSpacerBetweenMembersFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) intmod.ISpacerBetweenMembersFragment {
-	return &SpacerBetweenMembersFragment{
-		SpacerBetweenMovableBlocksFragment: *fragment.NewSpacerBetweenMovableBlocksFragment(
-			minimalLineCount, lineCount, maximalLineCount, weight, label).(*fragment.SpacerBetweenMovableBlocksFragment),
+func NewSpacerBetweenMembersFragment(minimalLineCount, lineCount, maximalLineCount, weight int, label string) SpacerBetweenMembersFragment {
+	return SpacerBetweenMembersFragment{
+		SpacerBetweenMovableBlocksFragment: NewSpacerBetweenMovableBlocksFragment(
+			minimalLineCount, lineCount, maximalLineCount, weight, label),
 	}
 }
 
 type SpacerBetweenMembersFragment struct {
-	fragment.SpacerBetweenMovableBlocksFragment
+	SpacerBetweenMovableBlocksFragment
 }
 
-func (f *SpacerBetweenMembersFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *SpacerBetweenMembersFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitSpacerBetweenMembersFragment(f)
 }

@@ -1,20 +1,15 @@
 package javafragment
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
-)
-
-func NewStartMovableJavaBlockFragment(typ int) intmod.IStartMovableJavaBlockFragment {
-	return &StartMovableJavaBlockFragment{
-		StartMovableBlockFragment: *fragment.NewStartMovableBlockFragment(typ).(*fragment.StartMovableBlockFragment),
+func NewStartMovableJavaBlockFragment(typ int) StartMovableJavaBlockFragment {
+	return StartMovableJavaBlockFragment{
+		StartMovableBlockFragment: NewStartMovableBlockFragment(typ),
 	}
 }
 
 type StartMovableJavaBlockFragment struct {
-	fragment.StartMovableBlockFragment
+	StartMovableBlockFragment
 }
 
-func (f *StartMovableJavaBlockFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *StartMovableJavaBlockFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitStartMovableJavaBlockFragment(f)
 }

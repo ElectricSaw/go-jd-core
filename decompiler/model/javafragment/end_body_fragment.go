@@ -1,44 +1,31 @@
 package javafragment
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/fragment"
-)
-
 func NewEndBodyFragment(minimalLineCount, lineCount, maximalLineCount, weight int,
-	label string, start intmod.IStartBodyFragment) intmod.IEndBodyFragment {
-	f := &EndBodyFragment{
-		EndFlexibleBlockFragment: *fragment.NewEndFlexibleBlockFragment(minimalLineCount,
-			lineCount, maximalLineCount, weight, label).(*fragment.EndFlexibleBlockFragment),
-		start: start,
+	label string, start *StartBodyFragment) EndBodyFragment {
+	f := EndBodyFragment{
+		EndFlexibleBlockFragment: NewEndFlexibleBlockFragment(minimalLineCount,
+			lineCount, maximalLineCount, weight, label),
+		Start: start,
 	}
 
-	f.start.SetEnd(f)
+	f.Start.End = &f
 
 	return f
 }
 
 type EndBodyFragment struct {
-	fragment.EndFlexibleBlockFragment
+	EndFlexibleBlockFragment
 
-	start intmod.IStartBodyFragment
-}
-
-func (f *EndBodyFragment) Start() intmod.IStartBodyFragment {
-	return f.start
-}
-
-func (f *EndBodyFragment) SetStart(start intmod.IStartBodyFragment) {
-	f.start = start
+	Start *StartBodyFragment
 }
 
 func (f *EndBodyFragment) IncLineCount(force bool) bool {
-	if f.LineCount() < f.MaximalLineCount() {
-		f.SetLineCount(f.LineCount() + 1)
+	if f.LineCount < f.MaximalLineCount {
+		f.LineCount = f.LineCount + 1
 
 		if !force {
-			if f.LineCount() == 1 && f.start.LineCount() == 0 {
-				f.start.SetLineCount(f.LineCount())
+			if f.LineCount == 1 && f.Start.LineCount == 0 {
+				f.Start.LineCount = f.LineCount
 			}
 		}
 
@@ -48,12 +35,12 @@ func (f *EndBodyFragment) IncLineCount(force bool) bool {
 }
 
 func (f *EndBodyFragment) DecLineCount(force bool) bool {
-	if f.LineCount() > f.MinimalLineCount() {
-		f.SetLineCount(f.LineCount() - 1)
+	if f.LineCount > f.MinimalLineCount {
+		f.LineCount = f.LineCount - 1
 
 		if !force {
-			if f.LineCount() == 0 {
-				f.start.SetLineCount(f.LineCount())
+			if f.LineCount == 0 {
+				f.Start.LineCount = f.LineCount
 			}
 		}
 
@@ -62,6 +49,6 @@ func (f *EndBodyFragment) DecLineCount(force bool) bool {
 	return false
 }
 
-func (f *EndBodyFragment) Accept(visitor intmod.IJavaFragmentVisitor) {
+func (f *EndBodyFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitEndBodyFragment(f)
 }
