@@ -1,119 +1,96 @@
 package classfile
 
-import (
-	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
+// Access flags for Class, Field, Method, Nested class, Module, Module Requires, Module Exports, Module Opens
+const (
+	AccPublic       = 0x0001 // C  F  M  N  .  .  .  .
+	AccPrivate      = 0x0002 // .  F  M  N  .  .  .  .
+	AccProtected    = 0x0004 // .  F  M  N  .  .  .  .
+	AccStatic       = 0x0008 // C  F  M  N  .  .  .  .
+	AccFinal        = 0x0010 // C  F  M  N  .  .  .  .
+	AccSynchronized = 0x0020 // .  .  M  .  .  .  .  .
+	AccSuper        = 0x0020 // C  .  .  .  .  .  .  .
+	AccOpen         = 0x0020 // .  .  .  .  Mo .  .  .
+	AccTransitive   = 0x0020 // .  .  .  .  .  MR .  .
+	AccVolatile     = 0x0040 // .  F  .  .  .  .  .  .
+	AccBridge       = 0x0040 // .  .  M  .  .  .  .  .
+	AccStaticPhase  = 0x0040 // .  .  .  .  .  MR .  .
+	AccTransient    = 0x0080 // .  F  .  .  .  .  .  .
+	AccVarArgs      = 0x0080 // .  .  M  .  .  .  .  .
+	AccNative       = 0x0100 // .  .  M  .  .  .  .  .
+	AccInterface    = 0x0200 // C  .  .  N  .  .  .  .
+	AccAbstract     = 0x0400 // C  .  M  N  .  .  .  .
+	AccStrict       = 0x0800 // .  .  M  .  .  .  .  .
+	AccSynthetic    = 0x1000 // C  F  M  N  Mo MR ME MO
+	AccAnnotation   = 0x2000 // C  .  .  N  .  .  .  .
+	AccEnum         = 0x4000 // C  F  .  N  .  .  .  .
+	AccModule       = 0x8000 // C  .  .  .  .  .  .  .
+	AccMandated     = 0x8000 // .  .  .  .  Mo MR ME MO
 )
 
 func NewClassFile(majorVersion int, minorVersion int, accessFlags int,
 	internalTypeName string, superTypeName string, interfaceTypeNames []string,
-	field []intcls.IField, method []intcls.IMethod, attributes map[string]intcls.IAttribute) intcls.IClassFile {
-	return &ClassFile{
-		majorVersion:       majorVersion,
-		minorVersion:       minorVersion,
-		accessFlags:        accessFlags,
-		internalTypeName:   internalTypeName,
-		superTypeName:      superTypeName,
-		interfaceTypeNames: interfaceTypeNames,
-		field:              field,
-		method:             method,
-		attributes:         attributes,
+	field []Field, method []Method, attributes map[string]IAttribute) ClassFile {
+	return ClassFile{
+		MajorVersion:       majorVersion,
+		MinorVersion:       minorVersion,
+		AccessFlags:        accessFlags,
+		InternalTypeName:   internalTypeName,
+		SuperTypeName:      superTypeName,
+		InterfaceTypeNames: interfaceTypeNames,
+		Fields:             field,
+		Methods:            method,
+		Attributes:         attributes,
 	}
 }
 
+type IClassFile interface {
+	IsEnum() bool
+	IsAnnotation() bool
+	IsInterface() bool
+	IsModule() bool
+	IsStatic() bool
+	Attribute(name string) IAttribute
+	String() string
+}
+
 type ClassFile struct {
-	majorVersion       int
-	minorVersion       int
-	accessFlags        int
-	internalTypeName   string
-	superTypeName      string
-	interfaceTypeNames []string
-	field              []intcls.IField
-	method             []intcls.IMethod
-	attributes         map[string]intcls.IAttribute
-	outerClassFile     intcls.IClassFile
-	innerClassFiles    []intcls.IClassFile
-}
-
-func (cf ClassFile) MajorVersion() int {
-	return cf.majorVersion
-}
-
-func (cf ClassFile) MinorVersion() int {
-	return cf.minorVersion
+	MajorVersion       int
+	MinorVersion       int
+	AccessFlags        int
+	InternalTypeName   string
+	SuperTypeName      string
+	InterfaceTypeNames []string
+	Fields             []Field
+	Methods            []Method
+	Attributes         map[string]IAttribute
+	OuterClassFile     IClassFile
+	InnerClassFiles    []IClassFile
 }
 
 func (cf ClassFile) IsEnum() bool {
-	return (cf.accessFlags & intcls.AccEnum) != 0
+	return (cf.AccessFlags & AccEnum) != 0
 }
 
 func (cf ClassFile) IsAnnotation() bool {
-	return (cf.accessFlags & intcls.AccAnnotation) != 0
+	return (cf.AccessFlags & AccAnnotation) != 0
 }
 
 func (cf ClassFile) IsInterface() bool {
-	return (cf.accessFlags & intcls.AccInterface) != 0
+	return (cf.AccessFlags & AccInterface) != 0
 }
 
 func (cf ClassFile) IsModule() bool {
-	return (cf.accessFlags & intcls.AccModule) != 0
+	return (cf.AccessFlags & AccModule) != 0
 }
 
 func (cf ClassFile) IsStatic() bool {
-	return (cf.accessFlags & intcls.AccStatic) != 0
+	return (cf.AccessFlags & AccStatic) != 0
 }
 
-func (cf ClassFile) AccessFlags() int {
-	return cf.accessFlags
-}
-
-func (cf ClassFile) SetAccessFlags(accessFlags int) {
-	cf.accessFlags = accessFlags
-}
-
-func (cf ClassFile) InternalTypeName() string {
-	return cf.internalTypeName
-}
-
-func (cf ClassFile) SuperTypeName() string {
-	return cf.superTypeName
-}
-
-func (cf ClassFile) InterfaceTypeNames() []string {
-	return cf.interfaceTypeNames
-}
-
-func (cf ClassFile) Fields() []intcls.IField {
-	return cf.field
-}
-
-func (cf ClassFile) Methods() []intcls.IMethod {
-	return cf.method
-}
-
-func (cf ClassFile) Attributes() map[string]intcls.IAttribute {
-	return cf.attributes
-}
-
-func (cf ClassFile) Attribute(name string) intcls.IAttribute {
-	return cf.attributes[name]
-}
-
-func (cf ClassFile) OuterClassFile() intcls.IClassFile {
-	return cf.outerClassFile
-}
-
-func (cf ClassFile) SetOuterClassFile(outerClassFile intcls.IClassFile) {
-	cf.outerClassFile = outerClassFile
-}
-
-func (cf ClassFile) InnerClassFiles() []intcls.IClassFile {
-	return cf.innerClassFiles
-}
-
-func (cf ClassFile) SetInnerClassFiles(innerClassFiles []intcls.IClassFile) {
-	cf.innerClassFiles = innerClassFiles
+func (cf ClassFile) Attribute(name string) IAttribute {
+	return cf.Attributes[name]
 }
 
 func (cf ClassFile) String() string {
-	return "ClassFile { Internal Type Name: " + cf.InternalTypeName() + " }"
+	return "ClassFile{ Internal Type Name: " + cf.InternalTypeName + " }"
 }
