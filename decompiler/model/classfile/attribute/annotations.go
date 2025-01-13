@@ -12,7 +12,7 @@ type Annotations struct {
 	annotations []intcls.IAnnotation
 }
 
-func (a Annotations) Annotations() []intcls.IAnnotation {
+func (a *Annotations) Annotations() []intcls.IAnnotation {
 	return a.annotations
 }
 
