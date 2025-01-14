@@ -4,10 +4,10 @@ import (
 	"errors"
 	"fmt"
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
+	classfile2 "github.com/ElectricSaw/go-jd-core/decompiler/classfile"
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/constant"
 	"log"
@@ -87,7 +87,7 @@ func (d *ClassFileDeserializer) InnerLoadClassFile(loader api.Loader, internalTy
 					}
 
 					if innerClassFile == nil {
-						innerClassFile = classfile.NewClassFile(
+						innerClassFile = classfile2.NewClassFile(
 							classFile.MajorVersion(),
 							classFile.MinorVersion(),
 							0,
@@ -129,7 +129,7 @@ func (d *ClassFileDeserializer) LoadClassFile(reader intsrv.IClassFileReader) (i
 	if err != nil {
 		return nil, err
 	}
-	constants := classfile.NewConstantPool(constantArray)
+	constants := classfile2.NewConstantPool(constantArray)
 
 	accessFlags := reader.ReadUnsignedShort()
 	thisClassIndex := reader.ReadUnsignedShort()
@@ -157,7 +157,7 @@ func (d *ClassFileDeserializer) LoadClassFile(reader intsrv.IClassFileReader) (i
 		return nil, err
 	}
 
-	return classfile.NewClassFile(majorVersion, minorVersion, accessFlags, internalTypeName, superTypeName, interfaceTypeNames, fields, methods, attributes), nil
+	return classfile2.NewClassFile(majorVersion, minorVersion, accessFlags, internalTypeName, superTypeName, interfaceTypeNames, fields, methods, attributes), nil
 }
 
 func (d *ClassFileDeserializer) LoadConstants(reader intsrv.IClassFileReader) ([]intcls.IConstant, error) {
@@ -235,7 +235,7 @@ func (d *ClassFileDeserializer) LoadFields(reader intsrv.IClassFileReader, const
 		name, _ := constants.ConstantUtf8(nameIndex)
 		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 
-		fields[i] = classfile.NewField(accessFlags, name, descriptor, attr)
+		fields[i] = classfile2.NewField(accessFlags, name, descriptor, attr)
 	}
 
 	return fields, nil
@@ -258,7 +258,7 @@ func (d *ClassFileDeserializer) LoadMethods(reader intsrv.IClassFileReader, cons
 		name, _ := constants.ConstantUtf8(nameIndex)
 		descriptor, _ := constants.ConstantUtf8(descriptorIndex)
 
-		methods[i] = classfile.NewMethod(accessFlags, name, descriptor, attr, constants)
+		methods[i] = classfile2.NewMethod(accessFlags, name, descriptor, attr, constants)
 	}
 
 	return methods, nil

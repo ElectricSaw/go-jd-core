@@ -3,8 +3,7 @@ package visitor
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javafragment"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -22,33 +21,33 @@ type StatementVisitor struct {
 
 func (v *StatementVisitor) VisitAssertStatement(state intmod.IAssertStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.StartDeclarationOrStatementBlock)
-	v.tokens.Add(token.Assert)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.StartDeclarationOrStatementBlock)
+	v.tokens.Add(model.Assert)
+	v.tokens.Add(model.Space)
 	state.Condition().Accept(v)
 
 	msg := state.Message()
 
 	if msg != nil {
-		v.tokens.Add(token.SpaceColonSpace)
+		v.tokens.Add(model.SpaceColonSpace)
 		msg.Accept(v)
 	}
 
-	v.tokens.Add(token.Semicolon)
-	v.tokens.Add(token.EndDeclarationOrStatementBlock)
+	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.EndDeclarationOrStatementBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitBreakStatement(state intmod.IBreakStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Break)
+	v.tokens.Add(model.Break)
 
 	if state.Text() != "" {
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
 		v.tokens.Add(v.newTextToken(state.Text()))
 	}
 
-	v.tokens.Add(token.Semicolon)
+	v.tokens.Add(model.Semicolon)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 func (v *StatementVisitor) VisitByteCodeStatement(state intmod.IByteCodeStatement) {
@@ -60,31 +59,31 @@ func (v *StatementVisitor) VisitCommentStatement(state intmod.ICommentStatement)
 
 func (v *StatementVisitor) visitComment(text string) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.StartComment)
+	v.tokens.Add(model.StartComment)
 
 	st := util.NewStringTokenizer2(text, "\n")
 
 	for st.HasMoreTokens() {
 		value, _ := st.NextToken()
-		v.tokens.Add(token.NewTextToken(value))
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewTextToken(value))
+		v.tokens.Add(model.NewLine1)
 	}
 
 	v.tokens.RemoveAt(v.tokens.Size() - 1)
-	v.tokens.Add(token.EndComment)
+	v.tokens.Add(model.EndComment)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitContinueStatement(state intmod.IContinueStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Continue)
+	v.tokens.Add(model.Continue)
 
 	if state.Text() != "" {
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
 		v.tokens.Add(v.newTextToken(state.Text()))
 	}
 
-	v.tokens.Add(token.Semicolon)
+	v.tokens.Add(model.Semicolon)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
@@ -96,48 +95,48 @@ func (v *StatementVisitor) VisitDoWhileStatement(state intmod.IDoWhileStatement)
 	fragutil.AddEndStatementsBlock(v.fragments, group)
 
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.For)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.For)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	state.Condition().Accept(v)
 
-	v.tokens.Add(token.EndParametersBlock)
-	v.tokens.Add(token.Semicolon)
+	v.tokens.Add(model.EndParametersBlock)
+	v.tokens.Add(model.Semicolon)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitExpressionStatement(state intmod.IExpressionStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.StartDeclarationOrStatementBlock)
+	v.tokens.Add(model.StartDeclarationOrStatementBlock)
 
 	state.Expression().Accept(v)
 
-	v.tokens.Add(token.Semicolon)
-	v.tokens.Add(token.EndDeclarationOrStatementBlock)
+	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.EndDeclarationOrStatementBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitForStatement(state intmod.IForStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.For)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.For)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	v.SafeAcceptDeclaration(state.Declaration())
 	v.SafeAcceptExpression(state.Init())
 
 	if state.Condition() == nil {
-		v.tokens.Add(token.Semicolon)
+		v.tokens.Add(model.Semicolon)
 	} else {
-		v.tokens.Add(token.SemicolonSpace)
+		v.tokens.Add(model.SemicolonSpace)
 		state.Condition().Accept(v)
 	}
 
 	if state.Update() == nil {
-		v.tokens.Add(token.Semicolon)
+		v.tokens.Add(model.Semicolon)
 	} else {
-		v.tokens.Add(token.SemicolonSpace)
+		v.tokens.Add(model.SemicolonSpace)
 		state.Update().Accept(v)
 	}
 
@@ -146,16 +145,16 @@ func (v *StatementVisitor) VisitForStatement(state intmod.IForStatement) {
 
 func (v *StatementVisitor) VisitForEachStatement(state intmod.IForEachStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.For)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.For)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	typ := state.Type()
 	typ.AcceptTypeVisitor(v)
 
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.Space)
 	v.tokens.Add(v.newTextToken(state.Name()))
-	v.tokens.Add(token.SpaceColonSpace)
+	v.tokens.Add(model.SpaceColonSpace)
 
 	state.Expression().Accept(v)
 
@@ -163,11 +162,11 @@ func (v *StatementVisitor) VisitForEachStatement(state intmod.IForEachStatement)
 }
 
 func (v *StatementVisitor) visitLoopStatements(state intmod.IStatement) {
-	v.tokens.Add(token.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 
 	if state == nil {
-		v.tokens.Add(token.Semicolon)
+		v.tokens.Add(model.Semicolon)
 	} else {
 		tmp := v.fragments
 		v.fragments = NewFragments()
@@ -176,7 +175,7 @@ func (v *StatementVisitor) visitLoopStatements(state intmod.IStatement) {
 
 		switch v.fragments.Size() {
 		case 0:
-			v.tokens.Add(token.Semicolon)
+			v.tokens.Add(model.Semicolon)
 		case 1:
 			start := fragutil.AddStartSingleStatementBlock(tmp)
 			tmp.AddAll(v.fragments.ToSlice())
@@ -193,18 +192,18 @@ func (v *StatementVisitor) visitLoopStatements(state intmod.IStatement) {
 
 func (v *StatementVisitor) VisitIfStatement(state intmod.IIfStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.If)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.If)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	state.Condition().Accept(v)
 
-	v.tokens.Add(token.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 	stmt := state.Statements()
 
 	if stmt == nil {
-		v.fragments.Add(javafragment.Semicolon)
+		v.fragments.Add(model.Semicolon)
 	} else {
 		tmp := v.fragments
 		v.fragments = NewFragments()
@@ -213,7 +212,7 @@ func (v *StatementVisitor) VisitIfStatement(state intmod.IIfStatement) {
 
 		switch stmt.Size() {
 		case 0:
-			tmp.Add(javafragment.Semicolon)
+			tmp.Add(model.Semicolon)
 		case 1:
 			start := fragutil.AddStartSingleStatementBlock(tmp)
 			tmp.AddAll(v.fragments.ToSlice())
@@ -230,13 +229,13 @@ func (v *StatementVisitor) VisitIfStatement(state intmod.IIfStatement) {
 
 func (v *StatementVisitor) VisitIfElseStatement(state intmod.IIfElseStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.If)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.If)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	state.Condition().Accept(v)
 
-	v.tokens.Add(token.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 
 	group := fragutil.AddStartStatementsBlock(v.fragments)
@@ -255,17 +254,17 @@ func (v *StatementVisitor) visitElseStatements(elseStatements intmod.IStatement,
 	}
 
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Else)
+	v.tokens.Add(model.Else)
 
 	if statementList.IsIfElseStatement() {
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.If)
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.StartParametersBlock)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.If)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartParametersBlock)
 
 		statementList.Condition().Accept(v)
 
-		v.tokens.Add(token.EndParametersBlock)
+		v.tokens.Add(model.EndParametersBlock)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		fragutil.AddStartStatementsBlock2(v.fragments, group)
@@ -273,14 +272,14 @@ func (v *StatementVisitor) visitElseStatements(elseStatements intmod.IStatement,
 		fragutil.AddEndStatementsBlock(v.fragments, group)
 		v.visitElseStatements(statementList.ElseStatements(), group)
 	} else if statementList.IsIfStatement() {
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.If)
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.StartParametersBlock)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.If)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartParametersBlock)
 
 		statementList.Condition().Accept(v)
 
-		v.tokens.Add(token.EndParametersBlock)
+		v.tokens.Add(model.EndParametersBlock)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		fragutil.AddStartStatementsBlock2(v.fragments, group)
@@ -302,12 +301,12 @@ func (v *StatementVisitor) visitElseStatements(elseStatements intmod.IStatement,
 func (v *StatementVisitor) VisitLabelStatement(state intmod.ILabelStatement) {
 	v.tokens = NewTokens(v)
 	v.tokens.Add(v.newTextToken(state.Text()))
-	v.tokens.Add(token.Colon)
+	v.tokens.Add(model.Colon)
 
 	if state.Statement() == nil {
 		v.fragments.AddTokensFragment(v.tokens)
 	} else {
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
 		v.fragments.AddTokensFragment(v.tokens)
 		state.Statement().AcceptStatement(v)
 	}
@@ -319,41 +318,41 @@ func (v *StatementVisitor) VisitLambdaExpressionStatement(state intmod.ILambdaEx
 
 func (v *StatementVisitor) VisitLocalVariableDeclarationStatement(state intmod.ILocalVariableDeclarationStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.StartDeclarationOrStatementBlock)
+	v.tokens.Add(model.StartDeclarationOrStatementBlock)
 
 	if state.IsFinal() {
-		v.tokens.Add(token.Final)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Final)
+		v.tokens.Add(model.Space)
 	}
 
 	typ := state.Type()
 	typ.AcceptTypeVisitor(v)
 
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.Space)
 
 	state.LocalVariableDeclarators().AcceptDeclaration(v)
 
-	v.tokens.Add(token.Semicolon)
-	v.tokens.Add(token.EndDeclarationOrStatementBlock)
+	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.EndDeclarationOrStatementBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitReturnExpressionStatement(state intmod.IReturnExpressionStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.StartDeclarationOrStatementBlock)
+	v.tokens.Add(model.StartDeclarationOrStatementBlock)
 	v.tokens.AddLineNumberTokenAt(state.LineNumber())
-	v.tokens.Add(token.Return)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.Return)
+	v.tokens.Add(model.Space)
 
 	state.Expression().Accept(v)
 
-	v.tokens.Add(token.Semicolon)
-	v.tokens.Add(token.EndDeclarationOrStatementBlock)
+	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.EndDeclarationOrStatementBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitReturnStatement(_ intmod.IReturnStatement) {
-	v.fragments.Add(javafragment.ReturnSemicolon)
+	v.fragments.Add(model.ReturnSemicolon)
 }
 
 func (v *StatementVisitor) VisitStatements(list intmod.IStatements) {
@@ -372,13 +371,13 @@ func (v *StatementVisitor) VisitStatements(list intmod.IStatements) {
 
 func (v *StatementVisitor) VisitSwitchStatement(state intmod.ISwitchStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Switch)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.Switch)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	state.Condition().Accept(v)
 
-	v.tokens.Add(token.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 
 	group := fragutil.AddStartStatementsBlock(v.fragments)
@@ -406,19 +405,19 @@ func (v *StatementVisitor) VisitSwitchStatementLabelBlock(state intmod.ILabelBlo
 
 func (v *StatementVisitor) VisitSwitchStatementDefaultLabel(state intmod.IDefaultLabel) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Default)
-	v.tokens.Add(token.Colon)
+	v.tokens.Add(model.Default)
+	v.tokens.Add(model.Colon)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
 func (v *StatementVisitor) VisitSwitchStatementExpressionLabel(state intmod.IExpressionLabel) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Case)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.Case)
+	v.tokens.Add(model.Space)
 
 	state.Expression().Accept(v)
 
-	v.tokens.Add(token.Colon)
+	v.tokens.Add(model.Colon)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
@@ -441,19 +440,19 @@ func (v *StatementVisitor) VisitSwitchStatementMultiLabelsBlock(state intmod.IMu
 
 func (v *StatementVisitor) VisitSynchronizedStatement(state intmod.ISynchronizedStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.Synchronized)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.Synchronized)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	state.Monitor().Accept(v)
 
-	v.tokens.Add(token.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlock)
 
 	statements := state.Statements()
 
 	if statements == nil {
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.LeftRightCurlyBrackets)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.LeftRightCurlyBrackets)
 		v.fragments.AddTokensFragment(v.tokens)
 	} else {
 		v.fragments.AddTokensFragment(v.tokens)
@@ -465,14 +464,14 @@ func (v *StatementVisitor) VisitSynchronizedStatement(state intmod.ISynchronized
 
 func (v *StatementVisitor) VisitThrowStatement(state intmod.IThrowStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.StartDeclarationOrStatementBlock)
-	v.tokens.Add(token.Throw)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.StartDeclarationOrStatementBlock)
+	v.tokens.Add(model.Throw)
+	v.tokens.Add(model.Space)
 
 	state.Expression().Accept(v)
 
-	v.tokens.Add(token.Semicolon)
-	v.tokens.Add(token.EndDeclarationOrStatementBlock)
+	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.EndDeclarationOrStatementBlock)
 	v.fragments.AddTokensFragment(v.tokens)
 }
 
@@ -486,20 +485,20 @@ func (v *StatementVisitor) VisitTryStatement(state intmod.ITryStatement) {
 		size := resources.Size()
 
 		v.tokens = NewTokens(v)
-		v.tokens.Add(token.Try)
+		v.tokens.Add(model.Try)
 		if size == 1 {
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.Space)
 		}
-		v.tokens.Add(token.StartResourcesBlock)
+		v.tokens.Add(model.StartResourcesBlock)
 
 		resources.Get(0).AcceptStatement(v)
 
 		for i := 1; i < size; i++ {
-			v.tokens.Add(token.SemicolonSpace)
+			v.tokens.Add(model.SemicolonSpace)
 			resources.Get(i).AcceptStatement(v)
 		}
 
-		v.tokens.Add(token.EndResourcesBlock)
+		v.tokens.Add(model.EndResourcesBlock)
 		v.fragments.AddTokensFragment(v.tokens)
 		group = fragutil.AddStartStatementsBlock(v.fragments)
 	}
@@ -514,9 +513,9 @@ func (v *StatementVisitor) VisitTryStatementResource(resource intmod.IResource) 
 	typ := resource.Type()
 	typ.AcceptTypeVisitor(v)
 
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.Space)
 	v.tokens.Add(v.newTextToken(resource.Name()))
-	v.tokens.Add(token.SpaceEqualSpace)
+	v.tokens.Add(model.SpaceEqualSpace)
 	expression.Accept(v)
 }
 
@@ -533,20 +532,20 @@ func (v *StatementVisitor) visitTryStatement(state intmod.ITryStatement, group i
 			typ := cc.Type()
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(token.Catch)
-			v.tokens.Add(token.SpaceLeftRoundBracket)
+			v.tokens.Add(model.Catch)
+			v.tokens.Add(model.SpaceLeftRoundBracket)
 			typ.AcceptTypeVisitor(v)
 
 			if cc.OtherType() != nil {
 				for _, otherType := range cc.OtherType() {
-					v.tokens.Add(token.VerticalLine)
+					v.tokens.Add(model.VerticalLine)
 					otherType.AcceptTypeVisitor(v)
 				}
 			}
 
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.Space)
 			v.tokens.Add(v.newTextToken(cc.Name()))
-			v.tokens.Add(token.RightRoundBracket)
+			v.tokens.Add(model.RightRoundBracket)
 
 			lineNumber := cc.LineNumber()
 
@@ -568,7 +567,7 @@ func (v *StatementVisitor) visitTryStatement(state intmod.ITryStatement, group i
 		fragutil.AddEndStatementsBlock(v.fragments, group)
 
 		v.tokens = NewTokens(v)
-		v.tokens.Add(token.Finally)
+		v.tokens.Add(model.Finally)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		fragmentCount1 = v.fragments.Size()
@@ -579,8 +578,8 @@ func (v *StatementVisitor) visitTryStatement(state intmod.ITryStatement, group i
 
 	if fragmentCount2 == v.fragments.Size() {
 		v.fragments.SubList(fragmentCount1, fragmentCount2).Clear()
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.LeftRightCurlyBrackets)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.LeftRightCurlyBrackets)
 	} else {
 		fragutil.AddEndStatementsBlock(v.fragments, group)
 	}
@@ -588,14 +587,14 @@ func (v *StatementVisitor) visitTryStatement(state intmod.ITryStatement, group i
 
 func (v *StatementVisitor) VisitTypeDeclarationStatement(state intmod.ITypeDeclarationStatement) {
 	state.TypeDeclaration().AcceptDeclaration(v)
-	v.fragments.Add(javafragment.Semicolon)
+	v.fragments.Add(model.Semicolon)
 }
 
 func (v *StatementVisitor) VisitWhileStatement(state intmod.IWhileStatement) {
 	v.tokens = NewTokens(v)
-	v.tokens.Add(token.For)
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.StartParametersBlock)
+	v.tokens.Add(model.For)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.StartParametersBlock)
 
 	state.Condition().Accept(v)
 

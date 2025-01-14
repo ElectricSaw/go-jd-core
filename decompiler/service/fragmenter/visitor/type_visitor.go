@@ -1,13 +1,13 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"strings"
 
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -55,15 +55,15 @@ func (v *TypeVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {
 	for _, item := range arguments.ToSlice() {
 		tmp = append(tmp, item.(intmod.IType))
 	}
-	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), token.CommaSpace)
+	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.CommaSpace)
 }
 
 func (v *TypeVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {}
 
 func (v *TypeVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
-	v.tokens.Add(token.QuestionMarkSpace)
-	v.tokens.Add(token.Extends)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.QuestionMarkSpace)
+	v.tokens.Add(model.Extends)
+	v.tokens.Add(model.Space)
 
 	typ := argument.Type()
 	typ.AcceptTypeVisitor(v)
@@ -72,31 +72,31 @@ func (v *TypeVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcard
 func (v *TypeVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType) {
 	switch typ.JavaPrimitiveFlags() {
 	case intmod.FlagBoolean:
-		v.tokens.Add(token.Boolean)
+		v.tokens.Add(model.Boolean)
 		break
 	case intmod.FlagChar:
-		v.tokens.Add(token.Char)
+		v.tokens.Add(model.Char)
 		break
 	case intmod.FlagFloat:
-		v.tokens.Add(token.Float)
+		v.tokens.Add(model.Float)
 		break
 	case intmod.FlagDouble:
-		v.tokens.Add(token.Double)
+		v.tokens.Add(model.Double)
 		break
 	case intmod.FlagByte:
-		v.tokens.Add(token.Byte)
+		v.tokens.Add(model.Byte)
 		break
 	case intmod.FlagShort:
-		v.tokens.Add(token.Short)
+		v.tokens.Add(model.Short)
 		break
 	case intmod.FlagInt:
-		v.tokens.Add(token.Int)
+		v.tokens.Add(model.Int)
 		break
 	case intmod.FlagLong:
-		v.tokens.Add(token.Long)
+		v.tokens.Add(model.Long)
 		break
 	case intmod.FlagVoid:
-		v.tokens.Add(token.Void)
+		v.tokens.Add(model.Void)
 		break
 	}
 
@@ -127,11 +127,11 @@ func (v *TypeVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {
 		outerType := typ.OuterType()
 
 		outerType.AcceptTypeVisitor(v)
-		v.tokens.Add(token.Dot)
+		v.tokens.Add(model.Dot)
 	}
 
 	// Build token for type reference
-	v.tokens.Add(token.NewReferenceToken(intmod.TypeToken, typ.InternalName(),
+	v.tokens.Add(model.NewReferenceToken(intmod.TypeToken, typ.InternalName(),
 		typ.Name(), "", v.currentInternalTypeName))
 
 	if v.genericTypesSupported {
@@ -149,9 +149,9 @@ func (v *TypeVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {
 
 func (v *TypeVisitor) visitTypeArgumentList(arguments intmod.ITypeArgument) {
 	if arguments != nil {
-		v.tokens.Add(token.LeftAngleBracket)
+		v.tokens.Add(model.LeftAngleBracket)
 		arguments.AcceptTypeArgumentVisitor(v)
-		v.tokens.Add(token.RightAngleBracket)
+		v.tokens.Add(model.RightAngleBracket)
 	}
 }
 
@@ -160,10 +160,10 @@ func (v *TypeVisitor) visitDimension(dimension int) {
 	case 0:
 		break
 	case 1:
-		v.tokens.Add(token.Dimension1)
+		v.tokens.Add(model.Dimension1)
 		break
 	case 2:
-		v.tokens.Add(token.Dimension2)
+		v.tokens.Add(model.Dimension2)
 		break
 	default:
 		str := ""
@@ -176,9 +176,9 @@ func (v *TypeVisitor) visitDimension(dimension int) {
 }
 
 func (v *TypeVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
-	v.tokens.Add(token.QuestionMarkSpace)
-	v.tokens.Add(token.Super)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.QuestionMarkSpace)
+	v.tokens.Add(model.Super)
+	v.tokens.Add(model.Space)
 
 	typ := argument.Type()
 	typ.AcceptTypeVisitor(v)
@@ -189,7 +189,7 @@ func (v *TypeVisitor) VisitTypes(types intmod.ITypes) {
 	for _, item := range types.ToSlice() {
 		tmp = append(tmp, item.(intmod.IType))
 	}
-	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), token.CommaSpace)
+	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.CommaSpace)
 }
 
 func (v *TypeVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
@@ -198,9 +198,9 @@ func (v *TypeVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
 
 func (v *TypeVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
 	v.tokens.Add(v.newTextToken(parameter.Identifier()))
-	v.tokens.Add(token.Space)
-	v.tokens.Add(token.Extends)
-	v.tokens.Add(token.Space)
+	v.tokens.Add(model.Space)
+	v.tokens.Add(model.Extends)
+	v.tokens.Add(model.Space)
 
 	types := parameter.TypeBounds()
 	if types.IsList() {
@@ -208,7 +208,7 @@ func (v *TypeVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypePar
 		for _, item := range types.ToSlice() {
 			tmp = append(tmp, item.(intmod.IType))
 		}
-		v.buildTokensForList(util.NewDefaultListWithSlice(tmp), token.SpaceAndSpace)
+		v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.SpaceAndSpace)
 	} else {
 		typ := types.First()
 		typ.AcceptTypeVisitor(v)
@@ -222,7 +222,7 @@ func (v *TypeVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
 		parameters.Get(0).AcceptTypeParameterVisitor(v)
 
 		for i := 1; i < size; i++ {
-			v.tokens.Add(token.CommaSpace)
+			v.tokens.Add(model.CommaSpace)
 			parameters.Get(i).AcceptTypeParameterVisitor(v)
 		}
 	}
@@ -234,7 +234,7 @@ func (v *TypeVisitor) VisitGenericType(typ intmod.IGenericType) {
 }
 
 func (v *TypeVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
-	v.tokens.Add(token.QuestionMark)
+	v.tokens.Add(model.QuestionMark)
 }
 
 func (v *TypeVisitor) buildTokensForList(list util.IList[intmod.IType], separator intmod.ITextToken) {
@@ -257,17 +257,17 @@ func (v *TypeVisitor) newTypeReferenceToken(ot intmod.IObjectType, ownerInternal
 
 	if packageContainsType(v.internalPackageName, internalName) {
 		// In the current package
-		return token.NewReferenceToken(intmod.TypeToken, internalName, name, "", ownerInternalName)
+		return model.NewReferenceToken(intmod.TypeToken, internalName, name, "", ownerInternalName)
 	} else {
 		if packageContainsType("java/lang/", internalName) {
 			// A 'java.lang' class
 			internalLocalTypeName := v.internalPackageName + name
 
 			if v.loader.CanLoad(internalLocalTypeName) {
-				return token.NewReferenceToken(intmod.TypeToken, internalName, qualifiedName,
+				return model.NewReferenceToken(intmod.TypeToken, internalName, qualifiedName,
 					"", ownerInternalName)
 			} else {
-				return token.NewReferenceToken(intmod.TypeToken, internalName, name,
+				return model.NewReferenceToken(intmod.TypeToken, internalName, name,
 					"", ownerInternalName)
 			}
 		} else {
@@ -289,7 +289,7 @@ func (v *TypeVisitor) newTextToken(text string) intmod.ITextToken {
 	textToken := v.textTokenCache[text]
 
 	if textToken == nil {
-		textToken = token.NewTextToken(text)
+		textToken = model.NewTextToken(text)
 		v.textTokenCache[text] = textToken
 	}
 
@@ -947,8 +947,8 @@ func (v *TypeVisitor) SafeAcceptListStatement(list []intmod.IStatement) {
 func NewTypeReferenceToken(parent *TypeVisitor, importsFragment intmod.IImportsFragment, internalTypeName,
 	qualifiedName, name, ownerInternalName string) ITypeReferenceToken {
 	t := &TypeReferenceToken{
-		ReferenceToken: *token.NewReferenceToken(intmod.TypeToken, internalTypeName, name, "",
-			ownerInternalName).(*token.ReferenceToken),
+		ReferenceToken: *model.NewReferenceToken(intmod.TypeToken, internalTypeName, name, "",
+			ownerInternalName).(*model.ReferenceToken),
 		parent:          parent,
 		importsFragment: importsFragment,
 		qualifiedName:   qualifiedName,
@@ -963,7 +963,7 @@ type ITypeReferenceToken interface {
 }
 
 type TypeReferenceToken struct {
-	token.ReferenceToken
+	model.ReferenceToken
 
 	parent          *TypeVisitor
 	importsFragment intmod.IImportsFragment
@@ -1017,7 +1017,7 @@ func (t *Tokens) AddLineNumberToken(expression intmod.IExpression) {
 func (t *Tokens) AddLineNumberTokenAt(lineNumber int) {
 	if lineNumber != UnknownLineNumber {
 		if lineNumber >= t.parent.(*TypeVisitor).maxLineNumber {
-			t.Add(token.NewLineNumberToken(lineNumber))
+			t.Add(model.NewLineNumberToken(lineNumber))
 			t.parent.(*TypeVisitor).maxLineNumber = lineNumber
 			t.currentLineNumber = lineNumber
 		}

@@ -2,7 +2,7 @@ package converter
 
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/processor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 )
@@ -17,7 +17,7 @@ func NewClassFileToJavaSyntaxProcessor() *ClassFileToJavaSyntaxProcessor {
 type ClassFileToJavaSyntaxProcessor struct {
 }
 
-func (p *ClassFileToJavaSyntaxProcessor) Process(message *message.Message) error {
+func (p *ClassFileToJavaSyntaxProcessor) Process(message *model.Message) error {
 	loader := message.Headers["loader"].(api.Loader)
 	configuration := message.Headers["configuration"].(map[string]interface{})
 

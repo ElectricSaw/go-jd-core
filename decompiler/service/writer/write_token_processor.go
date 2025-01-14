@@ -1,7 +1,7 @@
 package writer
 
 import (
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewWriteTokenProcessor() *WriteTokenProcessor {
@@ -11,6 +11,6 @@ func NewWriteTokenProcessor() *WriteTokenProcessor {
 type WriteTokenProcessor struct {
 }
 
-func (p *WriteTokenProcessor) Process(message *message.Message) error {
+func (p *WriteTokenProcessor) Process(message *model.Message) error {
 	return nil
 }

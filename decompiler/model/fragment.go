@@ -1,4 +1,4 @@
-package javafragment
+package model
 
 import (
 	"fmt"

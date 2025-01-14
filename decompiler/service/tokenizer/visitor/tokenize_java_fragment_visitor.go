@@ -3,21 +3,22 @@ package visitor
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-var Do = token.NewKeywordToken("do")
-var Import = token.NewKeywordToken("import")
-var For = token.NewKeywordToken("for")
-var True = token.NewKeywordToken("true")
-var Try = token.NewKeywordToken("try")
-var While = token.NewKeywordToken("while")
+var Do = model.NewKeywordToken("do")
+var Import = model.NewKeywordToken("import")
+var For = model.NewKeywordToken("for")
+var True = model.NewKeywordToken("true")
+var Try = model.NewKeywordToken("try")
+var While = model.NewKeywordToken("while")
 
 var DoTokens = util.NewDefaultListWithSlice[intmod.IToken]([]intmod.IToken{Do})
-var EmptyForTokens = util.NewDefaultListWithSlice[intmod.IToken]([]intmod.IToken{For, token.InfiniteFor})
+var EmptyForTokens = util.NewDefaultListWithSlice[intmod.IToken]([]intmod.IToken{For, model.InfiniteFor})
 var EmptyWhileTokens = util.NewDefaultListWithSlice[intmod.IToken]([]intmod.IToken{While,
-	token.Space, token.LeftRoundBracket, True, token.RightRoundBracket})
+	model.Space, model.LeftRoundBracket, True, model.RightRoundBracket})
 var TryTokens = util.NewDefaultListWithSlice[intmod.IToken]([]intmod.IToken{Try})
 
 func NewTokenizeJavaFragmentVisitor(capacity int) *TokenizeJavaFragmentVisitor {
@@ -39,87 +40,87 @@ func (v *TokenizeJavaFragmentVisitor) Tokens() util.IList[intmod.IToken] {
 func (v *TokenizeJavaFragmentVisitor) VisitEndBlockFragment(fragment intmod.IEndBlockFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.EndBlock)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.EndBlock)
 	case 1:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.EndBlock)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.EndBlock)
 	case 2:
-		v.tokens.Add(token.NewLine2)
-		v.tokens.Add(token.EndBlock)
+		v.tokens.Add(model.NewLine2)
+		v.tokens.Add(model.EndBlock)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
-		v.tokens.Add(token.EndBlock)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
+		v.tokens.Add(model.EndBlock)
 	}
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitEndBlockInParameterFragment(fragment intmod.IEndBlockInParameterFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
 	case 1:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
 	case 2:
-		v.tokens.Add(token.NewLine2)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
+		v.tokens.Add(model.NewLine2)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
 	}
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitEndBodyFragment(fragment intmod.IEndBodyFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.EndBlock)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.EndBlock)
 	case 1:
 		if fragment.Start().LineCount() == 0 {
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine1)
 		} else {
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.EndBlock)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.EndBlock)
 		}
 	case 2:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.NewLine1)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.NewLine1)
 	}
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitEndBodyInParameterFragment(fragment intmod.IEndBodyInParameterFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
 	case 1:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
+		v.tokens.Add(model.Space)
 	case 2:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
+		v.tokens.Add(model.NewLine1)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Comma)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Comma)
+		v.tokens.Add(model.NewLine1)
 	}
 }
 
@@ -131,41 +132,41 @@ func (v *TokenizeJavaFragmentVisitor) VisitEndSingleStatementBlockFragment(fragm
 	case 0:
 		switch fragment.Start().LineCount() {
 		case 0, 1:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.EndDeclarationOrStatementBlock)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.EndDeclarationOrStatementBlock)
 		default:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.Space)
 		}
 	case 1:
 		switch fragment.Start().LineCount() {
 		case 0:
-			v.tokens.Add(token.EndDeclarationOrStatementBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.EndDeclarationOrStatementBlock)
+			v.tokens.Add(model.NewLine1)
 		default:
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.EndBlock)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.EndBlock)
 		}
 	case 2:
 		switch fragment.Start().LineCount() {
 		case 0:
-			v.tokens.Add(token.EndDeclarationOrStatementBlock)
-			v.tokens.Add(token.NewLine2)
+			v.tokens.Add(model.EndDeclarationOrStatementBlock)
+			v.tokens.Add(model.NewLine2)
 		default:
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	default:
 		switch fragment.Start().LineCount() {
 		case 0:
-			v.tokens.Add(token.EndDeclarationOrStatementBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.EndDeclarationOrStatementBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 		default:
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
 		}
 	}
 }
@@ -175,47 +176,47 @@ func (v *TokenizeJavaFragmentVisitor) VisitEndStatementsBlockFragment(fragment i
 
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.EndBlock)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.EndBlock)
+		v.tokens.Add(model.Space)
 	case 1:
 		if minimalLineCount == 0 {
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine1)
 		} else {
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.Space)
 		}
 	case 2:
 		switch minimalLineCount {
 		case 0:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine2)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine2)
 		case 1:
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine1)
 		default:
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	default:
 		switch minimalLineCount {
 		case 0:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 		case 1:
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
-			v.tokens.Add(token.EndBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.EndBlock)
 		default:
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
-			v.tokens.Add(token.EndBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
+			v.tokens.Add(model.EndBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	}
 }
@@ -226,18 +227,18 @@ func (v *TokenizeJavaFragmentVisitor) VisitImportsFragment(fragment intmod.IImpo
 		return imports.ToSlice()[i].QualifiedName() < imports.ToSlice()[j].QualifiedName()
 	})
 
-	v.tokens.Add(token.StartImportStatementsToken)
+	v.tokens.Add(model.StartImportStatementsToken)
 
 	for _, imp := range imports.ToSlice() {
 		v.tokens.Add(Import)
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.NewReferenceToken(intmod.TypeToken, imp.InternalName(),
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.NewReferenceToken(intmod.TypeToken, imp.InternalName(),
 			imp.QualifiedName(), "", ""))
-		v.tokens.Add(token.Semicolon)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.Semicolon)
+		v.tokens.Add(model.NewLine1)
 	}
 
-	v.tokens.Add(token.EndImportStatements)
+	v.tokens.Add(model.EndImportStatements)
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitLineNumberTokensFragment(fragment intmod.ILineNumberTokensFragment) {
@@ -251,13 +252,13 @@ func (v *TokenizeJavaFragmentVisitor) VisitLineNumberTokensFragment(fragment int
 func (v *TokenizeJavaFragmentVisitor) VisitSpacerBetweenMembersFragment(fragment intmod.ISpacerBetweenMembersFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
 	case 1:
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
 	case 2:
-		v.tokens.Add(token.NewLine2)
+		v.tokens.Add(model.NewLine2)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 	}
 }
 
@@ -265,62 +266,62 @@ func (v *TokenizeJavaFragmentVisitor) VisitSpacerFragment(fragment intmod.ISpace
 	switch fragment.LineCount() {
 	case 0:
 	case 1:
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
 	case 2:
-		v.tokens.Add(token.NewLine2)
+		v.tokens.Add(model.NewLine2)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 	}
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitSpaceSpacerFragment(fragment intmod.ISpaceSpacerFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
 	case 1:
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
 	case 2:
-		v.tokens.Add(token.NewLine2)
+		v.tokens.Add(model.NewLine2)
 	default:
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 	}
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitStartBlockFragment(fragment intmod.IStartBlockFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.Space)
 	case 1:
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewLine1)
 	case 2:
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewLine2)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewLine2)
 	default:
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 	}
 }
 
 func (v *TokenizeJavaFragmentVisitor) VisitStartBodyFragment(fragment intmod.IStartBodyFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.Space)
 	case 1:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewLine1)
 	case 2:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewLine1)
 	default:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
 	}
 }
 
@@ -330,26 +331,26 @@ func (v *TokenizeJavaFragmentVisitor) VisitStartMovableJavaBlockFragment(fragmen
 func (v *TokenizeJavaFragmentVisitor) VisitStartSingleStatementBlockFragment(fragment intmod.IStartSingleStatementBlockFragment) {
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.StartDeclarationOrStatementBlock)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.StartDeclarationOrStatementBlock)
+		v.tokens.Add(model.Space)
 	case 1:
 		switch fragment.End().LineCount() {
 		case 0:
-			v.tokens.Add(token.StartDeclarationOrStatementBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.StartDeclarationOrStatementBlock)
+			v.tokens.Add(model.NewLine1)
 		default:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	case 2:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewLine1)
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewLine1)
 	default:
-		v.tokens.Add(token.NewLine1)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
+		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
 	}
 }
 
@@ -358,48 +359,48 @@ func (v *TokenizeJavaFragmentVisitor) VisitStartStatementsBlockFragment(fragment
 
 	switch fragment.LineCount() {
 	case 0:
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.Space)
 	case 1:
 		if minimalLineCount == 0 {
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.Space)
 		} else {
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	case 2:
 		switch minimalLineCount {
 		case 0:
-			v.tokens.Add(token.NewLine2)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.NewLine2)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.Space)
 		case 1:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine2)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine2)
 		default:
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	default:
 		switch minimalLineCount {
 		case 0:
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.Space)
 		case 1:
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 		default:
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
 		}
 	}
 }
@@ -432,60 +433,60 @@ func (v *TokenizeJavaFragmentVisitor) visit(fragment intmod.IStartStatementsBloc
 	switch fragment.LineCount() {
 	case 0:
 		v.tokens.AddAll(adds)
-		v.tokens.Add(token.Space)
-		v.tokens.Add(token.StartBlock)
-		v.tokens.Add(token.Space)
+		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartBlock)
+		v.tokens.Add(model.Space)
 	case 1:
 		if minimalLineCount == 0 {
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewLine1)
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.Space)
 		} else {
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	case 2:
 		switch minimalLineCount {
 		case 0:
-			v.tokens.Add(token.NewLine2)
+			v.tokens.Add(model.NewLine2)
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.Space)
 		case 1:
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewLine1)
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine1)
 		default:
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewLine1)
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewLine1)
 		}
 	default:
 		switch minimalLineCount {
 		case 0:
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.Space)
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.Space)
 		case 1:
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.Space)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount()))
+			v.tokens.Add(model.Space)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount()))
 		default:
 			v.tokens.AddAll(adds)
-			v.tokens.Add(token.NewLine1)
-			v.tokens.Add(token.StartBlock)
-			v.tokens.Add(token.NewNewLineToken(fragment.LineCount() - 1))
+			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.StartBlock)
+			v.tokens.Add(model.NewNewLineToken(fragment.LineCount() - 1))
 		}
 	}
 }
@@ -521,13 +522,13 @@ func (v *KnownLineNumberTokenVisitor) VisitLineNumberToken(tkn intmod.ILineNumbe
 			case 0:
 				break
 			case 1:
-				v.parent.tokens.Add(token.NewLine1)
+				v.parent.tokens.Add(model.NewLine1)
 				break
 			case 2:
-				v.parent.tokens.Add(token.NewLine2)
+				v.parent.tokens.Add(model.NewLine2)
 				break
 			default:
-				v.parent.tokens.Add(token.NewNewLineToken(lineNumber - v.currentLineNumber))
+				v.parent.tokens.Add(model.NewNewLineToken(lineNumber - v.currentLineNumber))
 				break
 			}
 		}

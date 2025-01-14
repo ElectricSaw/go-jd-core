@@ -2,7 +2,7 @@ package decompiler
 
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/deserializer"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter"
@@ -33,7 +33,7 @@ type ClassFileToJavaSourceDecompiler struct {
 
 func (d *ClassFileToJavaSourceDecompiler) Decompiler(loader api.Loader,
 	printer api.Printer, internalName string) error {
-	msg := message.NewMessage()
+	msg := model.NewMessage()
 
 	msg.Headers["mainInternalTypeName"] = internalName
 	msg.Headers["loader"] = loader
@@ -44,7 +44,7 @@ func (d *ClassFileToJavaSourceDecompiler) Decompiler(loader api.Loader,
 
 func (d *ClassFileToJavaSourceDecompiler) DecompilerWithConfig(loader api.Loader, printer api.Printer,
 	internalName string, configuration map[string]interface{}) error {
-	msg := message.NewMessage()
+	msg := model.NewMessage()
 
 	msg.Headers["mainInternalTypeName"] = internalName
 	msg.Headers["configuration"] = configuration
@@ -54,7 +54,7 @@ func (d *ClassFileToJavaSourceDecompiler) DecompilerWithConfig(loader api.Loader
 	return d.DecompilerWithMessage(msg)
 }
 
-func (d *ClassFileToJavaSourceDecompiler) DecompilerWithMessage(msg *message.Message) error {
+func (d *ClassFileToJavaSourceDecompiler) DecompilerWithMessage(msg *model.Message) error {
 	if err := d.dsr.Process(msg); err != nil {
 		return err
 	}

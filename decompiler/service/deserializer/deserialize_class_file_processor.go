@@ -2,7 +2,7 @@ package deserializer
 
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewDeserializeClassFileProcessor() *DeserializeClassFileProcessor {
@@ -13,7 +13,7 @@ type DeserializeClassFileProcessor struct {
 	ClassFileDeserializer
 }
 
-func (p *DeserializeClassFileProcessor) Process(message *message.Message) error {
+func (p *DeserializeClassFileProcessor) Process(message *model.Message) error {
 	loader := message.Headers["loader"].(api.Loader)
 	internalTypeName := message.Headers["mainInternalTypeName"].(string)
 	classFile, err := p.LoadClassFileWithRaw(loader, internalTypeName)

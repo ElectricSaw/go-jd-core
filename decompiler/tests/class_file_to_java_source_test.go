@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/deserializer"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter"
@@ -21,7 +21,7 @@ func TestLog4j(t *testing.T) {
 
 	configuration["realignLineNumbers"] = true
 
-	message := message.NewMessage()
+	message := model.NewMessage()
 	message.Headers["loader"] = classLoader
 	message.Headers["printer"] = printer
 	message.Headers["configuration"] = configuration

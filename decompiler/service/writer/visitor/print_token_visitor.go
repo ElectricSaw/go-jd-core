@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -61,7 +62,7 @@ func (v *PrintTokenVisitor) VisitStartBlockToken(tkn intmod.IStartBlockToken) {
 	v.prepareNewLine()
 	v.printer.PrintText(tkn.Text())
 	v.printer.Indent()
-	if tkn == token.StartResourcesBlock {
+	if tkn == model.StartResourcesBlock {
 		v.printer.Indent()
 	}
 	v.index++
@@ -69,7 +70,7 @@ func (v *PrintTokenVisitor) VisitStartBlockToken(tkn intmod.IStartBlockToken) {
 
 func (v *PrintTokenVisitor) VisitEndBlockToken(tkn intmod.IEndBlockToken) {
 	v.printer.Unindent()
-	if tkn == token.EndResourcesBlock {
+	if tkn == model.EndResourcesBlock {
 		v.printer.Unindent()
 	}
 	v.prepareNewLine()

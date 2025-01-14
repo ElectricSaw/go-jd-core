@@ -1,11 +1,11 @@
-package message
+package model
 
-func NewMessage() *Message {
+func NewMessage() Message {
 	return NewMessageWithBody(nil)
 }
 
-func NewMessageWithBody(body interface{}) *Message {
-	return &Message{
+func NewMessageWithBody(body interface{}) Message {
+	return Message{
 		Headers: make(map[string]interface{}),
 		Body:    body,
 	}

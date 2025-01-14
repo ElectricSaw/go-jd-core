@@ -4,11 +4,11 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -26,7 +26,7 @@ type ConvertClassFileProcessor struct {
 	populateBindingsWithTypeParameterVisitor intsrv.IPopulateBindingsWithTypeParameterVisitor
 }
 
-func (p *ConvertClassFileProcessor) Process(message *message.Message) error {
+func (p *ConvertClassFileProcessor) Process(message *model.Message) error {
 	typeMaker := message.Headers["typeMaker"].(intsrv.ITypeMaker)
 	classFile := message.Body.(intcls.IClassFile)
 

@@ -1,6 +1,8 @@
-package token
+package model
 
-import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/api"
+)
 
 // -------- EndBlockToken --------
 
@@ -27,7 +29,7 @@ var EndImportStatements = NewEndMarkerToken(ImportStatementsToken)
 
 // -------- LineNumberToken --------
 
-var UnknownLineNumber = NewLineNumberToken(intmod.UnknownLineNumberToken)
+var UnknownLineNumber = NewLineNumberToken(api.UnknownLineNumber)
 
 // -------- NewLineToken --------
 

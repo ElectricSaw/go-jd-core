@@ -1,61 +1,10 @@
-package javafragment
+package model
 
 import (
+	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/token"
-	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
-
-func NewLineNumberTokensFragment(tokens ...intmod.IToken) LineNumberTokensFragment {
-	frag := LineNumberTokensFragment{
-		Tokens: util.NewDefaultListWithElements[intmod.IToken](tokens...),
-	}
-	return frag
-}
-
-func SearchFirstLineNumber(tokens util.IList[intmod.IToken]) int {
-	visitor := NewSearchLineNumberVisitor()
-
-	for _, tkn := range tokens.ToSlice() {
-		tkn.Accept(&visitor)
-
-		if visitor.LineNumber != intmod.UnknownLineNumberToken {
-			return visitor.LineNumber - visitor.NewLineCounter
-		}
-	}
-
-	return intmod.UnknownLineNumberToken
-}
-
-func searchLastLineNumber(tokens util.IList[intmod.IToken]) int {
-	visitor := NewSearchLineNumberVisitor()
-	index := tokens.Size()
-
-	for index > 0 {
-		index--
-		tokens.Get(index).Accept(&visitor)
-
-		if visitor.LineNumber != intmod.UnknownLineNumberToken {
-			return visitor.LineNumber + visitor.NewLineCounter
-		}
-	}
-
-	return intmod.UnknownLineNumberToken
-}
-
-type LineNumberTokensFragment struct {
-	FixedFragment
-
-	Tokens util.IList[intmod.IToken]
-}
-
-func (f *LineNumberTokensFragment) TokenAt(index int) intmod.IToken {
-	return f.Tokens.Get(index)
-}
-
-func (f *LineNumberTokensFragment) Accept(visitor IJavaFragmentVisitor) {
-	visitor.VisitLineNumberTokensFragment(f)
-}
 
 func NewSearchLineNumberVisitor() SearchLineNumberVisitor {
 	return SearchLineNumberVisitor{}
@@ -104,3 +53,23 @@ func (v *SearchLineNumberVisitor) VisitStartMarkerToken(_ intmod.IStartMarkerTok
 func (v *SearchLineNumberVisitor) VisitStringConstantToken(_ intmod.IStringConstantToken) {}
 
 func (v *SearchLineNumberVisitor) VisitTextToken(_ intmod.ITextToken) {}
+
+func (v *SearchLineNumberVisitor) String() string {
+	return fmt.Sprintf("SearchLineNumberVisitor{lineNumber: %d, newLineCounter: %d}", v.LineNumber, v.NewLineCounter)
+}
+
+func NewLineCountVisitor() LineCountVisitor {
+	return LineCountVisitor{
+		LineCount: 0,
+	}
+}
+
+type LineCountVisitor struct {
+	token.AbstractNopTokenVisitor
+
+	LineCount int
+}
+
+func (v *LineCountVisitor) VisitLineNumberToken(_ intmod.ILineNumberToken) {
+	v.LineCount++
+}

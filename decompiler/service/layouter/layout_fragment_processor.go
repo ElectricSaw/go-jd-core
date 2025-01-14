@@ -3,7 +3,7 @@ package layouter
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/message"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	visitor2 "github.com/ElectricSaw/go-jd-core/decompiler/service/layouter/visitor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"math"
@@ -16,7 +16,7 @@ func NewLayoutFragmentProcessor() *LayoutFragmentProcessor {
 type LayoutFragmentProcessor struct {
 }
 
-func (p *LayoutFragmentProcessor) Process(message *message.Message) error {
+func (p *LayoutFragmentProcessor) Process(message *model.Message) error {
 	var maxLineNumber int
 	var ok, containsByteCode, showBridgeAndSynthetic bool
 	var realignLineNumbers bool
