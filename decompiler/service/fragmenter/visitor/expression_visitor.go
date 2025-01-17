@@ -42,9 +42,9 @@ func (v *ExpressionVisitor) Fragments() util.IList[intmod.IFragment] {
 
 func (v *ExpressionVisitor) VisitArrayExpression(expr intmod.IArrayExpression) {
 	v.visit(expr, expr.Expression())
-	v.tokens.Add(model.StartArrayBlock)
+	v.tokens.Add(model.StartArrayBlockTkn)
 	expr.Index().Accept(v)
-	v.tokens.Add(model.EndArrayBlock)
+	v.tokens.Add(model.EndArrayBlockTkn)
 }
 
 func (v *ExpressionVisitor) VisitBinaryOperatorExpression(expr intmod.IBinaryOperatorExpression) {
@@ -56,16 +56,16 @@ func (v *ExpressionVisitor) VisitBinaryOperatorExpression(expr intmod.IBinaryOpe
 	case "|=":
 	case "^=":
 		v.visitHexa(expr, expr.LeftExpression())
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 		v.tokens.Add(v.newTextToken(expr.Operator()))
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 		v.visitHexa(expr, expr.RightExpression())
 		break
 	default:
 		v.visit(expr, expr.LeftExpression())
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 		v.tokens.Add(v.newTextToken(expr.Operator()))
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 		v.visit(expr, expr.RightExpression())
 		break
 	}
@@ -73,34 +73,34 @@ func (v *ExpressionVisitor) VisitBinaryOperatorExpression(expr intmod.IBinaryOpe
 
 func (v *ExpressionVisitor) VisitBooleanExpression(expr intmod.IBooleanExpression) {
 	if expr.IsTrue() {
-		v.tokens.Add(model.True)
+		v.tokens.Add(model.TrueTkn)
 	} else {
-		v.tokens.Add(model.False)
+		v.tokens.Add(model.FalseTkn)
 	}
 }
 
 func (v *ExpressionVisitor) VisitCastExpression(expr intmod.ICastExpression) {
 	if expr.IsExplicit() {
 		v.tokens.AddLineNumberTokenAt(expr.LineNumber())
-		v.tokens.Add(model.LeftRoundBracket)
+		v.tokens.Add(model.LeftRoundBracketTkn)
 
 		typ := expr.Type()
 		typ.AcceptTypeVisitor(v)
-		v.tokens.Add(model.RightRoundBracket)
+		v.tokens.Add(model.RightRoundBracketTkn)
 	}
 
 	v.visit(expr, expr.Expression())
 }
 func (v *ExpressionVisitor) VisitCommentExpression(expr intmod.ICommentExpression) {
-	v.tokens.Add(model.StartComment)
+	v.tokens.Add(model.StartCommentTkn)
 	v.tokens.Add(v.newTextToken(expr.Text()))
-	v.tokens.Add(model.EndComment)
+	v.tokens.Add(model.EndCommentTkn)
 }
 
 func (v *ExpressionVisitor) VisitConstructorInvocationExpression(expr intmod.IConstructorInvocationExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.This)
-	v.tokens.Add(model.StartParametersBlock)
+	v.tokens.Add(model.ThisTkn)
+	v.tokens.Add(model.StartParametersBlockTkn)
 
 	parameters := expr.Parameters()
 
@@ -108,7 +108,7 @@ func (v *ExpressionVisitor) VisitConstructorInvocationExpression(expr intmod.ICo
 		parameters.Accept(v)
 	}
 
-	v.tokens.Add(model.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlockTkn)
 }
 
 func (v *ExpressionVisitor) VisitConstructorReferenceExpression(expr intmod.IConstructorReferenceExpression) {
@@ -116,9 +116,9 @@ func (v *ExpressionVisitor) VisitConstructorReferenceExpression(expr intmod.ICon
 
 	v.tokens.AddLineNumberToken(expr)
 	v.tokens.Add(v.newTypeReferenceToken(ot, v.currentInternalTypeName))
-	v.tokens.Add(model.ColonColon)
+	v.tokens.Add(model.ColonColonTkn)
 	//v.tokens.Add(new ReferenceToken(ReferenceToken.CONSTRUCTOR, ot.InternalName(), "new", expr.Descriptor(), currentInternalTypeName));
-	v.tokens.Add(model.New)
+	v.tokens.Add(model.NewTkn)
 }
 
 func (v *ExpressionVisitor) VisitDoubleConstantExpression(expr intmod.IDoubleConstantExpression) {
@@ -148,7 +148,7 @@ func (v *ExpressionVisitor) VisitExpressions(list intmod.IExpressions) {
 				iterator.Next().Accept(v)
 
 				if !v.tokens.IsEmpty() {
-					v.tokens.Add(model.CommaSpace)
+					v.tokens.Add(model.CommaSpaceTkn)
 				}
 			}
 
@@ -173,7 +173,7 @@ func (v *ExpressionVisitor) VisitFieldReferenceExpression(expr intmod.IFieldRefe
 		v.tokens.AddLineNumberToken(expr)
 
 		if delta != 0 {
-			v.tokens.Add(model.Dot)
+			v.tokens.Add(model.DotTkn)
 		}
 
 		v.tokens.Add(model.NewReferenceToken(intmod.FieldToken, expr.InternalTypeName(), expr.Name(), expr.Descriptor(), v.currentInternalTypeName))
@@ -205,9 +205,9 @@ func (v *ExpressionVisitor) VisitIntegerConstantExpression(expr intmod.IIntegerC
 
 func (v *ExpressionVisitor) VisitInstanceOfExpression(expr intmod.IInstanceOfExpression) {
 	expr.Expression().Accept(v)
-	v.tokens.Add(model.Space)
-	v.tokens.Add(model.InstanceOf)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
+	v.tokens.Add(model.InstanceOfTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	typ := expr.InstanceOfType()
 	typ.AcceptTypeVisitor(v)
@@ -217,27 +217,27 @@ func (v *ExpressionVisitor) VisitLambdaFormalParametersExpression(expr intmod.IL
 	parameters := expr.FormalParameters()
 
 	if parameters == nil {
-		v.tokens.Add(model.LeftRightRoundBrackets)
+		v.tokens.Add(model.LeftRightRoundBracketsTkn)
 	} else {
 		size := parameters.Size()
 
 		switch size {
 		case 0:
-			v.tokens.Add(model.LeftRightRoundBrackets)
+			v.tokens.Add(model.LeftRightRoundBracketsTkn)
 			break
 		case 1:
 			parameters.First().AcceptDeclaration(v)
 			break
 		default:
-			v.tokens.Add(model.LeftRoundBracket)
+			v.tokens.Add(model.LeftRoundBracketTkn)
 			iterator := parameters.Iterator()
 			iterator.Next().AcceptDeclaration(v)
 			for iterator.HasNext() {
-				v.tokens.Add(model.CommaSpace)
+				v.tokens.Add(model.CommaSpaceTkn)
 				iterator.Next().AcceptDeclaration(v)
 			}
 
-			v.tokens.Add(model.RightRoundBracket)
+			v.tokens.Add(model.RightRoundBracketTkn)
 			break
 		}
 	}
@@ -249,25 +249,25 @@ func (v *ExpressionVisitor) VisitLambdaIdentifiersExpression(expr intmod.ILambda
 	parameters := util.NewDefaultListWithSlice(expr.ParameterNames())
 
 	if parameters == nil {
-		v.tokens.Add(model.LeftRightRoundBrackets)
+		v.tokens.Add(model.LeftRightRoundBracketsTkn)
 	} else {
 		size := parameters.Size()
 
 		switch size {
 		case 0:
-			v.tokens.Add(model.LeftRightRoundBrackets)
+			v.tokens.Add(model.LeftRightRoundBracketsTkn)
 			break
 		case 1:
 			v.tokens.Add(v.newTextToken(parameters.Get(0)))
 			break
 		default:
-			v.tokens.Add(model.LeftRoundBracket)
+			v.tokens.Add(model.LeftRoundBracketTkn)
 			v.tokens.Add(v.newTextToken(parameters.Get(0)))
 			for i := 1; i < size; i++ {
-				v.tokens.Add(model.CommaSpace)
+				v.tokens.Add(model.CommaSpaceTkn)
 				v.tokens.Add(v.newTextToken(parameters.Get(i)))
 			}
-			v.tokens.Add(model.RightRoundBracket)
+			v.tokens.Add(model.RightRoundBracketTkn)
 			break
 		}
 	}
@@ -277,7 +277,7 @@ func (v *ExpressionVisitor) VisitLambdaIdentifiersExpression(expr intmod.ILambda
 
 func (v *ExpressionVisitor) visitLambdaBody(statementList intmod.IStatement) {
 	if statementList != nil {
-		v.tokens.Add(model.SpaceArrowSpace)
+		v.tokens.Add(model.SpaceArrowSpaceTkn)
 
 		if statementList.IsLambdaExpressionStatement() {
 			statementList.AcceptStatement(v)
@@ -302,8 +302,8 @@ func (v *ExpressionVisitor) visitLambdaBody(statementList intmod.IStatement) {
 
 func (v *ExpressionVisitor) VisitLengthExpression(expr intmod.ILengthExpression) {
 	v.visit(expr, expr.Expression())
-	v.tokens.Add(model.Dot)
-	v.tokens.Add(model.Length)
+	v.tokens.Add(model.DotTkn)
+	v.tokens.Add(model.LengthTkn)
 }
 
 func (v *ExpressionVisitor) VisitLocalVariableReferenceExpression(expr intmod.ILocalVariableReferenceExpression) {
@@ -330,7 +330,7 @@ func (v *ExpressionVisitor) VisitMethodInvocationExpression(expr intmod.IMethodI
 		if ot.InternalName() != v.currentInternalTypeName {
 			v.visit(expr, exp)
 			v.tokens.AddLineNumberToken(expr)
-			v.tokens.Add(model.Dot)
+			v.tokens.Add(model.DotTkn)
 			dot = true
 		}
 	} else {
@@ -342,20 +342,20 @@ func (v *ExpressionVisitor) VisitMethodInvocationExpression(expr intmod.IMethodI
 			v.tokens.AddLineNumberToken(expr)
 		}
 
-		v.tokens.Add(model.Dot)
+		v.tokens.Add(model.DotTkn)
 		dot = true
 	}
 
 	v.tokens.AddLineNumberToken(expr)
 
 	if (nonWildcardTypeArguments != nil) && dot {
-		v.tokens.Add(model.LeftAngleBracket)
+		v.tokens.Add(model.LeftAngleBracketTkn)
 		nonWildcardTypeArguments.AcceptTypeArgumentVisitor(v)
-		v.tokens.Add(model.RightAngleBracket)
+		v.tokens.Add(model.RightAngleBracketTkn)
 	}
 
 	v.tokens.Add(model.NewReferenceToken(intmod.MethodToken, expr.InternalTypeName(), expr.Name(), expr.Descriptor(), v.currentInternalTypeName))
-	v.tokens.Add(model.StartParametersBlock)
+	v.tokens.Add(model.StartParametersBlockTkn)
 
 	if parameters != nil {
 		ief := v.inExpressionFlag
@@ -364,20 +364,20 @@ func (v *ExpressionVisitor) VisitMethodInvocationExpression(expr intmod.IMethodI
 		v.inExpressionFlag = ief
 	}
 
-	v.tokens.Add(model.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlockTkn)
 }
 
 func (v *ExpressionVisitor) VisitMethodReferenceExpression(expr intmod.IMethodReferenceExpression) {
 	expr.Expression().Accept(v)
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.ColonColon)
+	v.tokens.Add(model.ColonColonTkn)
 	v.tokens.Add(model.NewReferenceToken(intmod.MethodToken, expr.InternalTypeName(), expr.Name(), expr.Descriptor(), v.currentInternalTypeName))
 }
 
 func (v *ExpressionVisitor) VisitNewArray(expr intmod.INewArray) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.New)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.NewTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	typ := expr.Type()
 	typ.AcceptTypeVisitor(v)
@@ -394,15 +394,15 @@ func (v *ExpressionVisitor) VisitNewArray(expr intmod.INewArray) {
 			iterator := dimensionExpressionList.Iterator()
 
 			for iterator.HasNext() {
-				v.tokens.Add(model.StartArrayBlock)
+				v.tokens.Add(model.StartArrayBlockTkn)
 				iterator.Next().Accept(v)
-				v.tokens.Add(model.EndArrayBlock)
+				v.tokens.Add(model.EndArrayBlockTkn)
 				dimension--
 			}
 		} else {
-			v.tokens.Add(model.StartArrayBlock)
+			v.tokens.Add(model.StartArrayBlockTkn)
 			dimensionExpressionList.Accept(v)
-			v.tokens.Add(model.EndArrayBlock)
+			v.tokens.Add(model.EndArrayBlockTkn)
 			dimension--
 		}
 	}
@@ -412,12 +412,12 @@ func (v *ExpressionVisitor) VisitNewArray(expr intmod.INewArray) {
 
 func (v *ExpressionVisitor) VisitNewInitializedArray(expr intmod.INewInitializedArray) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.New)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.NewTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	typ := expr.Type()
 	typ.AcceptTypeVisitor(v)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
 	expr.ArrayInitializer().AcceptDeclaration(v)
 }
 
@@ -425,8 +425,8 @@ func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
 	bodyDeclaration := expr.BodyDeclaration()
 
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.New)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.NewTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	objectType := expr.ObjectType()
 
@@ -437,14 +437,14 @@ func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
 	typ := objectType
 
 	typ.AcceptTypeVisitor(v)
-	v.tokens.Add(model.StartParametersBlock)
+	v.tokens.Add(model.StartParametersBlockTkn)
 
 	parameters := expr.Parameters()
 	if parameters != nil {
 		parameters.Accept(v)
 	}
 
-	v.tokens.Add(model.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlockTkn)
 
 	if bodyDeclaration != nil {
 		v.fragments.AddTokensFragment(v.tokens)
@@ -488,9 +488,9 @@ func (v *ExpressionVisitor) VisitObjectTypeReferenceExpression(expr intmod.IObje
 }
 
 func (v *ExpressionVisitor) VisitParenthesesExpression(expr intmod.IParenthesesExpression) {
-	v.tokens.Add(model.StartParametersBlock)
+	v.tokens.Add(model.StartParametersBlockTkn)
 	expr.Expression().Accept(v)
-	v.tokens.Add(model.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlockTkn)
 }
 
 func (v *ExpressionVisitor) VisitPostOperatorExpression(expr intmod.IPostOperatorExpression) {
@@ -511,8 +511,8 @@ func (v *ExpressionVisitor) VisitStringConstantExpression(expr intmod.IStringCon
 
 func (v *ExpressionVisitor) VisitSuperConstructorInvocationExpression(expr intmod.ISuperConstructorInvocationExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.Super)
-	v.tokens.Add(model.StartParametersBlock)
+	v.tokens.Add(model.SuperTkn)
+	v.tokens.Add(model.StartParametersBlockTkn)
 
 	parameters := expr.Parameters()
 
@@ -520,12 +520,12 @@ func (v *ExpressionVisitor) VisitSuperConstructorInvocationExpression(expr intmo
 		parameters.Accept(v)
 	}
 
-	v.tokens.Add(model.EndParametersBlock)
+	v.tokens.Add(model.EndParametersBlockTkn)
 }
 
 func (v *ExpressionVisitor) VisitSuperExpression(expr intmod.ISuperExpression) {
 	v.tokens.AddLineNumberToken(expr)
-	v.tokens.Add(model.Super)
+	v.tokens.Add(model.SuperTkn)
 }
 
 func (v *ExpressionVisitor) VisitTernaryOperatorExpression(expr intmod.ITernaryOperatorExpression) {
@@ -541,24 +541,24 @@ func (v *ExpressionVisitor) VisitTernaryOperatorExpression(expr intmod.ITernaryO
 		}
 
 		if be1.IsFalse() && be2.IsTrue() {
-			v.tokens.Add(model.Exclamation)
+			v.tokens.Add(model.ExclamationTkn)
 			v.printTernaryOperatorExpression(expr.Condition())
 			return
 		}
 	}
 
 	v.printTernaryOperatorExpression(expr.Condition())
-	v.tokens.Add(model.SpaceQuestionSpace)
+	v.tokens.Add(model.SpaceQuestionSpaceTkn)
 	v.printTernaryOperatorExpression(expr.TrueExpression())
-	v.tokens.Add(model.SpaceColonSpace)
+	v.tokens.Add(model.SpaceColonSpaceTkn)
 	v.printTernaryOperatorExpression(expr.FalseExpression())
 }
 
 func (v *ExpressionVisitor) printTernaryOperatorExpression(expr intmod.IExpression) {
 	if expr.Priority() > 3 {
-		v.tokens.Add(model.LeftRoundBracket)
+		v.tokens.Add(model.LeftRoundBracketTkn)
 		expr.Accept(v)
-		v.tokens.Add(model.RightRoundBracket)
+		v.tokens.Add(model.RightRoundBracketTkn)
 	} else {
 		expr.Accept(v)
 	}
@@ -567,7 +567,7 @@ func (v *ExpressionVisitor) printTernaryOperatorExpression(expr intmod.IExpressi
 func (v *ExpressionVisitor) VisitThisExpression(expr intmod.IThisExpression) {
 	if expr.IsExplicit() {
 		v.tokens.AddLineNumberToken(expr)
-		v.tokens.Add(model.This)
+		v.tokens.Add(model.ThisTkn)
 	}
 }
 
@@ -577,8 +577,8 @@ func (v *ExpressionVisitor) VisitTypeReferenceDotClassExpression(expr intmod.ITy
 	typ := expr.TypeDotClass()
 
 	typ.AcceptTypeVisitor(v)
-	v.tokens.Add(model.Dot)
-	v.tokens.Add(model.Class)
+	v.tokens.Add(model.DotTkn)
+	v.tokens.Add(model.ClassTkn)
 }
 
 func (v *ExpressionVisitor) storeContext() {
@@ -594,9 +594,9 @@ func (v *ExpressionVisitor) restoreContext() {
 
 func (v *ExpressionVisitor) visit(parent, child intmod.IExpression) {
 	if (parent.Priority() < child.Priority()) || ((parent.Priority() == 14) && (child.Priority() == 13)) {
-		v.tokens.Add(model.LeftRoundBracket)
+		v.tokens.Add(model.LeftRoundBracketTkn)
 		child.Accept(v)
-		v.tokens.Add(model.RightRoundBracket)
+		v.tokens.Add(model.RightRoundBracketTkn)
 	} else {
 		child.Accept(v)
 	}
@@ -604,9 +604,9 @@ func (v *ExpressionVisitor) visit(parent, child intmod.IExpression) {
 
 func (v *ExpressionVisitor) visitHexa(parent, child intmod.IExpression) {
 	if (parent.Priority() < child.Priority()) || ((parent.Priority() == 14) && (child.Priority() == 13)) {
-		v.tokens.Add(model.LeftRoundBracket)
+		v.tokens.Add(model.LeftRoundBracketTkn)
 		child.Accept(v.hexaExpressionVisitor)
-		v.tokens.Add(model.RightRoundBracket)
+		v.tokens.Add(model.RightRoundBracketTkn)
 	} else {
 		child.Accept(v.hexaExpressionVisitor)
 	}

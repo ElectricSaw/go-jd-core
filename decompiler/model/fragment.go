@@ -145,7 +145,7 @@ func (f *FlexibleFragment) ResetLineCount() {
 	f.LineCount = f.InitialLineCount
 }
 
-func (f *FlexibleFragment) IncLineCount(force bool) bool {
+func (f *FlexibleFragment) IncLineCount(_ bool) bool {
 	if f.LineCount < f.MaximalLineCount {
 		f.LineCount++
 		return true
@@ -153,7 +153,7 @@ func (f *FlexibleFragment) IncLineCount(force bool) bool {
 	return false
 }
 
-func (f *FlexibleFragment) DecLineCount(force bool) bool {
+func (f *FlexibleFragment) DecLineCount(_ bool) bool {
 	if f.LineCount > f.MinimalLineCount {
 		f.LineCount--
 		return true

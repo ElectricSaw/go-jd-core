@@ -4,6 +4,7 @@ import "fmt"
 
 const (
 	UnknownLineNumberToken = 0
+	UnknownLineNumber      = 0
 )
 
 const (

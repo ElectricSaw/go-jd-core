@@ -84,7 +84,7 @@ func AddSpacerAfterMemberAnnotations(fragments util.IList[intmod.IFragment]) {
 }
 
 func AddSpacerAfterSwitchLabel(fragments util.IList[intmod.IFragment]) {
-	fragments.Add(model.StartDeclarationOrStatementBlock)
+	fragments.Add(model.StartDeclarationOrStatementBlockTkn)
 	fragments.Add(model.NewSpaceSpacerFragment(0, 1, 1, 16, "Spacer after switch label"))
 }
 
@@ -101,13 +101,13 @@ func AddSpacerBeforeImplements(fragments util.IList[intmod.IFragment]) {
 }
 
 func AddSpacerBetweenEnumValues(fragments util.IList[intmod.IFragment], preferredLineCount int) {
-	fragments.Add(model.Comma)
+	fragments.Add(model.CommaTkn)
 	fragments.Add(model.NewSpaceSpacerFragment(0, preferredLineCount, 1, 10, "Spacer between enum values"))
 	fragments.Add(model.NewSpacerFragment(0, 0, math.MaxInt32, 24, "Second spacer between enum values"))
 }
 
 func AddSpacerBetweenFieldDeclarators(fragments util.IList[intmod.IFragment]) {
-	fragments.Add(model.Comma)
+	fragments.Add(model.CommaTkn)
 	fragments.Add(model.NewSpacerFragment(0, 0, 1, 10, "Spacer between field declarators"))
 }
 
@@ -129,7 +129,7 @@ func AddSpacerBetweenSwitchLabelBlock(fragments util.IList[intmod.IFragment]) {
 }
 
 func AddSpacerAfterSwitchBlock(fragments util.IList[intmod.IFragment]) {
-	fragments.Add(model.EndDeclarationOrStatementBlock)
+	fragments.Add(model.EndDeclarationOrStatementBlockTkn)
 }
 
 func AddStartArrayInitializerBlock(fragments util.IList[intmod.IFragment]) intmod.IStartBlockFragment {
@@ -139,7 +139,7 @@ func AddStartArrayInitializerBlock(fragments util.IList[intmod.IFragment]) intmo
 }
 
 func AddSpacerBetweenArrayInitializerBlock(fragments util.IList[intmod.IFragment]) {
-	fragments.Add(model.Comma)
+	fragments.Add(model.CommaTkn)
 	fragments.Add(model.NewSpaceSpacerFragment(0, 0, math.MaxInt32, 20, "Spacer between array initializer block"))
 }
 

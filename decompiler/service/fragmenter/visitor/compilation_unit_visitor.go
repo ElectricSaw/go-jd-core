@@ -36,7 +36,7 @@ func (v *CompilationUnitVisitor) VisitAnnotationDeclaration(declaration intmod.I
 	if (declaration.Flags() & intmod.FlagSynthetic) == 0 {
 		v.fragments.Add(model.StartMovableTypeBlock)
 
-		v.buildFragmentsForTypeDeclaration(declaration, declaration.Flags() & ^intmod.FlagAbstract, model.Annotation)
+		v.buildFragmentsForTypeDeclaration(declaration, declaration.Flags() & ^intmod.FlagAbstract, model.AnnotationTkn)
 
 		v.fragments.AddTokensFragment(v.tokens)
 
@@ -44,8 +44,8 @@ func (v *CompilationUnitVisitor) VisitAnnotationDeclaration(declaration intmod.I
 		bodyDeclaration := declaration.BodyDeclaration()
 
 		if (annotationDeclaratorList == nil) && (bodyDeclaration == nil) {
-			v.tokens.Add(model.Space)
-			v.tokens.Add(model.LeftRightCurlyBrackets)
+			v.tokens.Add(model.SpaceTkn)
+			v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 		} else {
 			fragmentCount1 := v.fragments.Size()
 			start := fragutil.AddStartTypeBody(v.fragments)
@@ -69,8 +69,8 @@ func (v *CompilationUnitVisitor) VisitAnnotationDeclaration(declaration intmod.I
 
 			if fragmentCount2 == v.fragments.Size() {
 				v.fragments.SubList(fragmentCount1, fragmentCount2).Clear()
-				v.tokens.Add(model.Space)
-				v.tokens.Add(model.LeftRightCurlyBrackets)
+				v.tokens.Add(model.SpaceTkn)
+				v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 			} else {
 				fragutil.AddEndTypeBody(v.fragments, start)
 			}
@@ -89,7 +89,7 @@ func (v *CompilationUnitVisitor) VisitAnnotationReference(reference intmod.IAnno
 }
 
 func (v *CompilationUnitVisitor) visitAnnotationReferenceAnnotationReference(reference intmod.IAnnotationReference) {
-	v.tokens.Add(model.At)
+	v.tokens.Add(model.AtTkn)
 
 	typ := reference.Type()
 	typ.AcceptTypeVisitor(v)
@@ -100,14 +100,14 @@ func (v *CompilationUnitVisitor) visitAnnotationReferenceAnnotationReference(ref
 		elementValuePairs := reference.ElementValuePairs()
 
 		if elementValuePairs != nil {
-			v.tokens.Add(model.StartParametersBlock)
+			v.tokens.Add(model.StartParametersBlockTkn)
 			elementValuePairs.Accept(v)
-			v.tokens.Add(model.EndParametersBlock)
+			v.tokens.Add(model.EndParametersBlockTkn)
 		}
 	} else {
-		v.tokens.Add(model.StartParametersBlock)
+		v.tokens.Add(model.StartParametersBlockTkn)
 		elementValue.Accept(v)
-		v.tokens.Add(model.EndParametersBlock)
+		v.tokens.Add(model.EndParametersBlockTkn)
 	}
 }
 
@@ -119,7 +119,7 @@ func (v *CompilationUnitVisitor) VisitAnnotationReferences(list intmod.IAnnotati
 		iterator.Next().Accept(v)
 
 		for i := 1; i < size; i++ {
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.SpaceTkn)
 			iterator.Next().Accept(v)
 		}
 	}
@@ -156,7 +156,7 @@ func (v *CompilationUnitVisitor) VisitArrayVariableInitializer(declaration intmo
 
 				v.tokens = NewTokens(v)
 			} else {
-				v.tokens.Add(model.CommaSpace)
+				v.tokens.Add(model.CommaSpaceTkn)
 			}
 
 			declaration.Get(i).AcceptDeclaration(v)
@@ -172,7 +172,7 @@ func (v *CompilationUnitVisitor) VisitArrayVariableInitializer(declaration intmo
 
 		v.tokens = NewTokens(v)
 	} else {
-		v.tokens.Add(model.LeftRightCurlyBrackets)
+		v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 	}
 }
 
@@ -184,9 +184,9 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 	if (declaration.Flags() & intmod.FlagSynthetic) == 0 {
 		v.fragments.Add(model.StartMovableTypeBlock)
 
-		v.buildFragmentsForClassOrInterfaceDeclaration(declaration, declaration.Flags(), model.Class2)
+		v.buildFragmentsForClassOrInterfaceDeclaration(declaration, declaration.Flags(), model.Class2Tkn)
 
-		v.tokens.Add(model.StartDeclarationOrStatementBlock)
+		v.tokens.Add(model.StartDeclarationOrStatementBlockTkn)
 
 		// Build v.fragments for super type
 		superType := declaration.SuperType()
@@ -195,8 +195,8 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 			fragutil.AddSpacerBeforeExtends(v.fragments)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(model.Exports)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.ExportsTkn)
+			v.tokens.Add(model.SpaceTkn)
 			superType.AcceptTypeVisitor(v)
 			v.fragments.AddTokensFragment(v.tokens)
 
@@ -213,22 +213,22 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 			fragutil.AddSpacerBeforeImplements(v.fragments)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(model.Implements)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.ImplementsTkn)
+			v.tokens.Add(model.SpaceTkn)
 			interfaces.AcceptTypeVisitor(v)
 			v.fragments.AddTokensFragment(v.tokens)
 
 			v.tokens = NewTokens(v)
 		}
 
-		v.tokens.Add(model.EndDeclarationOrStatementBlock)
+		v.tokens.Add(model.EndDeclarationOrStatementBlockTkn)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		bodyDeclaration := declaration.BodyDeclaration()
 
 		if bodyDeclaration == nil {
-			v.tokens.Add(model.Space)
-			v.tokens.Add(model.LeftRightCurlyBrackets)
+			v.tokens.Add(model.SpaceTkn)
+			v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 		} else {
 			fragmentCount1 := v.fragments.Size()
 			start := fragutil.AddStartTypeBody(v.fragments)
@@ -242,8 +242,8 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 
 			if fragmentCount2 == v.fragments.Size() {
 				v.fragments.SubList(fragmentCount1, fragmentCount2).Clear()
-				v.tokens.Add(model.Space)
-				v.tokens.Add(model.LeftRightCurlyBrackets)
+				v.tokens.Add(model.SpaceTkn)
+				v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 			} else {
 				fragutil.AddEndTypeBody(v.fragments, start)
 			}
@@ -264,10 +264,10 @@ func (v *CompilationUnitVisitor) VisitCompilationUnit(compilationUnit *javasynta
 	if index != -1 {
 		v.tokens = NewTokens(v)
 
-		v.tokens.Add(model.Package)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PackageTkn)
+		v.tokens.Add(model.SpaceTkn)
 		v.tokens.Add(model.NewTextToken(strings.ReplaceAll(v.mainInternalName[:index], "/", ".")))
-		v.tokens.Add(model.Semicolon)
+		v.tokens.Add(model.SemicolonTkn)
 
 		v.fragments.AddTokensFragment(v.tokens)
 
@@ -315,10 +315,10 @@ func (v *CompilationUnitVisitor) VisitConstructorDeclaration(declaration intmod.
 			typeParameters := declaration.TypeParameters()
 
 			if typeParameters != nil {
-				v.tokens.Add(model.LeftAngleBracket)
+				v.tokens.Add(model.LeftAngleBracketTkn)
 				typeParameters.AcceptTypeParameterVisitor(v)
-				v.tokens.Add(model.RightAngleBracket)
-				v.tokens.Add(model.Space)
+				v.tokens.Add(model.RightAngleBracketTkn)
+				v.tokens.Add(model.SpaceTkn)
 			}
 
 			// Build token for type declaration
@@ -330,23 +330,23 @@ func (v *CompilationUnitVisitor) VisitConstructorDeclaration(declaration intmod.
 			formalParameters := declaration.FormalParameters()
 
 			if formalParameters == nil {
-				v.tokens.Add(model.LeftRightRoundBrackets)
+				v.tokens.Add(model.LeftRightRoundBracketsTkn)
 			} else {
-				v.tokens.Add(model.StartParametersBlock)
+				v.tokens.Add(model.StartParametersBlockTkn)
 				v.fragments.AddTokensFragment(v.tokens)
 
 				formalParameters.AcceptDeclaration(v)
 
 				v.tokens = NewTokens(v)
-				v.tokens.Add(model.EndParametersBlock)
+				v.tokens.Add(model.EndParametersBlockTkn)
 			}
 
 			exceptionTypes := declaration.ExceptionTypes()
 
 			if exceptionTypes != nil {
-				v.tokens.Add(model.Space)
-				v.tokens.Add(model.Throws)
-				v.tokens.Add(model.Space)
+				v.tokens.Add(model.SpaceTkn)
+				v.tokens.Add(model.ThrowsTkn)
+				v.tokens.Add(model.SpaceTkn)
 				exceptionTypes.AcceptTypeVisitor(v)
 			}
 
@@ -371,8 +371,8 @@ func (v *CompilationUnitVisitor) VisitConstructorDeclaration(declaration intmod.
 
 				if fragmentCount2 == v.fragments.Size() {
 					v.fragments.SubList(fragmentCount1, fragmentCount2).Clear()
-					v.tokens.Add(model.Space)
-					v.tokens.Add(model.LeftRightCurlyBrackets)
+					v.tokens.Add(model.SpaceTkn)
+					v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 				} else if singleLineStatement {
 					fragutil.AddEndSingleStatementMethodBody(v.fragments, start)
 				} else {
@@ -406,9 +406,9 @@ func (v *CompilationUnitVisitor) VisitConstructorDeclaration(declaration intmod.
 }
 
 func (v *CompilationUnitVisitor) VisitElementValueArrayInitializerElementValue(reference intmod.IElementValueArrayInitializerElementValue) {
-	v.tokens.Add(model.StartArrayInitializerBlock)
+	v.tokens.Add(model.StartArrayInitializerBlockTkn)
 	v.SafeAcceptReference(reference.ElementValueArrayInitializer())
-	v.tokens.Add(model.EndArrayInitializerBlock)
+	v.tokens.Add(model.EndArrayInitializerBlockTkn)
 }
 
 func (v *CompilationUnitVisitor) VisitElementValues(references intmod.IElementValues) {
@@ -416,7 +416,7 @@ func (v *CompilationUnitVisitor) VisitElementValues(references intmod.IElementVa
 
 	iterator.Next().Accept(v)
 	for iterator.HasNext() {
-		v.tokens.Add(model.CommaSpace)
+		v.tokens.Add(model.CommaSpaceTkn)
 		iterator.Next().Accept(v)
 	}
 }
@@ -431,14 +431,14 @@ func (v *CompilationUnitVisitor) VisitElementValuePairs(references intmod.IEleme
 	iterator.Next().Accept(v)
 
 	for iterator.HasNext() {
-		v.tokens.Add(model.CommaSpace)
+		v.tokens.Add(model.CommaSpaceTkn)
 		iterator.Next().Accept(v)
 	}
 }
 
 func (v *CompilationUnitVisitor) VisitElementValuePair(reference intmod.IElementValuePair) {
 	v.tokens.Add(model.NewTextToken(reference.Name()))
-	v.tokens.Add(model.SpaceEqualSpace)
+	v.tokens.Add(model.SpaceEqualSpaceTkn)
 	reference.ElementValue().Accept(v)
 }
 
@@ -446,26 +446,26 @@ func (v *CompilationUnitVisitor) VisitEnumDeclaration(declaration intmod.IEnumDe
 	if (declaration.Flags() & intmod.FlagSynthetic) == 0 {
 		v.fragments.Add(model.StartMovableTypeBlock)
 
-		v.buildFragmentsForTypeDeclaration(declaration, declaration.Flags(), model.Enum)
+		v.buildFragmentsForTypeDeclaration(declaration, declaration.Flags(), model.EnumTkn)
 
 		// Build v.fragments for interfaces
 		interfaces := declaration.Interfaces()
 		if interfaces != nil {
-			v.tokens.Add(model.StartDeclarationOrStatementBlock)
+			v.tokens.Add(model.StartDeclarationOrStatementBlockTkn)
 
 			v.fragments.AddTokensFragment(v.tokens)
 
 			fragutil.AddSpacerBeforeImplements(v.fragments)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(model.Implements)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.ImplementsTkn)
+			v.tokens.Add(model.SpaceTkn)
 			interfaces.AcceptTypeVisitor(v)
 			v.fragments.AddTokensFragment(v.tokens)
 
 			v.tokens = NewTokens(v)
 
-			v.tokens.Add(model.EndDeclarationOrStatementBlock)
+			v.tokens.Add(model.EndDeclarationOrStatementBlockTkn)
 		}
 
 		v.fragments.AddTokensFragment(v.tokens)
@@ -499,7 +499,7 @@ func (v *CompilationUnitVisitor) VisitEnumDeclaration(declaration intmod.IEnumDe
 				constants.Get(i).AcceptDeclaration(v)
 			}
 
-			v.fragments.Add(model.Semicolon)
+			v.fragments.Add(model.SemicolonTkn)
 			v.fragments.Add(model.EndMovableBlock)
 		}
 
@@ -554,9 +554,9 @@ func (v *CompilationUnitVisitor) VisitEnumDeclarationConstant(declaration intmod
 
 	arguments := declaration.Arguments()
 	if arguments != nil {
-		v.tokens.Add(model.StartParametersBlock)
+		v.tokens.Add(model.StartParametersBlockTkn)
 		arguments.Accept(v)
-		v.tokens.Add(model.EndParametersBlock)
+		v.tokens.Add(model.EndParametersBlockTkn)
 	}
 
 	v.fragments.AddTokensFragment(v.tokens)
@@ -595,7 +595,7 @@ func (v *CompilationUnitVisitor) VisitFieldDeclaration(declaration intmod.IField
 
 		typ.AcceptTypeVisitor(v)
 
-		v.tokens.Add(model.StartDeclarationOrStatementBlock)
+		v.tokens.Add(model.StartDeclarationOrStatementBlockTkn)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		declaration.FieldDeclarators().AcceptDeclaration(v)
@@ -612,7 +612,7 @@ func (v *CompilationUnitVisitor) VisitFieldDeclarator(fieldDeclarator intmod.IFi
 	descriptor := fieldDeclaration.Type().Descriptor()
 
 	v.tokens = NewTokens(v)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
 
 	switch fieldDeclarator.Dimension() {
 	case 0:
@@ -620,11 +620,11 @@ func (v *CompilationUnitVisitor) VisitFieldDeclarator(fieldDeclarator intmod.IFi
 		break
 	case 1:
 		v.tokens.Add(model.NewDeclarationToken(intmod.FieldToken, v.currentInternalTypeName, fieldDeclarator.Name(), "["+descriptor))
-		v.tokens.Add(model.Dimension1)
+		v.tokens.Add(model.DimensionTkn1)
 		break
 	case 2:
 		v.tokens.Add(model.NewDeclarationToken(intmod.FieldToken, v.currentInternalTypeName, fieldDeclarator.Name(), "[["+descriptor))
-		v.tokens.Add(model.Dimension2)
+		v.tokens.Add(model.DimensionTkn2)
 		break
 	default:
 		prefix := ""
@@ -644,7 +644,7 @@ func (v *CompilationUnitVisitor) VisitFieldDeclarator(fieldDeclarator intmod.IFi
 	if variableInitializer == nil {
 		v.fragments.AddTokensFragment(v.tokens)
 	} else {
-		v.tokens.Add(model.SpaceEqualSpace)
+		v.tokens.Add(model.SpaceEqualSpaceTkn)
 		variableInitializer.AcceptDeclaration(v)
 		v.fragments.AddTokensFragment(v.tokens)
 	}
@@ -669,23 +669,23 @@ func (v *CompilationUnitVisitor) VisitFormalParameter(declaration intmod.IFormal
 
 	if annotationReferences != nil {
 		annotationReferences.Accept(v)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 	}
 
 	if declaration.IsVarargs() {
 		arrayType := declaration.Type()
 		typ := arrayType.CreateType(arrayType.Dimension() - 1)
 		typ.AcceptTypeVisitor(v)
-		v.tokens.Add(model.VarArgs)
+		v.tokens.Add(model.VarArgsTkn)
 	} else {
 		if declaration.IsFinal() {
-			v.tokens.Add(model.Final)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.FinalTkn)
+			v.tokens.Add(model.SpaceTkn)
 		}
 
 		typ := declaration.Type()
 		typ.AcceptTypeVisitor(v)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 	}
 
 	name := declaration.Name()
@@ -702,7 +702,7 @@ func (v *CompilationUnitVisitor) VisitFormalParameters(declarations intmod.IForm
 		iterator.Next().AcceptDeclaration(v)
 
 		for i := 1; i < size; i++ {
-			v.tokens.Add(model.CommaSpace)
+			v.tokens.Add(model.CommaSpaceTkn)
 			iterator.Next().AcceptDeclaration(v)
 		}
 	}
@@ -731,9 +731,9 @@ func (v *CompilationUnitVisitor) VisitInterfaceDeclaration(declaration intmod.II
 	if (declaration.Flags() & intmod.FlagSynthetic) == 0 {
 		v.fragments.Add(model.StartMovableTypeBlock)
 
-		v.buildFragmentsForClassOrInterfaceDeclaration(declaration, declaration.Flags() & ^intmod.FlagAbstract, model.Interface)
+		v.buildFragmentsForClassOrInterfaceDeclaration(declaration, declaration.Flags() & ^intmod.FlagAbstract, model.InterfaceTkn)
 
-		v.tokens.Add(model.StartDeclarationOrStatementBlock)
+		v.tokens.Add(model.StartDeclarationOrStatementBlockTkn)
 
 		// Build v.fragments for interfaces
 		interfaces := declaration.Interfaces()
@@ -743,21 +743,21 @@ func (v *CompilationUnitVisitor) VisitInterfaceDeclaration(declaration intmod.II
 			fragutil.AddSpacerBeforeImplements(v.fragments)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(model.Extends)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.ExtendsTkn)
+			v.tokens.Add(model.SpaceTkn)
 			interfaces.AcceptTypeVisitor(v)
 			v.fragments.AddTokensFragment(v.tokens)
 
 			v.tokens = NewTokens(v)
 		}
 
-		v.tokens.Add(model.EndDeclarationOrStatementBlock)
+		v.tokens.Add(model.EndDeclarationOrStatementBlockTkn)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		bodyDeclaration := declaration.BodyDeclaration()
 		if bodyDeclaration == nil {
-			v.tokens.Add(model.Space)
-			v.tokens.Add(model.LeftRightCurlyBrackets)
+			v.tokens.Add(model.SpaceTkn)
+			v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 		} else {
 			fragmentCount1 := v.fragments.Size()
 			start := fragutil.AddStartTypeBody(v.fragments)
@@ -771,8 +771,8 @@ func (v *CompilationUnitVisitor) VisitInterfaceDeclaration(declaration intmod.II
 
 			if fragmentCount2 == v.fragments.Size() {
 				v.fragments.SubList(fragmentCount1, fragmentCount2).Clear()
-				v.tokens.Add(model.Space)
-				v.tokens.Add(model.LeftRightCurlyBrackets)
+				v.tokens.Add(model.SpaceTkn)
+				v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 			} else {
 				fragutil.AddEndTypeBody(v.fragments, start)
 			}
@@ -791,12 +791,12 @@ func (v *CompilationUnitVisitor) VisitModuleDeclaration(declaration intmod.IModu
 	v.tokens = NewTokens(v)
 
 	if (declaration.Flags() & intmod.FlagOpen) != 0 {
-		v.tokens.Add(model.Open)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.OpenTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 
-	v.tokens.Add(model.Module)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.ModuleTkn)
+	v.tokens.Add(model.SpaceTkn)
 	v.tokens.Add(model.NewDeclarationToken(intmod.ModuleToken, declaration.InternalTypeName(), declaration.Name(), ""))
 	v.fragments.AddTokensFragment(v.tokens)
 
@@ -808,7 +808,7 @@ func (v *CompilationUnitVisitor) VisitModuleDeclaration(declaration intmod.IModu
 		iterator := declaration.Requires().Iterator()
 		v.visitModuleDeclaration1(iterator.Next())
 		for iterator.HasNext() {
-			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.NewLineTkn1)
 			v.visitModuleDeclaration1(iterator.Next())
 		}
 		needNewLine = true
@@ -816,38 +816,38 @@ func (v *CompilationUnitVisitor) VisitModuleDeclaration(declaration intmod.IModu
 
 	if (declaration.Exports() != nil) && !declaration.Exports().IsEmpty() {
 		if needNewLine {
-			v.tokens.Add(model.NewLine2)
+			v.tokens.Add(model.NewLineTkn2)
 		}
 		iterator := declaration.Exports().Iterator()
-		v.visitModuleDeclaration2(iterator.Next(), model.Exports)
+		v.visitModuleDeclaration2(iterator.Next(), model.ExportsTkn)
 		for iterator.HasNext() {
-			v.tokens.Add(model.NewLine1)
-			v.visitModuleDeclaration2(iterator.Next(), model.Exports)
+			v.tokens.Add(model.NewLineTkn1)
+			v.visitModuleDeclaration2(iterator.Next(), model.ExportsTkn)
 		}
 		needNewLine = true
 	}
 
 	if (declaration.Opens() != nil) && !declaration.Opens().IsEmpty() {
 		if needNewLine {
-			v.tokens.Add(model.NewLine2)
+			v.tokens.Add(model.NewLineTkn2)
 		}
 		iterator := declaration.Opens().Iterator()
-		v.visitModuleDeclaration2(iterator.Next(), model.Opens)
+		v.visitModuleDeclaration2(iterator.Next(), model.OpensTkn)
 		for iterator.HasNext() {
-			v.tokens.Add(model.NewLine1)
-			v.visitModuleDeclaration2(iterator.Next(), model.Opens)
+			v.tokens.Add(model.NewLineTkn1)
+			v.visitModuleDeclaration2(iterator.Next(), model.OpensTkn)
 		}
 		needNewLine = true
 	}
 
 	if (declaration.Uses() != nil) && !declaration.Uses().IsEmpty() {
 		if needNewLine {
-			v.tokens.Add(model.NewLine2)
+			v.tokens.Add(model.NewLineTkn2)
 		}
 		iterator := declaration.Uses().Iterator()
 		v.visitModuleDeclaration3(iterator.Next())
 		for iterator.HasNext() {
-			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.NewLineTkn1)
 			v.visitModuleDeclaration3(iterator.Next())
 		}
 		needNewLine = true
@@ -855,12 +855,12 @@ func (v *CompilationUnitVisitor) VisitModuleDeclaration(declaration intmod.IModu
 
 	if (declaration.Provides() != nil) && !declaration.Provides().IsEmpty() {
 		if needNewLine {
-			v.tokens.Add(model.NewLine2)
+			v.tokens.Add(model.NewLineTkn2)
 		}
 		iterator := declaration.Provides().Iterator()
 		v.visitModuleDeclaration4(iterator.Next())
 		for iterator.HasNext() {
-			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.NewLineTkn1)
 			v.visitModuleDeclaration4(iterator.Next())
 		}
 	}
@@ -873,42 +873,42 @@ func (v *CompilationUnitVisitor) VisitModuleDeclaration(declaration intmod.IModu
 }
 
 func (v *CompilationUnitVisitor) visitModuleDeclaration1(moduleInfo intmod.IModuleInfo) {
-	v.tokens.Add(model.Requires)
+	v.tokens.Add(model.RequiresTkn)
 
 	if (moduleInfo.Flags() & intmod.FlagStatic) != 0 {
-		v.tokens.Add(model.Space)
-		v.tokens.Add(model.Static)
+		v.tokens.Add(model.SpaceTkn)
+		v.tokens.Add(model.StaticTkn)
 	}
 	if (moduleInfo.Flags() & intmod.FlagTransitive) != 0 {
-		v.tokens.Add(model.Space)
-		v.tokens.Add(model.Transient)
+		v.tokens.Add(model.SpaceTkn)
+		v.tokens.Add(model.TransientTkn)
 	}
 
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
 	v.tokens.Add(model.NewReferenceToken(intmod.ModuleToken, "module-info",
 		moduleInfo.Name(), "", ""))
-	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.SemicolonTkn)
 }
 
 func (v *CompilationUnitVisitor) visitModuleDeclaration2(packageInfo intmod.IPackageInfo, keywordToken intmod.IKeywordToken) {
 	v.tokens.Add(keywordToken)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
 	v.tokens.Add(model.NewReferenceToken(intmod.PackageToken, packageInfo.InternalName(),
 		strings.ReplaceAll(packageInfo.InternalName(), "/", "."), "", ""))
 
 	if (packageInfo.ModuleInfoNames() != nil) && len(packageInfo.ModuleInfoNames()) != 0 {
 		moduleInfoNames := util.NewDefaultListWithSlice(packageInfo.ModuleInfoNames())
-		v.tokens.Add(model.Space)
-		v.tokens.Add(model.To)
+		v.tokens.Add(model.SpaceTkn)
+		v.tokens.Add(model.ToTkn)
 
 		if moduleInfoNames.Size() == 1 {
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.SpaceTkn)
 			moduleInfoName := moduleInfoNames.Get(0)
 			v.tokens.Add(model.NewReferenceToken(intmod.ModuleToken, "module-info",
 				moduleInfoName, "", ""))
 		} else {
-			v.tokens.Add(model.StartDeclarationOrStatementBlock)
-			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.StartDeclarationOrStatementBlockTkn)
+			v.tokens.Add(model.NewLineTkn1)
 
 			iterator := moduleInfoNames.Iterator()
 
@@ -917,44 +917,44 @@ func (v *CompilationUnitVisitor) visitModuleDeclaration2(packageInfo intmod.IPac
 				moduleInfoName, "", ""))
 
 			for iterator.HasNext() {
-				v.tokens.Add(model.Comma)
-				v.tokens.Add(model.NewLine1)
+				v.tokens.Add(model.CommaTkn)
+				v.tokens.Add(model.NewLineTkn1)
 				moduleInfoName = iterator.Next()
 				v.tokens.Add(model.NewReferenceToken(intmod.ModuleToken, "module-info",
 					moduleInfoName, "", ""))
 			}
 
-			v.tokens.Add(model.EndDeclarationOrStatementBlock)
+			v.tokens.Add(model.EndDeclarationOrStatementBlockTkn)
 		}
 	}
 
-	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.SemicolonTkn)
 }
 
 func (v *CompilationUnitVisitor) visitModuleDeclaration3(internalTypeName string) {
-	v.tokens.Add(model.Uses)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.UsesTkn)
+	v.tokens.Add(model.SpaceTkn)
 	v.tokens.Add(model.NewReferenceToken(intmod.TypeToken, internalTypeName, strings.ReplaceAll(internalTypeName, "/", "."), "", ""))
-	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.SemicolonTkn)
 }
 
 func (v *CompilationUnitVisitor) visitModuleDeclaration4(serviceInfo intmod.IServiceInfo) {
-	v.tokens.Add(model.Provides)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.ProvidesTkn)
+	v.tokens.Add(model.SpaceTkn)
 	internalTypeName := serviceInfo.InternalTypeName()
 	v.tokens.Add(model.NewReferenceToken(intmod.TypeToken, internalTypeName,
 		strings.ReplaceAll(internalTypeName, "/", "."), "", ""))
-	v.tokens.Add(model.Space)
-	v.tokens.Add(model.With)
+	v.tokens.Add(model.SpaceTkn)
+	v.tokens.Add(model.WithTkn)
 
 	if len(serviceInfo.ImplementationTypeNames()) == 1 {
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 		internalTypeName = serviceInfo.ImplementationTypeNames()[0]
 		v.tokens.Add(model.NewReferenceToken(intmod.TypeToken, internalTypeName,
 			strings.ReplaceAll(internalTypeName, "/", "."), "", ""))
 	} else {
-		v.tokens.Add(model.StartDeclarationOrStatementBlock)
-		v.tokens.Add(model.NewLine1)
+		v.tokens.Add(model.StartDeclarationOrStatementBlockTkn)
+		v.tokens.Add(model.NewLineTkn1)
 
 		iterator := util.NewIteratorWithSlice(serviceInfo.ImplementationTypeNames())
 
@@ -963,27 +963,27 @@ func (v *CompilationUnitVisitor) visitModuleDeclaration4(serviceInfo intmod.ISer
 			strings.ReplaceAll(internalTypeName, "/", "."), "", ""))
 
 		for iterator.HasNext() {
-			v.tokens.Add(model.Comma)
-			v.tokens.Add(model.NewLine1)
+			v.tokens.Add(model.CommaTkn)
+			v.tokens.Add(model.NewLineTkn1)
 			internalTypeName = iterator.Next()
 			v.tokens.Add(model.NewReferenceToken(intmod.TypeToken, internalTypeName,
 				strings.ReplaceAll(internalTypeName, "/", "."), "", ""))
 		}
 
-		v.tokens.Add(model.EndDeclarationOrStatementBlock)
+		v.tokens.Add(model.EndDeclarationOrStatementBlockTkn)
 	}
 
-	v.tokens.Add(model.Semicolon)
+	v.tokens.Add(model.SemicolonTkn)
 }
 
 func (v *CompilationUnitVisitor) VisitLocalVariableDeclaration(declaration intmod.ILocalVariableDeclaration) {
 	if declaration.IsFinal() {
-		v.tokens.Add(model.Final)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.FinalTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	typ := declaration.Type()
 	typ.AcceptTypeVisitor(v)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
 	declaration.LocalVariableDeclarators().AcceptDeclaration(v)
 }
 
@@ -998,7 +998,7 @@ func (v *CompilationUnitVisitor) VisitLocalVariableDeclarator(declarator intmod.
 
 		v.visitDimension(declarator.Dimension())
 
-		v.tokens.Add(model.SpaceEqualSpace)
+		v.tokens.Add(model.SpaceEqualSpaceTkn)
 		declarator.VariableInitializer().AcceptDeclaration(v)
 	}
 }
@@ -1011,7 +1011,7 @@ func (v *CompilationUnitVisitor) VisitLocalVariableDeclarators(declarators intmo
 		iterator.Next().AcceptDeclaration(v)
 
 		for i := 1; i < size; i++ {
-			v.tokens.Add(model.CommaSpace)
+			v.tokens.Add(model.CommaSpaceTkn)
 			iterator.Next().AcceptDeclaration(v)
 		}
 	}
@@ -1068,15 +1068,15 @@ func (v *CompilationUnitVisitor) VisitMethodDeclaration(declaration intmod.IMeth
 		typeParameters := declaration.TypeParameters()
 
 		if typeParameters != nil {
-			v.tokens.Add(model.LeftAngleBracket)
+			v.tokens.Add(model.LeftAngleBracketTkn)
 			typeParameters.AcceptTypeParameterVisitor(v)
-			v.tokens.Add(model.RightAngleBracket)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.RightAngleBracketTkn)
+			v.tokens.Add(model.SpaceTkn)
 		}
 
 		returnedType := declaration.ReturnedType()
 		returnedType.AcceptTypeVisitor(v)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SpaceTkn)
 
 		// Build token for type declaration
 		v.tokens.Add(model.NewDeclarationToken(intmod.MethodToken, v.currentInternalTypeName, declaration.Name(), declaration.Descriptor()))
@@ -1087,23 +1087,23 @@ func (v *CompilationUnitVisitor) VisitMethodDeclaration(declaration intmod.IMeth
 		formalParameters := declaration.FormalParameters()
 
 		if formalParameters == nil {
-			v.tokens.Add(model.LeftRightRoundBrackets)
+			v.tokens.Add(model.LeftRightRoundBracketsTkn)
 		} else {
-			v.tokens.Add(model.StartParametersBlock)
+			v.tokens.Add(model.StartParametersBlockTkn)
 			v.fragments.AddTokensFragment(v.tokens)
 
 			formalParameters.AcceptDeclaration(v)
 
 			v.tokens = NewTokens(v)
-			v.tokens.Add(model.EndParametersBlock)
+			v.tokens.Add(model.EndParametersBlockTkn)
 		}
 
 		exceptions := declaration.ExceptionTypes()
 
 		if exceptions != nil {
-			v.tokens.Add(model.Space)
-			v.tokens.Add(model.Throws)
-			v.tokens.Add(model.Space)
+			v.tokens.Add(model.SpaceTkn)
+			v.tokens.Add(model.ThrowsTkn)
+			v.tokens.Add(model.SpaceTkn)
 			exceptions.AcceptTypeVisitor(v)
 		}
 
@@ -1113,18 +1113,18 @@ func (v *CompilationUnitVisitor) VisitMethodDeclaration(declaration intmod.IMeth
 			elementValue := declaration.DefaultAnnotationValue()
 
 			if elementValue == nil {
-				v.tokens.Add(model.Semicolon)
+				v.tokens.Add(model.SemicolonTkn)
 				v.fragments.AddTokensFragment(v.tokens)
 			} else {
-				v.tokens.Add(model.Space)
-				v.tokens.Add(model.Default2)
-				v.tokens.Add(model.Space)
+				v.tokens.Add(model.SpaceTkn)
+				v.tokens.Add(model.Default2Tkn)
+				v.tokens.Add(model.SpaceTkn)
 				v.fragments.AddTokensFragment(v.tokens)
 
 				elementValue.Accept(v)
 
 				v.tokens = NewTokens(v)
-				v.tokens.Add(model.Semicolon)
+				v.tokens.Add(model.SemicolonTkn)
 				v.fragments.AddTokensFragment(v.tokens)
 			}
 		} else {
@@ -1148,8 +1148,8 @@ func (v *CompilationUnitVisitor) VisitMethodDeclaration(declaration intmod.IMeth
 
 			if fragmentCount2 == v.fragments.Size() {
 				v.fragments.SubList(fragmentCount1, fragmentCount2).Clear()
-				v.tokens.Add(model.Space)
-				v.tokens.Add(model.LeftRightCurlyBrackets)
+				v.tokens.Add(model.SpaceTkn)
+				v.tokens.Add(model.LeftRightCurlyBracketsTkn)
 			} else if singleLineStatement {
 				fragutil.AddEndSingleStatementMethodBody(v.fragments, start)
 			} else {
@@ -1181,7 +1181,7 @@ func (v *CompilationUnitVisitor) VisitStaticInitializerDeclaration(declaration i
 		v.currentMethodParamNames.Clear()
 
 		v.tokens = NewTokens(v)
-		v.tokens.Add(model.Static)
+		v.tokens.Add(model.StaticTkn)
 		v.fragments.AddTokensFragment(v.tokens)
 
 		start := fragutil.AddStartMethodBody(v.fragments)
@@ -1223,7 +1223,7 @@ func (v *CompilationUnitVisitor) buildFragmentsForTypeDeclaration(declaration in
 	// Build v.tokens for access
 	v.buildTokensForTypeAccessFlags(flags)
 	v.tokens.Add(keyword)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
 
 	// Build token for type declaration
 	v.tokens.Add(model.NewDeclarationToken(intmod.TypeToken, declaration.InternalTypeName(), declaration.Name(), ""))
@@ -1236,134 +1236,134 @@ func (v *CompilationUnitVisitor) buildFragmentsForClassOrInterfaceDeclaration(de
 	typeParameters := declaration.TypeParameters()
 
 	if typeParameters != nil {
-		v.tokens.Add(model.LeftAngleBracket)
+		v.tokens.Add(model.LeftAngleBracketTkn)
 		typeParameters.AcceptTypeParameterVisitor(v)
-		v.tokens.Add(model.RightAngleBracket)
+		v.tokens.Add(model.RightAngleBracketTkn)
 	}
 }
 
 func (v *CompilationUnitVisitor) buildTokensForTypeAccessFlags(flags int) {
 	if (flags & intmod.FlagPublic) != 0 {
-		v.tokens.Add(model.Public)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PublicTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagProtected) != 0 {
-		v.tokens.Add(model.Protected)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.ProtectedTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagPrivate) != 0 {
-		v.tokens.Add(model.Private)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PrivateTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagStatic) != 0 {
-		v.tokens.Add(model.Static)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StaticTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagFinal) != 0 {
-		v.tokens.Add(model.Final)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.FinalTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagAbstract) != 0 {
-		v.tokens.Add(model.Abstract)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.AbstractTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagSynthetic) != 0 {
-		v.tokens.Add(model.StartComment)
-		v.tokens.Add(model.CommentSynthetic)
-		v.tokens.Add(model.EndComment)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartCommentTkn)
+		v.tokens.Add(model.CommentSyntheticTkn)
+		v.tokens.Add(model.EndCommentTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 }
 
 func (v *CompilationUnitVisitor) buildTokensForFieldAccessFlags(flags int) {
 	if (flags & intmod.FlagPublic) != 0 {
-		v.tokens.Add(model.Public)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PublicTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagProtected) != 0 {
-		v.tokens.Add(model.Protected)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.ProtectedTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagPrivate) != 0 {
-		v.tokens.Add(model.Private)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PrivateTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagStatic) != 0 {
-		v.tokens.Add(model.Static)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StaticTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagFinal) != 0 {
-		v.tokens.Add(model.Final)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.FinalTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagVolatile) != 0 {
-		v.tokens.Add(model.Volatile)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.VolatileTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagTransient) != 0 {
-		v.tokens.Add(model.Transient)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.TransientTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagSynthetic) != 0 {
-		v.tokens.Add(model.StartComment)
-		v.tokens.Add(model.CommentSynthetic)
-		v.tokens.Add(model.EndComment)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartCommentTkn)
+		v.tokens.Add(model.CommentSyntheticTkn)
+		v.tokens.Add(model.EndCommentTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 }
 
 func (v *CompilationUnitVisitor) buildTokensForMethodAccessFlags(flags int) {
 	if (flags & intmod.FlagPublic) != 0 {
-		v.tokens.Add(model.Public)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PublicTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagProtected) != 0 {
-		v.tokens.Add(model.Protected)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.ProtectedTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagPrivate) != 0 {
-		v.tokens.Add(model.Private)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.PrivateTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagStatic) != 0 {
-		v.tokens.Add(model.Static)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StaticTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagFinal) != 0 {
-		v.tokens.Add(model.Final)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.FinalTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagSynchronized) != 0 {
-		v.tokens.Add(model.Synchronized)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.SynchronizedTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagBridge) != 0 {
-		v.tokens.Add(model.StartComment)
-		v.tokens.Add(model.CommentBridge)
-		v.tokens.Add(model.EndComment)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartCommentTkn)
+		v.tokens.Add(model.CommentBridgeTkn)
+		v.tokens.Add(model.EndCommentTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagNative) != 0 {
-		v.tokens.Add(model.Native)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.NativeTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagAbstract) != 0 {
-		v.tokens.Add(model.Abstract)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.AbstractTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagStrict) != 0 {
-		v.tokens.Add(model.Strict)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StrictTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagSynthetic) != 0 {
-		v.tokens.Add(model.StartComment)
-		v.tokens.Add(model.CommentSynthetic)
-		v.tokens.Add(model.EndComment)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.StartCommentTkn)
+		v.tokens.Add(model.CommentSyntheticTkn)
+		v.tokens.Add(model.EndCommentTkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 	if (flags & intmod.FlagDefault) != 0 {
-		v.tokens.Add(model.Default2)
-		v.tokens.Add(model.Space)
+		v.tokens.Add(model.Default2Tkn)
+		v.tokens.Add(model.SpaceTkn)
 	}
 }
 

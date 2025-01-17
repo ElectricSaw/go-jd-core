@@ -62,7 +62,7 @@ func (v *PrintTokenVisitor) VisitStartBlockToken(tkn intmod.IStartBlockToken) {
 	v.prepareNewLine()
 	v.printer.PrintText(tkn.Text())
 	v.printer.Indent()
-	if tkn == model.StartResourcesBlock {
+	if tkn == model.StartResourcesBlockTkn {
 		v.printer.Indent()
 	}
 	v.index++
@@ -70,7 +70,7 @@ func (v *PrintTokenVisitor) VisitStartBlockToken(tkn intmod.IStartBlockToken) {
 
 func (v *PrintTokenVisitor) VisitEndBlockToken(tkn intmod.IEndBlockToken) {
 	v.printer.Unindent()
-	if tkn == model.EndResourcesBlock {
+	if tkn == model.EndResourcesBlockTkn {
 		v.printer.Unindent()
 	}
 	v.prepareNewLine()

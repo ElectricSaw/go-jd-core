@@ -55,15 +55,15 @@ func (v *TypeVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {
 	for _, item := range arguments.ToSlice() {
 		tmp = append(tmp, item.(intmod.IType))
 	}
-	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.CommaSpace)
+	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.CommaSpaceTkn)
 }
 
 func (v *TypeVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {}
 
 func (v *TypeVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
-	v.tokens.Add(model.QuestionMarkSpace)
-	v.tokens.Add(model.Extends)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.QuestionMarkSpaceTkn)
+	v.tokens.Add(model.ExtendsTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	typ := argument.Type()
 	typ.AcceptTypeVisitor(v)
@@ -72,31 +72,31 @@ func (v *TypeVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcard
 func (v *TypeVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType) {
 	switch typ.JavaPrimitiveFlags() {
 	case intmod.FlagBoolean:
-		v.tokens.Add(model.Boolean)
+		v.tokens.Add(model.BooleanTkn)
 		break
 	case intmod.FlagChar:
-		v.tokens.Add(model.Char)
+		v.tokens.Add(model.CharTkn)
 		break
 	case intmod.FlagFloat:
-		v.tokens.Add(model.Float)
+		v.tokens.Add(model.FloatTkn)
 		break
 	case intmod.FlagDouble:
-		v.tokens.Add(model.Double)
+		v.tokens.Add(model.DoubleTkn)
 		break
 	case intmod.FlagByte:
-		v.tokens.Add(model.Byte)
+		v.tokens.Add(model.ByteTkn)
 		break
 	case intmod.FlagShort:
-		v.tokens.Add(model.Short)
+		v.tokens.Add(model.ShortTkn)
 		break
 	case intmod.FlagInt:
-		v.tokens.Add(model.Int)
+		v.tokens.Add(model.IntTkn)
 		break
 	case intmod.FlagLong:
-		v.tokens.Add(model.Long)
+		v.tokens.Add(model.LongTkn)
 		break
 	case intmod.FlagVoid:
-		v.tokens.Add(model.Void)
+		v.tokens.Add(model.VoidTkn)
 		break
 	}
 
@@ -127,7 +127,7 @@ func (v *TypeVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {
 		outerType := typ.OuterType()
 
 		outerType.AcceptTypeVisitor(v)
-		v.tokens.Add(model.Dot)
+		v.tokens.Add(model.DotTkn)
 	}
 
 	// Build token for type reference
@@ -149,9 +149,9 @@ func (v *TypeVisitor) VisitInnerObjectType(typ intmod.IInnerObjectType) {
 
 func (v *TypeVisitor) visitTypeArgumentList(arguments intmod.ITypeArgument) {
 	if arguments != nil {
-		v.tokens.Add(model.LeftAngleBracket)
+		v.tokens.Add(model.LeftAngleBracketTkn)
 		arguments.AcceptTypeArgumentVisitor(v)
-		v.tokens.Add(model.RightAngleBracket)
+		v.tokens.Add(model.RightAngleBracketTkn)
 	}
 }
 
@@ -160,10 +160,10 @@ func (v *TypeVisitor) visitDimension(dimension int) {
 	case 0:
 		break
 	case 1:
-		v.tokens.Add(model.Dimension1)
+		v.tokens.Add(model.DimensionTkn1)
 		break
 	case 2:
-		v.tokens.Add(model.Dimension2)
+		v.tokens.Add(model.DimensionTkn2)
 		break
 	default:
 		str := ""
@@ -176,9 +176,9 @@ func (v *TypeVisitor) visitDimension(dimension int) {
 }
 
 func (v *TypeVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
-	v.tokens.Add(model.QuestionMarkSpace)
-	v.tokens.Add(model.Super)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.QuestionMarkSpaceTkn)
+	v.tokens.Add(model.SuperTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	typ := argument.Type()
 	typ.AcceptTypeVisitor(v)
@@ -189,7 +189,7 @@ func (v *TypeVisitor) VisitTypes(types intmod.ITypes) {
 	for _, item := range types.ToSlice() {
 		tmp = append(tmp, item.(intmod.IType))
 	}
-	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.CommaSpace)
+	v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.CommaSpaceTkn)
 }
 
 func (v *TypeVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
@@ -198,9 +198,9 @@ func (v *TypeVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
 
 func (v *TypeVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
 	v.tokens.Add(v.newTextToken(parameter.Identifier()))
-	v.tokens.Add(model.Space)
-	v.tokens.Add(model.Extends)
-	v.tokens.Add(model.Space)
+	v.tokens.Add(model.SpaceTkn)
+	v.tokens.Add(model.ExtendsTkn)
+	v.tokens.Add(model.SpaceTkn)
 
 	types := parameter.TypeBounds()
 	if types.IsList() {
@@ -208,7 +208,7 @@ func (v *TypeVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypePar
 		for _, item := range types.ToSlice() {
 			tmp = append(tmp, item.(intmod.IType))
 		}
-		v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.SpaceAndSpace)
+		v.buildTokensForList(util.NewDefaultListWithSlice(tmp), model.SpaceAndSpaceTkn)
 	} else {
 		typ := types.First()
 		typ.AcceptTypeVisitor(v)
@@ -222,7 +222,7 @@ func (v *TypeVisitor) VisitTypeParameters(parameters intmod.ITypeParameters) {
 		parameters.Get(0).AcceptTypeParameterVisitor(v)
 
 		for i := 1; i < size; i++ {
-			v.tokens.Add(model.CommaSpace)
+			v.tokens.Add(model.CommaSpaceTkn)
 			parameters.Get(i).AcceptTypeParameterVisitor(v)
 		}
 	}
@@ -234,7 +234,7 @@ func (v *TypeVisitor) VisitGenericType(typ intmod.IGenericType) {
 }
 
 func (v *TypeVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
-	v.tokens.Add(model.QuestionMark)
+	v.tokens.Add(model.QuestionMarkTkn)
 }
 
 func (v *TypeVisitor) buildTokensForList(list util.IList[intmod.IType], separator intmod.ITextToken) {

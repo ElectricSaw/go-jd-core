@@ -2,18 +2,17 @@ package model
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"math"
 	"sort"
 )
 
-var Comma = NewTokensFragment(Comma)
-var Semicolon = NewTokensFragment(Semicolon)
-var StartDeclarationOrStatementBlock = NewTokensFragment(StartDeclarationOrStatementBlock)
-var EndDeclarationOrStatementBlock = NewTokensFragment(EndDeclarationOrStatementBlock)
-var EndDeclarationOrStatementBlockSemicolon = NewTokensFragment(EndDeclarationOrStatementBlock, Semicolon)
-var ReturnSemicolon = NewTokensFragment(Return, Semicolon)
+var CommaFrag = NewTokensFragment(&CommaTkn)
+var SemicolonFrag = NewTokensFragment(&SemicolonTkn)
+var StartDeclarationOrStatementBlockFrag = NewTokensFragment(&StartDeclarationOrStatementBlockTkn)
+var EndDeclarationOrStatementBlockFrag = NewTokensFragment(&EndDeclarationOrStatementBlockTkn)
+var EndDeclarationOrStatementBlockSemicolonFrag = NewTokensFragment(&EndDeclarationOrStatementBlockTkn, &SemicolonTkn)
+var ReturnSemicolonFrag = NewTokensFragment(&ReturnTkn, &SemicolonTkn)
 
 func NewImportsFragment(weight int) ImportsFragment {
 	return ImportsFragment{
@@ -31,9 +30,9 @@ func NewImport(internalName string, qualifiedName string) Import {
 	}
 }
 
-func NewLineNumberTokensFragment(tokens ...intmod.IToken) LineNumberTokensFragment {
+func NewLineNumberTokensFragment(tokens ...IToken) LineNumberTokensFragment {
 	frag := LineNumberTokensFragment{
-		Tokens: util.NewDefaultListWithElements[intmod.IToken](tokens...),
+		Tokens: util.NewDefaultListWithElements[IToken](tokens...),
 	}
 	return frag
 }
@@ -42,21 +41,21 @@ func NewStartStatementsBlockFragmentGroup() StartStatementsBlockFragmentGroup {
 	return StartStatementsBlockFragmentGroup{minimalLineCount: math.MaxInt}
 }
 
-func SearchFirstLineNumber(tokens util.IList[intmod.IToken]) int {
+func SearchFirstLineNumber(tokens util.IList[IToken]) int {
 	visitor := NewSearchLineNumberVisitor()
 
 	for _, tkn := range tokens.ToSlice() {
 		tkn.Accept(&visitor)
 
-		if visitor.LineNumber != intmod.UnknownLineNumberToken {
+		if visitor.LineNumber != UnknownLineNumberToken {
 			return visitor.LineNumber - visitor.NewLineCounter
 		}
 	}
 
-	return intmod.UnknownLineNumberToken
+	return UnknownLineNumberToken
 }
 
-func SearchLastLineNumber(tokens util.IList[intmod.IToken]) int {
+func SearchLastLineNumber(tokens util.IList[IToken]) int {
 	visitor := NewSearchLineNumberVisitor()
 	index := tokens.Size()
 
@@ -64,12 +63,12 @@ func SearchLastLineNumber(tokens util.IList[intmod.IToken]) int {
 		index--
 		tokens.Get(index).Accept(&visitor)
 
-		if visitor.LineNumber != intmod.UnknownLineNumberToken {
+		if visitor.LineNumber != UnknownLineNumberToken {
 			return visitor.LineNumber + visitor.NewLineCounter
 		}
 	}
 
-	return intmod.UnknownLineNumberToken
+	return UnknownLineNumberToken
 }
 
 type StartStatementsBlockFragmentGroup struct {
@@ -111,19 +110,19 @@ func NewTokensFragment(tokens ...IToken) TokensFragment {
 	return NewTokensFragmentWithSlice(tokens)
 }
 
-func NewTokensFragmentWithSlice(tokens []intmod.IToken) TokensFragment {
+func NewTokensFragmentWithSlice(tokens []IToken) TokensFragment {
 	return newTokensFragment(getLineCount(tokens), tokens)
 }
 
-func newTokensFragment(lineCount int, tokens []intmod.IToken) TokensFragment {
+func newTokensFragment(lineCount int, tokens []IToken) TokensFragment {
 	return TokensFragment{
 		FlexibleFragment: NewFlexibleFragment(lineCount, lineCount, lineCount,
 			0, "Tokens"),
-		Tokens: util.NewDefaultListWithElements[intmod.IToken](tokens...),
+		Tokens: util.NewDefaultListWithElements[IToken](tokens...),
 	}
 }
 
-func getLineCount(tokens []intmod.IToken) int {
+func getLineCount(tokens []IToken) int {
 	visitor := NewLineCountVisitor()
 
 	for _, tkn := range tokens {
@@ -229,10 +228,10 @@ func (i *Import) String() string {
 type LineNumberTokensFragment struct {
 	FixedFragment
 
-	Tokens util.IList[intmod.IToken]
+	Tokens util.IList[IToken]
 }
 
-func (f *LineNumberTokensFragment) TokenAt(index int) intmod.IToken {
+func (f *LineNumberTokensFragment) TokenAt(index int) IToken {
 	return f.Tokens.Get(index)
 }
 
@@ -243,10 +242,10 @@ func (f *LineNumberTokensFragment) Accept(visitor IJavaFragmentVisitor) {
 type TokensFragment struct {
 	FlexibleFragment
 
-	Tokens util.IList[intmod.IToken]
+	Tokens util.IList[IToken]
 }
 
-func (f *TokensFragment) TokenAt(index int) intmod.IToken {
+func (f *TokensFragment) TokenAt(index int) IToken {
 	return f.Tokens.Get(index)
 }
 

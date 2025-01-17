@@ -39,7 +39,7 @@ func (d *ClassFileToJavaSourceDecompiler) Decompiler(loader api.Loader,
 	msg.Headers["loader"] = loader
 	msg.Headers["printer"] = printer
 
-	return d.DecompilerWithMessage(msg)
+	return d.DecompilerWithMessage(&msg)
 }
 
 func (d *ClassFileToJavaSourceDecompiler) DecompilerWithConfig(loader api.Loader, printer api.Printer,
@@ -51,7 +51,7 @@ func (d *ClassFileToJavaSourceDecompiler) DecompilerWithConfig(loader api.Loader
 	msg.Headers["loader"] = loader
 	msg.Headers["printer"] = printer
 
-	return d.DecompilerWithMessage(msg)
+	return d.DecompilerWithMessage(&msg)
 }
 
 func (d *ClassFileToJavaSourceDecompiler) DecompilerWithMessage(msg *model.Message) error {
