@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewBindTypeArgumentsToTypeArgumentsVisitor() intsrv.IBindTypeArgumentsToTypeArgumentsVisitor {
@@ -27,7 +27,7 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) SetBindings(bindings map[strin
 }
 
 func (v *BindTypeArgumentsToTypeArgumentsVisitor) TypeArgument() intmod.ITypeArgument {
-	if v.result == nil || _type.OtTypeObject == v.result {
+	if v.result == nil || model.OtTypeObject == v.result {
 		return nil
 	}
 	return v.result
@@ -49,7 +49,7 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitTypeArguments(arguments i
 		if i == size {
 			v.result = arguments
 		} else {
-			newTypes := _type.NewTypeArguments()
+			newTypes := model.NewTypeArguments()
 
 			newTypes.AddAll(arguments.ToSlice()[:i])
 			newTypes.Add(v.result)
@@ -75,21 +75,21 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitDiamondTypeArgument(argum
 func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
 	argument.Type().AcceptTypeArgumentVisitor(v)
 
-	if v.result == _type.WildcardTypeArgumentEmpty {
-		v.result = _type.WildcardTypeArgumentEmpty
+	if v.result == model.WildcardTypeArgumentEmpty {
+		v.result = model.WildcardTypeArgumentEmpty
 	} else if v.result == argument.Type() {
 		v.result = argument
-	} else if _type.OtTypeObject == v.result {
-		v.result = _type.WildcardTypeArgumentEmpty
+	} else if model.OtTypeObject == v.result {
+		v.result = model.WildcardTypeArgumentEmpty
 	} else if v.result != nil {
 		v.typeArgumentToTypeVisitor.Init()
 		v.result.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
 		bt := v.typeArgumentToTypeVisitor.Type()
 
-		if _type.OtTypeObject.(intmod.IType) == bt {
-			v.result = _type.WildcardTypeArgumentEmpty
+		if model.OtTypeObject.(intmod.IType) == bt {
+			v.result = model.WildcardTypeArgumentEmpty
 		} else {
-			v.result = _type.NewWildcardExtendsTypeArgument(bt)
+			v.result = model.NewWildcardExtendsTypeArgument(bt)
 		}
 	}
 }
@@ -139,21 +139,21 @@ func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitInnerObjectType(t intmod.
 			typeArguments = v.result
 		}
 
-		v.result = _type.NewInnerObjectTypeWithAll(t.InternalName(), t.QualifiedName(), t.Name(), typeArguments, t.Dimension(), outerObjectType)
+		v.result = model.NewInnerObjectTypeWithAll(t.InternalName(), t.QualifiedName(), t.Name(), typeArguments, t.Dimension(), outerObjectType)
 	}
 }
 
 func (v *BindTypeArgumentsToTypeArgumentsVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
 	argument.Type().AcceptTypeArgumentVisitor(v)
 
-	if v.result == _type.WildcardTypeArgumentEmpty {
-		v.result = _type.WildcardTypeArgumentEmpty
+	if v.result == model.WildcardTypeArgumentEmpty {
+		v.result = model.WildcardTypeArgumentEmpty
 	} else if v.result == argument.Type() {
 		v.result = argument
 	} else if v.result != nil {
 		v.typeArgumentToTypeVisitor.Init()
 		v.result.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
-		v.result = _type.NewWildcardSuperTypeArgument(v.typeArgumentToTypeVisitor.Type())
+		v.result = model.NewWildcardSuperTypeArgument(v.typeArgumentToTypeVisitor.Type())
 	}
 }
 

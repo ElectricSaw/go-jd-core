@@ -1,6 +1,7 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"strings"
 	"unicode"
 
@@ -8,7 +9,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_ "github.com/ElectricSaw/go-jd-core/decompiler/model/classfile"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	_ "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
@@ -22,7 +22,7 @@ func NewInitInnerClassVisitor() intsrv.IInitInnerClassVisitor {
 }
 
 type InitInnerClassVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	updateFieldDeclarationsAndReferencesVisitor UpdateFieldDeclarationsAndReferencesVisitor
 	syntheticInnerFieldNames                    util.DefaultList[string]
@@ -305,7 +305,7 @@ func NewUpdateNewExpressionVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateNe
 }
 
 type UpdateNewExpressionVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	typeMaker                 intsrv.ITypeMaker
 	bodyDeclaration           intsrv.IClassFileBodyDeclaration
@@ -622,7 +622,7 @@ func NewUpdateParametersAndLocalVariablesVisitor(parent *UpdateNewExpressionVisi
 }
 
 type UpdateParametersAndLocalVariablesVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	parent *UpdateNewExpressionVisitor
 	final  bool
@@ -663,7 +663,7 @@ func NewAddLocalClassDeclarationVisitor(parent *UpdateNewExpressionVisitor) ints
 }
 
 type AddLocalClassDeclarationVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	parent                       *UpdateNewExpressionVisitor
 	searchFirstLineNumberVisitor intsrv.ISearchFirstLineNumberVisitor

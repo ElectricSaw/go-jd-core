@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -15,7 +15,7 @@ func NewDeclaredSyntheticLocalVariableVisitor() intsrv.IDeclaredSyntheticLocalVa
 }
 
 type DeclaredSyntheticLocalVariableVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	localVariableReferenceExpressions util.IList[intmod.ILocalVariableReferenceExpression]
 }

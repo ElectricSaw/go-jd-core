@@ -5,10 +5,9 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	modexp "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/cfg"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
@@ -17,7 +16,7 @@ import (
 )
 
 var GlobalFinallyExceptionExpression = modexp.NewNullExpression(
-	_type.NewObjectType("java/lang/Exception",
+	model.NewObjectType("java/lang/Exception",
 		"java.lang.Exception", "Exception"))
 var GlobalMergeTryWithResourcesStatementVisitor = NewMergeTryWithResourcesStatementVisitor()
 
@@ -196,7 +195,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		watchdog.Check(basicBlock, basicBlock.Sub2())
 		exp2 = m.makeExpression(watchdog, basicBlock.Sub2(), statements, jumps)
 		m.stack.Push(modexp.NewBinaryOperatorExpression(basicBlock.FirstLineNumber(),
-			_type.PtTypeBoolean, exp1, "||", exp2, 14))
+			model.PtTypeBoolean, exp1, "||", exp2, 14))
 		break
 	case intsrv.TypeConditionAnd:
 		watchdog.Check(basicBlock, basicBlock.Sub1())
@@ -204,7 +203,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		watchdog.Check(basicBlock, basicBlock.Sub2())
 		exp2 = m.makeExpression(watchdog, basicBlock.Sub2(), statements, jumps)
 		m.stack.Push(modexp.NewBinaryOperatorExpression(basicBlock.FirstLineNumber(),
-			_type.PtTypeBoolean, exp1, "&&", exp2, 13))
+			model.PtTypeBoolean, exp1, "&&", exp2, 13))
 		break
 	case intsrv.TypeConditionTernaryOperator:
 		watchdog.Check(basicBlock, basicBlock.Condition())
@@ -828,7 +827,7 @@ func changeEndLoopToStartLoop(visited util.IBitSet, basicBlock intsrv.IBasicBloc
 }
 
 func (m *StatementMaker) parseTernaryOperator(lineNumber int, condition, exp1, exp2 intmod.IExpression) intmod.IExpression {
-	if _type.OtTypeClass == exp1.Type() && _type.OtTypeClass == exp2.Type() && condition.IsBinaryOperatorExpression() {
+	if model.OtTypeClass == exp1.Type() && model.OtTypeClass == exp2.Type() && condition.IsBinaryOperatorExpression() {
 
 		if condition.LeftExpression().IsFieldReferenceExpression() && condition.RightExpression().IsNullExpression() {
 			freCond := condition.LeftExpression().(intmod.IFieldReferenceExpression)
@@ -882,25 +881,25 @@ func (m *StatementMaker) newTernaryOperatorExpression(lineNumber int,
 			expressionFalseType.(intmod.IPrimitiveType).Flags()
 
 		if (flags & intmod.FlagDouble) != 0 {
-			typ = _type.PtTypeDouble
+			typ = model.PtTypeDouble
 		} else if (flags & intmod.FlagFloat) != 0 {
-			typ = _type.PtTypeFloat
+			typ = model.PtTypeFloat
 		} else if (flags & intmod.FlagLong) != 0 {
-			typ = _type.PtTypeLong
+			typ = model.PtTypeLong
 		} else {
 			flags = expressionTrueType.(intmod.IPrimitiveType).Flags() &
 				expressionFalseType.(intmod.IPrimitiveType).Flags()
 
 			if (flags & intmod.FlagInt) != 0 {
-				typ = _type.PtTypeInt
+				typ = model.PtTypeInt
 			} else if (flags & intmod.FlagShort) != 0 {
-				typ = _type.PtTypeShort
+				typ = model.PtTypeShort
 			} else if (flags & intmod.FlagChar) != 0 {
-				typ = _type.PtTypeChar
+				typ = model.PtTypeChar
 			} else if (flags & intmod.FlagByte) != 0 {
-				typ = _type.PtTypeByte
+				typ = model.PtTypeByte
 			} else {
-				typ = _type.PtMaybeBooleanType
+				typ = model.PtMaybeBooleanType
 			}
 		}
 	} else if expressionTrueType.IsObjectType() && expressionFalseType.IsObjectType() {
@@ -912,10 +911,10 @@ func (m *StatementMaker) newTernaryOperatorExpression(lineNumber int,
 		} else if m.typeMaker.IsAssignable(m.typeBounds, ot2, ot1) {
 			typ = m.getTernaryOperatorExpressionType(ot2, ot1)
 		} else {
-			typ = _type.OtTypeUndefinedObject
+			typ = model.OtTypeUndefinedObject
 		}
 	} else {
-		typ = _type.OtTypeUndefinedObject
+		typ = model.OtTypeUndefinedObject
 	}
 
 	return modexp.NewTernaryOperatorExpressionWithAll(lineNumber, typ, condition, expressionTrue, expressionFalse)
@@ -1024,7 +1023,7 @@ func NewStatementMakerMemberVisitor() *StatementMakerMemberVisitor {
 }
 
 type StatementMakerMemberVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	name  string
 	found bool

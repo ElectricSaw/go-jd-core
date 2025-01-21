@@ -2,11 +2,11 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 type AbstractUpdateExpressionVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 }
 
 func (v *AbstractUpdateExpressionVisitor) UpdateExpression(_ intmod.IExpression) intmod.IExpression {

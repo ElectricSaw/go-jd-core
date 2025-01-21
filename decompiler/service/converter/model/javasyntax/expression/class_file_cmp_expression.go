@@ -3,8 +3,8 @@ package expression
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 )
 
 func NewClassFileCmpExpression(lineNumber int, leftExpress, rightExpression intmod.IExpression) intsrv.IClassFileCmpExpression {

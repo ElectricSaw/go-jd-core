@@ -1,12 +1,12 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"strings"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
@@ -19,7 +19,7 @@ func NewCreateInstructionsVisitor(typeMaker intsrv.ITypeMaker) intsrv.ICreateIns
 }
 
 type CreateInstructionsVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	typeMaker intsrv.ITypeMaker
 }

@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -16,7 +16,7 @@ func NewInitEnumVisitor() intsrv.IInitEnumVisitor {
 }
 
 type InitEnumVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	bodyDeclaration         intsrv.IClassFileBodyDeclaration
 	constantBodyDeclaration intmod.IBodyDeclaration

@@ -3,6 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 )
 
@@ -81,12 +82,12 @@ func (v *BindTypesToTypesVisitor) VisitInnerObjectType(t intmod.IInnerObjectType
 			typeArguments.AcceptTypeArgumentVisitor(v.bindTypeArgumentsToTypeArgumentsVisitor)
 			typeArguments = v.bindTypeArgumentsToTypeArgumentsVisitor.TypeArgument()
 
-			if _type.WildcardTypeArgumentEmpty == typeArguments {
+			if model.WildcardTypeArgumentEmpty == typeArguments {
 				typeArguments = nil
 			}
 		}
 
-		v.result = _type.NewInnerObjectTypeWithAll(t.InternalName(), t.QualifiedName(),
+		v.result = model.NewInnerObjectTypeWithAll(t.InternalName(), t.QualifiedName(),
 			t.Name(), typeArguments, t.Dimension(), outerObjectType).(intmod.IType)
 	}
 }
@@ -95,9 +96,9 @@ func (v *BindTypesToTypesVisitor) VisitGenericType(t intmod.IGenericType) {
 	ta := v.bindings[t.Name()]
 
 	if ta == nil {
-		v.result = _type.OtTypeObject.CreateType(t.Dimension())
-	} else if ta == _type.WildcardTypeArgumentEmpty {
-		v.result = _type.OtTypeObject.CreateType(t.Dimension())
+		v.result = model.OtTypeObject.CreateType(t.Dimension())
+	} else if ta == model.WildcardTypeArgumentEmpty {
+		v.result = model.OtTypeObject.CreateType(t.Dimension())
 	} else {
 		v.typeArgumentToTypeVisitor.Init()
 		ta.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
@@ -121,7 +122,7 @@ func (v *BindTypesToTypesVisitor) VisitTypes(types intmod.ITypes) {
 	if i == size {
 		v.result = types
 	} else {
-		newTypes := _type.NewTypes()
+		newTypes := model.NewTypes()
 		newTypes.AddAll(types.ToSlice()[:i])
 		newTypes.Add(v.result)
 

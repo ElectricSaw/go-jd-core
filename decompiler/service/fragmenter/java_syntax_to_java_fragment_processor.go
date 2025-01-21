@@ -3,7 +3,6 @@ package fragmenter
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter/visitor"
 )
 
@@ -18,7 +17,7 @@ func (p *JavaSyntaxToJavaFragmentProcessor) Process(message *model.Message) erro
 	loader := message.Headers["loader"].(api.Loader)
 	mainInternalTypeName := message.Headers["mainInternalTypeName"].(string)
 	majorVersion := message.Headers["majorVersion"].(int)
-	compilationUnit := message.Body.(*javasyntax.CompilationUnit)
+	compilationUnit := message.Body.(*model.CompilationUnit)
 
 	importsVisitor := visitor.NewSearchImportsVisitor(loader, mainInternalTypeName)
 	importsVisitor.VisitCompilationUnit(compilationUnit)

@@ -3,11 +3,10 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/constant"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 )
 
 func NewUpdateOuterFieldTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateOuterFieldTypeVisitor {
@@ -18,7 +17,7 @@ func NewUpdateOuterFieldTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateO
 }
 
 type UpdateOuterFieldTypeVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	typeMaker          intsrv.ITypeMaker
 	searchFieldVisitor intsrv.ISearchFieldVisitor
@@ -82,13 +81,13 @@ func (v *UpdateOuterFieldTypeVisitor) VisitConstructorDeclaration(decl intmod.IC
 						var typeArguments intmod.ITypeArgument
 
 						if typeTypes.TypeParameters().IsList() {
-							tas := _type.NewTypeArgumentsWithCapacity(typeTypes.TypeParameters().Size())
+							tas := model.NewTypeArgumentsWithCapacity(typeTypes.TypeParameters().Size())
 							for _, typeParameter := range typeTypes.TypeParameters().ToSlice() {
-								tas.Add(_type.NewGenericType(typeParameter.Identifier()))
+								tas.Add(model.NewGenericType(typeParameter.Identifier()))
 							}
 							typeArguments = tas
 						} else {
-							typeArguments = _type.NewGenericType(typeTypes.TypeParameters().First().Identifier())
+							typeArguments = model.NewGenericType(typeTypes.TypeParameters().First().Identifier())
 						}
 
 						// Update generic type of outer field reference
@@ -126,7 +125,7 @@ func NewSearchFieldVisitor() intsrv.ISearchFieldVisitor {
 }
 
 type SearchFieldVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	name  string
 	found bool

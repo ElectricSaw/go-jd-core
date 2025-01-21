@@ -2,7 +2,7 @@ package reference
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewObjectReference(internalName, qualifiedName, name string) intmod.IObjectReference {

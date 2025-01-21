@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewBindTypeParametersToNonWildcardTypeArgumentsVisitor() intsrv.IBindTypeParametersToNonWildcardTypeArgumentsVisitor {

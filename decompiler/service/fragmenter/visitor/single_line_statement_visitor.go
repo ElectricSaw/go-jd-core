@@ -2,7 +2,7 @@ package visitor
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -15,7 +15,7 @@ func NewSingleLineStatementVisitor() *SingleLineStatementVisitor {
 }
 
 type SingleLineStatementVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	minLineNumber  int
 	maxLineNumber  int

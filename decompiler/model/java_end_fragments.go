@@ -79,6 +79,7 @@ func NewEndStatementsBlockFragment(minimalLineCount, lineCount, maximalLineCount
 
 type IJavaFragment interface {
 	Accept(visitor IJavaFragmentVisitor)
+	String() string
 }
 
 type IJavaFragmentVisitor interface {

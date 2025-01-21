@@ -7,8 +7,6 @@ import (
 
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -190,7 +188,7 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 
 		// Build v.fragments for super type
 		superType := declaration.SuperType()
-		if superType != nil && superType != _type.OtTypeObject {
+		if superType != nil && superType != model.OtTypeObject {
 			v.fragments.AddTokensFragment(v.tokens)
 			fragutil.AddSpacerBeforeExtends(v.fragments)
 
@@ -253,7 +251,7 @@ func (v *CompilationUnitVisitor) VisitClassDeclaration(declaration intmod.IClass
 	}
 }
 
-func (v *CompilationUnitVisitor) VisitCompilationUnit(compilationUnit *javasyntax.CompilationUnit) {
+func (v *CompilationUnitVisitor) VisitCompilationUnit(compilationUnit *model.CompilationUnit) {
 	// Init
 	v.fragments.Clear()
 	v.contextStack.Clear()
@@ -1374,7 +1372,7 @@ func NewAnnotationVisitor(parent *CompilationUnitVisitor) *AnnotationVisitor {
 }
 
 type AnnotationVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	parent *CompilationUnitVisitor
 }

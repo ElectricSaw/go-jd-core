@@ -3,11 +3,10 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	moddec "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -21,7 +20,7 @@ func NewInitStaticFieldVisitor() intsrv.IInitStaticFieldVisitor {
 }
 
 type InitStaticFieldVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	searchFirstLineNumberVisitor        intsrv.ISearchFirstLineNumberVisitor
 	searchLocalVariableReferenceVisitor intsrv.ISearchLocalVariableReferenceVisitor
@@ -177,7 +176,7 @@ func (v *InitStaticFieldVisitor) isAssertionsDisabledStatement(state intmod.ISta
 	if expr.LeftExpression().IsFieldReferenceExpression() {
 		fre := expr.LeftExpression().(intmod.IFieldReferenceExpression)
 
-		if fre.Type() == _type.PtTypeBoolean &&
+		if fre.Type() == model.PtTypeBoolean &&
 			fre.InternalTypeName() == v.internalTypeName &&
 			fre.Name() == "$assertionsDisabled" {
 			return true

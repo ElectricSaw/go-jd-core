@@ -2,9 +2,9 @@ package utils
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"strings"
 )

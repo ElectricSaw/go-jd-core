@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
@@ -24,7 +24,7 @@ func NewUpdateJavaSyntaxTreeStep2Visitor(typeMaker intsrv.ITypeMaker) intsrv.IUp
 }
 
 type UpdateJavaSyntaxTreeStep2Visitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	initStaticFieldVisitor          intsrv.IInitStaticFieldVisitor
 	initInstanceFieldVisitor        intsrv.IInitInstanceFieldVisitor

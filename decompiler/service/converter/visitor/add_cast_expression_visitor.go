@@ -3,10 +3,9 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -18,7 +17,7 @@ func NewAddCastExpressionVisitor(typeMaker intsrv.ITypeMaker) intsrv.IAddCastExp
 }
 
 type AddCastExpressionVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	searchFirstLineNumberVisitor intsrv.ISearchFirstLineNumberVisitor
 	typeMaker                    intsrv.ITypeMaker
@@ -125,7 +124,7 @@ func (v *AddCastExpressionVisitor) VisitLambdaIdentifiersExpression(expression i
 	if statements != nil {
 		rt := v.returnedType
 
-		v.returnedType = _type.OtTypeObject.(intmod.IType)
+		v.returnedType = model.OtTypeObject.(intmod.IType)
 		statements.AcceptStatement(v)
 		v.returnedType = rt
 	}
@@ -317,17 +316,17 @@ func (v *AddCastExpressionVisitor) updateParameters(types intmod.IType, expressi
 func (v *AddCastExpressionVisitor) updateParameter(typ intmod.IType, expr intmod.IExpression, forceCast bool, unique bool) intmod.IExpression {
 	expr = v.updateExpression(typ, expr, forceCast, unique)
 
-	if typ == _type.PtTypeByte {
+	if typ == model.PtTypeByte {
 		if expr.IsIntegerConstantExpression() {
-			expr = expression.NewCastExpression(_type.PtTypeByte, expr)
+			expr = expression.NewCastExpression(model.PtTypeByte, expr)
 		} else if expr.IsTernaryOperatorExpression() {
 			exp := expr.TrueExpression()
 			if exp.IsIntegerConstantExpression() || exp.IsTernaryOperatorExpression() {
-				expr = expression.NewCastExpression(_type.PtTypeByte, expr)
+				expr = expression.NewCastExpression(model.PtTypeByte, expr)
 			} else {
 				exp = expr.FalseExpression()
 				if exp.IsIntegerConstantExpression() || exp.IsTernaryOperatorExpression() {
-					expr = expression.NewCastExpression(_type.PtTypeByte, expr)
+					expr = expression.NewCastExpression(model.PtTypeByte, expr)
 				}
 			}
 		}
@@ -359,7 +358,7 @@ func (v *AddCastExpressionVisitor) updateExpression(typ intmod.IType, expr intmo
 							ne.SetObjectType(ne.ObjectType().CreateTypeWithArgs(nil))
 						}
 						expr = v.addCastExpression(objectType.(intmod.IType), expr)
-					} else if _type.OtTypeObject.(intmod.IType) != typ && !v.typeMaker.IsAssignable(v.typeBounds, objectType, expressionObjectType) {
+					} else if model.OtTypeObject.(intmod.IType) != typ && !v.typeMaker.IsAssignable(v.typeBounds, objectType, expressionObjectType) {
 						ta1 := objectType.TypeArguments()
 						ta2 := expressionObjectType.TypeArguments()
 						t := typ
@@ -370,7 +369,7 @@ func (v *AddCastExpressionVisitor) updateExpression(typ intmod.IType, expr intmo
 						}
 						expr = v.addCastExpression(t, expr)
 					}
-				} else if expressionType.IsGenericType() && _type.OtTypeObject.(intmod.IType) != typ {
+				} else if expressionType.IsGenericType() && model.OtTypeObject.(intmod.IType) != typ {
 					expr = v.addCastExpression(typ, expr)
 				}
 			} else if typ.IsGenericType() {

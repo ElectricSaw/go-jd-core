@@ -239,6 +239,10 @@ func (f *LineNumberTokensFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitLineNumberTokensFragment(f)
 }
 
+func (f *LineNumberTokensFragment) String() string {
+	return fmt.Sprintf("LineNumberTokensFragment { %s, tokens: %d }", f.FixedFragment.String(), f.Tokens.Size())
+}
+
 type TokensFragment struct {
 	FlexibleFragment
 
@@ -251,4 +255,8 @@ func (f *TokensFragment) TokenAt(index int) IToken {
 
 func (f *TokensFragment) Accept(visitor IJavaFragmentVisitor) {
 	visitor.VisitTokensFragment(f)
+}
+
+func (f *TokensFragment) String() string {
+	return fmt.Sprintf("TokensFragment { %s, tokens: %d }", f.FlexibleFragment.String(), f.Tokens.Size())
 }

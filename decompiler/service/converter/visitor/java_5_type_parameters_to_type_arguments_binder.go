@@ -3,8 +3,8 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	modexp "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -62,7 +62,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) NewConstructorInvocationExpre
 	methodTypeParameters := methodTypes.TypeParameters()
 
 	v.populateBindings(bindings, nil, nil, nil,
-		methodTypeParameters, _type.OtTypeObject, nil, nil, nil)
+		methodTypeParameters, model.OtTypeObject, nil, nil, nil)
 
 	parameterTypes = v.bind(bindings, parameterTypes)
 	v.bindParameters(parameterTypes, parameters)
@@ -88,7 +88,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) NewSuperConstructorInvocation
 			methodTypeParameters := methodTypes.TypeParameters()
 
 			v.populateBindings(bindings, nil, typeParameters, typeArguments,
-				methodTypeParameters, _type.OtTypeObject, nil, nil, nil)
+				methodTypeParameters, model.OtTypeObject, nil, nil, nil)
 		}
 	}
 
@@ -129,7 +129,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) NewFieldReferenceExpression(
 						typeParameters := typeTypes.TypeParameters()
 						typeArguments := expressionObjectType.TypeArguments()
 						partialBinding := v.populateBindings(bindings, expr, typeParameters,
-							typeArguments, nil, _type.OtTypeObject,
+							typeArguments, nil, model.OtTypeObject,
 							nil, nil, nil)
 
 						if !partialBinding {
@@ -230,7 +230,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) populateBindings(
 		methodTypeParameters.AcceptTypeParameterVisitor(v.populateBindingsWithTypeParameterVisitor)
 	}
 
-	if !(_type.OtTypeObject == returnType) && returnExpressionType != nil {
+	if !(model.OtTypeObject == returnType) && returnExpressionType != nil {
 		v.populateBindingsWithTypeArgumentVisitor.Init(v.contextualTypeBounds, bindings, typeBounds, returnType)
 		returnExpressionType.AcceptTypeArgumentVisitor(v.populateBindingsWithTypeArgumentVisitor)
 	}
@@ -261,7 +261,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) populateBindings(
 					baseType := typeBounds[key]
 
 					if baseType == nil {
-						bindings[key] = _type.WildcardTypeArgumentEmpty
+						bindings[key] = model.WildcardTypeArgumentEmpty
 					} else {
 						v.bindTypesToTypesVisitor.SetBindings(bindings)
 						v.bindTypesToTypesVisitor.Init()
@@ -298,7 +298,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) populateBindingsWithTypeArgum
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType, typ intmod.IType, expr intmod.IExpression) {
 	t := v.getExpressionType(expr)
 
-	if (t != nil) && (t != _type.OtTypeUndefinedObject) {
+	if (t != nil) && (t != model.OtTypeUndefinedObject) {
 		v.populateBindingsWithTypeArgumentVisitor.Init(v.contextualTypeBounds, bindings, typeBounds, t)
 		v.typ.AcceptTypeArgumentVisitor(v.populateBindingsWithTypeArgumentVisitor)
 	}
@@ -445,7 +445,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) VisitMethodInvocationExpressi
 						if exp.IsObjectTypeReferenceExpression() || (typeParameters == nil) {
 							expressionType = expressionObjectType.CreateTypeWithArgs(nil)
 						} else if typeParameters.IsList() {
-							tas := _type.NewTypeArgumentsWithCapacity(typeParameters.Size())
+							tas := model.NewTypeArgumentsWithCapacity(typeParameters.Size())
 							for _, typeParameter := range typeParameters.ToSlice() {
 								tas.Add(bindings[typeParameter.Identifier()])
 							}
@@ -456,11 +456,11 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) VisitMethodInvocationExpressi
 					}
 				} else if expressionType.IsGenericType() {
 					if len(bindings) == 0 || partialBinding {
-						expressionType = _type.OtTypeObject
+						expressionType = model.OtTypeObject
 					} else {
 						typeArgument := bindings[expressionType.Name()]
 						if typeArgument == nil {
-							expressionType = _type.OtTypeObject
+							expressionType = model.OtTypeObject
 						} else {
 							v.typeArgumentToTypeVisitor.Init()
 							typeArgument.AcceptTypeArgumentVisitor(v.typeArgumentToTypeVisitor)
@@ -505,13 +505,13 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) VisitNewExpression(expr intmo
 
 				if (typeParameters != nil) && (typeArguments == nil) {
 					if typeParameters.IsList() {
-						tas := _type.NewTypeArgumentsWithCapacity(typeParameters.Size())
+						tas := model.NewTypeArgumentsWithCapacity(typeParameters.Size())
 						for _, typeParameter := range typeParameters.ToSlice() {
-							tas.Add(_type.NewGenericType(typeParameter.Identifier()))
+							tas.Add(model.NewGenericType(typeParameter.Identifier()))
 						}
 						neObjectType = neObjectType.CreateTypeWithArgs(tas)
 					} else {
-						neObjectType = neObjectType.CreateTypeWithArgs(_type.NewGenericType(typeParameters.First().Identifier()))
+						neObjectType = neObjectType.CreateTypeWithArgs(model.NewGenericType(typeParameters.First().Identifier()))
 					}
 				}
 
@@ -556,7 +556,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) VisitCastExpression(expr intm
 	if v.typ.IsObjectType() {
 		objectType := v.typ.(intmod.IObjectType)
 
-		if objectType.TypeArguments() != nil && !(objectType.TypeArguments() == _type.WildcardTypeArgumentEmpty) {
+		if objectType.TypeArguments() != nil && !(objectType.TypeArguments() == model.WildcardTypeArgumentEmpty) {
 			// assert expr.Type().IsObjectType() : "TypeParametersToTypeArgumentsBinder.visit(CastExpression ce) : invalid object type";
 
 			expressionObjectType := expr.Type().(intmod.IObjectType)
@@ -593,8 +593,8 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) VisitTernaryOperatorExpressio
 }
 
 func (v *Java5TypeParametersToTypeArgumentsBinder) VisitBinaryOperatorExpression(expr intmod.IBinaryOperatorExpression) {
-	if expr.Type() == _type.OtTypeString && "+" == expr.Operator() {
-		v.typ = _type.OtTypeObject
+	if expr.Type() == model.OtTypeString && "+" == expr.Operator() {
+		v.typ = model.OtTypeObject
 	}
 
 	t := v.typ

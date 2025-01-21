@@ -3,6 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 )
@@ -30,11 +31,11 @@ func (v *TypeArgumentToTypeVisitor) VisitTypes(_ intmod.ITypes) {
 }
 
 func (v *TypeArgumentToTypeVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {
-	v.typ = _type.OtTypeObject
+	v.typ = model.OtTypeObject
 }
 
 func (v *TypeArgumentToTypeVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
-	v.typ = _type.OtTypeObject
+	v.typ = model.OtTypeObject
 }
 
 func (v *TypeArgumentToTypeVisitor) VisitPrimitiveType(typ intmod.IPrimitiveType) {
@@ -63,7 +64,7 @@ func (v *TypeArgumentToTypeVisitor) VisitWildcardSuperTypeArgument(argument intm
 
 func (v *TypeArgumentToTypeVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {
 	if arguments.IsEmpty() {
-		v.typ = _type.OtTypeUndefinedObject
+		v.typ = model.OtTypeUndefinedObject
 	} else {
 		arguments.First().AcceptTypeArgumentVisitor(v)
 	}

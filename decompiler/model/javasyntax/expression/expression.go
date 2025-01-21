@@ -2,7 +2,7 @@ package expression
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 

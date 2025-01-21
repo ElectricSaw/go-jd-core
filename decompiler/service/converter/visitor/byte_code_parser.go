@@ -4,11 +4,10 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	modexp "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
@@ -104,13 +103,13 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		switch opcode {
 		case 0: // NOP
 		case 1: // ACONST_nil
-			stack.Push(modexp.NewNullExpressionWithAll(lineNumber, _type.OtTypeUndefinedObject))
+			stack.Push(modexp.NewNullExpressionWithAll(lineNumber, model.OtTypeUndefinedObject))
 		case 2: // ICONST_M1
-			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, _type.PtMaybeNegativeByteType, -1))
+			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, model.PtMaybeNegativeByteType, -1))
 		case 3, 4: // ICONST_0, ICONST_1
-			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, _type.PtMaybeBooleanType, opcode-3))
+			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, model.PtMaybeBooleanType, opcode-3))
 		case 5, 6, 7, 8: // ICONST_2 ... ICONST_5
-			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, _type.PtMaybeByteType, opcode-3))
+			stack.Push(modexp.NewIntegerConstantExpressionWithAll(lineNumber, model.PtMaybeByteType, opcode-3))
 		case 9, 10: // LCONST_0, LCONST_1
 			stack.Push(modexp.NewLongConstantExpressionWithAll(lineNumber, int64(opcode-9)))
 		case 11, 12, 13: // FCONST_0, FCONST_1, FCONST_2
@@ -214,21 +213,21 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			statements.Add(modsts.NewExpressionStatement(
-				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong,
+				modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
 		case 81: // FASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			statements.Add(modsts.NewExpressionStatement(
-				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat,
+				modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
 		case 82: // DASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			statements.Add(modsts.NewExpressionStatement(
-				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble,
+				modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
 		case 83: // AASTORE
 			valueRef = stack.Pop()
@@ -249,26 +248,26 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			statements.Add(modsts.NewExpressionStatement(
-				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeByte,
+				modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeByte,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
 		case 85: // CASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			statements.Add(modsts.NewExpressionStatement(
-				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeChar,
+				modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeChar,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
 		case 86: // SASTORE
 			valueRef = stack.Pop()
 			indexRef = stack.Pop()
 			arrayRef = stack.Pop()
 			statements.Add(modsts.NewExpressionStatement(
-				modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeShort,
+				modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeShort,
 					modexp.NewArrayExpressionWithAll(lineNumber, arrayRef, indexRef), "=", valueRef, 16)))
 		case 87, 88: // POP, POP2
 			expression1 = stack.Pop()
 			if !expression1.IsLocalVariableReferenceExpression() && !expression1.IsFieldReferenceExpression() {
-				p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(_type.OtTypeObject, expression1)
+				p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(model.OtTypeObject, expression1)
 				statements.Add(modsts.NewExpressionStatement(expression1))
 			}
 		case 89: // DUP : ..., value => ..., value, value
@@ -285,7 +284,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
 			type2 = expression2.Type()
-			if _type.PtTypeLong == type2 || _type.PtTypeDouble == type2 {
+			if model.PtTypeLong == type2 || model.PtTypeDouble == type2 {
 				// ..., value2, value1 => ..., value1, value2, value1
 				stack.Push(expression1)
 				stack.Push(expression2)
@@ -301,7 +300,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 92: // DUP2
 			expression1 = stack.Pop()
 			type1 = expression1.Type()
-			if _type.PtTypeLong == type1 || _type.PtTypeDouble == type1 {
+			if model.PtTypeLong == type1 || model.PtTypeDouble == type1 {
 				// ..., value => ..., value, value
 				stack.Push(expression1)
 				stack.Push(expression1)
@@ -317,7 +316,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
 			type1 = expression1.Type()
-			if _type.PtTypeLong == type1 || _type.PtTypeDouble == type1 {
+			if model.PtTypeLong == type1 || model.PtTypeDouble == type1 {
 				// ..., value2, value1 => ..., value1, value2, value1
 				stack.Push(expression1)
 				stack.Push(expression2)
@@ -335,10 +334,10 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			expression1 = stack.Pop()
 			expression2 = stack.Pop()
 			type1 = expression1.Type()
-			if _type.PtTypeLong == type1 || _type.PtTypeDouble == type1 {
+			if model.PtTypeLong == type1 || model.PtTypeDouble == type1 {
 				type2 = expression2.Type()
 
-				if _type.PtTypeLong == type2 || _type.PtTypeDouble == type2 {
+				if model.PtTypeLong == type2 || model.PtTypeDouble == type2 {
 					// ..., value2, value1 => ..., value1, value2, value1
 					stack.Push(expression1)
 					stack.Push(expression2)
@@ -355,7 +354,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				expression3 = stack.Pop()
 				type3 = expression3.Type()
 
-				if _type.PtTypeLong == type3 || _type.PtTypeDouble == type3 {
+				if model.PtTypeLong == type3 || model.PtTypeDouble == type3 {
 					// ..., value3, value2, value1 => ..., value2, value1, value3, value2, value1
 					stack.Push(expression2)
 					stack.Push(expression1)
@@ -385,15 +384,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 97: // LADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "+", expression2, 6))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "+", expression2, 6))
 		case 98: // FADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "+", expression2, 6))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat, expression1, "+", expression2, 6))
 		case 99: // DADD
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "+", expression2, 6))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble, expression1, "+", expression2, 6))
 		case 100: // ISUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -401,15 +400,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 101: // LSUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "-", expression2, 6))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "-", expression2, 6))
 		case 102: // FSUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "-", expression2, 6))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat, expression1, "-", expression2, 6))
 		case 103: // DSUB
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "-", expression2, 6))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble, expression1, "-", expression2, 6))
 		case 104: // IMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -417,15 +416,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 105: // LMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "*", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "*", expression2, 5))
 		case 106: // FMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "*", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat, expression1, "*", expression2, 5))
 		case 107: // DMUL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "*", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble, expression1, "*", expression2, 5))
 		case 108: // IDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -433,15 +432,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 109: // LDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "/", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "/", expression2, 5))
 		case 110: // FDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "/", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat, expression1, "/", expression2, 5))
 		case 111: // DDIV
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "/", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble, expression1, "/", expression2, 5))
 		case 112: // IREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -449,15 +448,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 113: // LREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "%", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "%", expression2, 5))
 		case 114: // FREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat, expression1, "%", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat, expression1, "%", expression2, 5))
 		case 115: // DREM
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble, expression1, "%", expression2, 5))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble, expression1, "%", expression2, 5))
 		case 116, 117, 118, 119: // INEG, LNEG, FNEG, DNEG
 			stack.Push(p.newPreArithmeticOperatorExpression(lineNumber, "-", stack.Pop()))
 		case 120: // ISHL
@@ -467,15 +466,15 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 121: // LSHL
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "<<", expression2, 7))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "<<", expression2, 7))
 		case 122: // ISHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeInt, expression1, ">>", expression2, 7))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeInt, expression1, ">>", expression2, 7))
 		case 123: // LSHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, ">>", expression2, 7))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, ">>", expression2, 7))
 		case 124: // IUSHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -483,7 +482,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 125: // LUSHR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, ">>>", expression2, 7))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, ">>>", expression2, 7))
 		case 126: // IAND
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -491,7 +490,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 127: // LAND
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "&", expression2, 10))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "&", expression2, 10))
 		case 128: // IOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -499,7 +498,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 129: // LOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "|", expression2, 12))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "|", expression2, 12))
 		case 130: // IXOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -507,42 +506,42 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 		case 131: // LXOR
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong, expression1, "^", expression2, 11))
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong, expression1, "^", expression2, 11))
 		case 132: // IINC
 			value, offset = utils.PrefixReadInt8(code, offset)
 			localVariable = p.localVariableMaker.LocalVariable(value, offset)
 			value, offset = utils.PrefixReadInt8(code, offset)
 			p.parseIINC(statements, stack, lineNumber, offset, localVariable, value)
 		case 133: // I2L
-			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeLong, stack.Pop(), false))
+			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, model.PtTypeLong, stack.Pop(), false))
 		case 134: // I2F
-			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeFloat, stack.Pop(), false))
+			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, model.PtTypeFloat, stack.Pop(), false))
 		case 135: // I2D
-			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeDouble, stack.Pop(), false))
+			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, model.PtTypeDouble, stack.Pop(), false))
 		case 136: // L2I
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
 		case 137: // L2F
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeFloat, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeFloat, forceExplicitCastExpression(stack.Pop())))
 		case 138: // L2D
-			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeDouble, stack.Pop(), false))
+			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, model.PtTypeDouble, stack.Pop(), false))
 		case 139: // F2I
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
 		case 140: // F2L
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeLong, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeLong, forceExplicitCastExpression(stack.Pop())))
 		case 141: // F2D
-			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, _type.PtTypeDouble, stack.Pop(), false))
+			stack.Push(modexp.NewCastExpressionWithAll(lineNumber, model.PtTypeDouble, stack.Pop(), false))
 		case 142: // D2I
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeInt, forceExplicitCastExpression(stack.Pop())))
 		case 143: // D2L
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeLong, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeLong, forceExplicitCastExpression(stack.Pop())))
 		case 144: // D2F
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeFloat, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeFloat, forceExplicitCastExpression(stack.Pop())))
 		case 145: // I2B
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeByte, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeByte, forceExplicitCastExpression(stack.Pop())))
 		case 146: // I2C
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeChar, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeChar, forceExplicitCastExpression(stack.Pop())))
 		case 147: // I2S
-			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, _type.PtTypeShort, forceExplicitCastExpression(stack.Pop())))
+			stack.Push(modexp.NewCastExpressionWithLineNumber(lineNumber, model.PtTypeShort, forceExplicitCastExpression(stack.Pop())))
 		case 148, 149, 150, 151, 152: // LCMP, FCMPL, FCMPG, DCMPL, DCMPG
 			expression2 = stack.Pop()
 			expression1 = stack.Pop()
@@ -674,8 +673,8 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				expression1 = p.typeParametersToTypeArgumentsBinder.NewMethodInvocationExpression(
 					lineNumber, modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, ot),
 					ot, name, descriptor, methodTypes, parameters)
-				if _type.PtTypeVoid == methodTypes.ReturnedType() {
-					p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(_type.OtTypeObject, expression1)
+				if model.PtTypeVoid == methodTypes.ReturnedType() {
+					p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(model.OtTypeObject, expression1)
 					statements.Add(modsts.NewExpressionStatement(expression1))
 				} else {
 					stack.Push(expression1)
@@ -689,7 +688,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 				if opcode == 185 { // INVOKEINTERFACE
 					offset += 2 // Skip 'count' and one byte
 				}
-				if _type.PtTypeVoid == methodTypes.ReturnedType() {
+				if model.PtTypeVoid == methodTypes.ReturnedType() {
 					if opcode == 183 && // INVOKESPECIAL
 						"<init>" == name {
 
@@ -709,7 +708,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 						expression1 = p.typeParametersToTypeArgumentsBinder.NewMethodInvocationExpression(
 							lineNumber, p.getMethodInstanceReference(expression1, ot, name, descriptor),
 							ot, name, descriptor, methodTypes, parameters)
-						p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(_type.OtTypeObject, expression1)
+						p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(model.OtTypeObject, expression1)
 						statements.Add(modsts.NewExpressionStatement(expression1))
 					}
 				} else {
@@ -749,10 +748,10 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			} else {
 				type1 = p.typeMaker.MakeFromInternalTypeName(typeName).CreateType(1)
 			}
-			if strings.HasSuffix(typeName, _type.OtTypeClass.InternalName()) {
+			if strings.HasSuffix(typeName, model.OtTypeClass.InternalName()) {
 				ot = type1.(intmod.IObjectType)
 				if ot.TypeArguments() == nil {
-					type1 = ot.CreateTypeWithArgs(_type.WildcardTypeArgumentEmpty)
+					type1 = ot.CreateTypeWithArgs(model.WildcardTypeArgumentEmpty)
 				}
 			}
 			stack.Push(modexp.NewNewArray(lineNumber, type1, stack.Pop()))
@@ -816,21 +815,21 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 					valueRef = stack.Pop()
 					localVariable = p.getLocalVariableInAssignment(i, offset+4, valueRef)
 					statements.Add(modsts.NewExpressionStatement(
-						modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeLong,
+						modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeLong,
 							srvexp.NewClassFileLocalVariableReferenceExpression(
 								lineNumber, offset, localVariable), "=", valueRef, 16)))
 				case 56: // FSTORE
 					valueRef = stack.Pop()
 					localVariable = p.getLocalVariableInAssignment(i, offset+4, valueRef)
 					statements.Add(modsts.NewExpressionStatement(
-						modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeFloat,
+						modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeFloat,
 							srvexp.NewClassFileLocalVariableReferenceExpression(
 								lineNumber, offset, localVariable), "=", valueRef, 16)))
 				case 57: // DSTORE
 					valueRef = stack.Pop()
 					localVariable = p.getLocalVariableInAssignment(i, offset+4, valueRef)
 					statements.Add(modsts.NewExpressionStatement(
-						modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeDouble,
+						modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeDouble,
 							srvexp.NewClassFileLocalVariableReferenceExpression(
 								lineNumber, offset, localVariable), "=", valueRef, 16)))
 				case 58: // ASTORE
@@ -854,23 +853,23 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			stack.Push(modexp.NewNewArray(lineNumber, type1, dimensions))
 		case 198: // IFnil
 			expression1 = stack.Pop()
-			p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(_type.OtTypeObject, expression1)
+			p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(model.OtTypeObject, expression1)
 			op := "=="
 			if basicBlock.IsInverseCondition() {
 				op = "!="
 			}
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression1, op,
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression1, op,
 				modexp.NewNullExpressionWithAll(expression1.LineNumber(), expression1.Type()), 9))
 			offset += 2 // Skip branch offset
 			checkStack(stack, code, offset)
 		case 199: // IFNONnil
 			expression1 = stack.Pop()
-			p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(_type.OtTypeObject, expression1)
+			p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(model.OtTypeObject, expression1)
 			op := "=="
 			if basicBlock.IsInverseCondition() {
 				op = "!="
 			}
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression1, op,
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression1, op,
 				modexp.NewNullExpressionWithAll(expression1.LineNumber(), expression1.Type()), 9))
 			offset += 2 // Skip branch offset
 			checkStack(stack, code, offset)
@@ -945,7 +944,7 @@ func (p *ByteCodeParser) getLocalVariableInAssignment(index, offset int, value i
 			// Remove type arguments
 			valueType = valueType.(intmod.IObjectType).CreateTypeWithArgs(nil)
 		} else if valueType.IsGenericType() {
-			valueType = _type.OtTypeUndefinedObject
+			valueType = model.OtTypeUndefinedObject
 		}
 		return p.localVariableMaker.LocalVariableInAssignment(p.typeBounds, index, offset, valueType)
 	} else {
@@ -962,24 +961,24 @@ func (p *ByteCodeParser) parseLDC(stack util.IStack[intmod.IExpression], constan
 	case intcls.ConstTagFloat:
 		f := constant.(intcls.IConstantFloat).Value()
 		if f == -math.MaxFloat32 {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeFloat,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeFloat),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeFloat,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeFloat),
 				"java/lang/Float", "MIN_VALUE", "F"))
 		} else if f == math.MaxFloat32 {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeFloat,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeFloat),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeFloat,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeFloat),
 				"java/lang/Float", "MAX_VALUE", "F"))
 		} else if f == float32(math.Inf(-1)) {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeFloat,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeFloat),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeFloat,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeFloat),
 				"java/lang/Float", "NEGATIVE_INFINITY", "F"))
 		} else if f == float32(math.Inf(1)) {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeFloat,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeFloat),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeFloat,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeFloat),
 				"java/lang/Float", "POSITIVE_INFINITY", "F"))
 		} else if math.IsNaN(float64(f)) {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeFloat,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeFloat),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeFloat,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeFloat),
 				"java/lang/Float", "NaN", "F"))
 		} else {
 			stack.Push(modexp.NewFloatConstantExpressionWithAll(lineNumber, f))
@@ -995,12 +994,12 @@ func (p *ByteCodeParser) parseLDC(stack util.IStack[intmod.IExpression], constan
 	case intcls.ConstTagLong:
 		l := constant.(intcls.IConstantLong).Value()
 		if l == math.MinInt64 {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeLong,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeLong),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeLong,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeLong),
 				"java/lang/Long", "MIN_VALUE", "J"))
 		} else if l == math.MaxInt64 {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeLong,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeLong),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeLong,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeLong),
 				"java/lang/Long", "MAX_VALUE", "J"))
 		} else {
 			stack.Push(modexp.NewLongConstantExpressionWithAll(lineNumber, l))
@@ -1008,32 +1007,32 @@ func (p *ByteCodeParser) parseLDC(stack util.IStack[intmod.IExpression], constan
 	case intcls.ConstTagDouble:
 		d := constant.(intcls.IConstantDouble).Value()
 		if d == math.SmallestNonzeroFloat64 {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeDouble),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeDouble),
 				"java/lang/Double", "MIN_VALUE", "D"))
 		} else if d == math.MaxFloat64 {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeDouble),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeDouble),
 				"java/lang/Double", "MAX_VALUE", "D"))
 		} else if d == math.Inf(-1) {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeDouble),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeDouble),
 				"java/lang/Double", "NEGATIVE_INFINITY", "D"))
 		} else if d == math.Inf(1) {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeDouble),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeDouble),
 				"java/lang/Double", "POSITIVE_INFINITY", "D"))
 		} else if math.IsNaN(d) {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeDouble),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeDouble),
 				"java/lang/Double", "NaN", "D"))
 		} else if d == math.E {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeMath),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeMath),
 				"java/lang/Math", "E", "D"))
 		} else if d == math.Pi {
-			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeDouble,
-				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, _type.OtTypeMath),
+			stack.Push(modexp.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeDouble,
+				modexp.NewObjectTypeReferenceExpressionWithLineNumber(lineNumber, model.OtTypeMath),
 				"java/lang/Math", "PI", "D"))
 		} else {
 			stack.Push(modexp.NewDoubleConstantExpressionWithAll(lineNumber, d))
@@ -1632,7 +1631,7 @@ func (p *ByteCodeParser) parseIF(stack util.IStack[intmod.IExpression], lineNumb
 		if basicBlock.IsInverseCondition() {
 			operator = operator1
 		}
-		stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, cmp.LeftExpression(), operator, cmp.RightExpression(), priority))
+		stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, cmp.LeftExpression(), operator, cmp.RightExpression(), priority))
 	} else if expression.Type().IsPrimitiveType() {
 		pt := expression.Type().(intmod.IPrimitiveType)
 		p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(pt, expression)
@@ -1649,16 +1648,16 @@ func (p *ByteCodeParser) parseIF(stack util.IStack[intmod.IExpression], lineNumb
 				stack.Push(modexp.NewPreOperatorExpressionWithAll(lineNumber, "!", expression))
 			}
 		case intmod.FlagFloat:
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression,
 				operator, modexp.NewFloatConstantExpressionWithAll(lineNumber, 0), 9))
 		case intmod.FlagDouble:
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression,
 				operator, modexp.NewDoubleConstantExpressionWithAll(lineNumber, 0), 9))
 		case intmod.FlagLong:
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression,
 				operator, modexp.NewLongConstantExpressionWithAll(lineNumber, 0), 9))
 		default:
-			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
+			stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression,
 				operator, modexp.NewIntegerConstantExpressionWithAll(lineNumber, pt, 0), 9))
 		}
 	} else {
@@ -1666,7 +1665,7 @@ func (p *ByteCodeParser) parseIF(stack util.IStack[intmod.IExpression], lineNumb
 		if basicBlock.IsInverseCondition() {
 			operator = operator1
 		}
-		stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, expression,
+		stack.Push(modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, expression,
 			operator, modexp.NewNullExpressionWithAll(lineNumber, expression.Type()), 9))
 	}
 }
@@ -1722,31 +1721,31 @@ func (p *ByteCodeParser) parseGetStatic(stack util.IStack[intmod.IExpression],
 	if (name == "TYPE") && strings.HasPrefix(typeName, "java/lang/") {
 		switch typeName {
 		case "java/lang/Boolean":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeBoolean))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeBoolean))
 			return
 		case "java/lang/Character":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeChar))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeChar))
 			return
 		case "java/lang/Float":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeFloat))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeFloat))
 			return
 		case "java/lang/Double":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeDouble))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeDouble))
 			return
 		case "java/lang/Byte":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeByte))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeByte))
 			return
 		case "java/lang/Short":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeShort))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeShort))
 			return
 		case "java/lang/Integer":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeInt))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeInt))
 			return
 		case "java/lang/Long":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeLong))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeLong))
 			return
 		case "java/lang/Void":
-			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, _type.PtTypeVoid))
+			stack.Push(modexp.NewTypeReferenceDotClassExpressionWithAll(lineNumber, model.PtTypeVoid))
 			return
 		}
 	}
@@ -1826,7 +1825,7 @@ func (p *ByteCodeParser) newNewExpression(lineNumber int, internalTypeName strin
 		typeDeclaration := p.bodyDeclaration.InnerTypeDeclaration(internalTypeName).(intsrv.IClassFileTypeDeclaration)
 
 		if typeDeclaration == nil {
-			return srvexp.NewClassFileNewExpression(lineNumber, _type.OtTypeObject)
+			return srvexp.NewClassFileNewExpression(lineNumber, model.OtTypeObject)
 		} else if typeDeclaration.IsClassDeclaration() {
 			decl := typeDeclaration.(intsrv.IClassFileClassDeclaration)
 			var bodyDeclaration intmod.IBodyDeclaration
@@ -1842,7 +1841,7 @@ func (p *ByteCodeParser) newNewExpression(lineNumber int, internalTypeName strin
 			} else if decl.SuperType() != nil {
 				return srvexp.NewClassFileNewExpression3(lineNumber, decl.SuperType(), bodyDeclaration, true)
 			} else {
-				return srvexp.NewClassFileNewExpression3(lineNumber, _type.OtTypeObject, bodyDeclaration, true)
+				return srvexp.NewClassFileNewExpression3(lineNumber, model.OtTypeObject, bodyDeclaration, true)
 			}
 		}
 	}
@@ -1859,15 +1858,15 @@ func (p *ByteCodeParser) newIntegerBinaryOperatorExpression(lineNumber int,
 	leftExpression intmod.IExpression, operator string, rightExpression intmod.IExpression, priority int) intmod.IExpression {
 	if leftExpression.IsLocalVariableReferenceExpression() {
 		leftVariable := leftExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
-		leftVariable.TypeOnLeft(p.typeBounds, _type.PtMaybeByteType)
+		leftVariable.TypeOnLeft(p.typeBounds, model.PtMaybeByteType)
 	}
 
 	if rightExpression.IsLocalVariableReferenceExpression() {
 		rightVariable := rightExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
-		rightVariable.TypeOnLeft(p.typeBounds, _type.PtMaybeByteType)
+		rightVariable.TypeOnLeft(p.typeBounds, model.PtMaybeByteType)
 	}
 
-	return modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeInt, leftExpression, operator, rightExpression, priority)
+	return modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeInt, leftExpression, operator, rightExpression, priority)
 }
 
 /*
@@ -1877,7 +1876,7 @@ func (p *ByteCodeParser) newIntegerBinaryOperatorExpression(lineNumber int,
 func (p *ByteCodeParser) newIntegerOrBooleanBinaryOperatorExpression(lineNumber int,
 	leftExpression intmod.IExpression, operator string, rightExpression intmod.IExpression,
 	priority int) intmod.IExpression {
-	typ := _type.PtTypeInt
+	typ := model.PtTypeInt
 
 	if leftExpression.IsLocalVariableReferenceExpression() {
 		leftVariable := leftExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
@@ -1885,29 +1884,29 @@ func (p *ByteCodeParser) newIntegerOrBooleanBinaryOperatorExpression(lineNumber 
 		if rightExpression.IsLocalVariableReferenceExpression() {
 			rightVariable := rightExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
 
-			if leftVariable.IsAssignableFrom(p.typeBounds, _type.PtTypeBoolean) || rightVariable.IsAssignableFrom(p.typeBounds, _type.PtTypeBoolean) {
+			if leftVariable.IsAssignableFrom(p.typeBounds, model.PtTypeBoolean) || rightVariable.IsAssignableFrom(p.typeBounds, model.PtTypeBoolean) {
 				leftVariable.VariableOnRight(p.typeBounds, rightVariable)
 				rightVariable.VariableOnLeft(p.typeBounds, leftVariable)
 
-				if (leftVariable.Type() == _type.PtTypeBoolean) || (rightVariable.Type() == _type.PtTypeBoolean) {
-					typ = _type.PtTypeBoolean
+				if (leftVariable.Type() == model.PtTypeBoolean) || (rightVariable.Type() == model.PtTypeBoolean) {
+					typ = model.PtTypeBoolean
 				}
 			}
 		} else {
-			if rightExpression.Type() == _type.PtTypeBoolean {
-				typ = _type.PtTypeBoolean
+			if rightExpression.Type() == model.PtTypeBoolean {
+				typ = model.PtTypeBoolean
 				leftVariable.TypeOnRight(p.typeBounds, typ)
 			}
 		}
 	} else if rightExpression.IsLocalVariableReferenceExpression() {
-		if leftExpression.Type() == _type.PtTypeBoolean {
+		if leftExpression.Type() == model.PtTypeBoolean {
 			rightVariable := rightExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
-			typ = _type.PtTypeBoolean
+			typ = model.PtTypeBoolean
 			rightVariable.TypeOnRight(p.typeBounds, typ)
 		}
 	}
 
-	if typ == _type.PtTypeInt {
+	if typ == model.PtTypeInt {
 		if leftExpression.Type().IsPrimitiveType() && rightExpression.Type().IsPrimitiveType() {
 			leftFlags := leftExpression.Type().(intmod.IPrimitiveType).Flags()
 			rightFlags := rightExpression.Type().(intmod.IPrimitiveType).Flags()
@@ -1922,7 +1921,7 @@ func (p *ByteCodeParser) newIntegerOrBooleanBinaryOperatorExpression(lineNumber 
 			typ = utils.GetPrimitiveTypeFromFlags(commonflags)
 
 			if typ == nil {
-				typ = _type.PtTypeInt
+				typ = model.PtTypeInt
 			}
 		}
 	}
@@ -1946,26 +1945,26 @@ func (p *ByteCodeParser) newIntegerOrBooleanComparisonOperatorExpression(lineNum
 		if rightExpression.IsLocalVariableReferenceExpression() {
 			rightVariable := rightExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
 
-			if leftVariable.IsAssignableFrom(p.typeBounds, _type.PtTypeBoolean) || rightVariable.IsAssignableFrom(p.typeBounds, _type.PtTypeBoolean) {
+			if leftVariable.IsAssignableFrom(p.typeBounds, model.PtTypeBoolean) || rightVariable.IsAssignableFrom(p.typeBounds, model.PtTypeBoolean) {
 				leftVariable.VariableOnRight(p.typeBounds, rightVariable)
 				rightVariable.VariableOnLeft(p.typeBounds, leftVariable)
 			}
 		} else {
-			if rightExpression.Type() == _type.PtTypeBoolean {
-				leftVariable.TypeOnRight(p.typeBounds, _type.PtTypeBoolean)
+			if rightExpression.Type() == model.PtTypeBoolean {
+				leftVariable.TypeOnRight(p.typeBounds, model.PtTypeBoolean)
 			}
 		}
 	} else if rightExpression.IsLocalVariableReferenceExpression() {
-		if leftExpression.Type() == _type.PtTypeBoolean {
+		if leftExpression.Type() == model.PtTypeBoolean {
 			rightVariable := rightExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
-			rightVariable.TypeOnRight(p.typeBounds, _type.PtTypeBoolean)
+			rightVariable.TypeOnRight(p.typeBounds, model.PtTypeBoolean)
 		}
 	}
 
 	p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(leftExpression.Type(), rightExpression)
 	p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(rightExpression.Type(), leftExpression)
 
-	return modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, leftExpression, operator, rightExpression, priority)
+	return modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, leftExpression, operator, rightExpression, priority)
 }
 
 /*
@@ -1976,18 +1975,18 @@ func (p *ByteCodeParser) newIntegerComparisonOperatorExpression(lineNumber int,
 	leftExpression intmod.IExpression, operator string, rightExpression intmod.IExpression, priority int) intmod.IExpression {
 	if leftExpression.IsLocalVariableReferenceExpression() {
 		leftVariable := leftExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
-		leftVariable.TypeOnLeft(p.typeBounds, _type.PtMaybeByteType)
+		leftVariable.TypeOnLeft(p.typeBounds, model.PtMaybeByteType)
 	}
 
 	if rightExpression.IsLocalVariableReferenceExpression() {
 		rightVariable := rightExpression.(intsrv.IClassFileLocalVariableReferenceExpression).LocalVariable().(intsrv.ILocalVariable)
-		rightVariable.TypeOnLeft(p.typeBounds, _type.PtMaybeByteType)
+		rightVariable.TypeOnLeft(p.typeBounds, model.PtMaybeByteType)
 	}
 
 	p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(leftExpression.Type(), rightExpression)
 	p.typeParametersToTypeArgumentsBinder.BindParameterTypesWithArgumentTypes(rightExpression.Type(), leftExpression)
 
-	return modexp.NewBinaryOperatorExpression(lineNumber, _type.PtTypeBoolean, leftExpression, operator, rightExpression, priority)
+	return modexp.NewBinaryOperatorExpression(lineNumber, model.PtTypeBoolean, leftExpression, operator, rightExpression, priority)
 }
 
 func (p *ByteCodeParser) newPreArithmeticOperatorExpression(lineNumber int, operator string,
@@ -2008,8 +2007,8 @@ func (p *ByteCodeParser) reduceIntegerLocalVariableType(expression intmod.IExpre
 
 		if lvre.LocalVariable().(intsrv.ILocalVariable).IsPrimitiveLocalVariable() {
 			plv := lvre.LocalVariable().(intsrv.ILocalVariable)
-			if plv.IsAssignableFrom(p.typeBounds, _type.PtMaybeBooleanType) {
-				plv.TypeOnRight(p.typeBounds, _type.PtMaybeByteType)
+			if plv.IsAssignableFrom(p.typeBounds, model.PtMaybeBooleanType) {
+				plv.TypeOnRight(p.typeBounds, model.PtMaybeByteType)
 			}
 		}
 	}
@@ -2198,7 +2197,7 @@ func NewByteCodeParserMemberVisitor() *ByteCodeParserMemberVisitor {
 }
 
 type ByteCodeParserMemberVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	name       string
 	descriptor string
@@ -2254,7 +2253,7 @@ func (v *LambdaParameterNamesVisitor) VisitFormalParameters(decls intmod.IFormal
 
 func NewJsrReturnAddressExpression() *JsrReturnAddressExpression {
 	return &JsrReturnAddressExpression{
-		NullExpression: *modexp.NewNullExpression(_type.PtTypeVoid).(*modexp.NullExpression),
+		NullExpression: *modexp.NewNullExpression(model.PtTypeVoid).(*modexp.NullExpression),
 	}
 }
 

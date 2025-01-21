@@ -3,7 +3,6 @@ package processor
 import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 )
 
@@ -16,7 +15,7 @@ type UpdateJavaSyntaxTreeProcessor struct {
 
 func (p *UpdateJavaSyntaxTreeProcessor) Process(message *model.Message) error {
 	typeMaker := message.Headers["typeMaker"].(intsrv.ITypeMaker)
-	compilationUnit := message.Body.(*javasyntax.CompilationUnit)
+	compilationUnit := message.Body.(*model.CompilationUnit)
 
 	visitor.NewUpdateJavaSyntaxTreeStep0Visitor(typeMaker).VisitCompilationUnit(compilationUnit)
 	visitor.NewUpdateJavaSyntaxTreeStep1Visitor(typeMaker).VisitCompilationUnit(compilationUnit)

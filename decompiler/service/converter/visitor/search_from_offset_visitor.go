@@ -1,11 +1,11 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"math"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
@@ -14,7 +14,7 @@ func NewSearchFromOffsetVisitor() intsrv.ISearchFromOffsetVisitor {
 }
 
 type SearchFromOffsetVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	offset int
 }

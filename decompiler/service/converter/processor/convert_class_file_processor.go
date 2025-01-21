@@ -5,10 +5,8 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -48,7 +46,7 @@ func (p *ConvertClassFileProcessor) Process(message *model.Message) error {
 
 	message.Headers["majorVersion"] = classFile.MajorVersion()
 	message.Headers["minorVersion"] = classFile.MinorVersion()
-	message.Body = javasyntax.NewCompilationUnit(typeDeclaration)
+	message.Body = model.NewCompilationUnit(typeDeclaration)
 
 	return nil
 }
@@ -412,11 +410,11 @@ type CustomPopulateBindingsWithTypeParameterVisitor struct {
 }
 
 func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameter(parameter intmod.ITypeParameter) {
-	v.Bindings()[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
+	v.Bindings()[parameter.Identifier()] = model.NewGenericTypeWithAll(parameter.Identifier(), 0)
 }
 
 func (v *CustomPopulateBindingsWithTypeParameterVisitor) VisitTypeParameterWithTypeBounds(parameter intmod.ITypeParameterWithTypeBounds) {
-	v.Bindings()[parameter.Identifier()] = _type.NewGenericTypeWithAll(parameter.Identifier(), 0)
+	v.Bindings()[parameter.Identifier()] = model.NewGenericTypeWithAll(parameter.Identifier(), 0)
 	v.TypeBounds()[parameter.Identifier()] = parameter.TypeBounds()
 }
 

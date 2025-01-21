@@ -1,11 +1,11 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"reflect"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
@@ -14,7 +14,7 @@ func NewRemoveLastContinueStatementVisitor() intsrv.IRemoveLastContinueStatement
 }
 
 type RemoveLastContinueStatementVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 }
 
 func (v *RemoveLastContinueStatementVisitor) VisitStatements(list intmod.IStatements) {

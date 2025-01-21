@@ -5,7 +5,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -431,7 +430,7 @@ func (v *ExpressionVisitor) VisitNewExpression(expr intmod.INewExpression) {
 	objectType := expr.ObjectType()
 
 	if (objectType.TypeArguments() != nil) && (bodyDeclaration == nil) && v.diamondOperatorSupported {
-		objectType = objectType.CreateTypeWithArgs(_type.Diamond)
+		objectType = objectType.CreateTypeWithArgs(model.Diamond)
 	}
 
 	typ := objectType

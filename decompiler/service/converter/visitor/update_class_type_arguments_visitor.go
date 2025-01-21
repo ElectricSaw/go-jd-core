@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewUpdateClassTypeArgumentsVisitor() intsrv.IUpdateClassTypeArgumentsVisitor {
@@ -31,7 +31,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitWildcardExtendsTypeArgument(argum
 	if v.result == t {
 		v.result = argument
 	} else {
-		v.result = _type.NewWildcardExtendsTypeArgument(v.result.(intmod.IType))
+		v.result = model.NewWildcardExtendsTypeArgument(v.result.(intmod.IType))
 	}
 }
 
@@ -42,7 +42,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitWildcardSuperTypeArgument(argumen
 	if v.result == t {
 		v.result = argument
 	} else {
-		v.result = _type.NewWildcardSuperTypeArgument(v.result.(intmod.IType))
+		v.result = model.NewWildcardSuperTypeArgument(v.result.(intmod.IType))
 	}
 }
 
@@ -60,8 +60,8 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitObjectType(t intmod.IObjectType) 
 	typeArguments := t.TypeArguments()
 
 	if typeArguments == nil {
-		if t.InternalName() == _type.OtTypeClass.InternalName() {
-			v.result = _type.OtTypeClassWildcard
+		if t.InternalName() == model.OtTypeClass.InternalName() {
+			v.result = model.OtTypeClassWildcard
 		} else {
 			v.result = t
 		}
@@ -100,7 +100,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitInnerObjectType(t intmod.IInnerOb
 			typeArguments = v.result
 		}
 
-		v.result = _type.NewInnerObjectTypeWithAll(t.InternalName(), t.QualifiedName(), t.Name(), typeArguments, t.Dimension(), outerObjectType)
+		v.result = model.NewInnerObjectTypeWithAll(t.InternalName(), t.QualifiedName(), t.Name(), typeArguments, t.Dimension(), outerObjectType)
 	}
 }
 
@@ -120,7 +120,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitTypeArguments(arguments intmod.IT
 		if i == size {
 			v.result = arguments
 		} else {
-			newTypes := _type.NewTypeArgumentsWithCapacity(size)
+			newTypes := model.NewTypeArgumentsWithCapacity(size)
 			newTypes.AddAll(arguments.ToSlice()[:i])
 			newTypes.Add(v.result.(intmod.ITypeArgument))
 

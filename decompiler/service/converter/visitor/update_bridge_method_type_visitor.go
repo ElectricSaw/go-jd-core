@@ -1,13 +1,13 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"strings"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/constant"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
@@ -18,7 +18,7 @@ func NewUpdateBridgeMethodTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdat
 }
 
 type UpdateBridgeMethodTypeVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	typeMaker intsrv.ITypeMaker
 }

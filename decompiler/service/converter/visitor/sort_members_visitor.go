@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
@@ -14,7 +14,7 @@ func NewSortMembersVisitor() intsrv.ISortMembersVisitor {
 }
 
 type SortMembersVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 }
 
 func (v *SortMembersVisitor) VisitAnnotationDeclaration(declaration intmod.IAnnotationDeclaration) {

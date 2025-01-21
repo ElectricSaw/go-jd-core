@@ -4,9 +4,9 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/reference"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 )
 
 func NewAnnotationConverter(typeMaker intsrv.ITypeMaker) intsrv.IAnnotationConverter {

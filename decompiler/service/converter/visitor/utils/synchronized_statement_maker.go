@@ -3,7 +3,7 @@ package utils
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
@@ -51,7 +51,7 @@ func NewRemoveMonitorExitVisitor(localVariable intsrv.ILocalVariable) *RemoveMon
 }
 
 type RemoveMonitorExitVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	localVariable intsrv.ILocalVariable
 }

@@ -3,8 +3,8 @@ package utils
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )

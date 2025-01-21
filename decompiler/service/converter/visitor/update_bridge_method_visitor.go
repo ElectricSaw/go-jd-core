@@ -2,13 +2,12 @@ package visitor
 
 import (
 	"fmt"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"strings"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 )
 
@@ -180,7 +179,7 @@ func NewBodyDeclarationsVisitor() intsrv.IBodyDeclarationsVisitor {
 }
 
 type BodyDeclarationsVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	bridgeMethodDeclarationsLink map[string]map[string]intsrv.IClassFileMethodDeclaration
 	mapped                       map[string]intsrv.IClassFileMethodDeclaration
@@ -311,7 +310,7 @@ func (v *BodyDeclarationsVisitor) checkBridgeMethodDeclaration(bridgeMethodDecla
 					}
 
 					t := parameter.Type()
-					if t == _type.PtTypeLong || t == _type.PtTypeDouble {
+					if t == model.PtTypeLong || t == model.PtTypeDouble {
 						i++
 					}
 				}
@@ -335,7 +334,7 @@ func (v *BodyDeclarationsVisitor) checkBridgeMethodDeclaration(bridgeMethodDecla
 					}
 					i++
 					t := parameter.Type()
-					if t == _type.PtTypeLong || t == _type.PtTypeDouble {
+					if t == model.PtTypeLong || t == model.PtTypeDouble {
 						i++
 					}
 				}

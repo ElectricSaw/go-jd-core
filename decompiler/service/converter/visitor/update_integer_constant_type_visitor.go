@@ -1,30 +1,29 @@
 package visitor
 
 import (
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"math"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
 var GlobTypes = make(map[string]intmod.IType)
 var GlobDimensionTypes = &DimensionTypes{}
-var GlobTypeCharacterRef = expression.NewObjectTypeReferenceExpression(_type.OtTypeCharacter)
-var GlobTypeByteRef = expression.NewObjectTypeReferenceExpression(_type.OtTypeByte)
-var GlobTypeShortRef = expression.NewObjectTypeReferenceExpression(_type.OtTypeShort)
-var GlobTypeIntegerRef = expression.NewObjectTypeReferenceExpression(_type.OtTypeInteger)
+var GlobTypeCharacterRef = expression.NewObjectTypeReferenceExpression(model.OtTypeCharacter)
+var GlobTypeByteRef = expression.NewObjectTypeReferenceExpression(model.OtTypeByte)
+var GlobTypeShortRef = expression.NewObjectTypeReferenceExpression(model.OtTypeShort)
+var GlobTypeIntegerRef = expression.NewObjectTypeReferenceExpression(model.OtTypeInteger)
 
 func init() {
-	c := _type.PtTypeChar
-	ci := _type.NewTypes()
-	ci.Add(_type.PtTypeChar)
-	ci.Add(_type.PtTypeInt)
+	c := model.PtTypeChar
+	ci := model.NewTypes()
+	ci.Add(model.PtTypeChar)
+	ci.Add(model.PtTypeInt)
 
 	GlobTypes["java/lang/String:indexOf(I)I"] = c
 	GlobTypes["java/lang/String:indexOf(II)I"] = ci
@@ -39,7 +38,7 @@ func NewUpdateIntegerConstantTypeVisitor(returnedType intmod.IType) intsrv.IUpda
 }
 
 type UpdateIntegerConstantTypeVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	returnedType                 intmod.IType
 	arrayVariableInitializerType intmod.IType
@@ -94,7 +93,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitBinaryOperatorExpression(expr in
 		if leftType.IsPrimitiveType() && rightType.IsPrimitiveType() {
 			t := utils.GetCommonPrimitiveType(leftType.(intmod.IPrimitiveType), rightType.(intmod.IPrimitiveType))
 			if t == nil {
-				t = _type.PtTypeInt
+				t = model.PtTypeInt
 			}
 			expr.SetLeftExpression(v.updateExpression(t, left))
 			expr.SetRightExpression(v.updateExpression(t, right))
@@ -114,7 +113,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitBinaryOperatorExpression(expr in
 					} else {
 						t = utils.GetCommonPrimitiveType(leftType.(intmod.IPrimitiveType), rightType.(intmod.IPrimitiveType))
 						if t == nil {
-							t = _type.PtTypeInt
+							t = model.PtTypeInt
 						}
 					}
 					expr.SetLeftExpression(v.updateExpression(t, left))
@@ -211,7 +210,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitNewArray(expr intmod.INewArray) 
 
 func (v *UpdateIntegerConstantTypeVisitor) VisitArrayExpression(expr intmod.IArrayExpression) {
 	expr.Expression().Accept(v)
-	expr.SetIndex(v.updateExpression(_type.PtTypeInt, expr.Index()))
+	expr.SetIndex(v.updateExpression(model.PtTypeInt, expr.Index()))
 }
 
 func (v *UpdateIntegerConstantTypeVisitor) VisitCastExpression(expr intmod.ICastExpression) {
@@ -226,8 +225,8 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitTernaryOperatorExpression(expr i
 
 	if trueType.IsPrimitiveType() {
 		if falseType.IsPrimitiveType() {
-			expr.SetTrueExpression(v.updateExpression(_type.PtTypeInt, expr.TrueExpression()))
-			expr.SetFalseExpression(v.updateExpression(_type.PtTypeInt, expr.FalseExpression()))
+			expr.SetTrueExpression(v.updateExpression(model.PtTypeInt, expr.TrueExpression()))
+			expr.SetFalseExpression(v.updateExpression(model.PtTypeInt, expr.FalseExpression()))
 		} else {
 			expr.TrueExpression().Accept(v)
 			expr.SetTrueExpression(v.updateExpression(falseType, expr.TrueExpression()))
@@ -322,8 +321,8 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 	// assert type != TYPE_VOID : "UpdateIntegerConstantTypeVisitorupdateexpr.(type, intmod.IupdateExpression expr) : try to set 'void' to a numeric expression";
 
 	if (t != expr.Type()) && expr.IsIntegerConstantExpression() {
-		if _type.OtTypeString.(intmod.IType) == t {
-			t = _type.PtTypeChar
+		if model.OtTypeString.(intmod.IType) == t {
+			t = model.PtTypeChar
 		}
 
 		if t.IsPrimitiveType() {
@@ -339,14 +338,14 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagChar:
 				switch value {
 				case math.MinInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MIN_VALUE", "C")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MIN_VALUE", "C")
 				case math.MaxInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MAX_VALUE", "C")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MAX_VALUE", "C")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
 					} else {
-						ice.SetType(_type.PtTypeInt)
+						ice.SetType(model.PtTypeInt)
 					}
 					break
 				}
@@ -354,14 +353,14 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagByte:
 				switch value {
 				case math.MinInt8:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MIN_VALUE", "B")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MIN_VALUE", "B")
 				case math.MaxInt8:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MAX_VALUE", "B")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MAX_VALUE", "B")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
 					} else {
-						ice.SetType(_type.PtTypeInt)
+						ice.SetType(model.PtTypeInt)
 					}
 					break
 				}
@@ -369,14 +368,14 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagShort:
 				switch value {
 				case math.MinInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MIN_VALUE", "S")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MIN_VALUE", "S")
 				case math.MaxInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MAX_VALUE", "S")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MAX_VALUE", "S")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
 					} else {
-						ice.SetType(_type.PtTypeInt)
+						ice.SetType(model.PtTypeInt)
 					}
 					break
 				}
@@ -384,14 +383,14 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagInt:
 				switch value {
 				case math.MinInt32:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MIN_VALUE", "I")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MIN_VALUE", "I")
 				case math.MaxInt32:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, _type.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MAX_VALUE", "I")
+					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MAX_VALUE", "I")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
 					} else {
-						ice.SetType(_type.PtTypeInt)
+						ice.SetType(model.PtTypeInt)
 					}
 					break
 				}
@@ -428,13 +427,13 @@ func (v *UpdateIntegerConstantTypeVisitor) safeUpdateBooleanExpression(expr intm
 }
 
 func (v *UpdateIntegerConstantTypeVisitor) updateBooleanExpression(expr intmod.IExpression) intmod.IExpression {
-	if _type.PtTypeBoolean != expr.Type() {
+	if model.PtTypeBoolean != expr.Type() {
 		if expr.IsIntegerConstantExpression() {
 			return expression.NewBooleanExpressionWithLineNumber(expr.LineNumber(), expr.IntegerValue() != 0)
 		} else if expr.IsTernaryOperatorExpression() {
 			toe := expr.(intmod.ITernaryOperatorExpression)
 
-			toe.SetType(_type.PtTypeBoolean)
+			toe.SetType(model.PtTypeBoolean)
 			toe.SetCondition(v.updateBooleanExpression(toe.Condition()))
 			toe.SetTrueExpression(v.updateBooleanExpression(toe.TrueExpression()))
 			toe.SetFalseExpression(v.updateBooleanExpression(toe.FalseExpression()))
@@ -487,12 +486,12 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitTypeParameterWithTypeBounds(_ in
 func (v *UpdateIntegerConstantTypeVisitor) VisitBodyDeclaration(_ intmod.IBodyDeclaration) {}
 
 type DimensionTypes struct {
-	_type.Types
+	model.Types
 }
 
-func (t *DimensionTypes) First() intmod.IType    { return _type.PtTypeInt }
-func (t *DimensionTypes) Last() intmod.IType     { return _type.PtTypeInt }
-func (t *DimensionTypes) Get(_ int) intmod.IType { return _type.PtTypeInt }
+func (t *DimensionTypes) First() intmod.IType    { return model.PtTypeInt }
+func (t *DimensionTypes) Last() intmod.IType     { return model.PtTypeInt }
+func (t *DimensionTypes) Get(_ int) intmod.IType { return model.PtTypeInt }
 func (t *DimensionTypes) Size() int              { return 0 }
 
 // $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$

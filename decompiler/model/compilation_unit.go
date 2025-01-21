@@ -1,4 +1,4 @@
-package javasyntax
+package model
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"

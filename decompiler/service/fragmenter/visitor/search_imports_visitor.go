@@ -3,7 +3,7 @@ package visitor
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -30,7 +30,7 @@ func NewSearchImportsVisitor(loader api.Loader, mainInternalName string) *Search
 }
 
 type SearchImportsVisitor struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	loader                api.Loader
 	internalPackagePrefix string
@@ -50,7 +50,7 @@ func (v *SearchImportsVisitor) MaxLineNumber() int {
 	return v.maxLineNumber
 }
 
-func (v *SearchImportsVisitor) VisitCompilationUnit(compilationUnit *javasyntax.CompilationUnit) {
+func (v *SearchImportsVisitor) VisitCompilationUnit(compilationUnit *model.CompilationUnit) {
 	compilationUnit.TypeDeclarations().AcceptDeclaration(NewTypeVisitor2(v.localTypeNames))
 	compilationUnit.TypeDeclarations().AcceptDeclaration(v)
 }
@@ -342,7 +342,7 @@ func NewTypeVisitor2(mainTypeNames util.ISet[string]) *TypeVisitor2 {
 }
 
 type TypeVisitor2 struct {
-	javasyntax.AbstractJavaSyntaxVisitor
+	model.AbstractJavaSyntaxVisitor
 
 	mainTypeNames util.ISet[string]
 }
