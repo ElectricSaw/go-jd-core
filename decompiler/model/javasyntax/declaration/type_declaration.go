@@ -4,8 +4,8 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 )
 
-func NewTypeDeclaration(annotationReferences intmod.IAnnotationReference, flags int,
-	internalTypeName string, name string, bodyDeclaration intmod.IDeclaration) intmod.ITypeDeclaration {
+func NewTypeDeclaration(annotationReferences AnnotationReference, flags int,
+	internalTypeName string, name string, bodyDeclaration Declaration) TypeDeclaration {
 	d := &TypeDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -20,14 +20,14 @@ func NewTypeDeclaration(annotationReferences intmod.IAnnotationReference, flags 
 type TypeDeclaration struct {
 	AbstractTypeDeclaration
 
-	annotationReferences intmod.IAnnotationReference
+	annotationReferences AnnotationReference
 	flags                int
 	internalTypeName     string
 	name                 string
-	bodyDeclaration      intmod.IDeclaration
+	bodyDeclaration      Declaration
 }
 
-func (d *TypeDeclaration) AnnotationReferences() intmod.IAnnotationReference {
+func (d *TypeDeclaration) AnnotationReferences() AnnotationReference {
 	return d.annotationReferences
 }
 
@@ -47,6 +47,6 @@ func (d *TypeDeclaration) Name() string {
 	return d.name
 }
 
-func (d *TypeDeclaration) BodyDeclaration() intmod.IBodyDeclaration {
-	return d.bodyDeclaration.(intmod.IBodyDeclaration)
+func (d *TypeDeclaration) BodyDeclaration() BodyDeclaration {
+	return d.bodyDeclaration.(BodyDeclaration)
 }

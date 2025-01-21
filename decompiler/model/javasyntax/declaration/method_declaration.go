@@ -6,42 +6,42 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 )
 
-func NewMethodDeclaration(flags int, name string, returnedType intmod.IType,
-	descriptor string) intmod.IMethodDeclaration {
+func NewMethodDeclaration(flags int, name string, returnedType Type,
+	descriptor string) MethodDeclaration {
 	return NewMethodDeclaration6(nil, flags, name, nil,
 		returnedType, nil, nil, descriptor, nil, nil)
 }
 
-func NewMethodDeclaration2(flags int, name string, returnedType intmod.IType,
-	descriptor string, statements intmod.IStatement) intmod.IMethodDeclaration {
+func NewMethodDeclaration2(flags int, name string, returnedType Type,
+	descriptor string, statements Statement) MethodDeclaration {
 	return NewMethodDeclaration6(nil, flags, name, nil,
 		returnedType, nil, nil, descriptor, statements, nil)
 }
 
-func NewMethodDeclaration3(flags int, name string, returnedType intmod.IType,
-	descriptor string, defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
+func NewMethodDeclaration3(flags int, name string, returnedType Type,
+	descriptor string, defaultAnnotationValue ElementValue) MethodDeclaration {
 	return NewMethodDeclaration6(nil, flags, name, nil,
 		returnedType, nil, nil, descriptor, nil, defaultAnnotationValue)
 }
 
-func NewMethodDeclaration4(flags int, name string, returnedType intmod.IType,
-	formalParameter intmod.IFormalParameter, descriptor string,
-	statements intmod.IStatement) intmod.IMethodDeclaration {
+func NewMethodDeclaration4(flags int, name string, returnedType Type,
+	formalParameter FormalParameter, descriptor string,
+	statements Statement) MethodDeclaration {
 	return NewMethodDeclaration6(nil, flags, name, nil,
 		returnedType, formalParameter, nil, descriptor, statements, nil)
 }
 
-func NewMethodDeclaration5(flags int, name string, returnedType intmod.IType,
-	formalParameter intmod.IFormalParameter, descriptor string,
-	defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
+func NewMethodDeclaration5(flags int, name string, returnedType Type,
+	formalParameter FormalParameter, descriptor string,
+	defaultAnnotationValue ElementValue) MethodDeclaration {
 	return NewMethodDeclaration6(nil, flags, name, nil,
 		returnedType, formalParameter, nil, descriptor, nil, defaultAnnotationValue)
 }
 
-func NewMethodDeclaration6(annotationReferences intmod.IAnnotationReference,
-	flags int, name string, typeParameters intmod.ITypeParameter, returnedType intmod.IType,
-	formalParameter intmod.IFormalParameter, exceptionTypes intmod.IType, descriptor string,
-	statements intmod.IStatement, defaultAnnotationValue intmod.IElementValue) intmod.IMethodDeclaration {
+func NewMethodDeclaration6(annotationReferences AnnotationReference,
+	flags int, name string, typeParameters TypeParameter, returnedType Type,
+	formalParameter FormalParameter, exceptionTypes Type, descriptor string,
+	statements Statement, defaultAnnotationValue ElementValue) MethodDeclaration {
 	d := &MethodDeclaration{
 		annotationReferences:   annotationReferences,
 		flags:                  flags,
@@ -61,16 +61,16 @@ func NewMethodDeclaration6(annotationReferences intmod.IAnnotationReference,
 type MethodDeclaration struct {
 	AbstractMemberDeclaration
 
-	annotationReferences   intmod.IAnnotationReference
+	annotationReferences   AnnotationReference
 	flags                  int
 	name                   string
-	typeParameters         intmod.ITypeParameter
-	returnedType           intmod.IType
-	formalParameter        intmod.IFormalParameter
-	exceptionTypes         intmod.IType
+	typeParameters         TypeParameter
+	returnedType           Type
+	formalParameter        FormalParameter
+	exceptionTypes         Type
 	descriptor             string
-	statements             intmod.IStatement
-	defaultAnnotationValue intmod.IElementValue
+	statements             Statement
+	defaultAnnotationValue ElementValue
 }
 
 func (d *MethodDeclaration) Flags() int {
@@ -81,7 +81,7 @@ func (d *MethodDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *MethodDeclaration) AnnotationReferences() intmod.IAnnotationReference {
+func (d *MethodDeclaration) AnnotationReferences() AnnotationReference {
 	return d.annotationReferences
 }
 
@@ -93,23 +93,23 @@ func (d *MethodDeclaration) Name() string {
 	return d.name
 }
 
-func (d *MethodDeclaration) TypeParameters() intmod.ITypeParameter {
+func (d *MethodDeclaration) TypeParameters() TypeParameter {
 	return d.typeParameters
 }
 
-func (d *MethodDeclaration) ReturnedType() intmod.IType {
+func (d *MethodDeclaration) ReturnedType() Type {
 	return d.returnedType
 }
 
-func (d *MethodDeclaration) FormalParameters() intmod.IFormalParameter {
+func (d *MethodDeclaration) FormalParameters() FormalParameter {
 	return d.formalParameter
 }
 
-func (d *MethodDeclaration) SetFormalParameters(formalParameter intmod.IFormalParameter) {
+func (d *MethodDeclaration) SetFormalParameters(formalParameter FormalParameter) {
 	d.formalParameter = formalParameter
 }
 
-func (d *MethodDeclaration) ExceptionTypes() intmod.IType {
+func (d *MethodDeclaration) ExceptionTypes() Type {
 	return d.exceptionTypes
 }
 
@@ -117,19 +117,19 @@ func (d *MethodDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *MethodDeclaration) Statements() intmod.IStatement {
+func (d *MethodDeclaration) Statements() Statement {
 	return d.statements
 }
 
-func (d *MethodDeclaration) SetStatements(statements intmod.IStatement) {
+func (d *MethodDeclaration) SetStatements(statements Statement) {
 	d.statements = statements
 }
 
-func (d *MethodDeclaration) DefaultAnnotationValue() intmod.IElementValue {
+func (d *MethodDeclaration) DefaultAnnotationValue() ElementValue {
 	return d.defaultAnnotationValue
 }
 
-func (d *MethodDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *MethodDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitMethodDeclaration(d)
 }
 

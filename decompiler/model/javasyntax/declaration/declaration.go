@@ -7,14 +7,14 @@ import (
 )
 
 type AbstractMemberDeclaration struct {
-	util.DefaultBase[intmod.IMemberDeclaration]
+	util.DefaultBase[MemberDeclaration]
 }
 
 func (d *AbstractMemberDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *AbstractMemberDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *AbstractMemberDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 
 }
 
@@ -26,11 +26,11 @@ func (d *AbstractTypeDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *AbstractTypeDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *AbstractTypeDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 
 }
 
-func (d *AbstractTypeDeclaration) AnnotationReferences() intmod.IAnnotationReference {
+func (d *AbstractTypeDeclaration) AnnotationReferences() AnnotationReference {
 	return nil
 }
 
@@ -50,7 +50,7 @@ func (d *AbstractTypeDeclaration) Name() string {
 	return ""
 }
 
-func (d *AbstractTypeDeclaration) BodyDeclaration() intmod.IBodyDeclaration {
+func (d *AbstractTypeDeclaration) BodyDeclaration() BodyDeclaration {
 	return nil
 }
 
@@ -65,10 +65,10 @@ func (d *AbstractVariableInitializer) IsExpressionVariableInitializer() bool {
 	return false
 }
 
-func (d *AbstractVariableInitializer) Expression() intmod.IExpression {
+func (d *AbstractVariableInitializer) Expression() Expression {
 	return expression.NeNoExpression
 }
 
-func (d *AbstractVariableInitializer) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *AbstractVariableInitializer) AcceptDeclaration(visitor DeclarationVisitor) {
 
 }

@@ -5,13 +5,13 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 )
 
-func NewInterfaceDeclaration(flags int, internalTypeName, name string, interfaces intmod.IType) intmod.IInterfaceDeclaration {
+func NewInterfaceDeclaration(flags int, internalTypeName, name string, interfaces Type) InterfaceDeclaration {
 	return NewInterfaceDeclarationWithAll(nil, flags, internalTypeName, name, nil, nil, interfaces)
 }
 
-func NewInterfaceDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
-	internalTypeName, name string, bodyDeclaration intmod.IBodyDeclaration,
-	typeParameters intmod.ITypeParameter, interfaces intmod.IType) intmod.IInterfaceDeclaration {
+func NewInterfaceDeclarationWithAll(annotationReferences AnnotationReference, flags int,
+	internalTypeName, name string, bodyDeclaration BodyDeclaration,
+	typeParameters TypeParameter, interfaces Type) InterfaceDeclaration {
 	d := &InterfaceDeclaration{
 		TypeDeclaration: TypeDeclaration{
 			annotationReferences: annotationReferences,
@@ -30,19 +30,19 @@ func NewInterfaceDeclarationWithAll(annotationReferences intmod.IAnnotationRefer
 type InterfaceDeclaration struct {
 	TypeDeclaration
 
-	typeParameters intmod.ITypeParameter
-	interfaces     intmod.IType
+	typeParameters TypeParameter
+	interfaces     Type
 }
 
-func (d *InterfaceDeclaration) TypeParameters() intmod.ITypeParameter {
+func (d *InterfaceDeclaration) TypeParameters() TypeParameter {
 	return d.typeParameters
 }
 
-func (d *InterfaceDeclaration) Interfaces() intmod.IType {
+func (d *InterfaceDeclaration) Interfaces() Type {
 	return d.interfaces
 }
 
-func (d *InterfaceDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *InterfaceDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitInterfaceDeclaration(d)
 }
 

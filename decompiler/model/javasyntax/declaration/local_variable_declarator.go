@@ -6,15 +6,15 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewLocalVariableDeclarator(name string) intmod.ILocalVariableDeclarator {
+func NewLocalVariableDeclarator(name string) LocalVariableDeclarator {
 	return NewLocalVariableDeclarator3(0, name, nil)
 }
 
-func NewLocalVariableDeclarator2(name string, variableInitializer intmod.IVariableInitializer) intmod.ILocalVariableDeclarator {
+func NewLocalVariableDeclarator2(name string, variableInitializer VariableInitializer) LocalVariableDeclarator {
 	return NewLocalVariableDeclarator3(0, name, variableInitializer)
 }
 
-func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer intmod.IVariableInitializer) intmod.ILocalVariableDeclarator {
+func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer VariableInitializer) LocalVariableDeclarator {
 	d := &LocalVariableDeclarator{
 		lineNumber:          lineNumber,
 		name:                name,
@@ -25,12 +25,12 @@ func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitialize
 }
 
 type LocalVariableDeclarator struct {
-	util.DefaultBase[intmod.ILocalVariableDeclarator]
+	util.DefaultBase[LocalVariableDeclarator]
 
 	lineNumber          int
 	name                string
 	dimension           int
-	variableInitializer intmod.IVariableInitializer
+	variableInitializer VariableInitializer
 }
 
 func (d *LocalVariableDeclarator) Name() string {
@@ -53,11 +53,11 @@ func (d *LocalVariableDeclarator) LineNumber() int {
 	return d.lineNumber
 }
 
-func (d *LocalVariableDeclarator) VariableInitializer() intmod.IVariableInitializer {
+func (d *LocalVariableDeclarator) VariableInitializer() VariableInitializer {
 	return d.variableInitializer
 }
 
-func (d *LocalVariableDeclarator) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *LocalVariableDeclarator) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarator(d)
 }
 

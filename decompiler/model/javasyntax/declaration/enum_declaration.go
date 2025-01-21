@@ -5,15 +5,15 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 )
 
-func NewEnumDeclaration(flags int, internalTypeName, name string, constants []intmod.IConstant,
-	bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
+func NewEnumDeclaration(flags int, internalTypeName, name string, constants []Constant,
+	bodyDeclaration Declaration) EnumDeclaration {
 	return NewEnumDeclarationWithAll(nil, flags,
 		internalTypeName, name, nil, constants, bodyDeclaration)
 }
 
-func NewEnumDeclarationWithAll(annotationReferences intmod.IAnnotationReference,
-	flags int, internalTypeName, name string, interfaces intmod.IType,
-	constants []intmod.IConstant, bodyDeclaration intmod.IDeclaration) intmod.IEnumDeclaration {
+func NewEnumDeclarationWithAll(annotationReferences AnnotationReference,
+	flags int, internalTypeName, name string, interfaces Type,
+	constants []Constant, bodyDeclaration Declaration) EnumDeclaration {
 	d := &EnumDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(annotationReferences, flags, internalTypeName, name, bodyDeclaration).(*TypeDeclaration),
 		interfaces:      interfaces,
@@ -26,23 +26,23 @@ func NewEnumDeclarationWithAll(annotationReferences intmod.IAnnotationReference,
 type EnumDeclaration struct {
 	TypeDeclaration
 
-	interfaces intmod.IType
-	constants  []intmod.IConstant
+	interfaces Type
+	constants  []Constant
 }
 
-func (d *EnumDeclaration) Interfaces() intmod.IType {
+func (d *EnumDeclaration) Interfaces() Type {
 	return d.interfaces
 }
 
-func (d *EnumDeclaration) Constants() []intmod.IConstant {
+func (d *EnumDeclaration) Constants() []Constant {
 	return d.constants
 }
 
-func (d *EnumDeclaration) SetConstants(constants []intmod.IConstant) {
+func (d *EnumDeclaration) SetConstants(constants []Constant) {
 	d.constants = constants
 }
 
-func (d *EnumDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *EnumDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitEnumDeclaration(d)
 }
 
@@ -50,29 +50,29 @@ func (d *EnumDeclaration) String() string {
 	return fmt.Sprintf("EnumDeclaration{%s}", d.internalTypeName)
 }
 
-func NewConstant(name string) intmod.IConstant {
+func NewConstant(name string) Constant {
 	return NewConstant6(-1, nil, name, nil, nil)
 }
 
-func NewConstant2(lineNumber int, name string) intmod.IConstant {
+func NewConstant2(lineNumber int, name string) Constant {
 	return NewConstant6(lineNumber, nil, name, nil, nil)
 }
 
-func NewConstant3(name string, arguments intmod.IExpression) intmod.IConstant {
+func NewConstant3(name string, arguments Expression) Constant {
 	return NewConstant6(-1, nil, name, arguments, nil)
 }
 
-func NewConstant4(lineNumber int, name string, arguments intmod.IExpression) intmod.IConstant {
+func NewConstant4(lineNumber int, name string, arguments Expression) Constant {
 	return NewConstant6(lineNumber, nil, name, arguments, nil)
 }
 
-func NewConstant5(lineNumber int, name string, arguments intmod.IExpression,
-	bodyDeclaration intmod.IBodyDeclaration) intmod.IConstant {
+func NewConstant5(lineNumber int, name string, arguments Expression,
+	bodyDeclaration BodyDeclaration) Constant {
 	return NewConstant6(lineNumber, nil, name, arguments, bodyDeclaration)
 }
 
-func NewConstant6(lineNumber int, annotationReferences intmod.IAnnotationReference, name string,
-	arguments intmod.IExpression, bodyDeclaration intmod.IBodyDeclaration) intmod.IConstant {
+func NewConstant6(lineNumber int, annotationReferences AnnotationReference, name string,
+	arguments Expression, bodyDeclaration BodyDeclaration) Constant {
 	c := &Constant{
 		lineNumber:           lineNumber,
 		annotationReferences: annotationReferences,
@@ -88,17 +88,17 @@ type Constant struct {
 	TypeDeclaration
 
 	lineNumber           int
-	annotationReferences intmod.IAnnotationReference
+	annotationReferences AnnotationReference
 	name                 string
-	arguments            intmod.IExpression
-	bodyDeclaration      intmod.IBodyDeclaration
+	arguments            Expression
+	bodyDeclaration      BodyDeclaration
 }
 
 func (c *Constant) LineNumber() int {
 	return c.lineNumber
 }
 
-func (c *Constant) AnnotationReferences() intmod.IAnnotationReference {
+func (c *Constant) AnnotationReferences() AnnotationReference {
 	return c.annotationReferences
 }
 
@@ -106,18 +106,18 @@ func (c *Constant) Name() string {
 	return c.name
 }
 
-func (c *Constant) Arguments() intmod.IExpression {
+func (c *Constant) Arguments() Expression {
 	return c.arguments
 }
 
-func (c *Constant) SetArguments(arguments intmod.IExpression) {
+func (c *Constant) SetArguments(arguments Expression) {
 	c.arguments = arguments
 }
 
-func (c *Constant) BodyDeclaration() intmod.IBodyDeclaration {
+func (c *Constant) BodyDeclaration() BodyDeclaration {
 	return c.bodyDeclaration
 }
 
-func (c *Constant) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (c *Constant) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitEnumDeclarationConstant(c)
 }

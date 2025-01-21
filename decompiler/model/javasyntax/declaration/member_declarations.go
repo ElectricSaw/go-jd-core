@@ -5,19 +5,19 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewMemberDeclarations() intmod.IMemberDeclarations {
+func NewMemberDeclarations() MemberDeclarations {
 	return NewMemberDeclarationsWithCapacity(0)
 }
 
-func NewMemberDeclarationsWithCapacity(capacity int) intmod.IMemberDeclarations {
+func NewMemberDeclarationsWithCapacity(capacity int) MemberDeclarations {
 	return &MemberDeclarations{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.IMemberDeclaration](capacity).(*util.DefaultList[intmod.IMemberDeclaration]),
+		DefaultList: *util.NewDefaultListWithCapacity[MemberDeclaration](capacity).(*util.DefaultList[MemberDeclaration]),
 	}
 }
 
 type MemberDeclarations struct {
 	AbstractMemberDeclaration
-	util.DefaultList[intmod.IMemberDeclaration]
+	util.DefaultList[MemberDeclaration]
 }
 
 func (d *MemberDeclarations) IsList() bool {
@@ -28,26 +28,26 @@ func (d *MemberDeclarations) Size() int {
 	return d.DefaultList.Size()
 }
 
-func (d *MemberDeclarations) ToSlice() []intmod.IMemberDeclaration {
+func (d *MemberDeclarations) ToSlice() []MemberDeclaration {
 	return d.DefaultList.ToSlice()
 }
 
-func (d *MemberDeclarations) ToList() *util.DefaultList[intmod.IMemberDeclaration] {
+func (d *MemberDeclarations) ToList() *util.DefaultList[MemberDeclaration] {
 	return d.DefaultList.ToList()
 }
 
-func (d *MemberDeclarations) First() intmod.IMemberDeclaration {
+func (d *MemberDeclarations) First() MemberDeclaration {
 	return d.DefaultList.First()
 }
 
-func (d *MemberDeclarations) Last() intmod.IMemberDeclaration {
+func (d *MemberDeclarations) Last() MemberDeclaration {
 	return d.DefaultList.Last()
 }
 
-func (d *MemberDeclarations) Iterator() util.IIterator[intmod.IMemberDeclaration] {
+func (d *MemberDeclarations) Iterator() util.IIterator[MemberDeclaration] {
 	return d.DefaultList.Iterator()
 }
 
-func (d *MemberDeclarations) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *MemberDeclarations) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitMemberDeclarations(d)
 }

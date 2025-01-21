@@ -5,12 +5,12 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewFieldDeclaration(flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intmod.IFieldDeclaration {
+func NewFieldDeclaration(flags int, typ Type, fieldDeclaration FieldDeclarator) FieldDeclaration {
 	return NewFieldDeclarationWithAll(nil, flags, typ, fieldDeclaration)
 }
 
-func NewFieldDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
-	typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator) intmod.IFieldDeclaration {
+func NewFieldDeclarationWithAll(annotationReferences AnnotationReference, flags int,
+	typ Type, fieldDeclaration FieldDeclarator) FieldDeclaration {
 	d := &FieldDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -23,12 +23,12 @@ func NewFieldDeclarationWithAll(annotationReferences intmod.IAnnotationReference
 
 type FieldDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IMemberDeclaration]
+	util.DefaultBase[MemberDeclaration]
 
-	annotationReferences intmod.IAnnotationReference
+	annotationReferences AnnotationReference
 	flags                int
-	typ                  intmod.IType
-	fieldDeclarators     intmod.IFieldDeclarator
+	typ                  Type
+	fieldDeclarators     FieldDeclarator
 }
 
 func (d *FieldDeclaration) Flags() int {
@@ -39,26 +39,26 @@ func (d *FieldDeclaration) SetFlags(flags int) {
 	d.flags = flags
 }
 
-func (d *FieldDeclaration) AnnotationReferences() intmod.IAnnotationReference {
+func (d *FieldDeclaration) AnnotationReferences() AnnotationReference {
 	return d.annotationReferences
 }
 
-func (d *FieldDeclaration) Type() intmod.IType {
+func (d *FieldDeclaration) Type() Type {
 	return d.typ
 }
 
-func (d *FieldDeclaration) SetType(t intmod.IType) {
+func (d *FieldDeclaration) SetType(t Type) {
 	d.typ = t
 }
 
-func (d *FieldDeclaration) FieldDeclarators() intmod.IFieldDeclarator {
+func (d *FieldDeclaration) FieldDeclarators() FieldDeclarator {
 	return d.fieldDeclarators
 }
 
-func (d *FieldDeclaration) SetFieldDeclarators(fd intmod.IFieldDeclarator) {
+func (d *FieldDeclaration) SetFieldDeclarators(fd FieldDeclarator) {
 	d.fieldDeclarators = fd
 }
 
-func (d *FieldDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *FieldDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitFieldDeclaration(d)
 }

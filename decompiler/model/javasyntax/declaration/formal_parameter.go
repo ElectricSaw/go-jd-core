@@ -6,19 +6,19 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewFormalParameter(typ intmod.IType, name string) intmod.IFormalParameter {
+func NewFormalParameter(typ Type, name string) FormalParameter {
 	return NewFormalParameter4(nil, typ, false, name)
 }
 
-func NewFormalParameter2(annotationReferences intmod.IAnnotationReference, typ intmod.IType, name string) intmod.IFormalParameter {
+func NewFormalParameter2(annotationReferences AnnotationReference, typ Type, name string) FormalParameter {
 	return NewFormalParameter4(annotationReferences, typ, false, name)
 }
 
-func NewFormalParameter3(typ intmod.IType, varargs bool, name string) intmod.IFormalParameter {
+func NewFormalParameter3(typ Type, varargs bool, name string) FormalParameter {
 	return NewFormalParameter4(nil, typ, varargs, name)
 }
 
-func NewFormalParameter4(annotationReferences intmod.IAnnotationReference, typ intmod.IType, varargs bool, name string) intmod.IFormalParameter {
+func NewFormalParameter4(annotationReferences AnnotationReference, typ Type, varargs bool, name string) FormalParameter {
 	p := &FormalParameter{
 		annotationReferences: annotationReferences,
 		typ:                  typ,
@@ -30,16 +30,16 @@ func NewFormalParameter4(annotationReferences intmod.IAnnotationReference, typ i
 }
 
 type FormalParameter struct {
-	util.DefaultBase[intmod.IFormalParameter]
+	util.DefaultBase[FormalParameter]
 
-	annotationReferences intmod.IAnnotationReference
+	annotationReferences AnnotationReference
 	final                bool
-	typ                  intmod.IType
+	typ                  Type
 	varargs              bool
 	name                 string
 }
 
-func (d *FormalParameter) AnnotationReferences() intmod.IAnnotationReference {
+func (d *FormalParameter) AnnotationReferences() AnnotationReference {
 	return d.annotationReferences
 }
 
@@ -51,7 +51,7 @@ func (d *FormalParameter) SetFinal(final bool) {
 	d.final = final
 }
 
-func (d *FormalParameter) Type() intmod.IType {
+func (d *FormalParameter) Type() Type {
 	return d.typ
 }
 
@@ -67,7 +67,7 @@ func (d *FormalParameter) SetName(name string) {
 	d.name = name
 }
 
-func (d *FormalParameter) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *FormalParameter) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitFormalParameter(d)
 }
 

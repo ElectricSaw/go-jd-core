@@ -5,7 +5,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewInstanceInitializerDeclaration(description string, statements intmod.IStatement) intmod.IInstanceInitializerDeclaration {
+func NewInstanceInitializerDeclaration(description string, statements Statement) InstanceInitializerDeclaration {
 	d := &InstanceInitializerDeclaration{
 		description: description,
 		statements:  statements,
@@ -16,21 +16,21 @@ func NewInstanceInitializerDeclaration(description string, statements intmod.ISt
 
 type InstanceInitializerDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IMemberDeclaration]
+	util.DefaultBase[MemberDeclaration]
 
 	description string
-	statements  intmod.IStatement
+	statements  Statement
 }
 
 func (d *InstanceInitializerDeclaration) Description() string {
 	return d.description
 }
 
-func (d *InstanceInitializerDeclaration) Statements() intmod.IStatement {
+func (d *InstanceInitializerDeclaration) Statements() Statement {
 	return d.statements
 }
 
-func (d *InstanceInitializerDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *InstanceInitializerDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitInstanceInitializerDeclaration(d)
 }
 

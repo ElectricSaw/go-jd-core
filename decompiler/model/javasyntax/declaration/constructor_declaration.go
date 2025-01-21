@@ -7,15 +7,15 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewConstructorDeclaration(flags int, formalParameter intmod.IFormalParameter, descriptor string,
-	statements intmod.IStatement) intmod.IConstructorDeclaration {
+func NewConstructorDeclaration(flags int, formalParameter FormalParameter, descriptor string,
+	statements Statement) ConstructorDeclaration {
 	return NewConstructorDeclarationWithAll(nil, flags, nil,
 		formalParameter, nil, descriptor, statements)
 }
 
-func NewConstructorDeclarationWithAll(annotationReferences intmod.IReference, flags int,
-	typeParameters intmod.ITypeParameter, formalParameter intmod.IFormalParameter,
-	exceptionTypes intmod.IType, descriptor string, statements intmod.IStatement) intmod.IConstructorDeclaration {
+func NewConstructorDeclarationWithAll(annotationReferences Reference, flags int,
+	typeParameters TypeParameter, formalParameter FormalParameter,
+	exceptionTypes Type, descriptor string, statements Statement) ConstructorDeclaration {
 	d := &ConstructorDeclaration{
 		annotationReferences: annotationReferences,
 		flags:                flags,
@@ -31,15 +31,15 @@ func NewConstructorDeclarationWithAll(annotationReferences intmod.IReference, fl
 
 type ConstructorDeclaration struct {
 	AbstractMemberDeclaration
-	util.DefaultBase[intmod.IMemberDeclaration]
+	util.DefaultBase[MemberDeclaration]
 
-	annotationReferences intmod.IReference
+	annotationReferences Reference
 	flags                int
-	typeParameters       intmod.ITypeParameter
-	formalParameter      intmod.IFormalParameter
-	exceptionTypes       intmod.IType
+	typeParameters       TypeParameter
+	formalParameter      FormalParameter
+	exceptionTypes       Type
 	descriptor           string
-	statements           intmod.IStatement
+	statements           Statement
 }
 
 func (d *ConstructorDeclaration) Flags() int {
@@ -54,23 +54,23 @@ func (d *ConstructorDeclaration) IsStatic() bool {
 	return d.flags&classpath.AccStatic != 0
 }
 
-func (d *ConstructorDeclaration) AnnotationReferences() intmod.IReference {
+func (d *ConstructorDeclaration) AnnotationReferences() Reference {
 	return d.annotationReferences
 }
 
-func (d *ConstructorDeclaration) TypeParameters() intmod.ITypeParameter {
+func (d *ConstructorDeclaration) TypeParameters() TypeParameter {
 	return d.typeParameters
 }
 
-func (d *ConstructorDeclaration) FormalParameters() intmod.IFormalParameter {
+func (d *ConstructorDeclaration) FormalParameters() FormalParameter {
 	return d.formalParameter
 }
 
-func (d *ConstructorDeclaration) SetFormalParameters(formalParameter intmod.IFormalParameter) {
+func (d *ConstructorDeclaration) SetFormalParameters(formalParameter FormalParameter) {
 	d.formalParameter = formalParameter
 }
 
-func (d *ConstructorDeclaration) ExceptionTypes() intmod.IType {
+func (d *ConstructorDeclaration) ExceptionTypes() Type {
 	return d.exceptionTypes
 }
 
@@ -78,15 +78,15 @@ func (d *ConstructorDeclaration) Descriptor() string {
 	return d.descriptor
 }
 
-func (d *ConstructorDeclaration) Statements() intmod.IStatement {
+func (d *ConstructorDeclaration) Statements() Statement {
 	return d.statements
 }
 
-func (d *ConstructorDeclaration) SetStatements(state intmod.IStatement) {
+func (d *ConstructorDeclaration) SetStatements(state Statement) {
 	d.statements = state
 }
 
-func (d *ConstructorDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ConstructorDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitConstructorDeclaration(d)
 }
 

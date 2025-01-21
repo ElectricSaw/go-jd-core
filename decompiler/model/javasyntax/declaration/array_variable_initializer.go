@@ -5,7 +5,7 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewArrayVariableInitializer(typ intmod.IType) intmod.IArrayVariableInitializer {
+func NewArrayVariableInitializer(typ Type) ArrayVariableInitializer {
 	return &ArrayVariableInitializer{
 		typ: typ,
 	}
@@ -13,12 +13,12 @@ func NewArrayVariableInitializer(typ intmod.IType) intmod.IArrayVariableInitiali
 
 type ArrayVariableInitializer struct {
 	AbstractVariableInitializer
-	util.DefaultList[intmod.IVariableInitializer]
+	util.DefaultList[VariableInitializer]
 
-	typ intmod.IType
+	typ Type
 }
 
-func (i *ArrayVariableInitializer) Type() intmod.IType {
+func (i *ArrayVariableInitializer) Type() Type {
 	return i.typ
 }
 
@@ -29,6 +29,6 @@ func (i *ArrayVariableInitializer) LineNumber() int {
 	return i.Get(0).LineNumber()
 }
 
-func (i *ArrayVariableInitializer) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (i *ArrayVariableInitializer) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitArrayVariableInitializer(i)
 }

@@ -5,19 +5,19 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewTypeDeclarations() intmod.ITypeDeclarations {
+func NewTypeDeclarations() TypeDeclarations {
 	return NewTypeDeclarationsWithCapacity(0)
 }
 
-func NewTypeDeclarationsWithCapacity(capacity int) intmod.ITypeDeclarations {
+func NewTypeDeclarationsWithCapacity(capacity int) TypeDeclarations {
 	return &TypeDeclarations{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.IMemberDeclaration](capacity).(*util.DefaultList[intmod.IMemberDeclaration]),
+		DefaultList: *util.NewDefaultListWithCapacity[MemberDeclaration](capacity).(*util.DefaultList[MemberDeclaration]),
 	}
 }
 
 type TypeDeclarations struct {
 	AbstractTypeDeclaration
-	util.DefaultList[intmod.IMemberDeclaration]
+	util.DefaultList[MemberDeclaration]
 }
 
 func (d *TypeDeclarations) IsList() bool {
@@ -28,26 +28,26 @@ func (d *TypeDeclarations) Size() int {
 	return d.DefaultList.Size()
 }
 
-func (d *TypeDeclarations) ToSlice() []intmod.IMemberDeclaration {
+func (d *TypeDeclarations) ToSlice() []MemberDeclaration {
 	return d.DefaultList.ToSlice()
 }
 
-func (d *TypeDeclarations) ToList() *util.DefaultList[intmod.IMemberDeclaration] {
+func (d *TypeDeclarations) ToList() *util.DefaultList[MemberDeclaration] {
 	return d.DefaultList.ToList()
 }
 
-func (d *TypeDeclarations) First() intmod.IMemberDeclaration {
+func (d *TypeDeclarations) First() MemberDeclaration {
 	return d.DefaultList.First()
 }
 
-func (d *TypeDeclarations) Last() intmod.IMemberDeclaration {
+func (d *TypeDeclarations) Last() MemberDeclaration {
 	return d.DefaultList.Last()
 }
 
-func (d *TypeDeclarations) Iterator() util.IIterator[intmod.IMemberDeclaration] {
+func (d *TypeDeclarations) Iterator() util.IIterator[MemberDeclaration] {
 	return d.DefaultList.Iterator()
 }
 
-func (d *TypeDeclarations) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *TypeDeclarations) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitTypeDeclarations(d)
 }

@@ -4,7 +4,7 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 )
 
-func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMemberDeclaration) intmod.IBodyDeclaration {
+func NewBodyDeclaration(internalTypeName string, memberDeclaration MemberDeclaration) BodyDeclaration {
 	d := &BodyDeclaration{
 		internalTypeName:   internalTypeName,
 		memberDeclarations: memberDeclaration,
@@ -14,21 +14,21 @@ func NewBodyDeclaration(internalTypeName string, memberDeclaration intmod.IMembe
 
 type BodyDeclaration struct {
 	internalTypeName   string
-	memberDeclarations intmod.IMemberDeclaration
+	memberDeclarations MemberDeclaration
 }
 
 func (d *BodyDeclaration) InternalTypeName() string {
 	return d.internalTypeName
 }
 
-func (d *BodyDeclaration) MemberDeclarations() intmod.IMemberDeclaration {
+func (d *BodyDeclaration) MemberDeclarations() MemberDeclaration {
 	return d.memberDeclarations
 }
 
-func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration intmod.IMemberDeclaration) {
+func (d *BodyDeclaration) SetMemberDeclarations(memberDeclaration MemberDeclaration) {
 	d.memberDeclarations = memberDeclaration
 }
 
-func (d *BodyDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *BodyDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitBodyDeclaration(d)
 }

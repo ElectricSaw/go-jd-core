@@ -7,9 +7,9 @@ import (
 )
 
 func NewModuleDeclaration(flags int, internalTypeName, name, version string,
-	requires util.IList[intmod.IModuleInfo], exports util.IList[intmod.IPackageInfo],
-	opens util.IList[intmod.IPackageInfo], uses util.IList[string],
-	provides util.IList[intmod.IServiceInfo]) intmod.IModuleDeclaration {
+	requires util.IList[ModuleInfo], exports util.IList[PackageInfo],
+	opens util.IList[PackageInfo], uses util.IList[string],
+	provides util.IList[ServiceInfo]) ModuleDeclaration {
 	d := &ModuleDeclaration{
 		TypeDeclaration: *NewTypeDeclaration(nil, flags, internalTypeName, name, nil).(*TypeDeclaration),
 		version:         version,
@@ -27,26 +27,26 @@ type ModuleDeclaration struct {
 	TypeDeclaration
 
 	version  string
-	requires util.IList[intmod.IModuleInfo]
-	exports  util.IList[intmod.IPackageInfo]
-	opens    util.IList[intmod.IPackageInfo]
+	requires util.IList[ModuleInfo]
+	exports  util.IList[PackageInfo]
+	opens    util.IList[PackageInfo]
 	uses     util.IList[string]
-	provides util.IList[intmod.IServiceInfo]
+	provides util.IList[ServiceInfo]
 }
 
 func (d *ModuleDeclaration) Version() string {
 	return d.version
 }
 
-func (d *ModuleDeclaration) Requires() util.IList[intmod.IModuleInfo] {
+func (d *ModuleDeclaration) Requires() util.IList[ModuleInfo] {
 	return d.requires
 }
 
-func (d *ModuleDeclaration) Exports() util.IList[intmod.IPackageInfo] {
+func (d *ModuleDeclaration) Exports() util.IList[PackageInfo] {
 	return d.exports
 }
 
-func (d *ModuleDeclaration) Opens() util.IList[intmod.IPackageInfo] {
+func (d *ModuleDeclaration) Opens() util.IList[PackageInfo] {
 	return d.opens
 }
 
@@ -54,11 +54,11 @@ func (d *ModuleDeclaration) Uses() util.IList[string] {
 	return d.uses
 }
 
-func (d *ModuleDeclaration) Provides() util.IList[intmod.IServiceInfo] {
+func (d *ModuleDeclaration) Provides() util.IList[ServiceInfo] {
 	return d.provides
 }
 
-func (d *ModuleDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ModuleDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitModuleDeclaration(d)
 }
 
@@ -66,7 +66,7 @@ func (d *ModuleDeclaration) String() string {
 	return fmt.Sprintf("ModuleDeclaration{%s}", d.internalTypeName)
 }
 
-func NewModuleInfo(name string, flags int, version string) intmod.IModuleInfo {
+func NewModuleInfo(name string, flags int, version string) ModuleInfo {
 	return &ModuleInfo{
 		name:    name,
 		flags:   flags,
@@ -102,7 +102,7 @@ func (i *ModuleInfo) String() string {
 	return msg
 }
 
-func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) intmod.IPackageInfo {
+func NewPackageInfo(internalName string, flags int, moduleInfoNames []string) PackageInfo {
 	return &PackageInfo{
 		internalName:    internalName,
 		flags:           flags,
@@ -138,7 +138,7 @@ func (i *PackageInfo) String() string {
 	return msg
 }
 
-func NewServiceInfo(internalTypeName string, implementationTypeNames []string) intmod.IServiceInfo {
+func NewServiceInfo(internalTypeName string, implementationTypeNames []string) ServiceInfo {
 	return &ServiceInfo{
 		internalTypeName:        internalTypeName,
 		implementationTypeNames: implementationTypeNames,

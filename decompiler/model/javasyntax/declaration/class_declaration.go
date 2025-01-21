@@ -6,14 +6,14 @@ import (
 )
 
 func NewClassDeclaration(flags int, internalTypeName, name string,
-	bodyDeclaration intmod.IBodyDeclaration) intmod.IClassDeclaration {
+	bodyDeclaration BodyDeclaration) ClassDeclaration {
 	return NewClassDeclarationWithAll(nil, flags, internalTypeName, name,
 		bodyDeclaration, nil, nil, nil)
 }
 
-func NewClassDeclarationWithAll(annotationReferences intmod.IAnnotationReference, flags int,
-	internalTypeName, name string, bodyDeclaration intmod.IBodyDeclaration,
-	typeParameters intmod.ITypeParameter, interfaces intmod.IType, superType intmod.IObjectType) intmod.IClassDeclaration {
+func NewClassDeclarationWithAll(annotationReferences AnnotationReference, flags int,
+	internalTypeName, name string, bodyDeclaration BodyDeclaration,
+	typeParameters TypeParameter, interfaces Type, superType ObjectType) ClassDeclaration {
 	d := &ClassDeclaration{
 		InterfaceDeclaration: *NewInterfaceDeclarationWithAll(annotationReferences, flags,
 			internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*InterfaceDeclaration),
@@ -26,10 +26,10 @@ func NewClassDeclarationWithAll(annotationReferences intmod.IAnnotationReference
 type ClassDeclaration struct {
 	InterfaceDeclaration
 
-	superType intmod.IObjectType
+	superType ObjectType
 }
 
-func (d *ClassDeclaration) SuperType() intmod.IObjectType {
+func (d *ClassDeclaration) SuperType() ObjectType {
 	return d.superType
 }
 
@@ -37,7 +37,7 @@ func (d *ClassDeclaration) IsClassDeclaration() bool {
 	return true
 }
 
-func (d *ClassDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ClassDeclaration) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitClassDeclaration(d)
 }
 

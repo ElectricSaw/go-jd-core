@@ -6,15 +6,15 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewFieldDeclarator(name string) intmod.IFieldDeclarator {
+func NewFieldDeclarator(name string) FieldDeclarator {
 	return NewFieldDeclarator3(name, 0, nil)
 }
 
-func NewFieldDeclarator2(name string, variableInitializer intmod.IVariableInitializer) intmod.IFieldDeclarator {
+func NewFieldDeclarator2(name string, variableInitializer VariableInitializer) FieldDeclarator {
 	return NewFieldDeclarator3(name, 0, variableInitializer)
 }
 
-func NewFieldDeclarator3(name string, dimension int, variableInitializer intmod.IVariableInitializer) intmod.IFieldDeclarator {
+func NewFieldDeclarator3(name string, dimension int, variableInitializer VariableInitializer) FieldDeclarator {
 	d := &FieldDeclarator{
 		name:                name,
 		variableInitializer: variableInitializer,
@@ -25,19 +25,19 @@ func NewFieldDeclarator3(name string, dimension int, variableInitializer intmod.
 }
 
 type FieldDeclarator struct {
-	util.DefaultBase[intmod.IFieldDeclarator]
+	util.DefaultBase[FieldDeclarator]
 
-	fieldDeclaration    intmod.IFieldDeclaration
+	fieldDeclaration    FieldDeclaration
 	name                string
 	dimension           int
-	variableInitializer intmod.IVariableInitializer
+	variableInitializer VariableInitializer
 }
 
-func (d *FieldDeclarator) SetFieldDeclaration(fieldDeclaration intmod.IFieldDeclaration) {
+func (d *FieldDeclarator) SetFieldDeclaration(fieldDeclaration FieldDeclaration) {
 	d.fieldDeclaration = fieldDeclaration
 }
 
-func (d *FieldDeclarator) FieldDeclaration() intmod.IFieldDeclaration {
+func (d *FieldDeclarator) FieldDeclaration() FieldDeclaration {
 	return d.fieldDeclaration
 }
 
@@ -49,15 +49,15 @@ func (d *FieldDeclarator) Dimension() int {
 	return d.dimension
 }
 
-func (d *FieldDeclarator) VariableInitializer() intmod.IVariableInitializer {
+func (d *FieldDeclarator) VariableInitializer() VariableInitializer {
 	return d.variableInitializer
 }
 
-func (d *FieldDeclarator) SetVariableInitializer(variableInitializer intmod.IVariableInitializer) {
+func (d *FieldDeclarator) SetVariableInitializer(variableInitializer VariableInitializer) {
 	d.variableInitializer = variableInitializer
 }
 
-func (d *FieldDeclarator) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *FieldDeclarator) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitFieldDeclarator(d)
 }
 

@@ -5,21 +5,21 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewFormalParameters() intmod.IFormalParameters {
+func NewFormalParameters() FormalParameters {
 	return NewFormalParametersWithCapacity(0)
 }
 
-func NewFormalParametersWithCapacity(capacity int) intmod.IFormalParameters {
+func NewFormalParametersWithCapacity(capacity int) FormalParameters {
 	return &FormalParameters{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.IFormalParameter](capacity).(*util.DefaultList[intmod.IFormalParameter]),
+		DefaultList: *util.NewDefaultListWithCapacity[FormalParameter](capacity).(*util.DefaultList[FormalParameter]),
 	}
 }
 
 type FormalParameters struct {
-	util.DefaultList[intmod.IFormalParameter]
+	util.DefaultList[FormalParameter]
 }
 
-func (d *FormalParameters) AnnotationReferences() intmod.IAnnotationReference {
+func (d *FormalParameters) AnnotationReferences() AnnotationReference {
 	return nil
 }
 
@@ -29,7 +29,7 @@ func (d *FormalParameters) IsFinal() bool {
 
 func (d *FormalParameters) SetFinal(final bool) {}
 
-func (d *FormalParameters) Type() intmod.IType {
+func (d *FormalParameters) Type() Type {
 	return nil
 }
 
@@ -43,7 +43,7 @@ func (d *FormalParameters) Name() string {
 
 func (d *FormalParameters) SetName(name string) {}
 
-func (d *FormalParameters) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *FormalParameters) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitFormalParameters(d)
 }
 

@@ -5,18 +5,18 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewLocalVariableDeclarators() intmod.ILocalVariableDeclarators {
+func NewLocalVariableDeclarators() LocalVariableDeclarators {
 	return NewLocalVariableDeclaratorsWithCapacity(0)
 }
 
-func NewLocalVariableDeclaratorsWithCapacity(capacity int) intmod.ILocalVariableDeclarators {
+func NewLocalVariableDeclaratorsWithCapacity(capacity int) LocalVariableDeclarators {
 	return &LocalVariableDeclarators{
-		DefaultList: *util.NewDefaultListWithCapacity[intmod.ILocalVariableDeclarator](capacity).(*util.DefaultList[intmod.ILocalVariableDeclarator]),
+		DefaultList: *util.NewDefaultListWithCapacity[LocalVariableDeclarator](capacity).(*util.DefaultList[LocalVariableDeclarator]),
 	}
 }
 
 type LocalVariableDeclarators struct {
-	util.DefaultList[intmod.ILocalVariableDeclarator]
+	util.DefaultList[LocalVariableDeclarator]
 }
 
 func (d *LocalVariableDeclarators) Name() string { return "" }
@@ -35,9 +35,9 @@ func (d *LocalVariableDeclarators) LineNumber() int {
 	return d.Get(0).LineNumber()
 }
 
-func (d *LocalVariableDeclarators) VariableInitializer() intmod.IVariableInitializer { return nil }
+func (d *LocalVariableDeclarators) VariableInitializer() VariableInitializer { return nil }
 
-func (d *LocalVariableDeclarators) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *LocalVariableDeclarators) AcceptDeclaration(visitor DeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarators(d)
 }
 
