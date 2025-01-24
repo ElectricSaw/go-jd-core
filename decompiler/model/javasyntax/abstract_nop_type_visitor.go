@@ -1,12 +1,10 @@
 package javasyntax
 
-import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-
 type AbstractNopTypeVisitor struct {
 }
 
-func (v *AbstractNopTypeVisitor) VisitPrimitiveType(y intmod.IPrimitiveType)     {}
-func (v *AbstractNopTypeVisitor) VisitObjectType(y intmod.IObjectType)           {}
-func (v *AbstractNopTypeVisitor) VisitInnerObjectType(y intmod.IInnerObjectType) {}
-func (v *AbstractNopTypeVisitor) VisitTypes(types intmod.ITypes)                 {}
-func (v *AbstractNopTypeVisitor) VisitGenericType(y intmod.IGenericType)         {}
+func (v *AbstractNopTypeVisitor) VisitPrimitiveType(y *PrimitiveType)     {}
+func (v *AbstractNopTypeVisitor) VisitObjectType(y *ObjectType)           {}
+func (v *AbstractNopTypeVisitor) VisitInnerObjectType(y *InnerObjectType) {}
+func (v *AbstractNopTypeVisitor) VisitTypes(types *Types)                 {}
+func (v *AbstractNopTypeVisitor) VisitGenericType(y *GenericType)         {}

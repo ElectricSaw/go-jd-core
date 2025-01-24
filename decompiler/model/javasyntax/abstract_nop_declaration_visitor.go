@@ -1,71 +1,67 @@
 package javasyntax
 
-import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-)
-
 type AbstractNopDeclarationVisitor struct {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitAnnotationDeclaration(declaration intmod.IAnnotationDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitAnnotationDeclaration(declaration *AnnotationDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitArrayVariableInitializer(declaration intmod.IArrayVariableInitializer) {
+func (v *AbstractNopDeclarationVisitor) VisitArrayVariableInitializer(declaration *ArrayVariableInitializer) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitBodyDeclaration(declaration intmod.IBodyDeclaration) {}
+func (v *AbstractNopDeclarationVisitor) VisitBodyDeclaration(declaration *BodyDeclaration) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitClassDeclaration(declaration intmod.IClassDeclaration) {}
+func (v *AbstractNopDeclarationVisitor) VisitClassDeclaration(declaration *ClassDeclaration) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitConstructorDeclaration(declaration intmod.IConstructorDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitConstructorDeclaration(declaration *ConstructorDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitEnumDeclaration(declaration intmod.IEnumDeclaration) {}
+func (v *AbstractNopDeclarationVisitor) VisitEnumDeclaration(declaration *EnumDeclaration) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitEnumDeclarationConstant(declaration intmod.IConstant) {
+func (v *AbstractNopDeclarationVisitor) VisitEnumDeclarationConstant(declaration *Constant) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitExpressionVariableInitializer(declaration intmod.IExpressionVariableInitializer) {
+func (v *AbstractNopDeclarationVisitor) VisitExpressionVariableInitializer(declaration *ExpressionVariableInitializer) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitFieldDeclaration(declaration intmod.IFieldDeclaration) {}
+func (v *AbstractNopDeclarationVisitor) VisitFieldDeclaration(declaration *FieldDeclaration) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitFieldDeclarator(declaration intmod.IFieldDeclarator) {}
+func (v *AbstractNopDeclarationVisitor) VisitFieldDeclarator(declaration *FieldDeclarator) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitFieldDeclarators(declarations intmod.IFieldDeclarators) {
+func (v *AbstractNopDeclarationVisitor) VisitFieldDeclarators(declarations *FieldDeclarators) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitFormalParameter(declaration intmod.IFormalParameter) {}
+func (v *AbstractNopDeclarationVisitor) VisitFormalParameter(declaration *FormalParameter) {}
 
-func (v *AbstractNopDeclarationVisitor) VisitFormalParameters(declarations intmod.IFormalParameters) {
+func (v *AbstractNopDeclarationVisitor) VisitFormalParameters(declarations *FormalParameters) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitInstanceInitializerDeclaration(declaration intmod.IInstanceInitializerDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitInstanceInitializerDeclaration(declaration *InstanceInitializerDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitInterfaceDeclaration(declaration intmod.IInterfaceDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitInterfaceDeclaration(declaration *InterfaceDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitLocalVariableDeclaration(declaration intmod.ILocalVariableDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitLocalVariableDeclaration(declaration *LocalVariableDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitLocalVariableDeclarator(declarator intmod.ILocalVariableDeclarator) {
+func (v *AbstractNopDeclarationVisitor) VisitLocalVariableDeclarator(declarator *LocalVariableDeclarator) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitLocalVariableDeclarators(declarators intmod.ILocalVariableDeclarators) {
+func (v *AbstractNopDeclarationVisitor) VisitLocalVariableDeclarators(declarators *LocalVariableDeclarators) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitMethodDeclaration(declaration intmod.IMethodDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitMethodDeclaration(declaration *MethodDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitMemberDeclarations(declarations intmod.IMemberDeclarations) {
+func (v *AbstractNopDeclarationVisitor) VisitMemberDeclarations(declarations *MemberDeclarations) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitModuleDeclaration(declarations intmod.IModuleDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitModuleDeclaration(declarations *ModuleDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitStaticInitializerDeclaration(declaration intmod.IStaticInitializerDeclaration) {
+func (v *AbstractNopDeclarationVisitor) VisitStaticInitializerDeclaration(declaration *StaticInitializerDeclaration) {
 }
 
-func (v *AbstractNopDeclarationVisitor) VisitTypeDeclarations(declarations intmod.ITypeDeclarations) {
+func (v *AbstractNopDeclarationVisitor) VisitTypeDeclarations(declarations *TypeDeclarations) {
 }

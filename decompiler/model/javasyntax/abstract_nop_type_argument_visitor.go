@@ -1,45 +1,43 @@
 package javasyntax
 
-import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-
 type AbstractTypeArgumentVisitor struct {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {
+func (v *AbstractTypeArgumentVisitor) VisitTypeArguments(arguments *TypeArguments) {
 	arguments.AcceptTypeArgumentVisitor(v)
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitDiamondTypeArgument(argument *DiamondTypeArgument) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument *WildcardExtendsTypeArgument) {
 	argument.AcceptTypeArgumentVisitor(v)
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument *WildcardSuperTypeArgument) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {
+func (v *AbstractTypeArgumentVisitor) VisitWildcardTypeArgument(argument *WildcardTypeArgument) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t intmod.IPrimitiveType) {
+func (v *AbstractTypeArgumentVisitor) VisitPrimitiveType(t *PrimitiveType) {
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitObjectType(t intmod.IObjectType) {
+func (v *AbstractTypeArgumentVisitor) VisitObjectType(t *ObjectType) {
 	v.SafeAcceptTypeArgumentVisitable(t.TypeArguments())
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {
+func (v *AbstractTypeArgumentVisitor) VisitInnerObjectType(t *InnerObjectType) {
 	t.OuterType().AcceptTypeArgumentVisitor(v)
-	if visitable, ok := t.TypeArguments().(intmod.ITypeArgumentVisitable); ok {
+	if visitable, ok := t.TypeArguments().(*TypeArgumentVisitable); ok {
 		v.SafeAcceptTypeArgumentVisitable(visitable)
 	}
 }
 
-func (v *AbstractTypeArgumentVisitor) VisitGenericType(t intmod.IGenericType) {
+func (v *AbstractTypeArgumentVisitor) VisitGenericType(t *GenericType) {
 }
 
-func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable intmod.ITypeArgumentVisitable) {
+func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable *TypeArgumentVisitable) {
 	if visitable != nil {
 		visitable.AcceptTypeArgumentVisitor(v)
 	}
@@ -48,16 +46,16 @@ func (v *AbstractTypeArgumentVisitor) SafeAcceptTypeArgumentVisitable(visitable 
 type AbstractNopTypeArgumentVisitor struct {
 }
 
-func (v *AbstractNopTypeArgumentVisitor) VisitTypeArguments(arguments intmod.ITypeArguments) {}
-func (v *AbstractNopTypeArgumentVisitor) VisitDiamondTypeArgument(argument intmod.IDiamondTypeArgument) {
+func (v *AbstractNopTypeArgumentVisitor) VisitTypeArguments(arguments *TypeArguments) {}
+func (v *AbstractNopTypeArgumentVisitor) VisitDiamondTypeArgument(argument *DiamondTypeArgument) {
 }
-func (v *AbstractNopTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument intmod.IWildcardExtendsTypeArgument) {
+func (v *AbstractNopTypeArgumentVisitor) VisitWildcardExtendsTypeArgument(argument *WildcardExtendsTypeArgument) {
 }
-func (v *AbstractNopTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument intmod.IWildcardSuperTypeArgument) {
+func (v *AbstractNopTypeArgumentVisitor) VisitWildcardSuperTypeArgument(argument *WildcardSuperTypeArgument) {
 }
-func (v *AbstractNopTypeArgumentVisitor) VisitWildcardTypeArgument(argument intmod.IWildcardTypeArgument) {
+func (v *AbstractNopTypeArgumentVisitor) VisitWildcardTypeArgument(argument *WildcardTypeArgument) {
 }
-func (v *AbstractNopTypeArgumentVisitor) VisitPrimitiveType(t intmod.IPrimitiveType)     {}
-func (v *AbstractNopTypeArgumentVisitor) VisitObjectType(t intmod.IObjectType)           {}
-func (v *AbstractNopTypeArgumentVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {}
-func (v *AbstractNopTypeArgumentVisitor) VisitGenericType(t intmod.IGenericType)         {}
+func (v *AbstractNopTypeArgumentVisitor) VisitPrimitiveType(t *PrimitiveType)     {}
+func (v *AbstractNopTypeArgumentVisitor) VisitObjectType(t *ObjectType)           {}
+func (v *AbstractNopTypeArgumentVisitor) VisitInnerObjectType(t *InnerObjectType) {}
+func (v *AbstractNopTypeArgumentVisitor) VisitGenericType(t *GenericType)         {}

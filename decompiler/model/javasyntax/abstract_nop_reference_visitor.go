@@ -1,23 +1,21 @@
 package javasyntax
 
-import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-
 type AbstractNopReferenceVisitor struct {
 }
 
-func (e *AbstractNopReferenceVisitor) VisitAnnotationElementValue(reference intmod.IAnnotationElementValue) {
+func (e *AbstractNopReferenceVisitor) VisitAnnotationElementValue(reference *AnnotationElementValue) {
 }
-func (e *AbstractNopReferenceVisitor) VisitAnnotationReference(reference intmod.IAnnotationReference) {
+func (e *AbstractNopReferenceVisitor) VisitAnnotationReference(reference *AnnotationReference) {
 }
-func (e *AbstractNopReferenceVisitor) VisitAnnotationReferences(references intmod.IAnnotationReferences) {
+func (e *AbstractNopReferenceVisitor) VisitAnnotationReferences(references *AnnotationReferences) {
 }
-func (e *AbstractNopReferenceVisitor) VisitElementValueArrayInitializerElementValue(reference intmod.IElementValueArrayInitializerElementValue) {
+func (e *AbstractNopReferenceVisitor) VisitElementValueArrayInitializerElementValue(reference *ElementValueArrayInitializerElementValue) {
 }
-func (e *AbstractNopReferenceVisitor) VisitElementValues(references intmod.IElementValues)         {}
-func (e *AbstractNopReferenceVisitor) VisitElementValuePair(reference intmod.IElementValuePair)    {}
-func (e *AbstractNopReferenceVisitor) VisitElementValuePairs(references intmod.IElementValuePairs) {}
-func (e *AbstractNopReferenceVisitor) VisitExpressionElementValue(reference intmod.IExpressionElementValue) {
+func (e *AbstractNopReferenceVisitor) VisitElementValues(references *ElementValues)         {}
+func (e *AbstractNopReferenceVisitor) VisitElementValuePair(reference *ElementValuePair)    {}
+func (e *AbstractNopReferenceVisitor) VisitElementValuePairs(references *ElementValuePairs) {}
+func (e *AbstractNopReferenceVisitor) VisitExpressionElementValue(reference *ExpressionElementValue) {
 }
-func (e *AbstractNopReferenceVisitor) VisitInnerObjectReference(reference intmod.IInnerObjectReference) {
+func (e *AbstractNopReferenceVisitor) VisitInnerObjectReference(reference *InnerObjectReference) {
 }
-func (e *AbstractNopReferenceVisitor) VisitObjectReference(reference intmod.IObjectReference) {}
+func (e *AbstractNopReferenceVisitor) VisitObjectReference(reference *ObjectReference) {}
