@@ -4,8 +4,8 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
 )
 
 func NewTypeArgumentToTypeVisitor() intsrv.ITypeArgumentToTypeVisitor {

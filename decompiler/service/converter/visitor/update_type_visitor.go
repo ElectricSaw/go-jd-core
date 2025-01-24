@@ -4,7 +4,7 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/type"
+	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 )
 
 func NewUpdateTypeVisitor(localVariableSet intsrv.ILocalVariableSet) intsrv.IUpdateTypeVisitor {

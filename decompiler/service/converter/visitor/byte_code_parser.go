@@ -5,7 +5,7 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
 	modexp "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
@@ -2227,7 +2227,7 @@ func NewLambdaParameterNamesVisitor() *LambdaParameterNamesVisitor {
 }
 
 type LambdaParameterNamesVisitor struct {
-	declaration.AbstractNopDeclarationVisitor
+	javasyntax.AbstractNopDeclarationVisitor
 
 	names util.IList[string]
 }

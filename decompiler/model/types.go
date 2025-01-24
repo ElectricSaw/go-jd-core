@@ -1174,7 +1174,7 @@ func (t *UnmodifiableTypes) InternalName() string {
 }
 
 func (t *UnmodifiableTypes) AcceptTypeVisitor(visitor ITypeVisitor) {
-	visitor.VisitTypes(t)
+	visitor.VisitTypes((*Types)(t))
 }
 
 func (t *UnmodifiableTypes) Equals(o interface{}) bool {
