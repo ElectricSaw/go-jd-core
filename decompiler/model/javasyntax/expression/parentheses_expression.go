@@ -6,15 +6,15 @@ import (
 
 func NewParenthesesExpression(expression intmod.IExpression) intmod.IParenthesesExpression {
 	e := &ParenthesesExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(expression.LineNumber()),
-		expression:                   expression,
+		LineNumberExpression: *NewAbstractLineNumberExpression(expression.LineNumber()),
+		expression:           expression,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type ParenthesesExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	expression intmod.IExpression
 }

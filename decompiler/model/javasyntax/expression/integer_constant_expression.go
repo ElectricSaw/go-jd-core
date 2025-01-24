@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"math"
 )
 
@@ -50,7 +50,7 @@ func (e *IntegerConstantExpression) String() string {
 func (e *IntegerConstantExpression) checkType(typ intmod.IType) bool {
 	if typ.IsPrimitiveType() {
 		valueType := GetPrimitiveTypeFromValue(e.value)
-		pt, ok := e.typ.(*_type.PrimitiveType)
+		pt, ok := e.typ.(*model.PrimitiveType)
 		if ok {
 			return pt.Flags()&valueType.Flags() != 0
 		}
@@ -61,24 +61,24 @@ func (e *IntegerConstantExpression) checkType(typ intmod.IType) bool {
 func GetPrimitiveTypeFromValue(value int) intmod.IPrimitiveType {
 	if value >= 0 {
 		if value <= 1 {
-			return _type.PtMaybeBooleanType
+			return model.PtMaybeBooleanType
 		}
 		if value <= math.MaxInt8 {
-			return _type.PtMaybeByteType
+			return model.PtMaybeByteType
 		}
 		if value <= math.MaxInt16 {
-			return _type.PtMaybeShortType
+			return model.PtMaybeShortType
 		}
 		if value <= math.MaxUint16 {
-			return _type.PtMaybeCharType
+			return model.PtMaybeCharType
 		}
 	} else {
 		if value >= math.MinInt8 {
-			return _type.PtMaybeNegativeByteType
+			return model.PtMaybeNegativeByteType
 		}
 		if value <= math.MinInt16 {
-			return _type.PtMaybeNegativeShortType
+			return model.PtMaybeNegativeShortType
 		}
 	}
-	return _type.PtMaybeIntType
+	return model.PtMaybeIntType
 }

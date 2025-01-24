@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 var True = NewBooleanExpression(true)
@@ -15,8 +15,8 @@ func NewBooleanExpression(value bool) intmod.IBooleanExpression {
 
 func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intmod.IBooleanExpression {
 	e := &BooleanExpression{
-		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: lineNumber,
+		LineNumberExpression: LineNumberExpression{
+			LineNumber: lineNumber,
 		},
 		value: value,
 	}
@@ -25,13 +25,13 @@ func NewBooleanExpressionWithLineNumber(lineNumber int, value bool) intmod.IBool
 }
 
 type BooleanExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	value bool
 }
 
 func (e *BooleanExpression) Type() intmod.IType {
-	return _type.PtTypeBoolean.(intmod.IType)
+	return model.PtTypeBoolean.(intmod.IType)
 }
 
 func (e *BooleanExpression) IsTrue() bool {

@@ -3,7 +3,6 @@ package utils
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	modexp "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"strings"
@@ -96,7 +95,7 @@ func MakeSwitchString(localVariableMaker intsrv.ILocalVariableMaker, statements 
 													if lb.Label() != modsts.DefaultLabe1.(intmod.ILabel) {
 														el := lb.Label().(intmod.IExpressionLabel)
 														nce := el.Expression().(intmod.IIntegerConstantExpression)
-														el.SetExpression(modexp.NewStringConstantExpressionWithAll(
+														el.SetExpression(expression.NewStringConstantExpressionWithAll(
 															nce.LineNumber(), mapped[nce.IntegerValue()]))
 													}
 												} else if block.IsSwitchStatementMultiLabelsBlock() {
@@ -106,7 +105,7 @@ func MakeSwitchString(localVariableMaker intsrv.ILocalVariableMaker, statements 
 														if label != modsts.DefaultLabe1.(intmod.ILabel) {
 															el := label.(intmod.IExpressionLabel)
 															nce := el.Expression().(intmod.IIntegerConstantExpression)
-															el.SetExpression(modexp.NewStringConstantExpressionWithAll(
+															el.SetExpression(expression.NewStringConstantExpressionWithAll(
 																nce.LineNumber(), mapped[nce.IntegerValue()]))
 														}
 													}
@@ -244,7 +243,7 @@ func updateSwitchStatement(switchStatement intmod.ISwitchStatement, iterator uti
 			if lb.Label() != modsts.DefaultLabe1.(intmod.ILabel) {
 				el := lb.Label().(intmod.IExpressionLabel)
 				nce := el.Expression().(intmod.IIntegerConstantExpression)
-				el.SetExpression(modexp.NewEnumConstantReferenceExpressionWithAll(
+				el.SetExpression(expression.NewEnumConstantReferenceExpressionWithAll(
 					nce.LineNumber(), typ, mapped[nce.IntegerValue()]))
 			}
 		} else if block.IsSwitchStatementMultiLabelsBlock() {
@@ -253,7 +252,7 @@ func updateSwitchStatement(switchStatement intmod.ISwitchStatement, iterator uti
 				if label != modsts.DefaultLabe1.(intmod.ILabel) {
 					el := label.(intmod.IExpressionLabel)
 					nce := el.Expression().(intmod.IIntegerConstantExpression)
-					el.SetExpression(modexp.NewEnumConstantReferenceExpressionWithAll(
+					el.SetExpression(expression.NewEnumConstantReferenceExpressionWithAll(
 						nce.LineNumber(), typ, mapped[nce.IntegerValue()]))
 				}
 			}

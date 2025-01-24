@@ -11,17 +11,17 @@ func NewNewExpression(lineNumber int, typ intmod.IObjectType, descriptor string)
 
 func NewNewExpressionWithAll(lineNumber int, typ intmod.IObjectType, descriptor string, bodyDeclaration intmod.IBodyDeclaration) intmod.INewExpression {
 	e := &NewExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		typ:                          typ,
-		descriptor:                   descriptor,
-		bodyDeclaration:              bodyDeclaration,
+		LineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
+		typ:                  typ,
+		descriptor:           descriptor,
+		bodyDeclaration:      bodyDeclaration,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type NewExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	typ             intmod.IObjectType
 	descriptor      string

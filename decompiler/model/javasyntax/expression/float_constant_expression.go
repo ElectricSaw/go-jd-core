@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewFloatConstantExpression(value float32) intmod.IFloatConstantExpression {
@@ -12,7 +12,7 @@ func NewFloatConstantExpression(value float32) intmod.IFloatConstantExpression {
 
 func NewFloatConstantExpressionWithAll(lineNumber int, value float32) intmod.IFloatConstantExpression {
 	e := &FloatConstantExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, _type.PtTypeFloat.(intmod.IType)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, model.PtTypeFloat.(intmod.IType)),
 		value:                            value,
 	}
 	e.SetValue(e)

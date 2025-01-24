@@ -11,8 +11,8 @@ func NewEnumConstantReferenceExpression(typ intmod.IObjectType, name string) int
 
 func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intmod.IObjectType, name string) intmod.IEnumConstantReferenceExpression {
 	e := &EnumConstantReferenceExpression{
-		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: lineNumber,
+		LineNumberExpression: LineNumberExpression{
+			LineNumber: lineNumber,
 		},
 		typ:  typ,
 		name: name,
@@ -22,7 +22,7 @@ func NewEnumConstantReferenceExpressionWithAll(lineNumber int, typ intmod.IObjec
 }
 
 type EnumConstantReferenceExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	typ  intmod.IObjectType
 	name string

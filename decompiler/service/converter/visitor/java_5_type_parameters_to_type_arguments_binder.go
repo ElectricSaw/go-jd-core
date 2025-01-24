@@ -4,7 +4,8 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	modexp "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -141,7 +142,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) NewFieldReferenceExpression(
 		}
 	}
 
-	return modexp.NewFieldReferenceExpressionWithAll(lineNumber, typ, expr,
+	return expression.NewFieldReferenceExpressionWithAll(lineNumber, typ, expr,
 		objectType.InternalName(), name, descriptor)
 }
 
@@ -701,7 +702,7 @@ func NewRemoveNonWildcardTypeArgumentsVisitor() *RemoveNonWildcardTypeArgumentsV
 }
 
 type RemoveNonWildcardTypeArgumentsVisitor struct {
-	modexp.AbstractNopExpressionVisitor
+	javasyntax.AbstractNopExpressionVisitor
 }
 
 func (v *RemoveNonWildcardTypeArgumentsVisitor) VisitMethodInvocationExpression(expr intmod.IMethodInvocationExpression) {

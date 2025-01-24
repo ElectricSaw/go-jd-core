@@ -2,10 +2,10 @@ package expression
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
-func CreateItemType(expression intmod.IExpression) intmod.IType {
+func CreateItemType(expression IExpression) model.IType {
 	typ := expression.Type()
 	dimension := typ.Dimension()
 
@@ -16,11 +16,11 @@ func CreateItemType(expression intmod.IExpression) intmod.IType {
 	return typ.CreateType(0)
 }
 
-func NewArrayExpression(expression intmod.IExpression, index intmod.IExpression) intmod.IArrayExpression {
+func NewArrayExpression(expression IExpression, index IExpression) IArrayExpression {
 	return NewArrayExpressionWithAll(0, expression, index)
 }
 
-func NewArrayExpressionWithAll(lineNumber int, expression intmod.IExpression, index intmod.IExpression) intmod.IArrayExpression {
+func NewArrayExpressionWithAll(lineNumber int, expression IExpression, index IExpression) IArrayExpression {
 	e := &ArrayExpression{
 		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpressionWithAll(lineNumber, CreateItemType(expression)),
 		expression:                       expression,
@@ -33,15 +33,15 @@ func NewArrayExpressionWithAll(lineNumber int, expression intmod.IExpression, in
 type ArrayExpression struct {
 	AbstractLineNumberTypeExpression
 
-	expression intmod.IExpression
-	index      intmod.IExpression
+	expression IExpression
+	index      IExpression
 }
 
-func (e *ArrayExpression) Expression() intmod.IExpression {
+func (e *ArrayExpression) Expression() IExpression {
 	return e.expression
 }
 
-func (e *ArrayExpression) Index() intmod.IExpression {
+func (e *ArrayExpression) Index() IExpression {
 	return e.index
 }
 
@@ -49,11 +49,11 @@ func (e *ArrayExpression) Priority() int {
 	return 1
 }
 
-func (e *ArrayExpression) SetExpression(expression intmod.IExpression) {
+func (e *ArrayExpression) SetExpression(expression IExpression) {
 	e.expression = expression
 }
 
-func (e *ArrayExpression) SetIndex(index intmod.IExpression) {
+func (e *ArrayExpression) SetIndex(index IExpression) {
 	e.index = index
 }
 
@@ -61,7 +61,7 @@ func (e *ArrayExpression) IsArrayExpression() bool {
 	return true
 }
 
-func (e *ArrayExpression) Accept(visitor intmod.IExpressionVisitor) {
+func (e *ArrayExpression) Accept(visitor IExpressionVisitor) {
 	visitor.VisitArrayExpression(e)
 }
 

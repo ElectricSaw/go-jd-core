@@ -1,4 +1,4 @@
-package expression
+package javasyntax
 
 import intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 

@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewCommentExpression(text string) intmod.ICommentExpression {
@@ -25,7 +25,7 @@ func (e *CommentExpression) LineNumber() int {
 }
 
 func (e *CommentExpression) Type() intmod.IType {
-	return _type.PtTypeVoid.(intmod.IType)
+	return model.PtTypeVoid.(intmod.IType)
 }
 
 func (e *CommentExpression) Priority() int {

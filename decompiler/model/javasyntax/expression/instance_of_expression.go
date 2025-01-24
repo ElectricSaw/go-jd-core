@@ -2,7 +2,7 @@ package expression
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewInstanceOfExpression(expression intmod.IExpression,
@@ -13,8 +13,8 @@ func NewInstanceOfExpression(expression intmod.IExpression,
 func NewInstanceOfExpressionWithAll(lineNumber int, expression intmod.IExpression,
 	instanceOfType intmod.IObjectType) intmod.IInstanceOfExpression {
 	e := &InstanceOfExpression{
-		AbstractLineNumberExpression: AbstractLineNumberExpression{
-			lineNumber: lineNumber,
+		LineNumberExpression: LineNumberExpression{
+			LineNumber: lineNumber,
 		},
 		expression:     expression,
 		instanceOfType: instanceOfType.(intmod.IType),
@@ -24,7 +24,7 @@ func NewInstanceOfExpressionWithAll(lineNumber int, expression intmod.IExpressio
 }
 
 type InstanceOfExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	expression     intmod.IExpression
 	instanceOfType intmod.IType
@@ -39,7 +39,7 @@ func (e *InstanceOfExpression) InstanceOfType() intmod.IType {
 }
 
 func (e *InstanceOfExpression) Type() intmod.IType {
-	return _type.PtTypeBoolean.(intmod.IType)
+	return model.PtTypeBoolean.(intmod.IType)
 }
 
 func (e *InstanceOfExpression) Priority() int {

@@ -11,16 +11,16 @@ func NewPreOperatorExpression(operator string, expression intmod.IExpression) in
 
 func NewPreOperatorExpressionWithAll(lineNumber int, operator string, expression intmod.IExpression) intmod.IPreOperatorExpression {
 	e := &PreOperatorExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		operator:                     operator,
-		expression:                   expression,
+		LineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
+		operator:             operator,
+		expression:           expression,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type PreOperatorExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	operator   string
 	expression intmod.IExpression

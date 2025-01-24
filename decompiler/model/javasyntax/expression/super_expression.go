@@ -11,15 +11,15 @@ func NewSuperExpression(typ intmod.IType) intmod.ISuperExpression {
 
 func NewSuperExpressionWithAll(lineNumber int, typ intmod.IType) intmod.ISuperExpression {
 	e := &SuperExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		typ:                          typ,
+		LineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
+		typ:                  typ,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type SuperExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	typ intmod.IType
 }

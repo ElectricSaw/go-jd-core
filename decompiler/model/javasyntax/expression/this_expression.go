@@ -11,16 +11,16 @@ func NewThisExpression(typ intmod.IType) intmod.IThisExpression {
 
 func NewThisExpressionWithAll(lineNumber int, typ intmod.IType) intmod.IThisExpression {
 	e := &ThisExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		typ:                          typ,
-		explicit:                     true,
+		LineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
+		typ:                  typ,
+		explicit:             true,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type ThisExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	typ      intmod.IType
 	explicit bool

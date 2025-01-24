@@ -2,6 +2,7 @@ package visitor
 
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"strings"
 	"unicode"
 
@@ -10,7 +11,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_ "github.com/ElectricSaw/go-jd-core/decompiler/model/classfile"
 	_ "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )

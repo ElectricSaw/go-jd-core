@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewLengthExpression(expression intmod.IExpression) intmod.ILengthExpression {
@@ -12,21 +12,21 @@ func NewLengthExpression(expression intmod.IExpression) intmod.ILengthExpression
 
 func NewLengthExpressionWithAll(lineNumber int, expression intmod.IExpression) intmod.ILengthExpression {
 	e := &LengthExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		expression:                   expression,
+		LineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
+		expression:           expression,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type LengthExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	expression intmod.IExpression
 }
 
 func (e *LengthExpression) Type() intmod.IType {
-	return _type.PtTypeInt.(intmod.IType)
+	return model.PtTypeInt.(intmod.IType)
 }
 
 func (e *LengthExpression) Expression() intmod.IExpression {

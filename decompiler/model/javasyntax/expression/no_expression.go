@@ -2,14 +2,14 @@ package expression
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 var NeNoExpression = NewNoExpression()
 
 func NewNoExpression() intmod.INoExpression {
 	e := &NoExpression{
-		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(_type.PtTypeVoid.(intmod.IType)),
+		AbstractLineNumberTypeExpression: *NewAbstractLineNumberTypeExpression(model.PtTypeVoid.(intmod.IType)),
 	}
 	e.SetValue(e)
 	return e

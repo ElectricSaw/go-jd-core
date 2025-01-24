@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewTypeReferenceDotClassExpression(typeDotClass intmod.IType) intmod.ITypeReferenceDotClassExpression {
@@ -14,7 +14,7 @@ func NewTypeReferenceDotClassExpressionWithAll(lineNumber int, typeDotClass intm
 	e := &TypeReferenceDotClassExpression{
 		lineNumber:   lineNumber,
 		typeDotClass: typeDotClass,
-		typ:          _type.OtTypeClass.CreateTypeWithArgs(typeDotClass).(intmod.IType),
+		typ:          model.OtTypeClass.CreateTypeWithArgs(typeDotClass).(intmod.IType),
 	}
 	e.SetValue(e)
 	return e

@@ -1,7 +1,6 @@
 package declaration
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )

@@ -11,16 +11,16 @@ func NewPostOperatorExpression(operator string, expression intmod.IExpression) i
 
 func NewPostOperatorExpressionWithAll(lineNumber int, operator string, expression intmod.IExpression) intmod.IPostOperatorExpression {
 	e := &PostOperatorExpression{
-		AbstractLineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
-		operator:                     operator,
-		expression:                   expression,
+		LineNumberExpression: *NewAbstractLineNumberExpression(lineNumber),
+		operator:             operator,
+		expression:           expression,
 	}
 	e.SetValue(e)
 	return e
 }
 
 type PostOperatorExpression struct {
-	AbstractLineNumberExpression
+	LineNumberExpression
 
 	operator   string
 	expression intmod.IExpression

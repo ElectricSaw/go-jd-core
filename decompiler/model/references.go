@@ -2,6 +2,7 @@ package model
 
 import (
 	"fmt"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"reflect"
 )
@@ -115,7 +116,7 @@ func NewElementValueArrayInitializerElementValueEmpty() ElementValueArrayInitial
 	return NewElementValueArrayInitializerElementValue(nil)
 }
 
-func NewExpressionElementValue(expression IExpression) ExpressionElementValue {
+func NewExpressionElementValue(expression expression.IExpression) ExpressionElementValue {
 	v := ExpressionElementValue{
 		DefaultBase: *util.NewDefaultBase[*ExpressionElementValue]().(*util.DefaultBase[*ExpressionElementValue]),
 		Expression:  expression,
@@ -597,7 +598,7 @@ func (e *ElementValueArrayInitializerElementValue) IsElementValue() bool {
 type ExpressionElementValue struct {
 	util.DefaultBase[*ExpressionElementValue]
 
-	Expression IExpression
+	Expression expression.IExpression
 }
 
 func (e *ExpressionElementValue) Accept(visitor IReferenceVisitor) {

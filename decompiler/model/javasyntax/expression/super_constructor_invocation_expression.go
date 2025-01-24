@@ -3,7 +3,7 @@ package expression
 import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewSuperConstructorInvocationExpression(typ intmod.IObjectType, descriptor string,
@@ -15,7 +15,7 @@ func NewSuperConstructorInvocationExpressionWithAll(lineNumber int, typ intmod.I
 	descriptor string, parameters intmod.IExpression) intmod.ISuperConstructorInvocationExpression {
 	e := &SuperConstructorInvocationExpression{
 		ConstructorReferenceExpression: *NewConstructorReferenceExpressionWithAll(lineNumber,
-			_type.PtTypeVoid.(intmod.IType), typ, descriptor).(*ConstructorReferenceExpression),
+			model.PtTypeVoid.(intmod.IType), typ, descriptor).(*ConstructorReferenceExpression),
 		parameters: parameters,
 	}
 	e.SetValue(e)
