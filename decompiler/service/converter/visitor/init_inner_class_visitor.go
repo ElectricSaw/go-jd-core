@@ -2,7 +2,6 @@ package visitor
 
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"strings"
 	"unicode"
 
@@ -244,7 +243,7 @@ func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldReferenceExpress
 					exp = expr.Expression()
 				}
 
-				expr.SetExpression(expression.NewObjectTypeReferenceExpressionWithLineNumber(
+				expr.SetExpression(model.NewObjectTypeReferenceExpressionWithLineNumber(
 					exp.LineNumber(), objectType.CreateTypeWithArgs(nil)))
 				expr.SetName("this")
 			}
@@ -265,7 +264,7 @@ func (v *UpdateFieldDeclarationsAndReferencesVisitor) VisitFieldReferenceExpress
 						exp = expr.Expression()
 					}
 
-					expr.SetExpression(expression.NewObjectTypeReferenceExpressionWithLineNumber(
+					expr.SetExpression(model.NewObjectTypeReferenceExpressionWithLineNumber(
 						exp.LineNumber(), objectType.CreateTypeWithArgs(nil)))
 					expr.SetName("this")
 				}
@@ -284,8 +283,8 @@ func (v *UpdateFieldDeclarationsAndReferencesVisitor) updateExpression(expr intm
 		if expr.Name() != "" && expr.Name() == v.parent.outerTypeFieldName && expr.Type().IsObjectType() {
 			objectType := expr.Type().(intmod.IObjectType)
 			if v.bodyDeclaration.OuterBodyDeclaration().InternalTypeName() == objectType.InternalName() {
-				return expression.NewFieldReferenceExpression(objectType.(intmod.IType),
-					expression.NewObjectTypeReferenceExpressionWithLineNumber(
+				return model.NewFieldReferenceExpression(objectType.(intmod.IType),
+					model.NewObjectTypeReferenceExpressionWithLineNumber(
 						expr.LineNumber(), objectType.CreateTypeWithArgs(nil)),
 					objectType.InternalName(), "this", objectType.Descriptor())
 			}

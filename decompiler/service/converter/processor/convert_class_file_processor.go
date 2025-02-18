@@ -6,7 +6,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -328,15 +327,15 @@ func (p *ConvertClassFileProcessor) convertFieldInitializer(field intcls.IField,
 
 		switch constantValue.Tag() {
 		case intcls.ConstTagInteger:
-			expr = expression.NewIntegerConstantExpression(typeField, constantValue.(intcls.IConstantInteger).Value())
+			expr = model.NewIntegerConstantExpression(typeField, constantValue.(intcls.IConstantInteger).Value())
 		case intcls.ConstTagFloat:
-			expr = expression.NewFloatConstantExpression(constantValue.(intcls.IConstantFloat).Value())
+			expr = model.NewFloatConstantExpression(constantValue.(intcls.IConstantFloat).Value())
 		case intcls.ConstTagLong:
-			expr = expression.NewLongConstantExpression(constantValue.(intcls.IConstantLong).Value())
+			expr = model.NewLongConstantExpression(constantValue.(intcls.IConstantLong).Value())
 		case intcls.ConstTagDouble:
-			expr = expression.NewDoubleConstantExpression(constantValue.(intcls.IConstantDouble).Value())
+			expr = model.NewDoubleConstantExpression(constantValue.(intcls.IConstantDouble).Value())
 		case intcls.ConstTagUtf8:
-			expr = expression.NewStringConstantExpression(constantValue.(intcls.IConstantUtf8).Value())
+			expr = model.NewStringConstantExpression(constantValue.(intcls.IConstantUtf8).Value())
 		default:
 			return nil
 		}

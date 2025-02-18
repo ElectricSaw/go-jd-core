@@ -3,7 +3,7 @@ package visitor
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	modexpr "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	modexpr "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	srvexpr "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 )
 

@@ -3,15 +3,15 @@ package expression
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileMethodInvocationExpression(lineNumber int, typeParameters intmod.ITypeParameter, typ intmod.IType,
 	expr intmod.IExpression, internalTypeName, name, descriptor string, parameterTypes intmod.IType,
 	parameters intmod.IExpression) intsrv.IClassFileMethodInvocationExpression {
 	e := &ClassFileMethodInvocationExpression{
-		MethodInvocationExpression: *expression.NewMethodInvocationExpressionWithAll(lineNumber,
-			typ, expr, internalTypeName, name, descriptor, parameters).(*expression.MethodInvocationExpression),
+		MethodInvocationExpression: *model.NewMethodInvocationExpressionWithAll(lineNumber,
+			typ, expr, internalTypeName, name, descriptor, parameters).(*model.MethodInvocationExpression),
 		typeParameters: typeParameters,
 		parameterTypes: parameterTypes,
 		bound:          false,
@@ -21,7 +21,7 @@ func NewClassFileMethodInvocationExpression(lineNumber int, typeParameters intmo
 }
 
 type ClassFileMethodInvocationExpression struct {
-	expression.MethodInvocationExpression
+	model.MethodInvocationExpression
 
 	typeParameters intmod.ITypeParameter
 	parameterTypes intmod.IType

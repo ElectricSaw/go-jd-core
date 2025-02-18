@@ -5,7 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	expression2 "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
@@ -180,7 +179,7 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 		} else {
 			// Unknown line numbers => Just try to find 'for (expression;;expression)'
 			statement := createForStatementWithoutLineNumber(localVariableMaker,
-				loopBasicBlock, statements, expression2.True, subStatements)
+				loopBasicBlock, statements, _type.True, subStatements)
 
 			if statement != nil {
 				return statement
@@ -188,7 +187,7 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 		}
 	}
 
-	return modsts.NewWhileStatement(expression2.True, subStatements)
+	return modsts.NewWhileStatement(_type.True, subStatements)
 }
 
 func MakeDoWhileLoop(loopBasicBlock intsrv.IBasicBlock, condition intmod.IExpression,
@@ -227,7 +226,7 @@ func extractInit(statements intmod.IStatements, lineNumber int) intmod.IExpressi
 			statements.Clear()
 			return expression
 		default:
-			init := expression2.NewExpressions()
+			init := _type.NewExpressions()
 			iterator := statements.ListIterator()
 			iterator.SetCursor(statements.Size())
 
@@ -264,7 +263,7 @@ func extractInit(statements intmod.IStatements, lineNumber int) intmod.IExpressi
 }
 
 func extractUpdate(statements intmod.IStatements, firstLineNumber int) intmod.IExpressions {
-	update := expression2.NewExpressions()
+	update := _type.NewExpressions()
 	iterator := statements.ListIterator()
 	iterator.SetCursor(statements.Size())
 
@@ -305,7 +304,7 @@ func createForStatementWithoutLineNumber(localVariableMaker intsrv.ILocalVariabl
 				expression = update.LeftExpression()
 			} else if update.IsPreOperatorExpression() {
 				expression = update.Expression()
-				update = expression2.NewPostOperatorExpressionWithAll(update.LineNumber(),
+				update = _type.NewPostOperatorExpressionWithAll(update.LineNumber(),
 					update.Operator(), expression)
 			} else if update.IsPostOperatorExpression() {
 				expression = update.Expression()
@@ -317,7 +316,7 @@ func createForStatementWithoutLineNumber(localVariableMaker intsrv.ILocalVariabl
 				statements.RemoveLast()
 				subStatements.RemoveLast()
 
-				if condition == expression2.True {
+				if condition == _type.True {
 					condition = nil
 				}
 
@@ -582,7 +581,7 @@ func makeForEachList(
 					ne := list.(intsrv.IClassFileNewExpression)
 					ne.SetType(listType.CreateTypeWithArgs(_type.Diamond))
 				} else {
-					list = expression2.NewCastExpression(_type.OtTypeIterable.CreateTypeWithArgs(item.Type()), list)
+					list = _type.NewCastExpression(_type.OtTypeIterable.CreateTypeWithArgs(item.Type()), list)
 				}
 			}
 		} else {

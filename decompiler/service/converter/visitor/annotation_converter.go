@@ -5,7 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/reference"
 )
 
@@ -100,39 +99,39 @@ func (c *AnnotationConverter) VisitPrimitiveType(elementValue intcls.IElementVal
 	switch elementValue.Type() {
 	case 'B':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewIntegerConstantExpression(_type.PtTypeByte,
+			_type.NewIntegerConstantExpression(_type.PtTypeByte,
 				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'D':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewDoubleConstantExpression(
+			_type.NewDoubleConstantExpression(
 				elementValue.Value().(intcls.IConstantDouble).Value()))
 	case 'F':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewFloatConstantExpression(
+			_type.NewFloatConstantExpression(
 				elementValue.Value().(intcls.IConstantFloat).Value()))
 	case 'I':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewIntegerConstantExpression(_type.PtTypeInt,
+			_type.NewIntegerConstantExpression(_type.PtTypeInt,
 				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'J':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewLongConstantExpression(
+			_type.NewLongConstantExpression(
 				elementValue.Value().(intcls.IConstantLong).Value()))
 	case 'S':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewIntegerConstantExpression(_type.PtTypeShort,
+			_type.NewIntegerConstantExpression(_type.PtTypeShort,
 				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'Z':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewIntegerConstantExpression(_type.PtTypeBoolean,
+			_type.NewIntegerConstantExpression(_type.PtTypeBoolean,
 				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 'C':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewIntegerConstantExpression(_type.PtTypeChar,
+			_type.NewIntegerConstantExpression(_type.PtTypeChar,
 				elementValue.Value().(intcls.IConstantInteger).Value()))
 	case 's':
 		c.ElementValue = _type.NewExpressionElementValue(
-			expression.NewStringConstantExpression(
+			_type.NewStringConstantExpression(
 				elementValue.Value().(intcls.IConstantUtf8).Value()))
 	}
 }
@@ -140,7 +139,7 @@ func (c *AnnotationConverter) VisitPrimitiveType(elementValue intcls.IElementVal
 func (c *AnnotationConverter) VisitClassInfo(elementValue intcls.IElementValueClassInfo) {
 	classInfo := elementValue.ClassInfo()
 	ot := c.TypeMaker.MakeFromDescriptor(classInfo)
-	c.ElementValue = _type.NewExpressionElementValue(expression.NewTypeReferenceDotClassExpression(ot))
+	c.ElementValue = _type.NewExpressionElementValue(_type.NewTypeReferenceDotClassExpression(ot))
 }
 
 func (c *AnnotationConverter) VisitAnnotationValue(elementValue intcls.IElementValueAnnotationValue) {
@@ -155,8 +154,8 @@ func (c *AnnotationConverter) VisitEnumConstValue(elementValue intcls.IElementVa
 	constName := elementValue.ConstName()
 	internalTypeName := descriptor[1 : len(descriptor)-1]
 	c.ElementValue = _type.NewExpressionElementValue(
-		expression.NewFieldReferenceExpression(ot,
-			expression.NewObjectTypeReferenceExpression(ot),
+		_type.NewFieldReferenceExpression(ot,
+			_type.NewObjectTypeReferenceExpression(ot),
 			internalTypeName, constName, descriptor,
 		),
 	)

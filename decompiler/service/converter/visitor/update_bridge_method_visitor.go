@@ -3,7 +3,6 @@ package visitor
 import (
 	"fmt"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"strings"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
@@ -94,7 +93,7 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 			expr = mie1.Parameters().First()
 		}
 
-		return expression.NewFieldReferenceExpressionWithAll(mie1.LineNumber(), fre.Type(), expr, fre.InternalTypeName(), fre.Name(), fre.Descriptor())
+		return model.NewFieldReferenceExpressionWithAll(mie1.LineNumber(), fre.Type(), expr, fre.InternalTypeName(), fre.Name(), fre.Descriptor())
 	} else if exp.IsMethodInvocationExpression() {
 		mie2 := exp.(intmod.IMethodInvocationExpression)
 		methodTypes := v.typeMaker.MakeMethodTypes2(mie2.InternalTypeName(), mie2.Name(), mie2.Descriptor())
@@ -115,7 +114,7 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 					newParameters = mie1Parameters.ToSlice()[1]
 				default:
 					p := mie1Parameters.ToSlice()
-					newParameters = expression.NewExpressions()
+					newParameters = model.NewExpressions()
 					newParameters.(intmod.IExpressions).AddAll(p[1 : 1+len(p)])
 				}
 
@@ -128,16 +127,16 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 		fre := getFieldReferenceExpression(exp.LeftExpression())
 
 		if parameterTypesCount == 1 {
-			return expression.NewBinaryOperatorExpression(
+			return model.NewBinaryOperatorExpression(
 				mie1.LineNumber(), mie1.Type(),
-				expression.NewFieldReferenceExpression(fre.Type(), fre.Expression(), fre.InternalTypeName(),
+				model.NewFieldReferenceExpression(fre.Type(), fre.Expression(), fre.InternalTypeName(),
 					fre.Name(), fre.Descriptor()), exp.Operator(), mie1.Parameters().First(), exp.Priority())
 		} else if parameterTypesCount == 2 {
 			parameters := mie1.Parameters().ToSlice()
 
-			return expression.NewBinaryOperatorExpression(
+			return model.NewBinaryOperatorExpression(
 				mie1.LineNumber(), mie1.Type(),
-				expression.NewFieldReferenceExpression(fre.Type(), parameters[0], fre.InternalTypeName(), fre.Name(), fre.Descriptor()),
+				model.NewFieldReferenceExpression(fre.Type(), parameters[0], fre.InternalTypeName(), fre.Name(), fre.Descriptor()),
 				exp.Operator(), parameters[1], exp.Priority())
 		}
 	} else if exp.IsPostOperatorExpression() {
@@ -149,8 +148,8 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 			expr = mie1.Parameters().First()
 		}
 
-		return expression.NewPostOperatorExpressionWithAll(mie1.LineNumber(), exp.Operator(),
-			expression.NewFieldReferenceExpression(fre.Type(), expr, fre.InternalTypeName(),
+		return model.NewPostOperatorExpressionWithAll(mie1.LineNumber(), exp.Operator(),
+			model.NewFieldReferenceExpression(fre.Type(), expr, fre.InternalTypeName(),
 				fre.Name(), fre.Descriptor()))
 	} else if exp.IsPreOperatorExpression() {
 		fre := getFieldReferenceExpression(exp.Expression())
@@ -161,8 +160,8 @@ func (v *UpdateBridgeMethodVisitor) updateExpression(expr intmod.IExpression) in
 			expr = mie1.Parameters().First()
 		}
 
-		return expression.NewPreOperatorExpressionWithAll(
-			mie1.LineNumber(), exp.Operator(), expression.NewFieldReferenceExpression(
+		return model.NewPreOperatorExpressionWithAll(
+			mie1.LineNumber(), exp.Operator(), model.NewFieldReferenceExpression(
 				fre.Type(), expr, fre.InternalTypeName(), fre.Name(), fre.Descriptor()))
 	} else if exp.IsIntegerConstantExpression() {
 		return exp

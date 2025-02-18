@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -318,15 +317,15 @@ func (v *AddCastExpressionVisitor) updateParameter(typ intmod.IType, expr intmod
 
 	if typ == model.PtTypeByte {
 		if expr.IsIntegerConstantExpression() {
-			expr = expression.NewCastExpression(model.PtTypeByte, expr)
+			expr = model.NewCastExpression(model.PtTypeByte, expr)
 		} else if expr.IsTernaryOperatorExpression() {
 			exp := expr.TrueExpression()
 			if exp.IsIntegerConstantExpression() || exp.IsTernaryOperatorExpression() {
-				expr = expression.NewCastExpression(model.PtTypeByte, expr)
+				expr = model.NewCastExpression(model.PtTypeByte, expr)
 			} else {
 				exp = expr.FalseExpression()
 				if exp.IsIntegerConstantExpression() || exp.IsTernaryOperatorExpression() {
-					expr = expression.NewCastExpression(model.PtTypeByte, expr)
+					expr = model.NewCastExpression(model.PtTypeByte, expr)
 				}
 			}
 		}
@@ -340,7 +339,7 @@ func (v *AddCastExpressionVisitor) updateExpression(typ intmod.IType, expr intmo
 		if forceCast {
 			v.searchFirstLineNumberVisitor.Init()
 			expr.Accept(v.searchFirstLineNumberVisitor)
-			expr = expression.NewCastExpressionWithLineNumber(v.searchFirstLineNumberVisitor.LineNumber(), typ, expr)
+			expr = model.NewCastExpressionWithLineNumber(v.searchFirstLineNumberVisitor.LineNumber(), typ, expr)
 		}
 	} else {
 		expressionType := expr.Type()
@@ -414,7 +413,7 @@ func (v *AddCastExpressionVisitor) addCastExpression(typ intmod.IType, expr intm
 	} else {
 		v.searchFirstLineNumberVisitor.Init()
 		expr.Accept(v.searchFirstLineNumberVisitor)
-		return expression.NewCastExpressionWithLineNumber(v.searchFirstLineNumberVisitor.LineNumber(), typ, expr)
+		return model.NewCastExpressionWithLineNumber(v.searchFirstLineNumberVisitor.LineNumber(), typ, expr)
 	}
 }
 

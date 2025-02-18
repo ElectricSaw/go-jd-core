@@ -4,12 +4,12 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileNewExpression(lineNumber int, typ intmod.IObjectType) intsrv.IClassFileNewExpression {
 	e := &ClassFileNewExpression{
-		NewExpression: *expression.NewNewExpression(lineNumber, typ, "").(*expression.NewExpression),
+		NewExpression: *model.NewNewExpression(lineNumber, typ, "").(*model.NewExpression),
 		bound:         false,
 	}
 	e.SetValue(e)
@@ -18,20 +18,20 @@ func NewClassFileNewExpression(lineNumber int, typ intmod.IObjectType) intsrv.IC
 
 func NewClassFileNewExpression2(lineNumber int, typ intmod.IObjectType, bodyDeclaration intmod.IBodyDeclaration) intsrv.IClassFileNewExpression {
 	return &ClassFileNewExpression{
-		NewExpression: *expression.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration).(*expression.NewExpression),
+		NewExpression: *model.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration).(*model.NewExpression),
 		bound:         false,
 	}
 }
 
 func NewClassFileNewExpression3(lineNumber int, typ intmod.IObjectType, bodyDeclaration intmod.IBodyDeclaration, bound bool) intsrv.IClassFileNewExpression {
 	return &ClassFileNewExpression{
-		NewExpression: *expression.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration).(*expression.NewExpression),
+		NewExpression: *model.NewNewExpressionWithAll(lineNumber, typ, "", bodyDeclaration).(*model.NewExpression),
 		bound:         bound,
 	}
 }
 
 type ClassFileNewExpression struct {
-	expression.NewExpression
+	model.NewExpression
 
 	parameterTypes intmod.IType
 	bound          bool

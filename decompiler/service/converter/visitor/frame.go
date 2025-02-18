@@ -6,7 +6,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
@@ -512,7 +511,7 @@ func (f *Frame) createInlineDeclarations2(
 		boe := es.Expression()
 
 		if boe.Operator() == "=" {
-			expressions := expression.NewExpressions()
+			expressions := _type.NewExpressions()
 
 			f.splitMultiAssignment(math.MaxInt, undeclaredLocalVariablesInStatement, expressions, boe)
 			_ = iterator.Remove()
@@ -544,7 +543,7 @@ func (f *Frame) splitMultiAssignment(toOffset int,
 				if rightExpression == expr.RightExpression() {
 					expressions.Add(expr)
 				} else {
-					expressions.Add(expression.NewBinaryOperatorExpression(
+					expressions.Add(_type.NewBinaryOperatorExpression(
 						expr.LineNumber(), expr.Type(), lvre, "=", rightExpression, expr.Priority()))
 				}
 				// Return local variable
@@ -588,7 +587,7 @@ func (f *Frame) createInlineDeclarations3(undeclaredLocalVariables util.ISet[int
 	init := fs.Init()
 
 	if init != nil {
-		expressions := expression.NewExpressions()
+		expressions := _type.NewExpressions()
 		toOffset := fs.ToOffset()
 
 		if init.IsList() {

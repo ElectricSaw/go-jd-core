@@ -1,7 +1,7 @@
 package declaration
 
 import (
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -65,7 +65,7 @@ func (d *AbstractVariableInitializer) IsExpressionVariableInitializer() bool {
 }
 
 func (d *AbstractVariableInitializer) Expression() Expression {
-	return expression.NeNoExpression
+	return model.NeNoExpression
 }
 
 func (d *AbstractVariableInitializer) AcceptDeclaration(visitor DeclarationVisitor) {

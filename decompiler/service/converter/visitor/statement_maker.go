@@ -6,7 +6,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/cfg"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
@@ -15,7 +14,7 @@ import (
 	"strings"
 )
 
-var GlobalFinallyExceptionExpression = expression.NewNullExpression(
+var GlobalFinallyExceptionExpression = model.NewNullExpression(
 	model.NewObjectType("java/lang/Exception",
 		"java.lang.Exception", "Exception"))
 var GlobalMergeTryWithResourcesStatementVisitor = NewMergeTryWithResourcesStatementVisitor()
@@ -194,7 +193,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		exp1 = m.makeExpression(watchdog, basicBlock.Sub1(), statements, jumps)
 		watchdog.Check(basicBlock, basicBlock.Sub2())
 		exp2 = m.makeExpression(watchdog, basicBlock.Sub2(), statements, jumps)
-		m.stack.Push(expression.NewBinaryOperatorExpression(basicBlock.FirstLineNumber(),
+		m.stack.Push(model.NewBinaryOperatorExpression(basicBlock.FirstLineNumber(),
 			model.PtTypeBoolean, exp1, "||", exp2, 14))
 		break
 	case intsrv.TypeConditionAnd:
@@ -202,7 +201,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		exp1 = m.makeExpression(watchdog, basicBlock.Sub1(), statements, jumps)
 		watchdog.Check(basicBlock, basicBlock.Sub2())
 		exp2 = m.makeExpression(watchdog, basicBlock.Sub2(), statements, jumps)
-		m.stack.Push(expression.NewBinaryOperatorExpression(basicBlock.FirstLineNumber(),
+		m.stack.Push(model.NewBinaryOperatorExpression(basicBlock.FirstLineNumber(),
 			model.PtTypeBoolean, exp1, "&&", exp2, 13))
 		break
 	case intsrv.TypeConditionTernaryOperator:
@@ -251,7 +250,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		jumps.Add(jump)
 		break
 	case intsrv.TypeInfiniteGoto:
-		statements.Add(modsts.NewWhileStatement(expression.True, nil))
+		statements.Add(modsts.NewWhileStatement(model.True, nil))
 		break
 	default:
 		//assert false : "Unexpected basic block: " + basicBlock.TypeName() + ':' + basicBlock.Index();
@@ -300,7 +299,7 @@ func (m *StatementMaker) makeExpression(watchdog intsrv.IWatchDog, basicBlock in
 		// Interesting... Kotlin pattern.
 		// https://github.com/JetBrains/intellij-community/blob/master/platform/built-in-server/src/org/jetbrains/builtInWebServer/SingleConnectionNetService.kt
 		// final override fun connectToProcess(...)
-		return expression.NewStringConstantExpression("JD-Core does not support Kotlin")
+		return model.NewStringConstantExpression("JD-Core does not support Kotlin")
 	} else {
 		expression := m.stack.Pop()
 
@@ -362,13 +361,13 @@ func (m *StatementMaker) parseSwitch(watchdog intsrv.IWatchDog, basicBlock intsr
 		if sc.IsDefaultCase() {
 			blocks.Add(modsts.NewLabelBlock(modsts.DefaultLabe1.(intmod.ILabel), subStatements))
 		} else if j == i+1 {
-			label := modsts.NewExpressionLabel(expression.NewIntegerConstantExpression(conditionType, sc.Value()))
+			label := modsts.NewExpressionLabel(model.NewIntegerConstantExpression(conditionType, sc.Value()))
 			blocks.Add(modsts.NewLabelBlock(label.(intmod.ILabel), subStatements))
 		} else {
 			labels := util.NewDefaultListWithCapacity[intmod.ILabel](j - i)
 
 			for ; i < j; i++ {
-				labels.Add(modsts.NewExpressionLabel(expression.NewIntegerConstantExpression(conditionType,
+				labels.Add(modsts.NewExpressionLabel(model.NewIntegerConstantExpression(conditionType,
 					switchCases.Get(i).Value())).(intmod.ILabel))
 			}
 
@@ -438,7 +437,7 @@ func (m *StatementMaker) parseTry(watchdog intsrv.IWatchDog, basicBlock intsrv.I
 				finallyStatements.RemoveLast()
 			}
 		} else {
-			m.stack.Push(expression.NewNullExpression(
+			m.stack.Push(model.NewNullExpression(
 				m.typeMaker.MakeFromInternalTypeName(
 					exceptionHandler.InternalThrowableName())))
 
@@ -554,7 +553,7 @@ func (m *StatementMaker) parseIf(watchdog intsrv.IWatchDog, basicBlock intsrv.IB
 		var cond intmod.IExpression
 
 		if condition == basicBlock.Condition() {
-			cond = expression.NewBooleanExpressionWithLineNumber(condition.FirstLineNumber(), false)
+			cond = model.NewBooleanExpressionWithLineNumber(condition.FirstLineNumber(), false)
 		} else {
 			condition = basicBlock.Condition().Sub2()
 			condition.InverseCondition()
@@ -917,7 +916,7 @@ func (m *StatementMaker) newTernaryOperatorExpression(lineNumber int,
 		typ = model.OtTypeUndefinedObject
 	}
 
-	return expression.NewTernaryOperatorExpressionWithAll(lineNumber, typ, condition, expressionTrue, expressionFalse)
+	return model.NewTernaryOperatorExpressionWithAll(lineNumber, typ, condition, expressionTrue, expressionFalse)
 }
 
 func (m *StatementMaker) getTernaryOperatorExpressionType(ot1, ot2 intmod.IObjectType) intmod.IType {
@@ -970,7 +969,7 @@ func (m *StatementMaker) createObjectTypeReferenceDotClassExpression(lineNumber 
 	typeName := mie.Parameters().StringValue()
 	ot := m.typeMaker.MakeFromInternalTypeName(strings.ReplaceAll(typeName, ".", "/"))
 
-	return expression.NewTypeReferenceDotClassExpressionWithAll(lineNumber, ot)
+	return model.NewTypeReferenceDotClassExpressionWithAll(lineNumber, ot)
 }
 
 func (m *StatementMaker) parseByteCode(basicBlock intsrv.IBasicBlock, statements intmod.IStatements) {
@@ -991,12 +990,12 @@ func (m *StatementMaker) replacePreOperatorWithPostOperator(statements intmod.IS
 				if statement.IsExpressionStatement() {
 					es := statement.(intmod.IExpressionStatement)
 					// Replace pre-operator statement with post-operator statement
-					es.SetExpression(expression.NewPostOperatorExpressionWithAll(
+					es.SetExpression(model.NewPostOperatorExpressionWithAll(
 						poe.LineNumber(), operator, poe.Expression()))
 				} else if statement.IsReturnExpressionStatement() {
 					res := statement.(intmod.IReturnExpressionStatement)
 					// Replace pre-operator statement with post-operator statement
-					res.SetExpression(expression.NewPostOperatorExpressionWithAll(
+					res.SetExpression(model.NewPostOperatorExpressionWithAll(
 						poe.LineNumber(), operator, poe.Expression()))
 				}
 			}

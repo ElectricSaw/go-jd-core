@@ -2,7 +2,6 @@ package visitor
 
 import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"math"
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
@@ -14,10 +13,10 @@ import (
 
 var GlobTypes = make(map[string]intmod.IType)
 var GlobDimensionTypes = &DimensionTypes{}
-var GlobTypeCharacterRef = expression.NewObjectTypeReferenceExpression(model.OtTypeCharacter)
-var GlobTypeByteRef = expression.NewObjectTypeReferenceExpression(model.OtTypeByte)
-var GlobTypeShortRef = expression.NewObjectTypeReferenceExpression(model.OtTypeShort)
-var GlobTypeIntegerRef = expression.NewObjectTypeReferenceExpression(model.OtTypeInteger)
+var GlobTypeCharacterRef = model.NewObjectTypeReferenceExpression(model.OtTypeCharacter)
+var GlobTypeByteRef = model.NewObjectTypeReferenceExpression(model.OtTypeByte)
+var GlobTypeShortRef = model.NewObjectTypeReferenceExpression(model.OtTypeShort)
+var GlobTypeIntegerRef = model.NewObjectTypeReferenceExpression(model.OtTypeInteger)
 
 func init() {
 	c := model.PtTypeChar
@@ -287,7 +286,7 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpressions(types intmod.IType,
 				if updatedParameter.IsIntegerConstantExpression() {
 					switch t.(intmod.IPrimitiveType).JavaPrimitiveFlags() {
 					case intmod.FlagByte, intmod.FlagShort:
-						updatedParameter = expression.NewCastExpression(t, updatedParameter)
+						updatedParameter = model.NewCastExpression(t, updatedParameter)
 					default:
 					}
 				}
@@ -304,7 +303,7 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpressions(types intmod.IType,
 			if updatedParameter.IsIntegerConstantExpression() {
 				switch t.(intmod.IPrimitiveType).JavaPrimitiveFlags() {
 				case intmod.FlagByte, intmod.FlagShort:
-					updatedParameter = expression.NewCastExpression(t, updatedParameter)
+					updatedParameter = model.NewCastExpression(t, updatedParameter)
 				default:
 				}
 			}
@@ -334,13 +333,13 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 
 			switch primitiveType.JavaPrimitiveFlags() {
 			case intmod.FlagBoolean:
-				return expression.NewBooleanExpressionWithLineNumber(lineNumber, value != 0)
+				return model.NewBooleanExpressionWithLineNumber(lineNumber, value != 0)
 			case intmod.FlagChar:
 				switch value {
 				case math.MinInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MIN_VALUE", "C")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MIN_VALUE", "C")
 				case math.MaxInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MAX_VALUE", "C")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeChar, GlobTypeCharacterRef, "java/lang/Character", "MAX_VALUE", "C")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
@@ -353,9 +352,9 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagByte:
 				switch value {
 				case math.MinInt8:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MIN_VALUE", "B")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MIN_VALUE", "B")
 				case math.MaxInt8:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MAX_VALUE", "B")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeByte, GlobTypeByteRef, "java/lang/Byte", "MAX_VALUE", "B")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
@@ -368,9 +367,9 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagShort:
 				switch value {
 				case math.MinInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MIN_VALUE", "S")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MIN_VALUE", "S")
 				case math.MaxInt16:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MAX_VALUE", "S")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeShort, GlobTypeShortRef, "java/lang/Short", "MAX_VALUE", "S")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
@@ -383,9 +382,9 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 			case intmod.FlagInt:
 				switch value {
 				case math.MinInt32:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MIN_VALUE", "I")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MIN_VALUE", "I")
 				case math.MaxInt32:
-					return expression.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MAX_VALUE", "I")
+					return model.NewFieldReferenceExpressionWithAll(lineNumber, model.PtTypeInt, GlobTypeIntegerRef, "java/lang/Integer", "MAX_VALUE", "I")
 				default:
 					if (icePrimitiveType.Flags() & primitiveType.Flags()) != 0 {
 						ice.SetType(t)
@@ -396,7 +395,7 @@ func (v *UpdateIntegerConstantTypeVisitor) updateExpression(t intmod.IType, expr
 				}
 				break
 			case intmod.FlagLong:
-				return expression.NewLongConstantExpressionWithAll(ice.LineNumber(), int64(ice.IntegerValue()))
+				return model.NewLongConstantExpressionWithAll(ice.LineNumber(), int64(ice.IntegerValue()))
 			default:
 			}
 
@@ -429,7 +428,7 @@ func (v *UpdateIntegerConstantTypeVisitor) safeUpdateBooleanExpression(expr intm
 func (v *UpdateIntegerConstantTypeVisitor) updateBooleanExpression(expr intmod.IExpression) intmod.IExpression {
 	if model.PtTypeBoolean != expr.Type() {
 		if expr.IsIntegerConstantExpression() {
-			return expression.NewBooleanExpressionWithLineNumber(expr.LineNumber(), expr.IntegerValue() != 0)
+			return model.NewBooleanExpressionWithLineNumber(expr.LineNumber(), expr.IntegerValue() != 0)
 		} else if expr.IsTernaryOperatorExpression() {
 			toe := expr.(intmod.ITernaryOperatorExpression)
 

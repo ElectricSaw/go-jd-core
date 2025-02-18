@@ -2,7 +2,7 @@ package statement
 
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -39,16 +39,16 @@ func (s *AbstractStatement) IsThrowStatement() bool                    { return 
 func (s *AbstractStatement) IsTryStatement() bool                      { return false }
 func (s *AbstractStatement) IsWhileStatement() bool                    { return false }
 
-func (s *AbstractStatement) Condition() intmod.IExpression        { return expression.NeNoExpression }
-func (s *AbstractStatement) Expression() intmod.IExpression       { return expression.NeNoExpression }
-func (s *AbstractStatement) Monitor() intmod.IExpression          { return expression.NeNoExpression }
+func (s *AbstractStatement) Condition() intmod.IExpression        { return model.NeNoExpression }
+func (s *AbstractStatement) Expression() intmod.IExpression       { return model.NeNoExpression }
+func (s *AbstractStatement) Monitor() intmod.IExpression          { return model.NeNoExpression }
 func (s *AbstractStatement) ElseStatements() intmod.IStatement    { return NoStmt.(intmod.IStatement) }
 func (s *AbstractStatement) FinallyStatements() intmod.IStatement { return NoStmt.(intmod.IStatement) }
 func (s *AbstractStatement) Statements() intmod.IStatement        { return NoStmt.(intmod.IStatement) }
 func (s *AbstractStatement) TryStatements() intmod.IStatement     { return NoStmt.(intmod.IStatement) }
 
-func (s *AbstractStatement) Init() intmod.IExpression   { return expression.NeNoExpression }
-func (s *AbstractStatement) Update() intmod.IExpression { return expression.NeNoExpression }
+func (s *AbstractStatement) Init() intmod.IExpression   { return model.NeNoExpression }
+func (s *AbstractStatement) Update() intmod.IExpression { return model.NeNoExpression }
 
 func (s *AbstractStatement) CatchClauses() []intmod.ICatchClause { return nil }
 

@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"strings"
 )
@@ -16,7 +15,7 @@ func MakeNewArrayMaker(statements intmod.IStatements, newArray intmod.IExpressio
 		ae := statements.Last().Expression().LeftExpression()
 
 		if ae.Expression() == newArray && ae.Index().IsIntegerConstantExpression() {
-			return expression.NewNewInitializedArrayWithAll(newArray.LineNumber(), newArray.Type(),
+			return _type.NewNewInitializedArrayWithAll(newArray.LineNumber(), newArray.Type(),
 				createVariableInitializer(statements.ListIterator(), newArray))
 		}
 	}
@@ -93,9 +92,9 @@ func createVariableInitializer(li util.IListIterator[intmod.IStatement],
 		typ = typ.CreateType(typ.Dimension() - 1)
 
 		if (typ.Dimension() == 0) && typ.IsPrimitiveType() {
-			evi = declaration.NewExpressionVariableInitializer(expression.NewIntegerConstantExpression(typ, 0))
+			evi = declaration.NewExpressionVariableInitializer(_type.NewIntegerConstantExpression(typ, 0))
 		} else {
-			evi = declaration.NewExpressionVariableInitializer(expression.NewNullExpression(typ))
+			evi = declaration.NewExpressionVariableInitializer(_type.NewNullExpression(typ))
 		}
 
 		for ; index > 0; index-- {

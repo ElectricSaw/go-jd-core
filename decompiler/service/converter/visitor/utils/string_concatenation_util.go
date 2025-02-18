@@ -3,7 +3,6 @@ package utils
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -25,7 +24,7 @@ func StringConcatenationUtilCreate1(expr intmod.IExpression, lineNumber int, typ
 				}
 
 				firstParameterHaveGenericType = mie.Parameters().First().Type().IsGenericType()
-				concatenatedStringExpression = expression.NewBinaryOperatorExpression(mie.LineNumber(),
+				concatenatedStringExpression = _type.NewBinaryOperatorExpression(mie.LineNumber(),
 					_type.OtTypeString, mie.Parameters(), "+", concatenatedStringExpression, 4)
 				exp = mie.Expression()
 			}
@@ -42,7 +41,7 @@ func StringConcatenationUtilCreate1(expr intmod.IExpression, lineNumber int, typ
 						exp = exp.Parameters().First()
 
 						if _type.OtTypeString == exp.Type() {
-							return expression.NewBinaryOperatorExpression(exp.LineNumber(), _type.OtTypeString,
+							return _type.NewBinaryOperatorExpression(exp.LineNumber(), _type.OtTypeString,
 								exp, "+", concatenatedStringExpression, 4)
 						}
 					}
@@ -65,7 +64,7 @@ func StringConcatenationUtilCreate2(recipe string, parameters intmod.IExpression
 		if token == "\u0001" {
 			expr = createFirstStringConcatenationItem(parameters.First())
 		} else {
-			expr = expression.NewStringConstantExpression(token)
+			expr = _type.NewStringConstantExpression(token)
 		}
 
 		if parameters.IsList() {
@@ -80,10 +79,10 @@ func StringConcatenationUtilCreate2(recipe string, parameters intmod.IExpression
 					expr = list.Get(index)
 					index++
 				} else {
-					expr = expression.NewStringConstantExpression(token)
+					expr = _type.NewStringConstantExpression(token)
 				}
 
-				expr = expression.NewBinaryOperatorExpression(expr.LineNumber(), _type.OtTypeString, expr, "+", e, 6)
+				expr = _type.NewBinaryOperatorExpression(expr.LineNumber(), _type.OtTypeString, expr, "+", e, 6)
 			}
 		} else {
 			for st.HasMoreTokens() {
@@ -92,29 +91,29 @@ func StringConcatenationUtilCreate2(recipe string, parameters intmod.IExpression
 				if token == "\u0001" {
 					expr = parameters.First()
 				} else {
-					expr = expression.NewStringConstantExpression(token)
+					expr = _type.NewStringConstantExpression(token)
 				}
-				expr = expression.NewBinaryOperatorExpression(expr.LineNumber(), _type.OtTypeString, expr, "+", e, 6)
+				expr = _type.NewBinaryOperatorExpression(expr.LineNumber(), _type.OtTypeString, expr, "+", e, 6)
 			}
 		}
 
 		return expr
 	} else {
-		return expression.EmptyString
+		return _type.EmptyString
 	}
 }
 
 func StringConcatenationUtilCreate3(parameters intmod.IExpression) intmod.IExpression {
 	switch parameters.Size() {
 	case 0:
-		return expression.EmptyString
+		return _type.EmptyString
 	case 1:
 		return createFirstStringConcatenationItem(parameters.First())
 	default:
 		iterator := parameters.Iterator()
 		expr := createFirstStringConcatenationItem(iterator.Next())
 		for iterator.HasNext() {
-			expr = expression.NewBinaryOperatorExpression(expr.LineNumber(), _type.OtTypeString, expr, "+", iterator.Next(), 6)
+			expr = _type.NewBinaryOperatorExpression(expr.LineNumber(), _type.OtTypeString, expr, "+", iterator.Next(), 6)
 		}
 		return expr
 	}
@@ -122,8 +121,8 @@ func StringConcatenationUtilCreate3(parameters intmod.IExpression) intmod.IExpre
 
 func createFirstStringConcatenationItem(expr intmod.IExpression) intmod.IExpression {
 	if expr.Type() != _type.OtTypeString {
-		expr = expression.NewBinaryOperatorExpression(expr.LineNumber(),
-			_type.OtTypeString, expression.EmptyString, "+", expr, 6)
+		expr = _type.NewBinaryOperatorExpression(expr.LineNumber(),
+			_type.OtTypeString, _type.EmptyString, "+", expr, 6)
 	}
 
 	return expr

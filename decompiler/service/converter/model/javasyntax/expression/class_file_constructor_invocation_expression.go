@@ -3,14 +3,14 @@ package expression
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileConstructorInvocationExpression(lineNumber int, typ intmod.IObjectType, descriptor string,
 	parameterTypes intmod.IType, parameters intmod.IExpression) intsrv.IClassFileConstructorInvocationExpression {
 	e := &ClassFileConstructorInvocationExpression{
-		ConstructorInvocationExpression: *expression.NewConstructorInvocationExpressionWithAll(
-			lineNumber, typ, descriptor, parameters).(*expression.ConstructorInvocationExpression),
+		ConstructorInvocationExpression: *model.NewConstructorInvocationExpressionWithAll(
+			lineNumber, typ, descriptor, parameters).(*model.ConstructorInvocationExpression),
 		parameterTypes: parameterTypes,
 	}
 	e.SetValue(e)
@@ -18,7 +18,7 @@ func NewClassFileConstructorInvocationExpression(lineNumber int, typ intmod.IObj
 }
 
 type ClassFileConstructorInvocationExpression struct {
-	expression.ConstructorInvocationExpression
+	model.ConstructorInvocationExpression
 	parameterTypes intmod.IType
 }
 

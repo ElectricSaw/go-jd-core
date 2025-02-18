@@ -249,7 +249,7 @@ func NewUnmodifiableTypesWithSlice(types []IType) UnmodifiableTypes {
 }
 
 type IType interface {
-	//util.IBase[IType]
+	GetDimension() int
 
 	CreateType(dimension int) IType
 
@@ -287,6 +287,10 @@ type PrimitiveType struct {
 	LeftFlags  int
 	RightFlags int
 	Descriptor string
+}
+
+func (t *PrimitiveType) GetDimension() int {
+	return t.Dimension
 }
 
 func (t *PrimitiveType) CreateType(dimension int) IType {
@@ -453,6 +457,10 @@ type ObjectType struct {
 	TypeArguments ITypeArgument
 	Dimension     int
 	Descriptor    string
+}
+
+func (t *ObjectType) GetDimension() int {
+	return t.Dimension
 }
 
 func (t *ObjectType) CreateType(dimension int) IType {
@@ -703,6 +711,10 @@ type InnerObjectType struct {
 	outerType     *ObjectType
 }
 
+func (t *InnerObjectType) GetDimension() int {
+	return t.Dimension
+}
+
 func (t *InnerObjectType) CreateType(dimension int) IType {
 	tmp := NewInnerObjectTypeWithAll(t.internalName, t.QualifiedName, t.Name, t.TypeArguments, dimension, t.OuterType())
 	return &tmp
@@ -894,6 +906,10 @@ type Types struct {
 	util.DefaultList[IType]
 }
 
+func (t *Types) GetDimension() int {
+	return -1
+}
+
 func (t *Types) CreateType(_ int) IType {
 	return nil
 }
@@ -985,6 +1001,10 @@ type GenericType struct {
 	Name       string
 	Descriptor string
 	Dimension  int
+}
+
+func (t *GenericType) GetDimension() int {
+	return t.Dimension
 }
 
 func (t *GenericType) CreateType(dimension int) IType {
@@ -1139,6 +1159,10 @@ func (t *GenericType) String() string {
 
 type UnmodifiableTypes struct {
 	util.DefaultList[IType]
+}
+
+func (t *UnmodifiableTypes) GetDimension() int {
+	return -1
 }
 
 func (t *UnmodifiableTypes) CreateType(_ int) IType {

@@ -2,14 +2,14 @@ package expression
 
 import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileLocalVariableReferenceExpression(lineNumber, offset int,
 	localVariable intsrv.ILocalVariable) intsrv.IClassFileLocalVariableReferenceExpression {
 	e := &ClassFileLocalVariableReferenceExpression{
-		LocalVariableReferenceExpression: *expression.NewLocalVariableReferenceExpressionWithAll(
-			lineNumber, nil, "").(*expression.LocalVariableReferenceExpression),
+		LocalVariableReferenceExpression: *model.NewLocalVariableReferenceExpressionWithAll(
+			lineNumber, nil, "").(*model.LocalVariableReferenceExpression),
 		offset:        offset,
 		localVariable: localVariable,
 	}
@@ -20,7 +20,7 @@ func NewClassFileLocalVariableReferenceExpression(lineNumber, offset int,
 }
 
 type ClassFileLocalVariableReferenceExpression struct {
-	expression.LocalVariableReferenceExpression
+	model.LocalVariableReferenceExpression
 
 	offset        int
 	localVariable intsrv.ILocalVariable

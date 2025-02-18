@@ -5,7 +5,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/expression"
 	srvexp "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/expression"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -142,7 +141,7 @@ func (v *Java5TypeParametersToTypeArgumentsBinder) NewFieldReferenceExpression(
 		}
 	}
 
-	return expression.NewFieldReferenceExpressionWithAll(lineNumber, typ, expr,
+	return model.NewFieldReferenceExpressionWithAll(lineNumber, typ, expr,
 		objectType.InternalName(), name, descriptor)
 }
 
