@@ -2,58 +2,75 @@ package statement
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewReturnExpressionStatement(expression intmod.IExpression) intmod.IReturnExpressionStatement {
+func NewReturnExpressionStatement(expression model.IExpression) ReturnExpressionStatement {
 	return &ReturnExpressionStatement{
-		lineNumber: expression.LineNumber(),
-		expression: expression,
+		LineNumber: expression.GetLineNumber(),
+		Expression: expression,
 	}
 }
 
-func NewReturnExpressionStatementWithAll(lineNumber int, expression intmod.IExpression) intmod.IReturnExpressionStatement {
+func NewReturnExpressionStatementWithAll(lineNumber int, expression model.IExpression) ReturnExpressionStatement {
 	return &ReturnExpressionStatement{
-		lineNumber: lineNumber,
-		expression: expression,
+		LineNumber: lineNumber,
+		Expression: expression,
 	}
 }
 
 type ReturnExpressionStatement struct {
-	AbstractStatement
+	util.DefaultBase[IStatement]
 
-	lineNumber int
-	expression intmod.IExpression
+	LineNumber int
+	Expression model.IExpression
 }
 
-func (s *ReturnExpressionStatement) LineNumber() int {
-	return s.lineNumber
-}
+//func (s *ReturnExpressionStatement) GenericExpression() model.IExpression {
+//	return s.expression
+//}
 
-func (s *ReturnExpressionStatement) SetLineNumber(lineNumber int) {
-	s.lineNumber = lineNumber
-}
-
-func (s *ReturnExpressionStatement) Expression() intmod.IExpression {
-	return s.expression
-}
-
-func (s *ReturnExpressionStatement) SetExpression(expression intmod.IExpression) {
-	s.expression = expression
-}
-
-func (s *ReturnExpressionStatement) GenericExpression() intmod.IExpression {
-	return s.expression
-}
-
-func (s *ReturnExpressionStatement) IsReturnExpressionStatement() bool {
-	return true
-}
-
-func (s *ReturnExpressionStatement) AcceptStatement(visitor intmod.IStatementVisitor) {
+func (s *ReturnExpressionStatement) AcceptStatement(visitor IStatementVisitor) {
 	visitor.VisitReturnExpressionStatement(s)
 }
 
+func (s *ReturnExpressionStatement) IsBreakStatement() bool                    { return false }
+func (s *ReturnExpressionStatement) IsContinueStatement() bool                 { return false }
+func (s *ReturnExpressionStatement) IsExpressionStatement() bool               { return false }
+func (s *ReturnExpressionStatement) IsForStatement() bool                      { return false }
+func (s *ReturnExpressionStatement) IsIfStatement() bool                       { return false }
+func (s *ReturnExpressionStatement) IsIfElseStatement() bool                   { return false }
+func (s *ReturnExpressionStatement) IsLabelStatement() bool                    { return false }
+func (s *ReturnExpressionStatement) IsLambdaExpressionStatement() bool         { return false }
+func (s *ReturnExpressionStatement) IsLocalVariableDeclarationStatement() bool { return false }
+func (s *ReturnExpressionStatement) IsMonitorEnterStatement() bool             { return false }
+func (s *ReturnExpressionStatement) IsMonitorExitStatement() bool              { return false }
+func (s *ReturnExpressionStatement) IsReturnStatement() bool                   { return false }
+func (s *ReturnExpressionStatement) IsReturnExpressionStatement() bool         { return true }
+func (s *ReturnExpressionStatement) IsStatements() bool                        { return false }
+func (s *ReturnExpressionStatement) IsSwitchStatement() bool                   { return false }
+func (s *ReturnExpressionStatement) IsSwitchStatementLabelBlock() bool         { return false }
+func (s *ReturnExpressionStatement) IsSwitchStatementMultiLabelsBlock() bool   { return false }
+func (s *ReturnExpressionStatement) IsThrowStatement() bool                    { return false }
+func (s *ReturnExpressionStatement) IsTryStatement() bool                      { return false }
+func (s *ReturnExpressionStatement) IsWhileStatement() bool                    { return false }
+
+func (s *ReturnExpressionStatement) GetCondition() model.IExpression  { return &model.NeNoExpression }
+func (s *ReturnExpressionStatement) GetExpression() model.IExpression { return s.Expression }
+func (s *ReturnExpressionStatement) GetMonitor() model.IExpression    { return &model.NeNoExpression }
+
+func (s *ReturnExpressionStatement) GetElseStatements() IStatement    { return &NoStmt }
+func (s *ReturnExpressionStatement) GetFinallyStatements() IStatement { return &NoStmt }
+func (s *ReturnExpressionStatement) GetStatements() IStatement        { return &NoStmt }
+func (s *ReturnExpressionStatement) GetTryStatements() IStatement     { return &NoStmt }
+
+func (s *ReturnExpressionStatement) GetInit() model.IExpression   { return &model.NeNoExpression }
+func (s *ReturnExpressionStatement) GetUpdate() model.IExpression { return &model.NeNoExpression }
+
+func (s *ReturnExpressionStatement) GetCatchClauses() util.IList[*CatchClause] { return nil }
+func (s *ReturnExpressionStatement) GetLineNumber() int                        { return s.LineNumber }
+
 func (s *ReturnExpressionStatement) String() string {
-	return fmt.Sprintf("ReturnExpressionStatement{return %s}", s.expression)
+	return fmt.Sprintf("ReturnExpressionStatement{return %s}", s.Expression)
 }

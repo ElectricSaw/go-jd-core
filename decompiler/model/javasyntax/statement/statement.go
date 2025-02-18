@@ -1,7 +1,6 @@
 package statement
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -13,10 +12,10 @@ func NewAbstractStatement() *AbstractStatement {
 }
 
 type AbstractStatement struct {
-	util.DefaultBase[intmod.IStatement]
+	util.DefaultBase[IStatement]
 }
 
-func (s *AbstractStatement) AcceptStatement(visitor intmod.IStatementVisitor) {}
+func (s *AbstractStatement) AcceptStatement(visitor IStatementVisitor) {}
 
 func (s *AbstractStatement) IsBreakStatement() bool                    { return false }
 func (s *AbstractStatement) IsContinueStatement() bool                 { return false }
@@ -39,17 +38,23 @@ func (s *AbstractStatement) IsThrowStatement() bool                    { return 
 func (s *AbstractStatement) IsTryStatement() bool                      { return false }
 func (s *AbstractStatement) IsWhileStatement() bool                    { return false }
 
-func (s *AbstractStatement) Condition() intmod.IExpression        { return model.NeNoExpression }
-func (s *AbstractStatement) Expression() intmod.IExpression       { return model.NeNoExpression }
-func (s *AbstractStatement) Monitor() intmod.IExpression          { return model.NeNoExpression }
-func (s *AbstractStatement) ElseStatements() intmod.IStatement    { return NoStmt.(intmod.IStatement) }
-func (s *AbstractStatement) FinallyStatements() intmod.IStatement { return NoStmt.(intmod.IStatement) }
-func (s *AbstractStatement) Statements() intmod.IStatement        { return NoStmt.(intmod.IStatement) }
-func (s *AbstractStatement) TryStatements() intmod.IStatement     { return NoStmt.(intmod.IStatement) }
+func (s *AbstractStatement) GetCondition() model.IExpression  { return &model.NeNoExpression }
+func (s *AbstractStatement) GetExpression() model.IExpression { return &model.NeNoExpression }
+func (s *AbstractStatement) GetMonitor() model.IExpression    { return &model.NeNoExpression }
 
-func (s *AbstractStatement) Init() intmod.IExpression   { return model.NeNoExpression }
-func (s *AbstractStatement) Update() intmod.IExpression { return model.NeNoExpression }
+func (s *AbstractStatement) GetElseStatements() IStatement { return NoStmt }
+func (s *AbstractStatement) GetFinallyStatements() IStatement {
+	return NoStmt
+}
+func (s *AbstractStatement) GetStatements() IStatement    { return NoStmt }
+func (s *AbstractStatement) GetTryStatements() IStatement { return NoStmt }
 
-func (s *AbstractStatement) CatchClauses() []intmod.ICatchClause { return nil }
+func (s *AbstractStatement) GetInit() model.IExpression   { return &model.NeNoExpression }
+func (s *AbstractStatement) GetUpdate() model.IExpression { return &model.NeNoExpression }
 
-func (s *AbstractStatement) LineNumber() int { return intmod.UnknownLineNumber }
+func (s *AbstractStatement) GetCatchClauses() util.IList[*CatchClause] { return nil }
+func (s *AbstractStatement) GetLineNumber() int                        { return model.UnknownLineNumber }
+
+func (s *AbstractStatement) String() string {
+	return ""
+}
