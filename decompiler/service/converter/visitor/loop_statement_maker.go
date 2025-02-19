@@ -5,7 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
 	"strings"
@@ -115,7 +114,7 @@ func makeLoopStatementMaker(majorVersion int, typeBounds map[string]intmod.IType
 		break
 	}
 
-	return modsts.NewWhileStatement(condition, subStatements)
+	return _type.NewWhileStatement(condition, subStatements)
 }
 
 func MakeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loopBasicBlock intsrv.IBasicBlock,
@@ -137,7 +136,7 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 	statements intmod.IStatements, subStatements intmod.IStatements) intmod.IStatement {
 	subStatementsSize := subStatements.Size()
 
-	if (subStatementsSize > 0) && (subStatements.Last() == modsts.Continue) {
+	if (subStatementsSize > 0) && (subStatements.Last() == _type.Continue) {
 		subStatements.RemoveLast()
 		subStatementsSize--
 	}
@@ -187,14 +186,14 @@ func makeLoopStatementMaker2(localVariableMaker intsrv.ILocalVariableMaker, loop
 		}
 	}
 
-	return modsts.NewWhileStatement(_type.True, subStatements)
+	return _type.NewWhileStatement(_type.True, subStatements)
 }
 
 func MakeDoWhileLoop(loopBasicBlock intsrv.IBasicBlock, condition intmod.IExpression,
 	subStatements intmod.IStatements, jumps intmod.IStatements) intmod.IStatement {
 	subStatements.AcceptStatement(GlobalRemoveLastContinueStatementVisitor)
 
-	loop := modsts.NewDoWhileStatement(condition, subStatements)
+	loop := _type.NewDoWhileStatement(condition, subStatements)
 	continueOffset := loopBasicBlock.Sub1().FromOffset()
 	breakOffset := loopBasicBlock.Next().FromOffset()
 
@@ -309,7 +308,7 @@ func createForStatementWithoutLineNumber(localVariableMaker intsrv.ILocalVariabl
 			} else if update.IsPostOperatorExpression() {
 				expression = update.Expression()
 			} else {
-				return modsts.NewWhileStatement(condition, subStatements)
+				return _type.NewWhileStatement(condition, subStatements)
 			}
 
 			if expression.IsLocalVariableReferenceExpression() && utils.ConvertTo(expression) == localVariable {
@@ -326,7 +325,7 @@ func createForStatementWithoutLineNumber(localVariableMaker intsrv.ILocalVariabl
 		}
 	}
 
-	return modsts.NewWhileStatement(condition, subStatements)
+	return _type.NewWhileStatement(condition, subStatements)
 }
 
 func makeForEachArray(
@@ -616,20 +615,20 @@ func makeLabels(loopIndex, continueOffset, breakOffset int, loop intmod.IStateme
 			targetOffset := statement.TargetOffset()
 
 			if targetOffset == continueOffset {
-				statement.SetStatement(modsts.NewContinueStatement(label))
+				statement.SetStatement(_type.NewContinueStatement(label))
 				createLabel = true
 				_ = iterator.Remove()
 			} else if targetOffset == breakOffset {
-				statement.SetStatement(modsts.NewBreakStatement(label))
+				statement.SetStatement(_type.NewBreakStatement(label))
 				createLabel = true
 				_ = iterator.Remove()
 			} else if (continueOffset <= offset) && (offset < breakOffset) {
 				if (continueOffset <= targetOffset) && (targetOffset < breakOffset) {
 					if statement.IsContinueLabel() {
-						statement.SetStatement(modsts.NewContinueStatement(label))
+						statement.SetStatement(_type.NewContinueStatement(label))
 						createLabel = true
 					} else {
-						statement.SetStatement(modsts.Continue)
+						statement.SetStatement(_type.Continue)
 					}
 					_ = iterator.Remove()
 				} else {
@@ -639,7 +638,7 @@ func makeLabels(loopIndex, continueOffset, breakOffset int, loop intmod.IStateme
 		}
 
 		if createLabel {
-			return modsts.NewLabelStatement(label, loop)
+			return _type.NewLabelStatement(label, loop)
 		}
 	}
 

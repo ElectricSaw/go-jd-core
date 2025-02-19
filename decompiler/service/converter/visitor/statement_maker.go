@@ -6,7 +6,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/cfg"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
@@ -63,8 +62,8 @@ type StatementMaker struct {
 }
 
 func (m *StatementMaker) Make(cfg intsrv.IControlFlowGraph) intmod.IStatements {
-	statements := modsts.NewStatements()
-	jumps := modsts.NewStatements()
+	statements := model.NewStatements()
+	jumps := model.NewStatements()
 	watchdog := utils.NewWatchDog()
 
 	m.localVariableMaker.PushFrame(statements)
@@ -132,7 +131,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		m.makeStatements(watchdog, basicBlock.Next(), statements, jumps)
 		break
 	case intsrv.TypeReturn:
-		statements.Add(modsts.Return)
+		statements.Add(model.Return)
 		break
 	case intsrv.TypeReturnValue:
 	case intsrv.TypeGotoInTernaryOperator:
@@ -142,7 +141,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		m.parseSwitch(watchdog, basicBlock, statements, jumps)
 		break
 	case intsrv.TypeSwitchBreak:
-		statements.Add(modsts.Break)
+		statements.Add(model.Break)
 		break
 	case intsrv.TypeTry:
 		m.parseTry(watchdog, basicBlock, statements, jumps, false, false)
@@ -175,7 +174,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		}
 		watchdog.Check(basicBlock, basicBlock.Sub2())
 		elseStatements = m.makeSubStatements2(watchdog, basicBlock.Sub2(), statements, jumps)
-		statements.Add(modsts.NewIfElseStatement(condition, subStatements, elseStatements))
+		statements.Add(model.NewIfElseStatement(condition, subStatements, elseStatements))
 		watchdog.Check(basicBlock, basicBlock.Next())
 		m.makeStatements(watchdog, basicBlock.Next(), statements, jumps)
 		break
@@ -239,10 +238,10 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		m.parseLoop(watchdog, basicBlock, statements, jumps)
 		break
 	case intsrv.TypeLoopStart, intsrv.TypeLoopContinue:
-		statements.Add(modsts.Continue)
+		statements.Add(model.Continue)
 		break
 	case intsrv.TypeLoopEnd:
-		statements.Add(modsts.Break)
+		statements.Add(model.Break)
 		break
 	case intsrv.TypeJump:
 		jump := srvsts.NewClassFileBreakContinueStatement(basicBlock.FromOffset(), basicBlock.ToOffset())
@@ -250,7 +249,7 @@ func (m *StatementMaker) makeStatements(watchdog intsrv.IWatchDog, basicBlock in
 		jumps.Add(jump)
 		break
 	case intsrv.TypeInfiniteGoto:
-		statements.Add(modsts.NewWhileStatement(model.True, nil))
+		statements.Add(model.NewWhileStatement(model.True, nil))
 		break
 	default:
 		//assert false : "Unexpected basic block: " + basicBlock.TypeName() + ':' + basicBlock.Index();
@@ -271,7 +270,7 @@ func (m *StatementMaker) makeSubStatements(watchdog intsrv.IWatchDog, basicBlock
 
 func (m *StatementMaker) makeSubStatements2(watchdog intsrv.IWatchDog, basicBlock intsrv.IBasicBlock,
 	statements intmod.IStatements, jumps intmod.IStatements) intmod.IStatements {
-	subStatements := modsts.NewStatements()
+	subStatements := model.NewStatements()
 
 	if !statements.IsEmpty() && statements.Last().IsMonitorEnterStatement() {
 		subStatements.Add(statements.RemoveLast())
@@ -352,26 +351,26 @@ func (m *StatementMaker) parseSwitch(watchdog intsrv.IWatchDog, basicBlock intsr
 			j++
 		}
 
-		subStatements := modsts.NewStatements()
+		subStatements := model.NewStatements()
 
 		m.stack.Copy(localStack)
 		m.makeStatements(watchdog, bb, subStatements, jumps)
 		m.replacePreOperatorWithPostOperator(subStatements)
 
 		if sc.IsDefaultCase() {
-			blocks.Add(modsts.NewLabelBlock(modsts.DefaultLabe1.(intmod.ILabel), subStatements))
+			blocks.Add(model.NewLabelBlock(model.DefaultLabe1.(intmod.ILabel), subStatements))
 		} else if j == i+1 {
-			label := modsts.NewExpressionLabel(model.NewIntegerConstantExpression(conditionType, sc.Value()))
-			blocks.Add(modsts.NewLabelBlock(label.(intmod.ILabel), subStatements))
+			label := model.NewExpressionLabel(model.NewIntegerConstantExpression(conditionType, sc.Value()))
+			blocks.Add(model.NewLabelBlock(label.(intmod.ILabel), subStatements))
 		} else {
 			labels := util.NewDefaultListWithCapacity[intmod.ILabel](j - i)
 
 			for ; i < j; i++ {
-				labels.Add(modsts.NewExpressionLabel(model.NewIntegerConstantExpression(conditionType,
+				labels.Add(model.NewExpressionLabel(model.NewIntegerConstantExpression(conditionType,
 					switchCases.Get(i).Value())).(intmod.ILabel))
 			}
 
-			blocks.Add(modsts.NewMultiLabelsBlock(labels.ToSlice(), subStatements))
+			blocks.Add(model.NewMultiLabelsBlock(labels.ToSlice(), subStatements))
 			i--
 		}
 	}
@@ -441,7 +440,7 @@ func (m *StatementMaker) parseTry(watchdog intsrv.IWatchDog, basicBlock intsrv.I
 				m.typeMaker.MakeFromInternalTypeName(
 					exceptionHandler.InternalThrowableName())))
 
-			catchStatements := modsts.NewStatements()
+			catchStatements := model.NewStatements()
 			m.localVariableMaker.PushFrame(catchStatements)
 
 			bb := exceptionHandler.BasicBlock()
@@ -574,7 +573,7 @@ func (m *StatementMaker) parseIf(watchdog intsrv.IWatchDog, basicBlock intsrv.IB
 			}
 		}
 
-		statements.Add(modsts.NewAssertStatement(cond, message))
+		statements.Add(model.NewAssertStatement(cond, message))
 		m.makeStatements(watchdog, basicBlock.Next(), statements, jumps)
 	} else {
 		m.makeStatements(watchdog, basicBlock.Condition(), statements, jumps)
@@ -584,7 +583,7 @@ func (m *StatementMaker) parseIf(watchdog intsrv.IWatchDog, basicBlock intsrv.IB
 		if m.stack.Size() != backup.Size() {
 			m.stack.Copy(backup)
 		}
-		statements.Add(modsts.NewIfStatement(cond, subStatements))
+		statements.Add(model.NewIfStatement(cond, subStatements))
 		index := statements.Size()
 		m.makeStatements(watchdog, basicBlock.Next(), statements, jumps)
 
@@ -599,7 +598,7 @@ func (m *StatementMaker) parseIf(watchdog intsrv.IWatchDog, basicBlock intsrv.IB
 
 				if cfres1.LineNumber() == cfres2.LineNumber() {
 					statements.SubList(index-1, statements.Size()).Clear()
-					statements.Add(modsts.NewReturnExpressionStatement(
+					statements.Add(model.NewReturnExpressionStatement(
 						m.newTernaryOperatorExpression(cfres1.LineNumber(),
 							cond, cfres1.Expression(), cfres2.Expression())))
 				}
@@ -636,7 +635,7 @@ func (m *StatementMaker) parseLoop(watchdog intsrv.IWatchDog, basicBlock intsrv.
 				// 'do-while' pattern
 				ifBB.Condition().InverseCondition()
 
-				subStatements := modsts.NewStatements()
+				subStatements := model.NewStatements()
 
 				m.makeStatements(watchdog, ifBB.Condition(), subStatements, jumps)
 				m.replacePreOperatorWithPostOperator(subStatements)
@@ -1012,7 +1011,7 @@ func (m *StatementMaker) updateJumpStatements(jumps intmod.IStatements) {
 		statement := iterator.Next().(intsrv.IClassFileBreakContinueStatement)
 
 		statement.SetStatement(
-			modsts.NewCommentStatement(
+			model.NewCommentStatement(
 				fmt.Sprintf("// Byte code: goto -> %d", statement.TargetOffset())))
 	}
 }

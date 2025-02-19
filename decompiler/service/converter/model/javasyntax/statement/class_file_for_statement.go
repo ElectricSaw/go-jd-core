@@ -4,13 +4,13 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileForStatement(fromOffset, toOffset int, init intmod.IExpression,
 	condition intmod.IExpression, update intmod.IExpression, state intmod.IStatement) intsrv.IClassFileForStatement {
 	s := &ClassFileForStatement{
-		ForStatement: *statement.NewForStatementWithInit(init, condition, update, state).(*statement.ForStatement),
+		ForStatement: *model.NewForStatementWithInit(init, condition, update, state).(*model.ForStatement),
 		fromOffset:   fromOffset,
 		toOffset:     toOffset,
 	}
@@ -19,7 +19,7 @@ func NewClassFileForStatement(fromOffset, toOffset int, init intmod.IExpression,
 }
 
 type ClassFileForStatement struct {
-	statement.ForStatement
+	model.ForStatement
 
 	fromOffset int
 	toOffset   int

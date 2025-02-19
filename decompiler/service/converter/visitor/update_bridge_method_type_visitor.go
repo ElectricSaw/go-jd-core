@@ -8,7 +8,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/constant"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewUpdateBridgeMethodTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateBridgeMethodTypeVisitor {
@@ -549,7 +548,7 @@ func (v *UpdateBridgeMethodTypeVisitor) VisitLambdaExpressionStatement(stat intm
 }
 
 func (v *UpdateBridgeMethodTypeVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *UpdateBridgeMethodTypeVisitor) VisitNoStatement(_ intmod.INoStatement) {

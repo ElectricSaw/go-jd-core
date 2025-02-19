@@ -6,7 +6,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -458,7 +457,7 @@ func (f *Frame) createInlineDeclarations() {
 						})
 
 						for _, lv := range sorted {
-							_ = iterator.Add(statement.NewLocalVariableDeclarationStatement(lv.Type(),
+							_ = iterator.Add(_type.NewLocalVariableDeclarationStatement(lv.Type(),
 								srvdecl.NewClassFileLocalVariableDeclarator(lv)))
 							lv.SetDeclared(true)
 							undeclaredLocalVariables.Remove(lv)
@@ -577,7 +576,7 @@ func (f *Frame) newDeclarationStatement(undeclaredLocalVariables util.ISet[intsr
 		variableInitializer = declaration.NewExpressionVariableInitializer(boe.RightExpression())
 	}
 
-	return statement.NewLocalVariableDeclarationStatement(typ,
+	return _type.NewLocalVariableDeclarationStatement(typ,
 		srvdecl.NewClassFileLocalVariableDeclarator2(boe.LineNumber(),
 			reference.LocalVariable().(intsrv.ILocalVariable), variableInitializer))
 }
@@ -763,7 +762,7 @@ func (f *Frame) createStartBlockDeclarations() {
 					addIndex = f.AddIndex()
 				}
 
-				_ = f.stat.AddAt(addIndex, statement.NewLocalVariableDeclarationStatement(
+				_ = f.stat.AddAt(addIndex, _type.NewLocalVariableDeclarationStatement(
 					lv.Type(), srvdecl.NewClassFileLocalVariableDeclarator(lv)))
 				lv.SetDeclared(true)
 			}
@@ -882,9 +881,9 @@ func (f *Frame) mergeDeclarations() {
 					iterator.Previous()
 
 					if minDimension == maxDimension {
-						_ = iterator.Set(statement.NewLocalVariableDeclarationStatement(type1, f.createDeclarators2(declarations, false)))
+						_ = iterator.Set(_type.NewLocalVariableDeclarationStatement(type1, f.createDeclarators2(declarations, false)))
 					} else {
-						_ = iterator.Set(statement.NewLocalVariableDeclarationStatement(type0, f.createDeclarators2(declarations, true)))
+						_ = iterator.Set(_type.NewLocalVariableDeclarationStatement(type0, f.createDeclarators2(declarations, true)))
 					}
 
 					iterator.Next()

@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvsts "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -231,7 +230,7 @@ func newTryStatement(localVariableMaker intsrv.ILocalVariableMaker,
 
 	// Create try-with-resources statement
 	resources := util.NewDefaultList[intmod.IResource]()
-	resources.Add(modsts.NewResource(lv1.Type().(intmod.IObjectType), lv1.Name(), boe.RightExpression()))
+	resources.Add(_type.NewResource(lv1.Type().(intmod.IObjectType), lv1.Name(), boe.RightExpression()))
 
 	return srvsts.NewClassFileTryStatement2(resources.ToSlice(),
 		tryStatements, nil, finallyStatements, false, false)

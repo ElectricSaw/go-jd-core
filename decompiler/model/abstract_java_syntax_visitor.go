@@ -3,7 +3,6 @@ package model
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 type AbstractJavaSyntaxVisitor struct {
@@ -475,7 +474,7 @@ func (v *AbstractJavaSyntaxVisitor) VisitLambdaExpressionStatement(stat intmod.I
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitNoStatement(stat intmod.INoStatement) {

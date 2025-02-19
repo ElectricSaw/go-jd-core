@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewRenameLocalVariablesVisitor() intsrv.IRenameLocalVariablesVisitor {
@@ -490,7 +489,7 @@ func (v *RenameLocalVariablesVisitor) VisitLambdaExpressionStatement(stat intmod
 }
 
 func (v *RenameLocalVariablesVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *RenameLocalVariablesVisitor) VisitNoStatement(_ intmod.INoStatement) {

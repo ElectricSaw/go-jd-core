@@ -4,14 +4,14 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileForEachStatement(localVariable intsrv.ILocalVariable, expr intmod.IExpression,
 	state intmod.IStatement) intsrv.IClassFileForEachStatement {
 	s := &ClassFileForEachStatement{
-		ForEachStatement: *statement.NewForEachStatement(localVariable.Type(), "", expr,
-			state).(*statement.ForEachStatement),
+		ForEachStatement: *model.NewForEachStatement(localVariable.Type(), "", expr,
+			state).(*model.ForEachStatement),
 		localVariable: localVariable,
 	}
 	s.SetValue(s)
@@ -19,7 +19,7 @@ func NewClassFileForEachStatement(localVariable intsrv.ILocalVariable, expr intm
 }
 
 type ClassFileForEachStatement struct {
-	statement.ForEachStatement
+	model.ForEachStatement
 
 	localVariable intsrv.ILocalVariable
 }

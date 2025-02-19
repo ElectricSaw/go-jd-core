@@ -6,7 +6,6 @@ import (
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -770,7 +769,7 @@ func (v *UpdateIntegerConstantTypeVisitor) VisitLambdaExpressionStatement(stat i
 }
 
 func (v *UpdateIntegerConstantTypeVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *UpdateIntegerConstantTypeVisitor) VisitNoStatement(_ intmod.INoStatement) {

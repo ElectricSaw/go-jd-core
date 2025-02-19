@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewSearchFirstLineNumberVisitor() intsrv.ISearchFirstLineNumberVisitor {
@@ -506,7 +505,7 @@ func (v *SearchFirstLineNumberVisitor) VisitLabelStatement(stat intmod.ILabelSta
 }
 
 func (v *SearchFirstLineNumberVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *SearchFirstLineNumberVisitor) VisitNoStatement(_ intmod.INoStatement) {

@@ -4,12 +4,12 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileMonitorExitStatement(monitor intmod.IExpression) intsrv.IClassFileMonitorExitStatement {
 	s := &ClassFileMonitorExitStatement{
-		CommentStatement: *statement.NewCommentStatement(fmt.Sprintf("/* monitor exit %s */", monitor)).(*statement.CommentStatement),
+		CommentStatement: *model.NewCommentStatement(fmt.Sprintf("/* monitor exit %s */", monitor)).(*model.CommentStatement),
 		monitor:          monitor,
 	}
 	s.SetValue(s)
@@ -17,7 +17,7 @@ func NewClassFileMonitorExitStatement(monitor intmod.IExpression) intsrv.IClassF
 }
 
 type ClassFileMonitorExitStatement struct {
-	statement.CommentStatement
+	model.CommentStatement
 
 	monitor intmod.IExpression
 }

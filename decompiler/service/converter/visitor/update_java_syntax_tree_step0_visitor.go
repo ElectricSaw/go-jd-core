@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewUpdateJavaSyntaxTreeStep0Visitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateJavaSyntaxTreeStep0Visitor {
@@ -479,7 +478,7 @@ func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitLambdaExpressionStatement(stat i
 }
 
 func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *UpdateJavaSyntaxTreeStep0Visitor) VisitNoStatement(_ intmod.INoStatement) {

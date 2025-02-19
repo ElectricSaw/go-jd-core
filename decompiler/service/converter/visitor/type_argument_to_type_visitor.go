@@ -5,7 +5,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewTypeArgumentToTypeVisitor() intsrv.ITypeArgumentToTypeVisitor {
@@ -541,7 +540,7 @@ func (v *TypeArgumentToTypeVisitor) VisitLambdaExpressionStatement(stat intmod.I
 }
 
 func (v *TypeArgumentToTypeVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *TypeArgumentToTypeVisitor) VisitNoStatement(_ intmod.INoStatement) {

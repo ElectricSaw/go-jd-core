@@ -7,8 +7,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
 )
 
@@ -121,11 +119,11 @@ func (v *CreateInstructionsVisitor) createParametersVariablesAndStatements(comd 
 			if utils.ReduceControlFlowGraphReducer(cfg) {
 				comd.SetStatements(statementMaker.Make(cfg))
 			} else {
-				comd.SetStatements(modsts.NewByteCodeStatement(utils.Write("// ", method)))
+				comd.SetStatements(model.NewByteCodeStatement(utils.Write("// ", method)))
 			}
 		} else {
 			// assert ExceptionUtil.printStackTrace(e);
-			comd.SetStatements(modsts.NewByteCodeStatement(utils.Write("// ", method)))
+			comd.SetStatements(model.NewByteCodeStatement(utils.Write("// ", method)))
 		}
 
 		localVariableMaker.Make(containsLineNumber, v.typeMaker)
@@ -545,7 +543,7 @@ func (v *CreateInstructionsVisitor) VisitLambdaExpressionStatement(stat intmod.I
 }
 
 func (v *CreateInstructionsVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *CreateInstructionsVisitor) VisitNoStatement(_ intmod.INoStatement) {

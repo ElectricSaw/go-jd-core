@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewSearchLocalVariableReferenceVisitor() intsrv.ISearchLocalVariableReferenceVisitor {
@@ -502,7 +501,7 @@ func (v *SearchLocalVariableReferenceVisitor) VisitLambdaExpressionStatement(sta
 }
 
 func (v *SearchLocalVariableReferenceVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *SearchLocalVariableReferenceVisitor) VisitNoStatement(_ intmod.INoStatement) {

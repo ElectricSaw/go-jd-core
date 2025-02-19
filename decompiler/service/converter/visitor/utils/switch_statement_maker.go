@@ -3,7 +3,7 @@ package utils
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
+	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"strings"
 )

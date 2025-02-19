@@ -5,8 +5,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	moddec "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -128,7 +126,7 @@ func (v *InitStaticFieldVisitor) VisitStaticInitializerDeclaration(decl intmod.I
 							newStatements = list.RemoveFirst()
 						} else {
 							subList := list.SubList(0, i)
-							newStatements = modsts.NewStatementsWithList(subList)
+							newStatements = model.NewStatementsWithList(subList)
 							subList.Clear()
 						}
 
@@ -637,7 +635,7 @@ func (v *InitStaticFieldVisitor) VisitLambdaExpressionStatement(stat intmod.ILam
 }
 
 func (v *InitStaticFieldVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *InitStaticFieldVisitor) VisitNoStatement(_ intmod.INoStatement) {

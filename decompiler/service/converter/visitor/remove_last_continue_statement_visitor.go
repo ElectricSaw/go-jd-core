@@ -6,7 +6,6 @@ import (
 
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewRemoveLastContinueStatementVisitor() intsrv.IRemoveLastContinueStatementVisitor {
@@ -21,7 +20,7 @@ func (v *RemoveLastContinueStatementVisitor) VisitStatements(list intmod.IStatem
 	if !list.IsEmpty() {
 		last := list.Last()
 
-		if reflect.TypeOf(last) == reflect.TypeOf(modsts.ContinueStatement{}) {
+		if reflect.TypeOf(last) == reflect.TypeOf(model.ContinueStatement{}) {
 			list.RemoveLast()
 			v.VisitStatements(list)
 		} else {

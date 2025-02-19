@@ -3,7 +3,7 @@ package statement
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileTryStatement(tryStatements intmod.IStatement, catchClauses []intmod.ICatchClause,
@@ -13,8 +13,8 @@ func NewClassFileTryStatement(tryStatements intmod.IStatement, catchClauses []in
 
 func NewClassFileTryStatement2(resources []intmod.IResource, tryStatements intmod.IStatement,
 	catchClauses []intmod.ICatchClause, finallyStatements intmod.IStatement, jsr, eclipse bool) intsrv.IClassFileTryStatement {
-	tryStatement := *statement.NewTryStatementWithAll(resources, tryStatements,
-		catchClauses, finallyStatements).(*statement.TryStatement)
+	tryStatement := *model.NewTryStatementWithAll(resources, tryStatements,
+		catchClauses, finallyStatements).(*model.TryStatement)
 	s := &ClassFileTryStatement{
 		TryStatement: tryStatement,
 		jsr:          jsr,
@@ -25,7 +25,7 @@ func NewClassFileTryStatement2(resources []intmod.IResource, tryStatements intmo
 }
 
 type ClassFileTryStatement struct {
-	statement.TryStatement
+	model.TryStatement
 
 	jsr     bool
 	eclipse bool
@@ -41,13 +41,13 @@ func (s *ClassFileTryStatement) IsEclipse() bool {
 
 func NewCatchClause(lineNumber int, typ intmod.IObjectType, localVariable intsrv.ILocalVariable, statements intmod.IStatement) intsrv.ICatchClause {
 	return &CatchClause{
-		CatchClause:   *statement.NewCatchClause(lineNumber, typ, "", statements).(*statement.CatchClause),
+		CatchClause:   *model.NewCatchClause(lineNumber, typ, "", statements).(*model.CatchClause),
 		localVariable: localVariable,
 	}
 }
 
 type CatchClause struct {
-	statement.CatchClause
+	model.CatchClause
 
 	localVariable intsrv.ILocalVariable
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/attribute"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model/classfile/constant"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func NewUpdateOuterFieldTypeVisitor(typeMaker intsrv.ITypeMaker) intsrv.IUpdateOuterFieldTypeVisitor {
@@ -558,7 +557,7 @@ func (v *UpdateOuterFieldTypeVisitor) VisitLambdaExpressionStatement(stat intmod
 }
 
 func (v *UpdateOuterFieldTypeVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *UpdateOuterFieldTypeVisitor) VisitNoStatement(_ intmod.INoStatement) {

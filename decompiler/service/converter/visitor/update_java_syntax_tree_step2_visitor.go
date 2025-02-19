@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 var aggregateFieldsVisitor = NewAggregateFieldsVisitor()
@@ -539,7 +538,7 @@ func (v *UpdateJavaSyntaxTreeStep2Visitor) VisitLambdaExpressionStatement(stat i
 }
 
 func (v *UpdateJavaSyntaxTreeStep2Visitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *UpdateJavaSyntaxTreeStep2Visitor) VisitNoStatement(_ intmod.INoStatement) {

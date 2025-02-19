@@ -10,7 +10,6 @@ import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_ "github.com/ElectricSaw/go-jd-core/decompiler/model/classfile"
 	_ "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -400,7 +399,7 @@ func (v *UpdateNewExpressionVisitor) VisitStatements(list intmod.IStatements) {
 				iterator.Previous()
 
 				for _, typeDeclaration := range v.localClassDeclarations.ToSlice() {
-					_ = iterator.Add(statement.NewTypeDeclarationStatement(typeDeclaration))
+					_ = iterator.Add(model.NewTypeDeclarationStatement(typeDeclaration))
 				}
 
 				v.localClassDeclarations.Clear()
@@ -699,17 +698,17 @@ func (v *AddLocalClassDeclarationVisitor) addLocalClassDeclarations(stat intmod.
 			}
 
 			if decl.FirstLineNumber() <= v.lineNumber {
-				list := statement.NewStatements()
+				list := model.NewStatements()
 				declarationIterator := v.parent.localClassDeclarations.Iterator()
 
-				list.Add(statement.NewTypeDeclarationStatement(decl))
+				list.Add(model.NewTypeDeclarationStatement(decl))
 				declarationIterator.Next()
 				_ = declarationIterator.Remove()
 
 				for declarationIterator.HasNext() {
 					decl = declarationIterator.Next()
 					if decl.FirstLineNumber() <= v.lineNumber {
-						list.Add(statement.NewTypeDeclarationStatement(decl))
+						list.Add(model.NewTypeDeclarationStatement(decl))
 						_ = declarationIterator.Remove()
 					}
 				}
@@ -747,7 +746,7 @@ func (v *AddLocalClassDeclarationVisitor) VisitStatements(list intmod.IStatement
 
 			for decl.FirstLineNumber() <= v.lineNumber {
 				statementIterator.Previous()
-				_ = statementIterator.Add(statement.NewTypeDeclarationStatement(decl))
+				_ = statementIterator.Add(model.NewTypeDeclarationStatement(decl))
 				statementIterator.Next()
 				_ = declarationIterator.Remove()
 
@@ -1175,7 +1174,7 @@ func (v *InitInnerClassVisitor) VisitLambdaExpressionStatement(stat intmod.ILamb
 }
 
 func (v *InitInnerClassVisitor) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *InitInnerClassVisitor) VisitNoStatement(_ intmod.INoStatement) {

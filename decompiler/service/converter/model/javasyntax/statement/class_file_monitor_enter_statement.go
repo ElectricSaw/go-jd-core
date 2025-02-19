@@ -4,13 +4,13 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileMonitorEnterStatement(monitor intmod.IExpression) intsrv.IClassFileMonitorEnterStatement {
 	s := &ClassFileMonitorEnterStatement{
-		CommentStatement: *statement.NewCommentStatement(fmt.Sprintf("/* monitor enter %s */",
-			monitor)).(*statement.CommentStatement),
+		CommentStatement: *model.NewCommentStatement(fmt.Sprintf("/* monitor enter %s */",
+			monitor)).(*model.CommentStatement),
 		monitor: monitor,
 	}
 	s.SetValue(s)
@@ -18,7 +18,7 @@ func NewClassFileMonitorEnterStatement(monitor intmod.IExpression) intsrv.IClass
 }
 
 type ClassFileMonitorEnterStatement struct {
-	statement.CommentStatement
+	model.CommentStatement
 
 	monitor intmod.IExpression
 }

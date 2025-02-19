@@ -4,7 +4,6 @@ import (
 	"github.com/ElectricSaw/go-jd-core/decompiler/api"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/fragmenter/visitor/fragutil"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"strings"
@@ -779,7 +778,7 @@ func (v *TypeVisitor2) VisitLambdaExpressionStatement(stat intmod.ILambdaExpress
 }
 
 func (v *TypeVisitor2) VisitLocalVariableDeclarationStatement(stat intmod.ILocalVariableDeclarationStatement) {
-	v.VisitLocalVariableDeclaration(&stat.(*statement.LocalVariableDeclarationStatement).LocalVariableDeclaration)
+	v.VisitLocalVariableDeclaration(&stat.(*model.LocalVariableDeclarationStatement).LocalVariableDeclaration)
 }
 
 func (v *TypeVisitor2) VisitNoStatement(stat intmod.INoStatement) {

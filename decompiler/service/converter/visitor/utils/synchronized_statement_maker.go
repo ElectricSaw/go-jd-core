@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	modsts "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/statement"
 )
 
 func MakeSynchronizedStatementMaker(localVariableMaker intsrv.ILocalVariableMaker, statements intmod.IStatements, tryStatements intmod.IStatements) intmod.IStatement {
@@ -41,7 +40,7 @@ func MakeSynchronizedStatementMaker(localVariableMaker intsrv.ILocalVariableMake
 	// Remove synthetic local variable
 	localVariableMaker.RemoveLocalVariable(localVariable)
 
-	return modsts.NewSynchronizedStatement(monitor, tryStatements)
+	return model.NewSynchronizedStatement(monitor, tryStatements)
 }
 
 func NewRemoveMonitorExitVisitor(localVariable intsrv.ILocalVariable) *RemoveMonitorExitVisitor {
