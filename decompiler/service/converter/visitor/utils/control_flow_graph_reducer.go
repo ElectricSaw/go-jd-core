@@ -606,7 +606,7 @@ func reduceSwitchDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock
 	end := cfg.End
 
 	for _, bb := range ends.ToSlice() {
-		if (end == cfg.End) || (end.FromOffset() < bb.FromOffset()) {
+		if (end == cfg.End) || (end.GetFromOffset() < bb.FromOffset()) {
 			end = bb
 		}
 	}
@@ -620,16 +620,16 @@ func reduceSwitchDeclaration(visited util.IBitSet, basicBlock intsrv.IBasicBlock
 			end = lastSwitchCaseBasicBlock
 		}
 	} else {
-		visit(v, lastSwitchCaseBasicBlock, end.FromOffset(), ends)
+		visit(v, lastSwitchCaseBasicBlock, end.GetFromOffset(), ends)
 	}
 
-	endPredecessors := end.Predecessors()
+	endPredecessors := end.GetPredecessors()
 	endPredecessorIterator := endPredecessors.Iterator()
 
 	for endPredecessorIterator.HasNext() {
 		endPredecessor := endPredecessorIterator.Next()
 
-		if v.Get(endPredecessor.Index()) {
+		if v.Get(endPredecessor.GetIndex()) {
 			endPredecessor.Replace(end, cfg.SwitchBreak)
 			_ = endPredecessorIterator.Remove()
 		}

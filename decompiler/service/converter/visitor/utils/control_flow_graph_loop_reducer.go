@@ -266,8 +266,8 @@ func makeCfgLoopReducerLoop(list util.IList[intsrv.IBasicBlock], start intsrv.IB
 		end = searchEndBasicBlock(memberIndexes, maxOffset, members)
 
 		if !end.MatchType(intsrv.TypeEnd|intsrv.TypeReturn|intsrv.TypeLoopStart|intsrv.TypeLoopContinue|intsrv.TypeLoopEnd) &&
-			(end.Predecessors().Size() == 1) &&
-			(end.Predecessors().Iterator().Next().LastLineNumber()+1 >= end.FirstLineNumber()) {
+			(end.GetPredecessors().Size() == 1) &&
+			(end.GetPredecessors().Iterator().Next().LastLineNumber()+1 >= end.FirstLineNumber()) {
 			set := util.NewSet[intsrv.IBasicBlock]()
 
 			if recursiveForwardSearchLastLoopMemberIndexes(members, searchZoneIndexes, set, end, nil) {
