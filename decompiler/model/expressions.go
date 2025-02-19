@@ -17,11 +17,11 @@ func NewArrayExpression(expression, index IExpression) ArrayExpression {
 func NewArrayExpressionWithAll(lineNumber int, expression, index IExpression) ArrayExpression {
 	e := ArrayExpression{
 		DefaultBase: *util.NewDefaultBase[IExpression]().(*util.DefaultBase[IExpression]),
-		lineNumber:  lineNumber,
-		typ:         CreateItemType(expression),
-		priority:    1,
-		expression:  expression,
-		index:       index,
+		LineNumber:  lineNumber,
+		Type:        CreateItemType(expression),
+		Priority:    1,
+		Expression:  expression,
+		Index:       index,
 	}
 	e.SetValue(&e)
 	return e
@@ -226,8 +226,8 @@ func NewInstanceOfExpressionWithAll(lineNumber int, expression IExpression,
 		LineNumber:     lineNumber,
 		Type:           &PtTypeBoolean,
 		Priority:       8,
-		expression:     expression,
-		instanceOfType: instanceOfType,
+		Expression:     expression,
+		InstanceOfType: instanceOfType,
 	}
 	e.SetValue(&e)
 	return e
@@ -418,11 +418,11 @@ func NewNewExpressionWithAll(lineNumber int, typ *ObjectType, descriptor string,
 	return e
 }
 
-func NewNewInitializedArray(typ IType, arrayInitializer ArrayVariableInitializer) NewInitializedArray {
+func NewNewInitializedArray(typ IType, arrayInitializer *ArrayVariableInitializer) NewInitializedArray {
 	return NewNewInitializedArrayWithAll(UnknownLineNumber, typ, arrayInitializer)
 }
 
-func NewNewInitializedArrayWithAll(lineNumber int, typ IType, arrayInitializer ArrayVariableInitializer) NewInitializedArray {
+func NewNewInitializedArrayWithAll(lineNumber int, typ IType, arrayInitializer *ArrayVariableInitializer) NewInitializedArray {
 	e := NewInitializedArray{
 		DefaultBase:      *util.NewDefaultBase[IExpression]().(*util.DefaultBase[IExpression]),
 		LineNumber:       lineNumber,
@@ -730,11 +730,11 @@ type IExpressionVisitor interface {
 type ArrayExpression struct {
 	util.DefaultBase[IExpression]
 
-	lineNumber int
-	typ        IType
-	priority   int
-	expression IExpression
-	index      IExpression
+	LineNumber int
+	Type       IType
+	Priority   int
+	Expression IExpression
+	Index      IExpression
 }
 
 func (e *ArrayExpression) Accept(visitor IExpressionVisitor) {
@@ -767,18 +767,18 @@ func (e *ArrayExpression) IsSuperExpression() bool                      { return
 func (e *ArrayExpression) IsTernaryOperatorExpression() bool            { return false }
 func (e *ArrayExpression) IsThisExpression() bool                       { return false }
 
-func (e *ArrayExpression) GetLineNumber() int { return e.lineNumber }
-func (e *ArrayExpression) GetType() IType     { return e.typ }
-func (e *ArrayExpression) GetPriority() int   { return e.priority }
+func (e *ArrayExpression) GetLineNumber() int { return e.LineNumber }
+func (e *ArrayExpression) GetType() IType     { return e.Type }
+func (e *ArrayExpression) GetPriority() int   { return e.Priority }
 
 func (e *ArrayExpression) GetDimensionExpressionList() IExpression { return &NeNoExpression }
 func (e *ArrayExpression) GetParameters() IExpression              { return &NeNoExpression }
 
 func (e *ArrayExpression) GetCondition() IExpression       { return &NeNoExpression }
-func (e *ArrayExpression) GetExpression() IExpression      { return e.expression }
+func (e *ArrayExpression) GetExpression() IExpression      { return e.Expression }
 func (e *ArrayExpression) GetTrueExpression() IExpression  { return &NeNoExpression }
 func (e *ArrayExpression) GetFalseExpression() IExpression { return &NeNoExpression }
-func (e *ArrayExpression) GetIndex() IExpression           { return e.index }
+func (e *ArrayExpression) GetIndex() IExpression           { return e.Index }
 func (e *ArrayExpression) GetLeftExpression() IExpression  { return &NeNoExpression }
 func (e *ArrayExpression) GetRightExpression() IExpression { return &NeNoExpression }
 
@@ -794,7 +794,7 @@ func (e *ArrayExpression) GetOperator() string         { return "" }
 func (e *ArrayExpression) GetStringValue() string      { return "" }
 
 func (e *ArrayExpression) String() string {
-	return fmt.Sprintf("ArrayExpression{%v[%v]}", e.expression, e.index)
+	return fmt.Sprintf("ArrayExpression{ %v[%v] }", e.Expression, e.Index)
 }
 
 type BinaryOperatorExpression struct {
@@ -1577,8 +1577,8 @@ type InstanceOfExpression struct {
 	LineNumber     int
 	Type           IType
 	Priority       int
-	expression     IExpression
-	instanceOfType IType
+	Expression     IExpression
+	InstanceOfType IType
 }
 
 func (e *InstanceOfExpression) Accept(visitor IExpressionVisitor) {
@@ -1619,7 +1619,7 @@ func (e *InstanceOfExpression) GetDimensionExpressionList() IExpression { return
 func (e *InstanceOfExpression) GetParameters() IExpression              { return &NeNoExpression }
 
 func (e *InstanceOfExpression) GetCondition() IExpression       { return &NeNoExpression }
-func (e *InstanceOfExpression) GetExpression() IExpression      { return e.expression }
+func (e *InstanceOfExpression) GetExpression() IExpression      { return e.Expression }
 func (e *InstanceOfExpression) GetTrueExpression() IExpression  { return &NeNoExpression }
 func (e *InstanceOfExpression) GetFalseExpression() IExpression { return &NeNoExpression }
 func (e *InstanceOfExpression) GetIndex() IExpression           { return &NeNoExpression }
@@ -2373,7 +2373,7 @@ type NewInitializedArray struct {
 	LineNumber       int
 	Type             IType
 	Priority         int
-	ArrayInitializer ArrayVariableInitializer
+	ArrayInitializer *ArrayVariableInitializer
 }
 
 func (e *NewInitializedArray) Accept(visitor IExpressionVisitor) {

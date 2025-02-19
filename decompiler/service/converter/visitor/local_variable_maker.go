@@ -397,7 +397,7 @@ func (m *LocalVariableMaker) IsCompatible(lv intsrv.ILocalVariable, valueType in
 					return m.typeMaker.IsRawTypeAssignable(lvObjectType, valueObjectType)
 				}
 			}
-		} else if lv.Type().IsGenericType() && valueObjectType.InternalName() == _type.OtTypeObject.InternalName() {
+		} else if lv.Type().IsGenericType() && valueObjectType.InternalName() == _type.OtTypeObject.GetInternalName() {
 			return true
 		}
 	}

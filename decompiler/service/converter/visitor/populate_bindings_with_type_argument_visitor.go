@@ -95,7 +95,7 @@ func (v *PopulateBindingsWithTypeArgumentVisitor) checkTypeClassCheckDimensionAn
 	if v.current != nil {
 		if v.current.IsObjectTypeArgument() {
 			ot := v.current.(intmod.IObjectType)
-			if ot.TypeArguments() == nil && ot.InternalName() == _type.OtTypeClass.InternalName() {
+			if ot.TypeArguments() == nil && ot.InternalName() == _type.OtTypeClass.GetInternalName() {
 				return _type.OtTypeClassWildcard.CreateType(ot.Dimension() - typ.Dimension())
 			}
 			return ot.CreateType(ot.Dimension() - typ.Dimension())

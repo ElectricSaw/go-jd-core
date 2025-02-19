@@ -60,7 +60,7 @@ func (v *UpdateClassTypeArgumentsVisitor) VisitObjectType(t intmod.IObjectType) 
 	typeArguments := t.TypeArguments()
 
 	if typeArguments == nil {
-		if t.InternalName() == model.OtTypeClass.InternalName() {
+		if t.InternalName() == model.OtTypeClass.GetInternalName() {
 			v.result = model.OtTypeClassWildcard
 		} else {
 			v.result = t

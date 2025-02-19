@@ -15,6 +15,10 @@ const (
 	EvArrayValue
 )
 
+/////////////////////////////////////////////////////////////////////////
+//  New Functions
+/////////////////////////////////////////////////////////////////////////
+
 func NewAnnotationElementValue(reference *AnnotationReference) AnnotationElementValue {
 	v := AnnotationElementValue{
 		DefaultBase:       *util.NewDefaultBase[*AnnotationElementValue]().(*util.DefaultBase[*AnnotationElementValue]),
@@ -59,8 +63,8 @@ func NewAnnotationReferences() AnnotationReferences {
 func NewElementValuePair(name string, elementValue IElementValue) ElementValuePair {
 	p := ElementValuePair{
 		DefaultBase:  *util.NewDefaultBase[IElementValuePair]().(*util.DefaultBase[IElementValuePair]),
-		name:         name,
-		elementValue: elementValue,
+		Name:         name,
+		ElementValue: elementValue,
 	}
 	p.SetValue(&p)
 	return p
@@ -154,7 +158,7 @@ func NewObjectReferenceWithArgs(internalName, qualifiedName, name string, typeAr
 func NewObjectReferenceWithAll(internalName, qualifiedName, name string, typeArguments ITypeArgument, dimension int) ObjectReference {
 	r := ObjectReference{
 		DefaultBase:   *util.NewDefaultBase[IType]().(*util.DefaultBase[IType]),
-		internalName:  internalName,
+		InternalName:  internalName,
 		QualifiedName: qualifiedName,
 		Name:          name,
 		TypeArguments: typeArguments,
@@ -416,8 +420,8 @@ func (r *AnnotationReferences) IsAnnotationReference() bool {
 type ElementValuePair struct {
 	util.DefaultBase[IElementValuePair]
 
-	name         string
-	elementValue IElementValue
+	Name         string
+	ElementValue IElementValue
 }
 
 func (e *ElementValuePair) Accept(visitor IReferenceVisitor) {
@@ -453,7 +457,7 @@ func (e *ElementValuePair) HashCode() int {
 }
 
 func (e *ElementValuePair) String() string {
-	return fmt.Sprintf("ElementValuePair{name=%s, elementValue=%s}", e.name, e.elementValue)
+	return fmt.Sprintf("ElementValuePair{name=%s, elementValue=%s}", e.Name, e.ElementValue)
 }
 
 func (e *ElementValuePair) IsElementValuePair() bool {
@@ -650,7 +654,7 @@ func NewInnerObjectReferenceWithAll(internalName, qualifiedName, name string,
 		TypeArguments: typeArguments,
 		Dimension:     dimension,
 		Descriptor:    createDescriptor(fmt.Sprintf("L%s;", internalName), dimension),
-		outerType:     outerType,
+		OuterType:     outerType,
 	}
 	t.SetValue(&t)
 	return t
@@ -665,7 +669,7 @@ type InnerObjectReference struct {
 	TypeArguments ITypeArgument
 	Dimension     int
 	Descriptor    string
-	outerType     *ObjectType
+	OuterType     *ObjectType
 }
 
 func (r *InnerObjectReference) GetDimension() int {
@@ -673,7 +677,7 @@ func (r *InnerObjectReference) GetDimension() int {
 }
 
 func (r *InnerObjectReference) CreateType(dimension int) IType {
-	tmp := NewInnerObjectTypeWithAll(r.internalName, r.QualifiedName, r.Name, r.TypeArguments, dimension, r.OuterType())
+	tmp := NewInnerObjectTypeWithAll(r.internalName, r.QualifiedName, r.Name, r.TypeArguments, dimension, r.GetOuterType())
 	return &tmp
 }
 
@@ -697,11 +701,11 @@ func (r *InnerObjectReference) IsTypes() bool {
 	return false
 }
 
-func (r *InnerObjectReference) OuterType() *ObjectType {
-	return r.outerType
+func (r *InnerObjectReference) GetOuterType() *ObjectType {
+	return r.OuterType
 }
 
-func (r *InnerObjectReference) InternalName() string {
+func (r *InnerObjectReference) GetInternalName() string {
 	return r.internalName
 }
 
@@ -713,12 +717,12 @@ func (r *InnerObjectReference) HashCode() int {
 	}
 	result = 31*result + r.Dimension
 	result = 111476860 + result
-	result = 31*result + r.OuterType().HashCode()
+	result = 31*result + r.GetOuterType().HashCode()
 	return result
 }
 
 func (r *InnerObjectReference) AcceptTypeVisitor(visitor ITypeVisitor) {
-	visitor.VisitInnerObjectType((*InnerObjectType)(r))
+	visitor.VisitInnerObjectType(r)
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -735,14 +739,14 @@ func (r *InnerObjectReference) TypeArgumentSize() int {
 	return 1
 }
 
-func (r *InnerObjectReference) Type() IType {
+func (r *InnerObjectReference) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
 func (r *InnerObjectReference) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	switch meta := typeArgument.(type) {
 	case *ObjectType:
-		if r.Dimension != meta.Dimension || r.internalName != meta.InternalName() {
+		if r.Dimension != meta.Dimension || r.internalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -754,7 +758,7 @@ func (r *InnerObjectReference) IsTypeArgumentAssignableFrom(typeBounds map[strin
 			return r.TypeArguments.IsTypeArgumentAssignableFrom(typeBounds, meta.TypeArguments)
 		}
 	case *InnerObjectType:
-		if r.Dimension != meta.Dimension || r.internalName != meta.InternalName() {
+		if r.Dimension != meta.Dimension || r.internalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -770,7 +774,7 @@ func (r *InnerObjectReference) IsTypeArgumentAssignableFrom(typeBounds map[strin
 		ot, ok := bt.(*ObjectType)
 
 		if ok {
-			if r.internalName == ot.InternalName() {
+			if r.internalName == ot.GetInternalName() {
 				return true
 			}
 		}
@@ -812,7 +816,7 @@ func (r *InnerObjectReference) IsWildcardTypeArgument() bool {
 }
 
 func (r *InnerObjectReference) AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor) {
-	visitor.VisitInnerObjectType((*InnerObjectType)(r))
+	visitor.VisitInnerObjectType(r)
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -837,7 +841,7 @@ func (r *InnerObjectReference) Equals(o interface{}) bool {
 		return false
 	}
 
-	if !r.outerType.Equals(other.Dimension) {
+	if !r.OuterType.Equals(other.Dimension) {
 		return false
 	}
 
@@ -846,16 +850,16 @@ func (r *InnerObjectReference) Equals(o interface{}) bool {
 
 func (r *InnerObjectReference) String() string {
 	if r.TypeArguments == nil {
-		return fmt.Sprintf("InnerObjectType { %s.%s }", r.outerType, r.Descriptor)
+		return fmt.Sprintf("InnerObjectType { %s.%s }", r.OuterType, r.Descriptor)
 	} else {
-		return fmt.Sprintf("InnerObjectType { %s.%s<%s> }", r.outerType, r.Descriptor, r.TypeArguments)
+		return fmt.Sprintf("InnerObjectType { %s.%s<%s> }", r.OuterType, r.Descriptor, r.TypeArguments)
 	}
 }
 
 /////////////////////////////////////////////////////////////////////
 
 func (r *InnerObjectReference) CreateTypeWithArg(typeArguments ITypeArgument) IType {
-	tmp := NewInnerObjectTypeWithAll(r.internalName, r.QualifiedName, r.Name, typeArguments, r.Dimension, r.outerType)
+	tmp := NewInnerObjectTypeWithAll(r.internalName, r.QualifiedName, r.Name, typeArguments, r.Dimension, r.OuterType)
 	return &tmp
 }
 
@@ -866,7 +870,7 @@ func (r *InnerObjectReference) Accept(visitor IReferenceVisitor) {
 type ObjectReference struct {
 	util.DefaultBase[IType]
 
-	internalName  string
+	InternalName  string
 	QualifiedName string
 	Name          string
 	TypeArguments ITypeArgument
@@ -886,11 +890,11 @@ func (r *ObjectReference) CreateType(dimension int) IType {
 			tmp := GetPrimitiveType(int(r.Descriptor[r.Dimension]))
 			return &tmp
 		} else {
-			tmp := NewObjectTypeWithDescAndDim(r.internalName, r.Dimension)
+			tmp := NewObjectTypeWithDescAndDim(r.InternalName, r.Dimension)
 			return &tmp
 		}
 	} else {
-		tmp := NewObjectTypeWithAll(r.internalName, r.QualifiedName, r.Name, r.TypeArguments, dimension)
+		tmp := NewObjectTypeWithAll(r.InternalName, r.QualifiedName, r.Name, r.TypeArguments, dimension)
 		return &tmp
 	}
 }
@@ -915,16 +919,16 @@ func (r *ObjectReference) IsTypes() bool {
 	return false
 }
 
-func (r *ObjectReference) OuterType() *ObjectType {
+func (r *ObjectReference) GetOuterType() *ObjectType {
 	return &OtTypeUndefinedObject
 }
 
-func (r *ObjectReference) InternalName() string {
-	return r.internalName
+func (r *ObjectReference) GetInternalName() string {
+	return r.InternalName
 }
 
 func (r *ObjectReference) HashCode() int {
-	result := 735485092 + hashCodeWithString(r.internalName)
+	result := 735485092 + hashCodeWithString(r.InternalName)
 	result *= 31
 	if r.TypeArguments != nil {
 		result += r.TypeArguments.HashCode()
@@ -951,14 +955,14 @@ func (r *ObjectReference) TypeArgumentSize() int {
 	return 1
 }
 
-func (r *ObjectReference) Type() IType {
+func (r *ObjectReference) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
 func (r *ObjectReference) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	switch meta := typeArgument.(type) {
 	case *ObjectType:
-		if r.Dimension != meta.Dimension || r.internalName != meta.InternalName() {
+		if r.Dimension != meta.Dimension || r.InternalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -970,7 +974,7 @@ func (r *ObjectReference) IsTypeArgumentAssignableFrom(typeBounds map[string]ITy
 			return r.TypeArguments.IsTypeArgumentAssignableFrom(typeBounds, meta.TypeArguments)
 		}
 	case *InnerObjectType:
-		if r.Dimension != meta.Dimension || r.internalName != meta.InternalName() {
+		if r.Dimension != meta.Dimension || r.InternalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -986,7 +990,7 @@ func (r *ObjectReference) IsTypeArgumentAssignableFrom(typeBounds map[string]ITy
 		ot, ok := bt.(*ObjectType)
 
 		if ok {
-			if r.internalName == ot.InternalName() {
+			if r.InternalName == ot.GetInternalName() {
 				return true
 			}
 		}
@@ -1057,11 +1061,11 @@ func (r *ObjectReference) Equals(o interface{}) bool {
 		return false
 	}
 
-	if r.internalName != other.internalName {
+	if r.InternalName != other.InternalName {
 		return false
 	}
 
-	if r.internalName == "jara/lang/Class" {
+	if r.InternalName == "jara/lang/Class" {
 		wildcard1 := (r.TypeArguments == nil) || (reflect.TypeOf(r.TypeArguments) == reflect.TypeOf(WildcardTypeArgument{}))
 		wildcard2 := (other.TypeArguments == nil) || (reflect.TypeOf(other.TypeArguments) == reflect.TypeOf(WildcardTypeArgument{}))
 
@@ -1078,7 +1082,7 @@ func (r *ObjectReference) Equals(o interface{}) bool {
 }
 
 func (r *ObjectReference) String() string {
-	msg := fmt.Sprintf("ObjectType{ %s", r.internalName)
+	msg := fmt.Sprintf("ObjectType{ %s", r.InternalName)
 	if r.TypeArguments != nil {
 		msg += fmt.Sprintf("<%s>", r.TypeArguments)
 	}
@@ -1092,7 +1096,7 @@ func (r *ObjectReference) String() string {
 /////////////////////////////////////////////////////////////////////
 
 func (r *ObjectReference) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]IType, objectType ObjectType) bool {
-	if r.Dimension != objectType.Dimension || r.internalName != objectType.InternalName() {
+	if r.Dimension != objectType.Dimension || r.InternalName != objectType.GetInternalName() {
 		return false
 	}
 
@@ -1109,7 +1113,7 @@ func (r *ObjectReference) CreateTypeWithArgs(typeArguments ITypeArgument) IType 
 	if r.TypeArguments == typeArguments {
 		return r
 	} else {
-		tmp := NewObjectTypeWithAll(r.internalName, r.QualifiedName, r.Name, typeArguments, r.Dimension)
+		tmp := NewObjectTypeWithAll(r.InternalName, r.QualifiedName, r.Name, typeArguments, r.Dimension)
 		return &tmp
 	}
 }

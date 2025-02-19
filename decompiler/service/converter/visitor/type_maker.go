@@ -21,15 +21,15 @@ import (
 )
 
 var InternalNameToObjectPrimitiveType = map[string]intmod.IObjectType{
-	model.OtTypePrimitiveBoolean.InternalName(): model.OtTypePrimitiveBoolean,
-	model.OtTypePrimitiveByte.InternalName():    model.OtTypePrimitiveByte,
-	model.OtTypePrimitiveChar.InternalName():    model.OtTypePrimitiveChar,
-	model.OtTypePrimitiveDouble.InternalName():  model.OtTypePrimitiveDouble,
-	model.OtTypePrimitiveFloat.InternalName():   model.OtTypePrimitiveFloat,
-	model.OtTypePrimitiveInt.InternalName():     model.OtTypePrimitiveInt,
-	model.OtTypePrimitiveLong.InternalName():    model.OtTypePrimitiveLong,
-	model.OtTypePrimitiveShort.InternalName():   model.OtTypePrimitiveShort,
-	model.OtTypePrimitiveVoid.InternalName():    model.OtTypePrimitiveVoid,
+	model.OtTypePrimitiveBoolean.GetInternalName(): model.OtTypePrimitiveBoolean,
+	model.OtTypePrimitiveByte.GetInternalName():    model.OtTypePrimitiveByte,
+	model.OtTypePrimitiveChar.GetInternalName():    model.OtTypePrimitiveChar,
+	model.OtTypePrimitiveDouble.GetInternalName():  model.OtTypePrimitiveDouble,
+	model.OtTypePrimitiveFloat.GetInternalName():   model.OtTypePrimitiveFloat,
+	model.OtTypePrimitiveInt.GetInternalName():     model.OtTypePrimitiveInt,
+	model.OtTypePrimitiveLong.GetInternalName():    model.OtTypePrimitiveLong,
+	model.OtTypePrimitiveShort.GetInternalName():   model.OtTypePrimitiveShort,
+	model.OtTypePrimitiveVoid.GetInternalName():    model.OtTypePrimitiveVoid,
 }
 
 func NewTypeMaker(loader api.Loader) intsrv.ITypeMaker {

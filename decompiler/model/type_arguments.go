@@ -8,6 +8,10 @@ import (
 	"hash/fnv"
 )
 
+/////////////////////////////////////////////////////////////////////////
+//  New Functions
+/////////////////////////////////////////////////////////////////////////
+
 func NewTypeArguments() TypeArguments {
 	return NewTypeArgumentsWithCapacity(0)
 }
@@ -24,13 +28,13 @@ func NewDiamondTypeArgument() DiamondTypeArgument {
 
 func NewWildcardExtendsTypeArgument(typ IType) WildcardExtendsTypeArgument {
 	return WildcardExtendsTypeArgument{
-		typ: typ,
+		Type: typ,
 	}
 }
 
 func NewWildcardSuperTypeArgument(typ IType) WildcardSuperTypeArgument {
 	return WildcardSuperTypeArgument{
-		typ: typ,
+		Type: typ,
 	}
 }
 
@@ -38,40 +42,13 @@ func NewWildcardTypeArgument() WildcardTypeArgument {
 	return WildcardTypeArgument{}
 }
 
-func hashCodeWithString(str string) int {
-	h := fnv.New32a()
-	_, err := h.Write([]byte(str))
-	if err != nil {
-		return -1
-	}
-	return int(h.Sum32())
-}
-
-func hashCodeWithStruct(data any) int {
-	byteArray := toBytes(data)
-	if byteArray == nil {
-		return -1
-	}
-
-	h := fnv.New32a()
-	_, err := h.Write(byteArray)
-	if err != nil {
-		return -1
-	}
-
-	return int(h.Sum32())
-}
-
-func toBytes(data any) []byte {
-	buf := bytes.Buffer{}
-	enc := gob.NewEncoder(&buf)
-	if err := enc.Encode(data); err != nil {
-		return nil
-	}
-	return buf.Bytes()
-}
+/////////////////////////////////////////////////////////////////////////
+//  Interfaces
+/////////////////////////////////////////////////////////////////////////
 
 type ITypeArgument interface {
+	AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor)
+
 	TypeArgumentFirst() ITypeArgument            // ITypeArgument
 	TypeArgumentList() util.IList[ITypeArgument] // ITypeArgument
 	TypeArgumentSize() int
@@ -85,7 +62,7 @@ type ITypeArgument interface {
 	IsWildcardSuperTypeArgument() bool
 	IsWildcardTypeArgument() bool
 
-	Type() IType
+	GetType() IType
 
 	HashCode() int
 	Equals(o interface{}) bool
@@ -103,10 +80,14 @@ type ITypeArgumentVisitor interface {
 	VisitWildcardSuperTypeArgument(argument *WildcardSuperTypeArgument)
 	VisitWildcardTypeArgument(argument *WildcardTypeArgument)
 	VisitPrimitiveType(t *PrimitiveType)
-	VisitObjectType(t *ObjectType)
-	VisitInnerObjectType(t *InnerObjectType)
+	VisitObjectType(t IType)
+	VisitInnerObjectType(t IType)
 	VisitGenericType(t *GenericType)
 }
+
+/////////////////////////////////////////////////////////////////////////
+//  Structures
+/////////////////////////////////////////////////////////////////////////
 
 type DiamondTypeArgument struct {
 }
@@ -123,7 +104,7 @@ func (a *DiamondTypeArgument) TypeArgumentSize() int {
 	return 1
 }
 
-func (a *DiamondTypeArgument) Type() IType {
+func (a *DiamondTypeArgument) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
@@ -198,13 +179,9 @@ func (a *DiamondTypeArgument) String() string {
 	return "DiamondTypeArgument {}"
 }
 
-/////////////////////////////////////////////////////////////////////
-
 type TypeArguments struct {
 	util.DefaultList[ITypeArgument]
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *TypeArguments) TypeArgumentFirst() ITypeArgument {
 	return t.Get(0)
@@ -218,7 +195,7 @@ func (t *TypeArguments) TypeArgumentSize() int {
 	return t.DefaultList.Size()
 }
 
-func (t *TypeArguments) Type() IType {
+func (t *TypeArguments) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
@@ -328,13 +305,9 @@ func (t *TypeArguments) String() string {
 	return "TypeArguments {}"
 }
 
-/////////////////////////////////////////////////////////////////////
-
 type WildcardExtendsTypeArgument struct {
-	typ IType
+	Type IType
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *WildcardExtendsTypeArgument) TypeArgumentFirst() ITypeArgument {
 	return t
@@ -348,15 +321,15 @@ func (t *WildcardExtendsTypeArgument) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *WildcardExtendsTypeArgument) Type() IType {
-	return t.typ
+func (t *WildcardExtendsTypeArgument) GetType() IType {
+	return t.Type
 }
 
 func (t *WildcardExtendsTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	if typeArgument.IsWildcardExtendsTypeArgument() {
-		return t.typ.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument.Type().(ITypeArgument))
+		return t.Type.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument.GetType().(ITypeArgument))
 	} else if _, ok := typeArgument.(ITypeArgument); ok {
-		return t.typ.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
+		return t.Type.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
 	}
 	return false
 }
@@ -417,32 +390,28 @@ func (t *WildcardExtendsTypeArgument) Equals(o interface{}) bool {
 		return false
 	}
 
-	if t.typ != nil {
-		return t.typ == other.typ
+	if t.Type != nil {
+		return t.Type == other.Type
 	}
 
-	return other.typ == nil
+	return other.Type == nil
 }
 
 func (t *WildcardExtendsTypeArgument) HashCode() int {
-	if t.typ == nil {
+	if t.Type == nil {
 		return 957014778
 	}
 
-	return 957014778 + t.typ.HashCode()
+	return 957014778 + t.Type.HashCode()
 }
 
 func (t *WildcardExtendsTypeArgument) String() string {
-	return fmt.Sprintf("WildcardExtendsTypeArgument{? extends %s }", t.typ)
+	return fmt.Sprintf("WildcardExtendsTypeArgument{? extends %s }", t.Type)
 }
-
-/////////////////////////////////////////////////////////////////////
 
 type WildcardSuperTypeArgument struct {
-	typ IType
+	Type IType
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *WildcardSuperTypeArgument) TypeArgumentFirst() ITypeArgument {
 	return t
@@ -456,15 +425,15 @@ func (t *WildcardSuperTypeArgument) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *WildcardSuperTypeArgument) Type() IType {
-	return t.typ
+func (t *WildcardSuperTypeArgument) GetType() IType {
+	return t.Type
 }
 
 func (t *WildcardSuperTypeArgument) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	if typeArgument.IsWildcardSuperTypeArgument() {
-		return t.typ.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument.Type().(ITypeArgument))
+		return t.Type.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument.GetType().(ITypeArgument))
 	} else if _, ok := typeArgument.(ITypeArgument); ok {
-		return t.typ.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
+		return t.Type.(ITypeArgument).IsTypeArgumentAssignableFrom(typeBounds, typeArgument)
 	}
 	return false
 }
@@ -525,23 +494,23 @@ func (t *WildcardSuperTypeArgument) Equals(o interface{}) bool {
 		return false
 	}
 
-	if t.typ != nil {
-		return t.typ == other.typ
+	if t.Type != nil {
+		return t.Type == other.Type
 	}
 
-	return other.typ == nil
+	return other.Type == nil
 }
 
 func (t *WildcardSuperTypeArgument) HashCode() int {
-	if t.typ == nil {
+	if t.Type == nil {
 		return 979510081
 	}
 
-	return 979510081 + t.typ.HashCode()
+	return 979510081 + t.Type.HashCode()
 }
 
 func (t *WildcardSuperTypeArgument) String() string {
-	return fmt.Sprintf("WildcardSuperTypeArgument{? super %s }", t.typ)
+	return fmt.Sprintf("WildcardSuperTypeArgument{? super %s }", t.Type)
 }
 
 /////////////////////////////////////////////////////////////////////
@@ -563,7 +532,7 @@ func (t *WildcardTypeArgument) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *WildcardTypeArgument) Type() IType {
+func (t *WildcardTypeArgument) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
@@ -638,4 +607,39 @@ func (t *WildcardTypeArgument) String() string {
 	return "Wildcard{?}"
 }
 
-/////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////
+//  Functions
+/////////////////////////////////////////////////////////////////////////
+
+func hashCodeWithString(str string) int {
+	h := fnv.New32a()
+	_, err := h.Write([]byte(str))
+	if err != nil {
+		return -1
+	}
+	return int(h.Sum32())
+}
+
+func hashCodeWithStruct(data any) int {
+	byteArray := toBytes(data)
+	if byteArray == nil {
+		return -1
+	}
+
+	h := fnv.New32a()
+	_, err := h.Write(byteArray)
+	if err != nil {
+		return -1
+	}
+
+	return int(h.Sum32())
+}
+
+func toBytes(data any) []byte {
+	buf := bytes.Buffer{}
+	enc := gob.NewEncoder(&buf)
+	if err := enc.Encode(data); err != nil {
+		return nil
+	}
+	return buf.Bytes()
+}

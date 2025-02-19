@@ -162,7 +162,7 @@ func NewObjectTypeWithArgs(internalName, qualifiedName, name string, typeArgumen
 
 func NewObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments ITypeArgument, dimension int) ObjectType {
 	t := ObjectType{
-		internalName:  internalName,
+		InternalName:  internalName,
 		QualifiedName: qualifiedName,
 		Name:          name,
 		TypeArguments: typeArguments,
@@ -179,7 +179,7 @@ func NewObjectTypeWithDesc(primitiveDescriptor string) ObjectType {
 
 func NewObjectTypeWithDescAndDim(primitiveDescriptor string, dimension int) ObjectType {
 	t := ObjectType{
-		internalName:  primitiveDescriptor,
+		InternalName:  primitiveDescriptor,
 		QualifiedName: GetPrimitiveType(int(primitiveDescriptor[0])).Name,
 		Dimension:     dimension,
 		Descriptor:    createDescriptor(fmt.Sprintf("L%s;", primitiveDescriptor), dimension),
@@ -202,13 +202,13 @@ func NewInnerObjectTypeWithArgs(internalName, qualifiedName, name string, typeAr
 
 func NewInnerObjectTypeWithAll(internalName, qualifiedName, name string, typeArguments ITypeArgument, dimension int, outerType *ObjectType) InnerObjectType {
 	t := InnerObjectType{
-		internalName:  internalName,
+		InternalName:  internalName,
 		QualifiedName: qualifiedName,
 		Name:          name,
 		TypeArguments: typeArguments,
 		Dimension:     dimension,
 		Descriptor:    createDescriptor(fmt.Sprintf("L%s;", internalName), dimension),
-		outerType:     outerType,
+		OuterType:     outerType,
 	}
 	t.SetValue(&t)
 	return t
@@ -259,9 +259,10 @@ type IType interface {
 	IsPrimitiveType() bool
 	IsTypes() bool
 
-	OuterType() *ObjectType
-	InternalName() string
+	GetOuterType() *ObjectType
+	GetInternalName() string
 
+	AcceptTypeVisitor(visitor ITypeVisitor)
 	HashCode() int
 	Equals(o interface{}) bool
 	String() string
@@ -269,8 +270,8 @@ type IType interface {
 
 type ITypeVisitor interface {
 	VisitPrimitiveType(y *PrimitiveType)
-	VisitObjectType(y *ObjectType)
-	VisitInnerObjectType(y *InnerObjectType)
+	VisitObjectType(y IType)
+	VisitInnerObjectType(y IType)
 	VisitTypes(types *Types)
 	VisitGenericType(y *GenericType)
 }
@@ -322,11 +323,11 @@ func (t *PrimitiveType) IsTypes() bool {
 	return false
 }
 
-func (t *PrimitiveType) OuterType() *ObjectType {
+func (t *PrimitiveType) GetOuterType() *ObjectType {
 	return &OtTypeUndefinedObject
 }
 
-func (t *PrimitiveType) InternalName() string {
+func (t *PrimitiveType) GetInternalName() string {
 	return ""
 }
 
@@ -352,7 +353,7 @@ func (t *PrimitiveType) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *PrimitiveType) Type() IType {
+func (t *PrimitiveType) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
@@ -451,7 +452,7 @@ func (t *PrimitiveType) String() string {
 type ObjectType struct {
 	util.DefaultBase[IType]
 
-	internalName  string
+	InternalName  string
 	QualifiedName string
 	Name          string
 	TypeArguments ITypeArgument
@@ -471,11 +472,11 @@ func (t *ObjectType) CreateType(dimension int) IType {
 			tmp := GetPrimitiveType(int(t.Descriptor[t.Dimension]))
 			return &tmp
 		} else {
-			tmp := NewObjectTypeWithDescAndDim(t.internalName, t.Dimension)
+			tmp := NewObjectTypeWithDescAndDim(t.InternalName, t.Dimension)
 			return &tmp
 		}
 	} else {
-		tmp := NewObjectTypeWithAll(t.internalName, t.QualifiedName, t.Name, t.TypeArguments, dimension)
+		tmp := NewObjectTypeWithAll(t.InternalName, t.QualifiedName, t.Name, t.TypeArguments, dimension)
 		return &tmp
 	}
 }
@@ -500,16 +501,16 @@ func (t *ObjectType) IsTypes() bool {
 	return false
 }
 
-func (t *ObjectType) OuterType() *ObjectType {
+func (t *ObjectType) GetOuterType() *ObjectType {
 	return &OtTypeUndefinedObject
 }
 
-func (t *ObjectType) InternalName() string {
-	return t.internalName
+func (t *ObjectType) GetInternalName() string {
+	return t.InternalName
 }
 
 func (t *ObjectType) HashCode() int {
-	result := 735485092 + hashCodeWithString(t.internalName)
+	result := 735485092 + hashCodeWithString(t.InternalName)
 	result *= 31
 	if t.TypeArguments != nil {
 		result += t.TypeArguments.HashCode()
@@ -536,14 +537,14 @@ func (t *ObjectType) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *ObjectType) Type() IType {
+func (t *ObjectType) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
 func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	switch meta := typeArgument.(type) {
 	case *ObjectType:
-		if t.Dimension != meta.Dimension || t.internalName != meta.InternalName() {
+		if t.Dimension != meta.Dimension || t.InternalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -555,7 +556,7 @@ func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, t
 			return t.TypeArguments.IsTypeArgumentAssignableFrom(typeBounds, meta.TypeArguments)
 		}
 	case *InnerObjectType:
-		if t.Dimension != meta.Dimension || t.internalName != meta.InternalName() {
+		if t.Dimension != meta.Dimension || t.InternalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -571,7 +572,7 @@ func (t *ObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, t
 		ot, ok := bt.(*ObjectType)
 
 		if ok {
-			if t.internalName == ot.InternalName() {
+			if t.InternalName == ot.GetInternalName() {
 				return true
 			}
 		}
@@ -642,11 +643,11 @@ func (t *ObjectType) Equals(o interface{}) bool {
 		return false
 	}
 
-	if t.internalName != other.internalName {
+	if t.InternalName != other.InternalName {
 		return false
 	}
 
-	if t.internalName == "jara/lang/Class" {
+	if t.InternalName == "jara/lang/Class" {
 		wildcard1 := (t.TypeArguments == nil) || (reflect.TypeOf(t.TypeArguments) == reflect.TypeOf(WildcardTypeArgument{}))
 		wildcard2 := (other.TypeArguments == nil) || (reflect.TypeOf(other.TypeArguments) == reflect.TypeOf(WildcardTypeArgument{}))
 
@@ -663,7 +664,7 @@ func (t *ObjectType) Equals(o interface{}) bool {
 }
 
 func (t *ObjectType) String() string {
-	msg := fmt.Sprintf("ObjectType{ %s", t.internalName)
+	msg := fmt.Sprintf("ObjectType{ %s", t.InternalName)
 	if t.TypeArguments != nil {
 		msg += fmt.Sprintf("<%s>", t.TypeArguments)
 	}
@@ -677,7 +678,7 @@ func (t *ObjectType) String() string {
 /////////////////////////////////////////////////////////////////////
 
 func (t *ObjectType) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]IType, objectType ObjectType) bool {
-	if t.Dimension != objectType.Dimension || t.internalName != objectType.InternalName() {
+	if t.Dimension != objectType.Dimension || t.InternalName != objectType.GetInternalName() {
 		return false
 	}
 
@@ -694,7 +695,7 @@ func (t *ObjectType) CreateTypeWithArgs(typeArguments ITypeArgument) IType {
 	if t.TypeArguments == typeArguments {
 		return t
 	} else {
-		tmp := NewObjectTypeWithAll(t.internalName, t.QualifiedName, t.Name, typeArguments, t.Dimension)
+		tmp := NewObjectTypeWithAll(t.InternalName, t.QualifiedName, t.Name, typeArguments, t.Dimension)
 		return &tmp
 	}
 }
@@ -702,13 +703,13 @@ func (t *ObjectType) CreateTypeWithArgs(typeArguments ITypeArgument) IType {
 type InnerObjectType struct {
 	util.DefaultBase[IType]
 
-	internalName  string
+	InternalName  string
 	QualifiedName string
 	Name          string
 	TypeArguments ITypeArgument
 	Dimension     int
 	Descriptor    string
-	outerType     *ObjectType
+	OuterType     *ObjectType
 }
 
 func (t *InnerObjectType) GetDimension() int {
@@ -716,7 +717,7 @@ func (t *InnerObjectType) GetDimension() int {
 }
 
 func (t *InnerObjectType) CreateType(dimension int) IType {
-	tmp := NewInnerObjectTypeWithAll(t.internalName, t.QualifiedName, t.Name, t.TypeArguments, dimension, t.OuterType())
+	tmp := NewInnerObjectTypeWithAll(t.InternalName, t.QualifiedName, t.Name, t.TypeArguments, dimension, t.GetOuterType())
 	return &tmp
 }
 
@@ -740,23 +741,23 @@ func (t *InnerObjectType) IsTypes() bool {
 	return false
 }
 
-func (t *InnerObjectType) OuterType() *ObjectType {
-	return t.outerType
+func (t *InnerObjectType) GetOuterType() *ObjectType {
+	return t.OuterType
 }
 
-func (t *InnerObjectType) InternalName() string {
-	return t.internalName
+func (t *InnerObjectType) GetInternalName() string {
+	return t.InternalName
 }
 
 func (t *InnerObjectType) HashCode() int {
-	result := 735485092 + hashCodeWithString(t.internalName)
+	result := 735485092 + hashCodeWithString(t.InternalName)
 	result *= 31
 	if t.TypeArguments != nil {
 		result += t.TypeArguments.HashCode()
 	}
 	result = 31*result + t.Dimension
 	result = 111476860 + result
-	result = 31*result + t.OuterType().HashCode()
+	result = 31*result + t.GetOuterType().HashCode()
 	return result
 }
 
@@ -778,14 +779,14 @@ func (t *InnerObjectType) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *InnerObjectType) Type() IType {
+func (t *InnerObjectType) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
 func (t *InnerObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]IType, typeArgument ITypeArgument) bool {
 	switch meta := typeArgument.(type) {
 	case *ObjectType:
-		if t.Dimension != meta.Dimension || t.internalName != meta.InternalName() {
+		if t.Dimension != meta.Dimension || t.InternalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -797,7 +798,7 @@ func (t *InnerObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]ITy
 			return t.TypeArguments.IsTypeArgumentAssignableFrom(typeBounds, meta.TypeArguments)
 		}
 	case *InnerObjectType:
-		if t.Dimension != meta.Dimension || t.internalName != meta.InternalName() {
+		if t.Dimension != meta.Dimension || t.InternalName != meta.GetInternalName() {
 			return false
 		}
 
@@ -813,7 +814,7 @@ func (t *InnerObjectType) IsTypeArgumentAssignableFrom(typeBounds map[string]ITy
 		ot, ok := bt.(*ObjectType)
 
 		if ok {
-			if t.internalName == ot.InternalName() {
+			if t.InternalName == ot.GetInternalName() {
 				return true
 			}
 		}
@@ -880,7 +881,7 @@ func (t *InnerObjectType) Equals(o interface{}) bool {
 		return false
 	}
 
-	if !t.outerType.Equals(other.Dimension) {
+	if !t.OuterType.Equals(other.Dimension) {
 		return false
 	}
 
@@ -889,16 +890,16 @@ func (t *InnerObjectType) Equals(o interface{}) bool {
 
 func (t *InnerObjectType) String() string {
 	if t.TypeArguments == nil {
-		return fmt.Sprintf("InnerObjectType { %s.%s }", t.outerType, t.Descriptor)
+		return fmt.Sprintf("InnerObjectType { %s.%s }", t.OuterType, t.Descriptor)
 	} else {
-		return fmt.Sprintf("InnerObjectType { %s.%s<%s> }", t.outerType, t.Descriptor, t.TypeArguments)
+		return fmt.Sprintf("InnerObjectType { %s.%s<%s> }", t.OuterType, t.Descriptor, t.TypeArguments)
 	}
 }
 
 /////////////////////////////////////////////////////////////////////
 
 func (t *InnerObjectType) CreateTypeWithArg(typeArguments ITypeArgument) IType {
-	tmp := NewInnerObjectTypeWithAll(t.internalName, t.QualifiedName, t.Name, typeArguments, t.Dimension, t.outerType)
+	tmp := NewInnerObjectTypeWithAll(t.InternalName, t.QualifiedName, t.Name, typeArguments, t.Dimension, t.OuterType)
 	return &tmp
 }
 
@@ -934,11 +935,11 @@ func (t *Types) IsTypes() bool {
 	return true
 }
 
-func (t *Types) OuterType() *ObjectType {
+func (t *Types) GetOuterType() *ObjectType {
 	return &OtTypeUndefinedObject
 }
 
-func (t *Types) InternalName() string {
+func (t *Types) GetInternalName() string {
 	return ""
 }
 
@@ -1036,11 +1037,11 @@ func (t *GenericType) IsTypes() bool {
 	return false
 }
 
-func (t *GenericType) OuterType() *ObjectType {
+func (t *GenericType) GetOuterType() *ObjectType {
 	return &OtTypeUndefinedObject
 }
 
-func (t *GenericType) InternalName() string {
+func (t *GenericType) GetInternalName() string {
 	return ""
 }
 
@@ -1068,7 +1069,7 @@ func (t *GenericType) TypeArgumentSize() int {
 	return 1
 }
 
-func (t *GenericType) Type() IType {
+func (t *GenericType) GetType() IType {
 	return &OtTypeUndefinedObject
 }
 
@@ -1189,11 +1190,11 @@ func (t *UnmodifiableTypes) IsTypes() bool {
 	return true
 }
 
-func (t *UnmodifiableTypes) OuterType() *ObjectType {
+func (t *UnmodifiableTypes) GetOuterType() *ObjectType {
 	return &OtTypeUndefinedObject
 }
 
-func (t *UnmodifiableTypes) InternalName() string {
+func (t *UnmodifiableTypes) GetInternalName() string {
 	return ""
 }
 
@@ -1246,5 +1247,5 @@ func (t *UnmodifiableTypes) HashCode() int {
 }
 
 func (t *UnmodifiableTypes) String() string {
-	return "UnmodifiableTypes {}"
+	return "UnmodifiableTypes{}"
 }

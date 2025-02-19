@@ -92,13 +92,13 @@ func NewForEachStatement(typ IType, name string, expression IExpression, stateme
 		Type:        typ,
 		Name:        name,
 		Expression:  expression,
-		Statement:   statement,
+		Statements:  statement,
 	}
 	s.SetValue(&s)
 	return s
 }
 
-func NewForStatementWithDeclaration(declaration ILocalVariableDeclaration,
+func NewForStatementWithDeclaration(declaration *LocalVariableDeclaration,
 	condition, update IExpression, statements IStatement) ForStatement {
 	s := ForStatement{
 		DefaultBase: *util.NewDefaultBase[IStatement]().(*util.DefaultBase[IStatement]),
@@ -339,7 +339,7 @@ func NewCatchClause(lineNumber int, typ *ObjectType, name string, statements ISt
 	return s
 }
 
-func NewTypeDeclarationStatement(typeDeclaration TypeDeclaration) TypeDeclarationStatement {
+func NewTypeDeclarationStatement(typeDeclaration ITypeDeclaration) TypeDeclarationStatement {
 	s := TypeDeclarationStatement{
 		DefaultBase:     *util.NewDefaultBase[IStatement]().(*util.DefaultBase[IStatement]),
 		TypeDeclaration: typeDeclaration,
@@ -418,7 +418,7 @@ type IStatementVisitor interface {
 	VisitIfElseStatement(statement *IfElseStatement)
 	VisitLabelStatement(statement *LabelStatement)
 	VisitLambdaExpressionStatement(statement *LambdaExpressionStatement)
-	VisitLocalVariableDeclarationStatement(statement *LocalVariableDeclarationStatement)
+	VisitLocalVariableDeclarationStatement(statement ILocalVariableDeclaration)
 	VisitNoStatement(statement *NoStatement)
 	VisitReturnExpressionStatement(statement *ReturnExpressionStatement)
 	VisitReturnStatement(statement *ReturnStatement)
@@ -438,15 +438,89 @@ type IStatementVisitor interface {
 }
 
 type ILabel interface {
-	IStatement
+	AcceptStatement(visitor IStatementVisitor)
 
 	IsLabel() bool
+	IsBreakStatement() bool
+	IsContinueStatement() bool
+	IsExpressionStatement() bool
+	IsForStatement() bool
+	IsIfStatement() bool
+	IsIfElseStatement() bool
+	IsLabelStatement() bool
+	IsLambdaExpressionStatement() bool
+	IsLocalVariableDeclarationStatement() bool
+	IsMonitorEnterStatement() bool
+	IsMonitorExitStatement() bool
+	IsReturnStatement() bool
+	IsReturnExpressionStatement() bool
+	IsStatements() bool
+	IsSwitchStatement() bool
+	IsSwitchStatementLabelBlock() bool
+	IsSwitchStatementMultiLabelsBlock() bool
+	IsThrowStatement() bool
+	IsTryStatement() bool
+	IsWhileStatement() bool
+
+	GetCondition() IExpression
+	GetExpression() IExpression
+	GetMonitor() IExpression
+
+	GetElseStatements() IStatement
+	GetFinallyStatements() IStatement
+	GetStatements() IStatement
+	GetTryStatements() IStatement
+
+	GetInit() IExpression
+	GetUpdate() IExpression
+
+	GetCatchClauses() util.IList[*CatchClause]
+	GetLineNumber() int
+
+	String() string
 }
 
 type IBlock interface {
-	IStatement
+	AcceptStatement(visitor IStatementVisitor)
 
 	IsBlock() bool
+	IsBreakStatement() bool
+	IsContinueStatement() bool
+	IsExpressionStatement() bool
+	IsForStatement() bool
+	IsIfStatement() bool
+	IsIfElseStatement() bool
+	IsLabelStatement() bool
+	IsLambdaExpressionStatement() bool
+	IsLocalVariableDeclarationStatement() bool
+	IsMonitorEnterStatement() bool
+	IsMonitorExitStatement() bool
+	IsReturnStatement() bool
+	IsReturnExpressionStatement() bool
+	IsStatements() bool
+	IsSwitchStatement() bool
+	IsSwitchStatementLabelBlock() bool
+	IsSwitchStatementMultiLabelsBlock() bool
+	IsThrowStatement() bool
+	IsTryStatement() bool
+	IsWhileStatement() bool
+
+	GetCondition() IExpression
+	GetExpression() IExpression
+	GetMonitor() IExpression
+
+	GetElseStatements() IStatement
+	GetFinallyStatements() IStatement
+	GetStatements() IStatement
+	GetTryStatements() IStatement
+
+	GetInit() IExpression
+	GetUpdate() IExpression
+
+	GetCatchClauses() util.IList[*CatchClause]
+	GetLineNumber() int
+
+	String() string
 }
 
 /////////////////////////////////////////////////////////////////////////
@@ -811,7 +885,7 @@ type ForEachStatement struct {
 	Type       IType
 	Name       string
 	Expression IExpression
-	Statement  IStatement
+	Statements IStatement
 }
 
 func (s *ForEachStatement) AcceptStatement(visitor IStatementVisitor) {
@@ -845,7 +919,7 @@ func (s *ForEachStatement) GetMonitor() IExpression    { return &NeNoExpression 
 
 func (s *ForEachStatement) GetElseStatements() IStatement    { return &NoStmt }
 func (s *ForEachStatement) GetFinallyStatements() IStatement { return &NoStmt }
-func (s *ForEachStatement) GetStatements() IStatement        { return s.Statement }
+func (s *ForEachStatement) GetStatements() IStatement        { return s.Statements }
 func (s *ForEachStatement) GetTryStatements() IStatement     { return &NoStmt }
 
 func (s *ForEachStatement) GetInit() IExpression   { return &NeNoExpression }
@@ -861,7 +935,7 @@ func (s *ForEachStatement) String() string {
 type ForStatement struct {
 	util.DefaultBase[IStatement]
 
-	Declaration ILocalVariableDeclaration
+	Declaration *LocalVariableDeclaration
 	Init        IExpression
 	Condition   IExpression
 	Update      IExpression
@@ -1118,12 +1192,22 @@ func (s *LambdaExpressionStatement) String() string {
 
 type LocalVariableDeclarationStatement struct {
 	util.DefaultBase[IStatement]
-	// FIXME: declaration.LocalVariableDeclaration 리펙토링 후 제작업 필요.
-	LocalVariableDeclaration
 
 	Final                    bool
 	Type                     IType
 	LocalVariableDeclarators ILocalVariableDeclarator
+}
+
+func (s *LocalVariableDeclarationStatement) IsFinal() bool {
+	return s.Final
+}
+
+func (s *LocalVariableDeclarationStatement) GetType() IType {
+	return s.Type
+}
+
+func (s *LocalVariableDeclarationStatement) GetLocalVariableDeclarators() ILocalVariableDeclarator {
+	return s.LocalVariableDeclarators
 }
 
 func (s *LocalVariableDeclarationStatement) AcceptStatement(visitor IStatementVisitor) {
@@ -1585,7 +1669,7 @@ func (s *TryStatement) String() string {
 type TypeDeclarationStatement struct {
 	util.DefaultBase[IStatement]
 
-	TypeDeclaration TypeDeclaration
+	TypeDeclaration ITypeDeclaration
 }
 
 func (s *TypeDeclarationStatement) AcceptStatement(visitor IStatementVisitor) {
@@ -1637,6 +1721,10 @@ type WhileStatement struct {
 
 	Condition  IExpression
 	Statements IStatement
+}
+
+func (s *WhileStatement) AcceptStatement(visitor IStatementVisitor) {
+	visitor.VisitWhileStatement(s)
 }
 
 func (s *WhileStatement) IsBreakStatement() bool                    { return false }

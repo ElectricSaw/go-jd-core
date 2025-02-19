@@ -46,7 +46,7 @@ const (
 /////////////////////////////////////////////////////////////////////////
 
 func NewAnnotationDeclaration(annotationReferences *AnnotationReference, flags int,
-	internalTypeName, name string, annotationDeclarators FieldDeclarator, bodyDeclaration *BodyDeclaration) AnnotationDeclaration {
+	internalTypeName, name string, annotationDeclarators *FieldDeclarator, bodyDeclaration *BodyDeclaration) AnnotationDeclaration {
 	d := AnnotationDeclaration{
 		DefaultBase:           *util.NewDefaultBase[IMemberDeclaration]().(*util.DefaultBase[IMemberDeclaration]),
 		AnnotationReferences:  annotationReferences,
@@ -327,7 +327,7 @@ func NewLocalVariableDeclarator2(name string, variableInitializer IVariableIniti
 
 func NewLocalVariableDeclarator3(lineNumber int, name string, variableInitializer IVariableInitializer) LocalVariableDeclarator {
 	d := LocalVariableDeclarator{
-		DefaultBase:         *util.NewDefaultBase[*LocalVariableDeclarator]().(*util.DefaultBase[*LocalVariableDeclarator]),
+		DefaultBase:         *util.NewDefaultBase[ILocalVariableDeclarator]().(*util.DefaultBase[ILocalVariableDeclarator]),
 		LineNumber:          lineNumber,
 		Name:                name,
 		VariableInitializer: variableInitializer,
@@ -342,13 +342,13 @@ func NewLocalVariableDeclarators() LocalVariableDeclarators {
 
 func NewLocalVariableDeclaratorsWithCapacity(capacity int) LocalVariableDeclarators {
 	return LocalVariableDeclarators{
-		DefaultList: *util.NewDefaultListWithCapacity[*LocalVariableDeclarator](capacity).(*util.DefaultList[*LocalVariableDeclarator]),
+		DefaultList: *util.NewDefaultListWithCapacity[ILocalVariableDeclarator](capacity).(*util.DefaultList[ILocalVariableDeclarator]),
 	}
 }
 
-func NewLocalVariableDeclaratorsWithElements(localVariableDeclarator ...*LocalVariableDeclarator) LocalVariableDeclarators {
+func NewLocalVariableDeclaratorsWithElements(localVariableDeclarator ...ILocalVariableDeclarator) LocalVariableDeclarators {
 	return LocalVariableDeclarators{
-		DefaultList: *util.NewDefaultListWithElements[*LocalVariableDeclarator](localVariableDeclarator...).(*util.DefaultList[*LocalVariableDeclarator]),
+		DefaultList: *util.NewDefaultListWithElements[ILocalVariableDeclarator](localVariableDeclarator...).(*util.DefaultList[ILocalVariableDeclarator]),
 	}
 }
 
@@ -521,7 +521,7 @@ type IDeclarationVisitor interface {
 	VisitFormalParameters(declarations *FormalParameters)
 	VisitInstanceInitializerDeclaration(declaration *InstanceInitializerDeclaration)
 	VisitInterfaceDeclaration(declaration *InterfaceDeclaration)
-	VisitLocalVariableDeclaration(declaration *LocalVariableDeclaration)
+	VisitLocalVariableDeclaration(declaration ILocalVariableDeclaration)
 	VisitLocalVariableDeclarator(declarator *LocalVariableDeclarator)
 	VisitLocalVariableDeclarators(declarators *LocalVariableDeclarators)
 	VisitMethodDeclaration(declaration *MethodDeclaration)
@@ -573,6 +573,13 @@ type IFieldDeclarator interface {
 	String() string
 }
 
+type ILocalVariableDeclaration interface {
+	IsFinal() bool
+	GetType() IType
+	GetLocalVariableDeclarators() ILocalVariableDeclarator
+	String() string
+}
+
 /////////////////////////////////////////////////////////////////////////
 //  Structures
 /////////////////////////////////////////////////////////////////////////
@@ -585,7 +592,7 @@ type AnnotationDeclaration struct {
 	InternalTypeName      string
 	Name                  string
 	BodyDeclaration       *BodyDeclaration
-	AnnotationDeclarators FieldDeclarator
+	AnnotationDeclarators *FieldDeclarator
 }
 
 func (d *AnnotationDeclaration) GetAnnotationReferences() *AnnotationReference {
@@ -984,7 +991,19 @@ func (d *InterfaceDeclaration) String() string {
 type LocalVariableDeclaration struct {
 	Final                    bool
 	Type                     IType
-	LocalVariableDeclarators *LocalVariableDeclarator
+	LocalVariableDeclarators ILocalVariableDeclarator
+}
+
+func (d *LocalVariableDeclaration) IsFinal() bool {
+	return d.Final
+}
+
+func (d *LocalVariableDeclaration) GetType() IType {
+	return d.Type
+}
+
+func (d *LocalVariableDeclaration) GetLocalVariableDeclarators() ILocalVariableDeclarator {
+	return d.LocalVariableDeclarators
 }
 
 func (d *LocalVariableDeclaration) AcceptDeclaration(visitor IDeclarationVisitor) {
@@ -996,7 +1015,7 @@ func (d *LocalVariableDeclaration) String() string {
 }
 
 type LocalVariableDeclarator struct {
-	util.DefaultBase[*LocalVariableDeclarator]
+	util.DefaultBase[ILocalVariableDeclarator]
 
 	LineNumber          int
 	Name                string
@@ -1018,7 +1037,7 @@ func (d *LocalVariableDeclarator) String() string {
 }
 
 type LocalVariableDeclarators struct {
-	util.DefaultList[*LocalVariableDeclarator]
+	util.DefaultList[ILocalVariableDeclarator]
 }
 
 func (d *LocalVariableDeclarators) GetLineNumber() int {
@@ -1210,7 +1229,7 @@ type PackageInfo struct {
 }
 
 func (i *PackageInfo) String() string {
-	msg := fmt.Sprintf("PackageInfo{internalName=%s, flags=%d", i.InternalName, i.Flags)
+	msg := fmt.Sprintf("PackageInfo{InternalName=%s, flags=%d", i.InternalName, i.Flags)
 	if i.ModuleInfoNames.Size() > 0 {
 		msg += fmt.Sprintf(", moduleInfoNames=%s", i.ModuleInfoNames.ToSlice())
 	}

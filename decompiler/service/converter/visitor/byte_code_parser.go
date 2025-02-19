@@ -746,7 +746,7 @@ func (p *ByteCodeParser) Parse(basicBlock intsrv.IBasicBlock, statements intmod.
 			} else {
 				type1 = p.typeMaker.MakeFromInternalTypeName(typeName).CreateType(1)
 			}
-			if strings.HasSuffix(typeName, model.OtTypeClass.InternalName()) {
+			if strings.HasSuffix(typeName, model.OtTypeClass.GetInternalName()) {
 				ot = type1.(intmod.IObjectType)
 				if ot.TypeArguments() == nil {
 					type1 = ot.CreateTypeWithArgs(model.WildcardTypeArgumentEmpty)
