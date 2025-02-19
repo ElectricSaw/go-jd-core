@@ -23,8 +23,8 @@ func NewAbstractLocalVariableWithAll(index, offset int, name string, declared bo
 }
 
 type AbstractLocalVariable struct {
-	frame            intsrv.IFrame
-	next             intsrv.ILocalVariable
+	frame            IFrame
+	next             LocalVariable
 	declared         bool
 	index            int
 	fromOffset       int

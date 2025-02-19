@@ -2,19 +2,17 @@ package localvariable
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
-func NewGenericLocalVariable(index, offset int, typ intmod.IGenericType) intsrv.IGenericLocalVariable {
+func NewGenericLocalVariable(index, offset int, typ model.GenericType) GenericLocalVariable {
 	return &GenericLocalVariable{
 		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, "").(*AbstractLocalVariable),
 		typ:                   typ,
 	}
 }
 
-func NewGenericLocalVariableWithAll(index, offset int, typ intmod.IGenericType, name string) intsrv.IGenericLocalVariable {
+func NewGenericLocalVariableWithAll(index, offset int, typ model.GenericType, name string) GenericLocalVariable {
 	return &GenericLocalVariable{
 		AbstractLocalVariable: *NewAbstractLocalVariable(index, offset, name).(*AbstractLocalVariable),
 		typ:                   typ,
@@ -24,14 +22,10 @@ func NewGenericLocalVariableWithAll(index, offset int, typ intmod.IGenericType, 
 type GenericLocalVariable struct {
 	AbstractLocalVariable
 
-	typ intmod.IGenericType
+	Type model.GenericType
 }
 
-func (v *GenericLocalVariable) Type() intmod.IType {
-	return v.typ.(intmod.IType)
-}
-
-func (v *GenericLocalVariable) SetType(typ intmod.IGenericType) {
+func (v *GenericLocalVariable) SetType(typ model.GenericType) {
 	v.typ = typ
 }
 
@@ -39,7 +33,7 @@ func (v *GenericLocalVariable) Dimension() int {
 	return v.typ.Dimension()
 }
 
-func (v *GenericLocalVariable) Accept(visitor intsrv.ILocalVariableVisitor) {
+func (v *GenericLocalVariable) Accept(visitor model.LocalVariableVisitor) {
 	visitor.VisitGenericLocalVariable(v)
 }
 
@@ -63,22 +57,22 @@ func (v *GenericLocalVariable) String() string {
 	return sb
 }
 
-func (v *GenericLocalVariable) IsAssignableFrom(_ map[string]intmod.IType, otherType intmod.IType) bool {
+func (v *GenericLocalVariable) IsAssignableFrom(_ map[string]model.Type, otherType model.Type) bool {
 	return v.typ.Equals(otherType.(*_type.GenericType))
 }
 
-func (v *GenericLocalVariable) TypeOnRight(_ map[string]intmod.IType, _ intmod.IType) {
+func (v *GenericLocalVariable) TypeOnRight(_ map[string]model.Type, _ model.Type) {
 }
 
-func (v *GenericLocalVariable) TypeOnLeft(_ map[string]intmod.IType, _ intmod.IType) {
+func (v *GenericLocalVariable) TypeOnLeft(_ map[string]model.Type, _ model.Type) {
 }
 
-func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]intmod.IType, variable intsrv.ILocalVariable) bool {
+func (v *GenericLocalVariable) IsAssignableFromWithVariable(typeBounds map[string]model.Type, variable model.LocalVariable) bool {
 	return v.IsAssignableFrom(typeBounds, variable.Type())
 }
 
-func (v *GenericLocalVariable) VariableOnRight(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
+func (v *GenericLocalVariable) VariableOnRight(_ map[string]model.Type, _ model.LocalVariable) {
 }
 
-func (v *GenericLocalVariable) VariableOnLeft(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
+func (v *GenericLocalVariable) VariableOnLeft(_ map[string]model.Type, _ model.LocalVariable) {
 }

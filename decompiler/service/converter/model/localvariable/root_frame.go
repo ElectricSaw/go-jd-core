@@ -1,4 +1,4 @@
-package visitor
+package localvariable
 
 import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
