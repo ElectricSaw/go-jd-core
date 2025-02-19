@@ -860,11 +860,9 @@ func (e *BinaryOperatorExpression) GetIntegerValue() int        { return 0 }
 func (e *BinaryOperatorExpression) GetInternalTypeName() string { return "" }
 func (e *BinaryOperatorExpression) GetLongValue() int64         { return 0 }
 func (e *BinaryOperatorExpression) GetName() string             { return "" }
-func (e *BinaryOperatorExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *BinaryOperatorExpression) GetOperator() string    { return e.Operator }
-func (e *BinaryOperatorExpression) GetStringValue() string { return "" }
+func (e *BinaryOperatorExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *BinaryOperatorExpression) GetOperator() string         { return e.Operator }
+func (e *BinaryOperatorExpression) GetStringValue() string      { return "" }
 
 func (e *BinaryOperatorExpression) String() string {
 	return fmt.Sprintf("BinaryOperatorExpression{%s %s %s}", e.LeftExpression, e.Operator, e.RightExpression)
@@ -939,11 +937,9 @@ func (e *BooleanExpression) GetIntegerValue() int        { return 0 }
 func (e *BooleanExpression) GetInternalTypeName() string { return "" }
 func (e *BooleanExpression) GetLongValue() int64         { return 0 }
 func (e *BooleanExpression) GetName() string             { return "" }
-func (e *BooleanExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *BooleanExpression) GetOperator() string    { return "" }
-func (e *BooleanExpression) GetStringValue() string { return "" }
+func (e *BooleanExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *BooleanExpression) GetOperator() string         { return "" }
+func (e *BooleanExpression) GetStringValue() string      { return "" }
 
 func (e *BooleanExpression) String() string {
 	value := "false"
@@ -1154,11 +1150,9 @@ func (e *ConstructorInvocationExpression) GetIntegerValue() int        { return 
 func (e *ConstructorInvocationExpression) GetInternalTypeName() string { return "" }
 func (e *ConstructorInvocationExpression) GetLongValue() int64         { return 0 }
 func (e *ConstructorInvocationExpression) GetName() string             { return "" }
-func (e *ConstructorInvocationExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *ConstructorInvocationExpression) GetOperator() string    { return "" }
-func (e *ConstructorInvocationExpression) GetStringValue() string { return "" }
+func (e *ConstructorInvocationExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *ConstructorInvocationExpression) GetOperator() string         { return "" }
+func (e *ConstructorInvocationExpression) GetStringValue() string      { return "" }
 
 func (e *ConstructorInvocationExpression) String() string {
 	return fmt.Sprintf("ConstructorInvocationExpression{call this(%s)}", e.Descriptor)
@@ -1228,11 +1222,9 @@ func (e *ConstructorReferenceExpression) GetIntegerValue() int        { return 0
 func (e *ConstructorReferenceExpression) GetInternalTypeName() string { return "" }
 func (e *ConstructorReferenceExpression) GetLongValue() int64         { return 0 }
 func (e *ConstructorReferenceExpression) GetName() string             { return "" }
-func (e *ConstructorReferenceExpression) GetObjectType() *ObjectType {
-	return e.ObjectType
-}
-func (e *ConstructorReferenceExpression) GetOperator() string    { return "" }
-func (e *ConstructorReferenceExpression) GetStringValue() string { return "" }
+func (e *ConstructorReferenceExpression) GetObjectType() *ObjectType  { return e.ObjectType }
+func (e *ConstructorReferenceExpression) GetOperator() string         { return "" }
+func (e *ConstructorReferenceExpression) GetStringValue() string      { return "" }
 
 func (e *ConstructorReferenceExpression) String() string { return "ConstructorReferenceExpression{}" }
 
@@ -1297,11 +1289,9 @@ func (e *DoubleConstantExpression) GetIntegerValue() int        { return 0 }
 func (e *DoubleConstantExpression) GetInternalTypeName() string { return "" }
 func (e *DoubleConstantExpression) GetLongValue() int64         { return 0 }
 func (e *DoubleConstantExpression) GetName() string             { return "" }
-func (e *DoubleConstantExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *DoubleConstantExpression) GetOperator() string    { return "" }
-func (e *DoubleConstantExpression) GetStringValue() string { return "" }
+func (e *DoubleConstantExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *DoubleConstantExpression) GetOperator() string         { return "" }
+func (e *DoubleConstantExpression) GetStringValue() string      { return "" }
 
 func (e *DoubleConstantExpression) String() string {
 	return fmt.Sprintf("DoubleConstantExpression{%f}", e.Value)
@@ -1370,11 +1360,9 @@ func (e *EnumConstantReferenceExpression) GetIntegerValue() int        { return 
 func (e *EnumConstantReferenceExpression) GetInternalTypeName() string { return "" }
 func (e *EnumConstantReferenceExpression) GetLongValue() int64         { return 0 }
 func (e *EnumConstantReferenceExpression) GetName() string             { return e.Name }
-func (e *EnumConstantReferenceExpression) GetObjectType() *ObjectType {
-	return e.Type.(*ObjectType)
-}
-func (e *EnumConstantReferenceExpression) GetOperator() string    { return "" }
-func (e *EnumConstantReferenceExpression) GetStringValue() string { return "" }
+func (e *EnumConstantReferenceExpression) GetObjectType() *ObjectType  { return e.Type.(*ObjectType) }
+func (e *EnumConstantReferenceExpression) GetOperator() string         { return "" }
+func (e *EnumConstantReferenceExpression) GetStringValue() string      { return "" }
 
 func (e *EnumConstantReferenceExpression) String() string {
 	return fmt.Sprintf("EnumConstantReferenceExpression{type=%s, Name=%s}", e.Type.String(), e.Name)
@@ -1506,11 +1494,9 @@ func (e *FieldReferenceExpression) GetIntegerValue() int        { return 0 }
 func (e *FieldReferenceExpression) GetInternalTypeName() string { return e.InternalTypeName }
 func (e *FieldReferenceExpression) GetLongValue() int64         { return 0 }
 func (e *FieldReferenceExpression) GetName() string             { return e.Name }
-func (e *FieldReferenceExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *FieldReferenceExpression) GetOperator() string    { return "" }
-func (e *FieldReferenceExpression) GetStringValue() string { return "" }
+func (e *FieldReferenceExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *FieldReferenceExpression) GetOperator() string         { return "" }
+func (e *FieldReferenceExpression) GetStringValue() string      { return "" }
 
 func (e *FieldReferenceExpression) String() string {
 	return fmt.Sprintf("FieldReferenceExpression{type=%s, Expression=%s, Name=%s, Descriptor=%s }", e.Type, e.Expression, e.Name, e.Descriptor)
@@ -1577,11 +1563,9 @@ func (e *FloatConstantExpression) GetIntegerValue() int        { return 0 }
 func (e *FloatConstantExpression) GetInternalTypeName() string { return "" }
 func (e *FloatConstantExpression) GetLongValue() int64         { return 0 }
 func (e *FloatConstantExpression) GetName() string             { return "" }
-func (e *FloatConstantExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *FloatConstantExpression) GetOperator() string    { return "" }
-func (e *FloatConstantExpression) GetStringValue() string { return "" }
+func (e *FloatConstantExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *FloatConstantExpression) GetOperator() string         { return "" }
+func (e *FloatConstantExpression) GetStringValue() string      { return "" }
 
 func (e *FloatConstantExpression) String() string {
 	return fmt.Sprintf("FloatConstantExpression{ %.2f }", e.value)
@@ -1729,11 +1713,9 @@ func (e *IntegerConstantExpression) GetIntegerValue() int        { return e.Valu
 func (e *IntegerConstantExpression) GetInternalTypeName() string { return "" }
 func (e *IntegerConstantExpression) GetLongValue() int64         { return 0 }
 func (e *IntegerConstantExpression) GetName() string             { return "" }
-func (e *IntegerConstantExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *IntegerConstantExpression) GetOperator() string    { return "" }
-func (e *IntegerConstantExpression) GetStringValue() string { return "" }
+func (e *IntegerConstantExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *IntegerConstantExpression) GetOperator() string         { return "" }
+func (e *IntegerConstantExpression) GetStringValue() string      { return "" }
 
 func (e *IntegerConstantExpression) String() string {
 	return fmt.Sprintf("IntegerConstantExpression{type=%s, Value=%d}", e.Type, e.Value)
@@ -1806,11 +1788,9 @@ func (e *LambdaFormalParametersExpression) GetIntegerValue() int        { return
 func (e *LambdaFormalParametersExpression) GetInternalTypeName() string { return "" }
 func (e *LambdaFormalParametersExpression) GetLongValue() int64         { return 0 }
 func (e *LambdaFormalParametersExpression) GetName() string             { return "" }
-func (e *LambdaFormalParametersExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *LambdaFormalParametersExpression) GetOperator() string    { return "" }
-func (e *LambdaFormalParametersExpression) GetStringValue() string { return "" }
+func (e *LambdaFormalParametersExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *LambdaFormalParametersExpression) GetOperator() string         { return "" }
+func (e *LambdaFormalParametersExpression) GetStringValue() string      { return "" }
 
 func (e *LambdaFormalParametersExpression) String() string {
 	return fmt.Sprintf("LambdaFormalParametersExpression{%s -> %d}", e.FormalParameters, e.Statements)
@@ -1882,11 +1862,9 @@ func (e *LambdaIdentifiersExpression) GetIntegerValue() int        { return 0 }
 func (e *LambdaIdentifiersExpression) GetInternalTypeName() string { return "" }
 func (e *LambdaIdentifiersExpression) GetLongValue() int64         { return 0 }
 func (e *LambdaIdentifiersExpression) GetName() string             { return "" }
-func (e *LambdaIdentifiersExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *LambdaIdentifiersExpression) GetOperator() string    { return "" }
-func (e *LambdaIdentifiersExpression) GetStringValue() string { return "" }
+func (e *LambdaIdentifiersExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *LambdaIdentifiersExpression) GetOperator() string         { return "" }
+func (e *LambdaIdentifiersExpression) GetStringValue() string      { return "" }
 
 func (e *LambdaIdentifiersExpression) String() string {
 	return fmt.Sprintf("LambdaIdentifiersExpression{%s -> %d}", e.ParameterNames, e.Statements)
@@ -2026,11 +2004,9 @@ func (e *LocalVariableReferenceExpression) GetIntegerValue() int        { return
 func (e *LocalVariableReferenceExpression) GetInternalTypeName() string { return "" }
 func (e *LocalVariableReferenceExpression) GetLongValue() int64         { return 0 }
 func (e *LocalVariableReferenceExpression) GetName() string             { return e.Name }
-func (e *LocalVariableReferenceExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *LocalVariableReferenceExpression) GetOperator() string    { return "" }
-func (e *LocalVariableReferenceExpression) GetStringValue() string { return "" }
+func (e *LocalVariableReferenceExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *LocalVariableReferenceExpression) GetOperator() string         { return "" }
+func (e *LocalVariableReferenceExpression) GetStringValue() string      { return "" }
 
 func (e *LocalVariableReferenceExpression) String() string {
 	return fmt.Sprintf("LocalVariableReferenceExpression{type=%s, Name=%s}", e.Type, e.Name)
@@ -2097,11 +2073,9 @@ func (e *LongConstantExpression) GetIntegerValue() int        { return 0 }
 func (e *LongConstantExpression) GetInternalTypeName() string { return "" }
 func (e *LongConstantExpression) GetLongValue() int64         { return e.Value }
 func (e *LongConstantExpression) GetName() string             { return "" }
-func (e *LongConstantExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *LongConstantExpression) GetOperator() string    { return "" }
-func (e *LongConstantExpression) GetStringValue() string { return "" }
+func (e *LongConstantExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *LongConstantExpression) GetOperator() string         { return "" }
+func (e *LongConstantExpression) GetStringValue() string      { return "" }
 
 func (e *LongConstantExpression) String() string {
 	return fmt.Sprintf("LongConstantExpression{%d}", e.Value)
@@ -2173,11 +2147,9 @@ func (e *MethodInvocationExpression) GetIntegerValue() int        { return 0 }
 func (e *MethodInvocationExpression) GetInternalTypeName() string { return e.InternalTypeName }
 func (e *MethodInvocationExpression) GetLongValue() int64         { return 0 }
 func (e *MethodInvocationExpression) GetName() string             { return e.Name }
-func (e *MethodInvocationExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *MethodInvocationExpression) GetOperator() string    { return "" }
-func (e *MethodInvocationExpression) GetStringValue() string { return "" }
+func (e *MethodInvocationExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *MethodInvocationExpression) GetOperator() string         { return "" }
+func (e *MethodInvocationExpression) GetStringValue() string      { return "" }
 
 func (e *MethodInvocationExpression) String() string {
 	return fmt.Sprintf("MethodInvocationExpression{call %s . %s (%s)}", e.Expression, e.Name, e.Descriptor)
@@ -2247,11 +2219,9 @@ func (e *MethodReferenceExpression) GetIntegerValue() int        { return 0 }
 func (e *MethodReferenceExpression) GetInternalTypeName() string { return e.InternalTypeName }
 func (e *MethodReferenceExpression) GetLongValue() int64         { return 0 }
 func (e *MethodReferenceExpression) GetName() string             { return e.Name }
-func (e *MethodReferenceExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *MethodReferenceExpression) GetOperator() string    { return "" }
-func (e *MethodReferenceExpression) GetStringValue() string { return "" }
+func (e *MethodReferenceExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *MethodReferenceExpression) GetOperator() string         { return "" }
+func (e *MethodReferenceExpression) GetStringValue() string      { return "" }
 
 func (e *MethodReferenceExpression) String() string {
 	return fmt.Sprintf("MethodReferenceExpression{call %s . %s (%s)}", e.Expression, e.Name, e.Descriptor)
@@ -2665,11 +2635,9 @@ func (e *ObjectTypeReferenceExpression) GetIntegerValue() int        { return 0 
 func (e *ObjectTypeReferenceExpression) GetInternalTypeName() string { return "" }
 func (e *ObjectTypeReferenceExpression) GetLongValue() int64         { return 0 }
 func (e *ObjectTypeReferenceExpression) GetName() string             { return "" }
-func (e *ObjectTypeReferenceExpression) GetObjectType() *ObjectType {
-	return e.Type
-}
-func (e *ObjectTypeReferenceExpression) GetOperator() string    { return "" }
-func (e *ObjectTypeReferenceExpression) GetStringValue() string { return "" }
+func (e *ObjectTypeReferenceExpression) GetObjectType() *ObjectType  { return e.Type }
+func (e *ObjectTypeReferenceExpression) GetOperator() string         { return "" }
+func (e *ObjectTypeReferenceExpression) GetStringValue() string      { return "" }
 
 func (e *ObjectTypeReferenceExpression) String() string {
 	return fmt.Sprintf("ObjectTypeReferenceExpression{%s}", e.Type)
@@ -2735,11 +2703,9 @@ func (e *ParenthesesExpression) GetIntegerValue() int        { return 0 }
 func (e *ParenthesesExpression) GetInternalTypeName() string { return "" }
 func (e *ParenthesesExpression) GetLongValue() int64         { return 0 }
 func (e *ParenthesesExpression) GetName() string             { return "" }
-func (e *ParenthesesExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *ParenthesesExpression) GetOperator() string    { return "" }
-func (e *ParenthesesExpression) GetStringValue() string { return "" }
+func (e *ParenthesesExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *ParenthesesExpression) GetOperator() string         { return "" }
+func (e *ParenthesesExpression) GetStringValue() string      { return "" }
 
 func (e *ParenthesesExpression) String() string { return "" }
 
@@ -2804,11 +2770,9 @@ func (e *PostOperatorExpression) GetIntegerValue() int        { return 0 }
 func (e *PostOperatorExpression) GetInternalTypeName() string { return "" }
 func (e *PostOperatorExpression) GetLongValue() int64         { return 0 }
 func (e *PostOperatorExpression) GetName() string             { return "" }
-func (e *PostOperatorExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *PostOperatorExpression) GetOperator() string    { return e.Operator }
-func (e *PostOperatorExpression) GetStringValue() string { return "" }
+func (e *PostOperatorExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *PostOperatorExpression) GetOperator() string         { return e.Operator }
+func (e *PostOperatorExpression) GetStringValue() string      { return "" }
 
 func (e *PostOperatorExpression) String() string {
 	return fmt.Sprintf("PostOperatorExpression{%s %s}", e.Expression, e.Operator)
@@ -2875,11 +2839,9 @@ func (e *PreOperatorExpression) GetIntegerValue() int        { return 0 }
 func (e *PreOperatorExpression) GetInternalTypeName() string { return "" }
 func (e *PreOperatorExpression) GetLongValue() int64         { return 0 }
 func (e *PreOperatorExpression) GetName() string             { return "" }
-func (e *PreOperatorExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *PreOperatorExpression) GetOperator() string    { return e.Operator }
-func (e *PreOperatorExpression) GetStringValue() string { return "" }
+func (e *PreOperatorExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *PreOperatorExpression) GetOperator() string         { return e.Operator }
+func (e *PreOperatorExpression) GetStringValue() string      { return "" }
 
 func (e *PreOperatorExpression) String() string {
 	return fmt.Sprintf("PreOperatorExpression{%s %s}", e.Operator, e.Expression)
@@ -2945,11 +2907,9 @@ func (e *StringConstantExpression) GetIntegerValue() int        { return 0 }
 func (e *StringConstantExpression) GetInternalTypeName() string { return "" }
 func (e *StringConstantExpression) GetLongValue() int64         { return 0 }
 func (e *StringConstantExpression) GetName() string             { return "" }
-func (e *StringConstantExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *StringConstantExpression) GetOperator() string    { return "" }
-func (e *StringConstantExpression) GetStringValue() string { return e.Text }
+func (e *StringConstantExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *StringConstantExpression) GetOperator() string         { return "" }
+func (e *StringConstantExpression) GetStringValue() string      { return e.Text }
 
 func (e *StringConstantExpression) String() string {
 	return fmt.Sprintf("StringConstantExpression{\"%s\"}", e.Text)
@@ -3032,11 +2992,9 @@ func (e *SuperConstructorInvocationExpression) GetIntegerValue() int        { re
 func (e *SuperConstructorInvocationExpression) GetInternalTypeName() string { return "" }
 func (e *SuperConstructorInvocationExpression) GetLongValue() int64         { return 0 }
 func (e *SuperConstructorInvocationExpression) GetName() string             { return "" }
-func (e *SuperConstructorInvocationExpression) GetObjectType() *ObjectType {
-	return e.ObjectType
-}
-func (e *SuperConstructorInvocationExpression) GetOperator() string    { return "" }
-func (e *SuperConstructorInvocationExpression) GetStringValue() string { return "" }
+func (e *SuperConstructorInvocationExpression) GetObjectType() *ObjectType  { return e.ObjectType }
+func (e *SuperConstructorInvocationExpression) GetOperator() string         { return "" }
+func (e *SuperConstructorInvocationExpression) GetStringValue() string      { return "" }
 
 func (e *SuperConstructorInvocationExpression) String() string {
 	return fmt.Sprintf("SuperConstructorInvocationExpression{call super(%s)}", e.Descriptor)
@@ -3184,11 +3142,9 @@ func (e *TernaryOperatorExpression) GetIntegerValue() int        { return 0 }
 func (e *TernaryOperatorExpression) GetInternalTypeName() string { return "" }
 func (e *TernaryOperatorExpression) GetLongValue() int64         { return 0 }
 func (e *TernaryOperatorExpression) GetName() string             { return "" }
-func (e *TernaryOperatorExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *TernaryOperatorExpression) GetOperator() string    { return "" }
-func (e *TernaryOperatorExpression) GetStringValue() string { return "" }
+func (e *TernaryOperatorExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *TernaryOperatorExpression) GetOperator() string         { return "" }
+func (e *TernaryOperatorExpression) GetStringValue() string      { return "" }
 
 func (e *TernaryOperatorExpression) String() string {
 	return fmt.Sprintf("TernaryOperatorExpression{%s ? %s : %s}", e.Condition, e.TrueExpression, e.FalseExpression)
@@ -3325,11 +3281,9 @@ func (e *TypeReferenceDotClassExpression) GetIntegerValue() int        { return 
 func (e *TypeReferenceDotClassExpression) GetInternalTypeName() string { return "" }
 func (e *TypeReferenceDotClassExpression) GetLongValue() int64         { return 0 }
 func (e *TypeReferenceDotClassExpression) GetName() string             { return "" }
-func (e *TypeReferenceDotClassExpression) GetObjectType() *ObjectType {
-	return &OtTypeUndefinedObject
-}
-func (e *TypeReferenceDotClassExpression) GetOperator() string    { return "" }
-func (e *TypeReferenceDotClassExpression) GetStringValue() string { return "" }
+func (e *TypeReferenceDotClassExpression) GetObjectType() *ObjectType  { return &OtTypeUndefinedObject }
+func (e *TypeReferenceDotClassExpression) GetOperator() string         { return "" }
+func (e *TypeReferenceDotClassExpression) GetStringValue() string      { return "" }
 
 func (e *TypeReferenceDotClassExpression) String() string {
 	return fmt.Sprintf("TypeReferenceDotClassExpression{%s}", e.TypeDotClass)

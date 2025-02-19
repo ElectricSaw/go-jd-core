@@ -4,7 +4,7 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileConstructorDeclaration(
@@ -19,9 +19,9 @@ func NewClassFileConstructorDeclaration(
 	typeBounds map[string]intmod.IType,
 	firstLineNumber int) intsrv.IClassFileConstructorDeclaration {
 	d := &ClassFileConstructorDeclaration{
-		ConstructorDeclaration: *declaration.NewConstructorDeclarationWithAll(
+		ConstructorDeclaration: *model.NewConstructorDeclarationWithAll(
 			annotationReferences, method.AccessFlags(), typeParameters,
-			nil, exceptionTypes, method.Descriptor(), nil).(*declaration.ConstructorDeclaration),
+			nil, exceptionTypes, method.Descriptor(), nil).(*model.ConstructorDeclaration),
 		bodyDeclaration: bodyDeclaration,
 		classFile:       classFile,
 		method:          method,
@@ -35,7 +35,7 @@ func NewClassFileConstructorDeclaration(
 }
 
 type ClassFileConstructorDeclaration struct {
-	declaration.ConstructorDeclaration
+	model.ConstructorDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
 	classFile       intcls.IClassFile

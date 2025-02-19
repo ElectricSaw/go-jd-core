@@ -4,7 +4,7 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileFieldDeclaration(flags int, typ intmod.IType,
@@ -25,7 +25,7 @@ func NewClassFileFieldDeclaration3(annotationReferences intmod.IAnnotationRefere
 func NewClassFileFieldDeclaration4(annotationReferences intmod.IAnnotationReference,
 	flags int, typ intmod.IType, fieldDeclaration intmod.IFieldDeclarator, firstLineNumber int) intsrv.IClassFileFieldDeclaration {
 	d := &ClassFileFieldDeclaration{
-		FieldDeclaration: *declaration.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration).(*declaration.FieldDeclaration),
+		FieldDeclaration: *model.NewFieldDeclarationWithAll(annotationReferences, flags, typ, fieldDeclaration).(*model.FieldDeclaration),
 		firstLineNumber:  firstLineNumber,
 	}
 	d.SetValue(d)
@@ -34,7 +34,7 @@ func NewClassFileFieldDeclaration4(annotationReferences intmod.IAnnotationRefere
 
 type ClassFileFieldDeclaration struct {
 	ClassFileMethodDeclaration
-	declaration.FieldDeclaration
+	model.FieldDeclaration
 
 	firstLineNumber int
 }

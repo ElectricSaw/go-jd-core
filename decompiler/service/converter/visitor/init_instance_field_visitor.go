@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	moddecl "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -275,7 +274,7 @@ func (v *InitInstanceFieldVisitor) updateFieldsAndConstructors() {
 
 			if decl != nil {
 				expression := putField.RightExpression()
-				decl.SetVariableInitializer(moddecl.NewExpressionVariableInitializer(expression))
+				decl.SetVariableInitializer(model.NewExpressionVariableInitializer(expression))
 				decl.FieldDeclaration().(intsrv.IClassFileFieldDeclaration).SetFirstLineNumber(expression.LineNumber())
 			}
 		}

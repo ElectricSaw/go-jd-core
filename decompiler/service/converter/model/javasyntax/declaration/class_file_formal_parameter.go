@@ -4,7 +4,7 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileFormalParameter(localVariable intsrv.ILocalVariable) intsrv.IClassFileFormalParameter {
@@ -18,7 +18,7 @@ func NewClassFileFormalParameter2(localVariable intsrv.ILocalVariable, varargs b
 func NewClassFileFormalParameter3(annotationReferences intmod.IAnnotationReference,
 	localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
 	p := &ClassFileFormalParameter{
-		FormalParameter: *declaration.NewFormalParameter4(annotationReferences, nil, varargs, "").(*declaration.FormalParameter),
+		FormalParameter: *model.NewFormalParameter4(annotationReferences, nil, varargs, "").(*model.FormalParameter),
 		localVariable:   localVariable,
 	}
 	p.SetValue(p)
@@ -26,7 +26,7 @@ func NewClassFileFormalParameter3(annotationReferences intmod.IAnnotationReferen
 }
 
 type ClassFileFormalParameter struct {
-	declaration.FormalParameter
+	model.FormalParameter
 
 	localVariable intsrv.ILocalVariable
 }

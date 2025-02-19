@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	moddec "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
@@ -203,7 +202,7 @@ func (v *InitStaticFieldVisitor) setStaticFieldInitializer(state intmod.IStateme
 					expr.Accept(v.searchLocalVariableReferenceVisitor)
 
 					if !v.searchLocalVariableReferenceVisitor.ContainsReference() {
-						fdr.SetVariableInitializer(moddec.NewExpressionVariableInitializer(expr))
+						fdr.SetVariableInitializer(model.NewExpressionVariableInitializer(expr))
 						fdr.FieldDeclaration().(intsrv.IClassFileFieldDeclaration).SetFirstLineNumber(expr.LineNumber())
 						return true
 					}

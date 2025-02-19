@@ -5,7 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -568,12 +567,12 @@ func (f *Frame) newDeclarationStatement(undeclaredLocalVariables util.ISet[intsr
 
 	if boe.RightExpression().IsNewInitializedArray() {
 		if typ.IsObjectType() && typ.(intmod.IObjectType).TypeArguments() != nil {
-			variableInitializer = declaration.NewExpressionVariableInitializer(boe.RightExpression())
+			variableInitializer = _type.NewExpressionVariableInitializer(boe.RightExpression())
 		} else {
 			variableInitializer = boe.RightExpression().(intmod.INewInitializedArray).ArrayInitializer()
 		}
 	} else {
-		variableInitializer = declaration.NewExpressionVariableInitializer(boe.RightExpression())
+		variableInitializer = _type.NewExpressionVariableInitializer(boe.RightExpression())
 	}
 
 	return _type.NewLocalVariableDeclarationStatement(typ,
@@ -640,10 +639,10 @@ func (f *Frame) updateForStatement(
 	if init.RightExpression().IsNewInitializedArray() {
 		variableInitializer = init.RightExpression().(intmod.INewInitializedArray).ArrayInitializer()
 	} else {
-		variableInitializer = declaration.NewExpressionVariableInitializer(init.RightExpression())
+		variableInitializer = _type.NewExpressionVariableInitializer(init.RightExpression())
 	}
 
-	forStatement.SetDeclaration(declaration.NewLocalVariableDeclaration(localVariable.Type(),
+	forStatement.SetDeclaration(_type.NewLocalVariableDeclaration(localVariable.Type(),
 		srvdecl.NewClassFileLocalVariableDeclarator2(init.LineNumber(),
 			reference.LocalVariable().(intsrv.ILocalVariable), variableInitializer)))
 	forStatement.SetInit(nil)
@@ -717,16 +716,16 @@ func (f *Frame) updateForStatement2(
 	}
 
 	if minDimension == maxDimension {
-		forStatement.SetDeclaration(declaration.NewLocalVariableDeclaration(type1, f.createDeclarators1(boes, false)))
+		forStatement.SetDeclaration(_type.NewLocalVariableDeclaration(type1, f.createDeclarators1(boes, false)))
 	} else {
-		forStatement.SetDeclaration(declaration.NewLocalVariableDeclaration(type0, f.createDeclarators1(boes, true)))
+		forStatement.SetDeclaration(_type.NewLocalVariableDeclaration(type0, f.createDeclarators1(boes, true)))
 	}
 
 	forStatement.SetInit(nil)
 }
 
 func (f *Frame) createDeclarators1(boes util.IList[intmod.IExpression], setDimension bool) intmod.ILocalVariableDeclarators {
-	declarators := declaration.NewLocalVariableDeclarators()
+	declarators := _type.NewLocalVariableDeclarators()
 
 	for _, boe := range boes.ToSlice() {
 		reference := boe.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression)
@@ -734,7 +733,7 @@ func (f *Frame) createDeclarators1(boes util.IList[intmod.IExpression], setDimen
 		if boe.RightExpression().IsNewInitializedArray() {
 			variableInitializer = boe.RightExpression().(intmod.INewInitializedArray).ArrayInitializer()
 		} else {
-			variableInitializer = declaration.NewExpressionVariableInitializer(boe.RightExpression())
+			variableInitializer = _type.NewExpressionVariableInitializer(boe.RightExpression())
 		}
 		declarator := srvdecl.NewClassFileLocalVariableDeclarator2(boe.LineNumber(),
 			reference.LocalVariable().(intsrv.ILocalVariable), variableInitializer)
@@ -895,7 +894,7 @@ func (f *Frame) mergeDeclarations() {
 
 func (f *Frame) createDeclarators2(declarations util.IList[intmod.ILocalVariableDeclarationStatement],
 	setDimension bool) intmod.ILocalVariableDeclarators {
-	declarators := declaration.NewLocalVariableDeclarators()
+	declarators := _type.NewLocalVariableDeclarators()
 
 	for _, decl := range declarations.ToSlice() {
 		declarator := decl.LocalVariableDeclarators().(intmod.ILocalVariableDeclarator)

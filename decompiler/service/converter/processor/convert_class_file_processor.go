@@ -5,7 +5,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -152,7 +151,7 @@ func (p *ConvertClassFileProcessor) convertFields(
 			annotationReference := p.convertAnnotationReferencesWithField(converter, field)
 			typeField := parser.ParseFieldSignature(classFile, field)
 			variableInitializer := p.convertFieldInitializer(field, typeField)
-			fieldDeclarator := declaration.NewFieldDeclarator2(field.Name(), variableInitializer)
+			fieldDeclarator := model.NewFieldDeclarator2(field.Name(), variableInitializer)
 			list = append(list, srvdecl.NewClassFileFieldDeclaration3(annotationReference, field.AccessFlags(), typeField, fieldDeclarator))
 		}
 
@@ -340,7 +339,7 @@ func (p *ConvertClassFileProcessor) convertFieldInitializer(field intcls.IField,
 			return nil
 		}
 
-		return declaration.NewExpressionVariableInitializer(expr)
+		return model.NewExpressionVariableInitializer(expr)
 	}
 }
 
@@ -355,7 +354,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclaration(classFile intcls.IC
 	}
 	provides := p.convertModuleDeclarationServiceInfo(attributeModule.Provides())
 
-	return declaration.NewModuleDeclaration(
+	return model.NewModuleDeclaration(
 		attributeModule.Flags(), classFile.InternalTypeName(), attributeModule.Name(),
 		attributeModule.Version(), requires, exports, opens, uses, provides)
 }
@@ -366,7 +365,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclarationModuleInfo(moduleInf
 	} else {
 		list := util.NewDefaultListWithCapacity[intmod.IModuleInfo](len(moduleInfos))
 		for _, moduleInfo := range moduleInfos {
-			list.Add(declaration.NewModuleInfo(moduleInfo.Name(), moduleInfo.Flags(), moduleInfo.Version()))
+			list.Add(model.NewModuleInfo(moduleInfo.Name(), moduleInfo.Flags(), moduleInfo.Version()))
 		}
 		return list
 	}
@@ -382,7 +381,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclarationPackageInfo(packageI
 			if packageInfo.ModuleInfoNames() != nil {
 				moduleInfoNames = copyStrings(packageInfo.ModuleInfoNames())
 			}
-			list.Add(declaration.NewPackageInfo(packageInfo.InternalName(), packageInfo.Flags(), moduleInfoNames))
+			list.Add(model.NewPackageInfo(packageInfo.InternalName(), packageInfo.Flags(), moduleInfoNames))
 		}
 		return list
 	}
@@ -398,7 +397,7 @@ func (p *ConvertClassFileProcessor) convertModuleDeclarationServiceInfo(serviceI
 			if serviceInfo.ImplementationTypeNames() != nil {
 				implementationTypeNames = copyStrings(serviceInfo.ImplementationTypeNames())
 			}
-			list.Add(declaration.NewServiceInfo(serviceInfo.InterfaceTypeName(), implementationTypeNames))
+			list.Add(model.NewServiceInfo(serviceInfo.InterfaceTypeName(), implementationTypeNames))
 		}
 		return list
 	}

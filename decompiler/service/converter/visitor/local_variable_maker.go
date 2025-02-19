@@ -6,7 +6,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	moddec "github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -101,7 +100,7 @@ func NewLocalVariableMaker(typeMaker intsrv.ITypeMaker,
 		varargs := method.AccessFlags()&intmod.FlagVarArgs != 0
 
 		m.initLocalVariablesFromParameterTypes(classFile, parameterTypes, varargs, firstVariableIndex, lastParameterIndex)
-		m.formalParameters = moddec.NewFormalParameters()
+		m.formalParameters = _type.NewFormalParameters()
 
 		var rvpa, ripa intcls.IAttributeParameterAnnotations
 		if tmp := method.Attribute("RuntimeVisibleParameterAnnotations"); tmp != nil {

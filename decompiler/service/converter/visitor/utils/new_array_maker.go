@@ -3,12 +3,11 @@ package utils
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 	"strings"
 )
 
-var EmptyArray = declaration.NewArrayVariableInitializer(_type.PtTypeVoid)
+var EmptyArray = _type.NewArrayVariableInitializer(_type.PtTypeVoid)
 
 func MakeNewArrayMaker(statements intmod.IStatements, newArray intmod.IExpression) intmod.IExpression {
 	if !statements.IsEmpty() {
@@ -30,10 +29,10 @@ func createVariableInitializer(li util.IListIterator[intmod.IStatement],
 
 	typ := newArray.Type()
 	boe := statement.Expression()
-	array := declaration.NewArrayVariableInitializer(typ.CreateType(typ.Dimension() - 1))
+	array := _type.NewArrayVariableInitializer(typ.CreateType(typ.Dimension() - 1))
 	index := boe.LeftExpression().Index().IntegerValue()
 
-	array.Add(declaration.NewExpressionVariableInitializer(boe.RightExpression()))
+	array.Add(_type.NewExpressionVariableInitializer(boe.RightExpression()))
 
 	for li.HasPrevious() {
 		boe = li.Previous().Expression()
@@ -44,7 +43,7 @@ func createVariableInitializer(li util.IListIterator[intmod.IStatement],
 			if ae.Index().IsIntegerConstantExpression() {
 				if ae.Expression() == newArray {
 					index = ae.Index().IntegerValue()
-					array.Add(declaration.NewExpressionVariableInitializer(boe.RightExpression()))
+					array.Add(_type.NewExpressionVariableInitializer(boe.RightExpression()))
 					_ = li.Remove()
 					continue
 				} else if ae.Expression().IsNewArray() {
@@ -92,9 +91,9 @@ func createVariableInitializer(li util.IListIterator[intmod.IStatement],
 		typ = typ.CreateType(typ.Dimension() - 1)
 
 		if (typ.Dimension() == 0) && typ.IsPrimitiveType() {
-			evi = declaration.NewExpressionVariableInitializer(_type.NewIntegerConstantExpression(typ, 0))
+			evi = _type.NewExpressionVariableInitializer(_type.NewIntegerConstantExpression(typ, 0))
 		} else {
-			evi = declaration.NewExpressionVariableInitializer(_type.NewNullExpression(typ))
+			evi = _type.NewExpressionVariableInitializer(_type.NewNullExpression(typ))
 		}
 
 		for ; index > 0; index-- {

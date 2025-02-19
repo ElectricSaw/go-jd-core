@@ -2,7 +2,6 @@ package model
 
 import (
 	"fmt"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -1120,7 +1119,7 @@ func (s *LambdaExpressionStatement) String() string {
 type LocalVariableDeclarationStatement struct {
 	util.DefaultBase[IStatement]
 	// FIXME: declaration.LocalVariableDeclaration 리펙토링 후 제작업 필요.
-	declaration.LocalVariableDeclaration
+	LocalVariableDeclaration
 
 	Final                    bool
 	Type                     IType

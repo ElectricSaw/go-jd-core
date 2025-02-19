@@ -5,7 +5,7 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileMethodDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intcls.IClassFile,
@@ -30,8 +30,8 @@ func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclara
 	exceptionTypes intmod.IType, defaultAnnotationValue intmod.IElementValue,
 	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType, firstLineNumber int) intsrv.IClassFileMethodDeclaration {
 	d := &ClassFileMethodDeclaration{
-		MethodDeclaration: *declaration.NewMethodDeclaration6(annotationReferences, method.AccessFlags(), name, typeParameters,
-			returnedType, nil, exceptionTypes, method.Descriptor(), nil, defaultAnnotationValue).(*declaration.MethodDeclaration),
+		MethodDeclaration: *model.NewMethodDeclaration6(annotationReferences, method.AccessFlags(), name, typeParameters,
+			returnedType, nil, exceptionTypes, method.Descriptor(), nil, defaultAnnotationValue).(*model.MethodDeclaration),
 		bodyDeclaration: bodyDeclaration,
 		classFile:       classFile,
 		parameterTypes:  parameterTypes,
@@ -45,7 +45,7 @@ func NewClassFileMethodDeclaration3(bodyDeclaration intsrv.IClassFileBodyDeclara
 }
 
 type ClassFileMethodDeclaration struct {
-	declaration.MethodDeclaration
+	model.MethodDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
 	classFile       intcls.IClassFile

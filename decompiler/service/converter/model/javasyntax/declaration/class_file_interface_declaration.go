@@ -4,7 +4,7 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileInterfaceDeclaration(
@@ -17,8 +17,8 @@ func NewClassFileInterfaceDeclaration(
 	bodyDeclaration intsrv.IClassFileBodyDeclaration,
 ) intsrv.IClassFileInterfaceDeclaration {
 	d := &ClassFileInterfaceDeclaration{
-		InterfaceDeclaration: *declaration.NewInterfaceDeclarationWithAll(annotationReferences,
-			flags, internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*declaration.InterfaceDeclaration),
+		InterfaceDeclaration: *model.NewInterfaceDeclarationWithAll(annotationReferences,
+			flags, internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*model.InterfaceDeclaration),
 		firstLineNumber: bodyDeclaration.FirstLineNumber(),
 	}
 	d.SetValue(d)
@@ -26,7 +26,7 @@ func NewClassFileInterfaceDeclaration(
 }
 
 type ClassFileInterfaceDeclaration struct {
-	declaration.InterfaceDeclaration
+	model.InterfaceDeclaration
 
 	firstLineNumber int
 }

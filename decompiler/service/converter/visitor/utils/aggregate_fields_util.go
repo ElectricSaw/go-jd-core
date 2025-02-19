@@ -2,7 +2,7 @@ package utils
 
 import (
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
@@ -56,7 +56,7 @@ func aggregate(fields util.IList[intsrv.IClassFileFieldDeclaration], firstField 
 		sublist := fields.SubList(firstIndex+1, lastIndex+1)
 
 		length := lastIndex - firstIndex
-		declarators := declaration.NewFieldDeclaratorsWithCapacity(length)
+		declarators := model.NewFieldDeclaratorsWithCapacity(length)
 		bfd := firstField.FieldDeclarators()
 
 		if bfd.IsList() {

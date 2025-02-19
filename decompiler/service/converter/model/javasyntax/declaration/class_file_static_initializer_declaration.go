@@ -5,7 +5,7 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileStaticInitializerDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration,
@@ -20,7 +20,7 @@ func NewClassFileStaticInitializerDeclaration2(bodyDeclaration intsrv.IClassFile
 	method intcls.IMethod, bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
 	firstLineNumber int, statements intmod.IStatement) intsrv.IClassFileStaticInitializerDeclaration {
 	d := &ClassFileStaticInitializerDeclaration{
-		StaticInitializerDeclaration: *declaration.NewStaticInitializerDeclaration(method.Descriptor(), statements).(*declaration.StaticInitializerDeclaration),
+		StaticInitializerDeclaration: *model.NewStaticInitializerDeclaration(method.Descriptor(), statements).(*model.StaticInitializerDeclaration),
 		bodyDeclaration:              bodyDeclaration,
 		classFile:                    classFile,
 		method:                       method,
@@ -33,7 +33,7 @@ func NewClassFileStaticInitializerDeclaration2(bodyDeclaration intsrv.IClassFile
 }
 
 type ClassFileStaticInitializerDeclaration struct {
-	declaration.StaticInitializerDeclaration
+	model.StaticInitializerDeclaration
 
 	bodyDeclaration intsrv.IClassFileBodyDeclaration
 	classFile       intcls.IClassFile

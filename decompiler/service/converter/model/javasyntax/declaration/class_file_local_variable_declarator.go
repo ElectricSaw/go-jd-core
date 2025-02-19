@@ -3,7 +3,7 @@ package declaration
 import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileLocalVariableDeclarator(localVariable intsrv.ILocalVariable) intsrv.IClassFileLocalVariableDeclarator {
@@ -13,7 +13,7 @@ func NewClassFileLocalVariableDeclarator(localVariable intsrv.ILocalVariable) in
 func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable intsrv.ILocalVariable,
 	initializer intmod.IVariableInitializer) intsrv.IClassFileLocalVariableDeclarator {
 	d := &ClassFileLocalVariableDeclarator{
-		LocalVariableDeclarator: *declaration.NewLocalVariableDeclarator3(lineNumber, "", initializer).(*declaration.LocalVariableDeclarator),
+		LocalVariableDeclarator: *model.NewLocalVariableDeclarator3(lineNumber, "", initializer).(*model.LocalVariableDeclarator),
 		localVariable:           localVariable,
 	}
 	d.SetValue(d)
@@ -21,7 +21,7 @@ func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable intsrv.I
 }
 
 type ClassFileLocalVariableDeclarator struct {
-	declaration.LocalVariableDeclarator
+	model.LocalVariableDeclarator
 
 	localVariable intsrv.ILocalVariable
 }

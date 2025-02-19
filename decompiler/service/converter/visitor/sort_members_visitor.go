@@ -4,7 +4,6 @@ import (
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor/utils"
 )
 
@@ -58,7 +57,7 @@ func Merge(fields, methods, innerTypes []intsrv.IClassFileMemberDeclaration) int
 		size += len(innerTypes)
 	}
 
-	result := declaration.NewMemberDeclarationsWithCapacity(size)
+	result := model.NewMemberDeclarationsWithCapacity(size)
 
 	tmp := make([]intmod.IMemberDeclaration, 0)
 	for _, item := range fields {

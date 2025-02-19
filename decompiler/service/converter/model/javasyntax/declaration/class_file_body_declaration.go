@@ -5,14 +5,14 @@ import (
 	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
 func NewClassFileBodyDeclaration(classFile intcls.IClassFile, bindings map[string]intmod.ITypeArgument,
 	typeBounds map[string]intmod.IType, outerBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
 	d := &ClassFileBodyDeclaration{
-		BodyDeclaration:      *declaration.NewBodyDeclaration(classFile.InternalTypeName(), nil).(*declaration.BodyDeclaration),
+		BodyDeclaration:      *model.NewBodyDeclaration(classFile.InternalTypeName(), nil).(*model.BodyDeclaration),
 		classFile:            classFile,
 		bindings:             bindings,
 		typeBounds:           typeBounds,
@@ -23,7 +23,7 @@ func NewClassFileBodyDeclaration(classFile intcls.IClassFile, bindings map[strin
 }
 
 type ClassFileBodyDeclaration struct {
-	declaration.BodyDeclaration
+	model.BodyDeclaration
 	util.DefaultBase[intmod.IMemberDeclaration]
 
 	classFile                intcls.IClassFile

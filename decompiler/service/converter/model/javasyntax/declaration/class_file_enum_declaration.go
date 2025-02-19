@@ -4,15 +4,15 @@ import (
 	"fmt"
 	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
 	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	"github.com/ElectricSaw/go-jd-core/decompiler/model/javasyntax/declaration"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 )
 
 func NewClassFileEnumDeclaration(annotationReferences intmod.IAnnotationReference, flags int,
 	internalTypeName, name string, interfaces intmod.IType,
 	bodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileEnumDeclaration {
 	d := &ClassFileEnumDeclaration{
-		EnumDeclaration: *declaration.NewEnumDeclarationWithAll(annotationReferences, flags,
-			internalTypeName, name, interfaces, nil, bodyDeclaration).(*declaration.EnumDeclaration),
+		EnumDeclaration: *model.NewEnumDeclarationWithAll(annotationReferences, flags,
+			internalTypeName, name, interfaces, nil, bodyDeclaration).(*model.EnumDeclaration),
 	}
 	if bodyDeclaration != nil {
 		d.firstLineNumber = bodyDeclaration.FirstLineNumber()
@@ -22,7 +22,7 @@ func NewClassFileEnumDeclaration(annotationReferences intmod.IAnnotationReferenc
 }
 
 type ClassFileEnumDeclaration struct {
-	declaration.EnumDeclaration
+	model.EnumDeclaration
 
 	firstLineNumber int
 }
@@ -42,7 +42,7 @@ func (d *ClassFileEnumDeclaration) String() string {
 func NewClassFileConstant(lineNumber int, name string, index int, arguments intmod.IExpression,
 	bodyDeclaration intmod.IBodyDeclaration) intsrv.IClassFileConstant {
 	c := &ClassFileConstant{
-		Constant: *declaration.NewConstant5(lineNumber, name, arguments, bodyDeclaration).(*declaration.Constant),
+		Constant: *model.NewConstant5(lineNumber, name, arguments, bodyDeclaration).(*model.Constant),
 		index:    index,
 	}
 	c.SetValue(c)
@@ -50,7 +50,7 @@ func NewClassFileConstant(lineNumber int, name string, index int, arguments intm
 }
 
 type ClassFileConstant struct {
-	declaration.Constant
+	model.Constant
 
 	index int
 }
