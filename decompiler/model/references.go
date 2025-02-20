@@ -672,6 +672,10 @@ type InnerObjectReference struct {
 	OuterType     *ObjectType
 }
 
+func (r *InnerObjectReference) GetName() string {
+	return r.Name
+}
+
 func (r *InnerObjectReference) GetDimension() int {
 	return r.Dimension
 }
@@ -876,6 +880,10 @@ type ObjectReference struct {
 	TypeArguments ITypeArgument
 	Dimension     int
 	Descriptor    string
+}
+
+func (r *ObjectReference) GetName() string {
+	return r.Name
 }
 
 func (r *ObjectReference) GetDimension() int {

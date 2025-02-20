@@ -15,23 +15,23 @@ type RootFrame struct {
 }
 
 func (f *RootFrame) LocalVariable(index int) intsrv.ILocalVariableReference {
-	if index < len(f.localVariableArray) {
-		return f.localVariableArray[index]
+	if index < len(f.LocalVariableArray) {
+		return f.LocalVariableArray[index]
 	}
 	return nil
 }
 
 func (f *RootFrame) UpdateLocalVariableInForStatements(typeMarker intsrv.ITypeMaker) {
-	if f.children != nil {
-		for _, child := range f.children {
+	if f.Children != nil {
+		for _, child := range f.Children {
 			child.UpdateLocalVariableInForStatements(typeMarker)
 		}
 	}
 }
 
 func (f *RootFrame) CreateDeclarations(containsLineNumber bool) {
-	if f.children != nil {
-		for _, child := range f.children {
+	if f.Children != nil {
+		for _, child := range f.Children {
 			child.CreateDeclarations(containsLineNumber)
 		}
 	}

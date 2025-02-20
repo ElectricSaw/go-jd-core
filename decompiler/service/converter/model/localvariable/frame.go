@@ -2,9 +2,7 @@ package localvariable
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
-	_type "github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	srvdecl "github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/javasyntax/declaration"
 	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/visitor"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
@@ -21,30 +19,44 @@ var CapitalizedJavaLanguageKeywords = []string{
 	"Short", "Try", "Char", "Final", "Interface", "Static", "Void", "Class", "Finally", "Long", "Strictfp",
 	"Volatile", "Const", "Float", "Native", "Super", "While"}
 
-func NewFrame(parent intsrv.IFrame, stat intmod.IStatements) intsrv.IFrame {
-	return &Frame{
-		localVariableArray: make([]intsrv.ILocalVariable, 10),
-		newExpressions:     make(map[intmod.INewExpression]intsrv.ILocalVariable),
-		children:           make([]intsrv.IFrame, 0),
-		parent:             parent,
-		stat:               stat,
+func NewFrame(parent IFrame, stat model.Statements) Frame {
+	return Frame{
+		LocalVariableArray: make([]ILocalVariable, 10),
+		NewExpressions:     make(map[*model.NewExpression]ILocalVariable),
+		Children:           util.NewDefaultList[IFrame](),
+		Parent:             parent,
+		Statements:         stat,
 	}
 }
 
 type Frame struct {
-	localVariableArray     []intsrv.ILocalVariable
-	newExpressions         map[intmod.INewExpression]intsrv.ILocalVariable
-	children               []intsrv.IFrame
-	parent                 intsrv.IFrame
-	stat                   intmod.IStatements
-	exceptionLocalVariable intsrv.ILocalVariable
+	LocalVariableArray     []ILocalVariable
+	NewExpressions         map[*model.NewExpression]ILocalVariable
+	Children               util.IList[IFrame]
+	Parent                 IFrame
+	Statements             model.Statements
+	ExceptionLocalVariable ILocalVariable
 }
 
-func (f *Frame) Statements() intmod.IStatements {
-	return f.stat
+func (f *Frame) GetStatements() model.Statements {
+	return f.Statements
 }
 
-func (f *Frame) AddLocalVariable(lv intsrv.ILocalVariable) {
+func (f *Frame) GetLocalVariable(index int) ILocalVariableReference {
+	if index < len(f.LocalVariableArray) {
+		lv := f.LocalVariableArray[index]
+		if lv != nil {
+			return lv
+		}
+	}
+	return f.Parent.GetLocalVariable(index)
+}
+
+func (f *Frame) GetParent() IFrame {
+	return f.Parent
+}
+
+func (f *Frame) AddLocalVariable(lv ILocalVariable) {
 	// Java의 assert 대체 코드
 	if lv.Next() != nil {
 		fmt.Println("Frame.AddLocalVariable: add local variable failed")
@@ -54,46 +66,28 @@ func (f *Frame) AddLocalVariable(lv intsrv.ILocalVariable) {
 	index := lv.Index()
 
 	// 배열 크기 늘리기
-	if index >= len(f.localVariableArray) {
-		newArray := make([]intsrv.ILocalVariable, index*2)
-		copy(newArray, f.localVariableArray)
-		f.localVariableArray = newArray
+	if index >= len(f.LocalVariableArray) {
+		newArray := make([]ILocalVariable, index*2)
+		copy(newArray, f.LocalVariableArray)
+		f.LocalVariableArray = newArray
 	}
 
-	next := f.localVariableArray[index]
+	next := f.LocalVariableArray[index]
 
 	// 중복 추가 방지
 	if next != lv {
-		f.localVariableArray[index] = lv
+		f.LocalVariableArray[index] = lv
 		lv.SetNext(next)
 		lv.SetFrame(f)
 	}
 }
 
-func (f *Frame) LocalVariable(index int) intsrv.ILocalVariableReference {
-	if index < len(f.localVariableArray) {
-		lv := f.localVariableArray[index]
-		if lv != nil {
-			return lv
-		}
-	}
-	return f.parent.LocalVariable(index)
-}
-
-func (f *Frame) Parent() intsrv.IFrame {
-	return f.parent
-}
-
-func (f *Frame) SetExceptionLocalVariable(e intsrv.ILocalVariable) {
-	f.exceptionLocalVariable = e
-}
-
-func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVariableMaker intsrv.ILocalVariableMaker, lv intsrv.ILocalVariable) {
+func (f *Frame) MergeLocalVariable(typeBounds map[string]model.IType, localVariableMaker *visitor.LocalVariableMaker, lv ILocalVariable) {
 	index := lv.Index()
-	var alvToMerge intsrv.ILocalVariable
+	var alvToMerge ILocalVariable
 
-	if index < len(f.localVariableArray) {
-		alvToMerge = f.localVariableArray[index]
+	if index < len(f.LocalVariableArray) {
+		alvToMerge = f.LocalVariableArray[index]
 	} else {
 		alvToMerge = nil
 	}
@@ -107,13 +101,13 @@ func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVari
 	}
 
 	if alvToMerge == nil {
-		if f.children != nil {
-			for _, child := range f.children {
+		if f.Children != nil {
+			for _, child := range f.Children.ToSlice() {
 				child.MergeLocalVariable(typeBounds, localVariableMaker, lv)
 			}
 		}
 	} else if lv != alvToMerge {
-		for _, reference := range alvToMerge.References() {
+		for _, reference := range alvToMerge.References().ToSlice() {
 			reference.SetLocalVariable(lv)
 			lv.AddReference(reference)
 		}
@@ -127,80 +121,80 @@ func (f *Frame) MergeLocalVariable(typeBounds map[string]intmod.IType, localVari
 			if typ.IsPrimitiveType() {
 				plv := lv.(*PrimitiveLocalVariable)
 				plvToMerype := alvToMerge.(*PrimitiveLocalVariable)
-				t := GetCommonPrimitiveType(plv.Type().(intmod.IPrimitiveType), plvToMerype.Type().(intmod.IPrimitiveType))
+				t := GetCommonPrimitiveType(plv.Type().(*model.PrimitiveType), plvToMerype.Type().(*model.PrimitiveType))
 
 				if t == nil {
-					t = _type.PtTypeInt
+					t = &model.PtTypeInt
 				}
 
-				plv.SetType(t.CreateType(typ.Dimension()).(intmod.IPrimitiveType))
+				plv.SetType(t.CreateType(typ.GetDimension()).(*model.PrimitiveType))
 			}
 		} else {
 			if typ.IsPrimitiveType() {
 				plv := lv.(*PrimitiveLocalVariable)
 
 				if alvToMerge.IsAssignableFromWithVariable(typeBounds, lv) || localVariableMaker.IsCompatible(alvToMerge, lv.Type()) {
-					plv.SetType(alvToMerype.(intmod.IPrimitiveType))
+					plv.SetType(alvToMerype.(*model.PrimitiveType))
 				} else {
-					plv.SetType(_type.PtTypeInt)
+					plv.SetType(&model.PtTypeInt)
 				}
 			} else if typ.IsObjectType() {
 				olv := lv.(*ObjectLocalVariable)
 
 				if alvToMerge.IsAssignableFromWithVariable(typeBounds, lv) || localVariableMaker.IsCompatible(alvToMerge, lv.Type()) {
-					olv.SetType(typeBounds, alvToMerype)
+					olv.SetTypeWithTypeBounds(typeBounds, alvToMerype)
 				} else {
 					dimension := alvToMerge.Dimension()
 					if lv.Dimension() >= alvToMerge.Dimension() {
 						dimension = lv.Dimension()
 					}
-					olv.SetType(typeBounds, _type.OtTypeObject.CreateType(dimension))
+					olv.SetTypeWithTypeBounds(typeBounds, model.OtTypeObject.CreateType(dimension))
 				}
 			}
 		}
 
-		f.localVariableArray[index] = alvToMerge.Next()
+		f.LocalVariableArray[index] = alvToMerge.Next()
 	}
 }
 
-func (f *Frame) RemoveLocalVariable(lv intsrv.ILocalVariable) {
+func (f *Frame) RemoveLocalVariable(lv ILocalVariable) {
 	index := lv.Index()
-	var alvToRemove intsrv.ILocalVariable
+	var alvToRemove ILocalVariable
 
-	if (index < len(f.localVariableArray)) && (f.localVariableArray[index] == lv) {
+	if (index < len(f.LocalVariableArray)) && (f.LocalVariableArray[index] == lv) {
 		alvToRemove = lv
 	} else {
 		alvToRemove = nil
 	}
 
 	if alvToRemove == nil {
-		if f.children != nil {
-			for _, child := range f.children {
+		if f.Children != nil {
+			for _, child := range f.Children.ToSlice() {
 				child.RemoveLocalVariable(lv)
 			}
 		}
 	} else {
-		f.localVariableArray[index] = alvToRemove.Next()
+		f.LocalVariableArray[index] = alvToRemove.Next()
 		alvToRemove.SetNext(nil)
 	}
 }
 
-func (f *Frame) AddChild(child intsrv.IFrame) {
-	if f.children == nil {
-		f.children = make([]intsrv.IFrame, 0)
+func (f *Frame) AddChild(child IFrame) {
+	if f.Children == nil {
+		f.Children = util.NewDefaultList[IFrame]()
 	}
-	f.children = append(f.children, child)
+	f.Children.Add(child)
 }
 
 func (f *Frame) Close() {
 	// Update type for 'new' expression
-	if f.newExpressions != nil {
-		for key, value := range f.newExpressions {
-			ot1 := key.ObjectType()
-			ot2 := value.Type().(intmod.IObjectType)
+	if f.NewExpressions != nil {
+		for key, value := range f.NewExpressions {
+			ot1 := key.GetObjectType()
+			ot2 := value.Type().(*model.ObjectType)
 
-			if (ot1.TypeArguments() == nil) && (ot2.TypeArguments() != nil) {
-				key.SetObjectType(ot1.CreateTypeWithArgs(ot2.TypeArguments()))
+			if (ot1.TypeArguments == nil) && (ot2.TypeArguments != nil) {
+				key.Type = ot1.CreateTypeWithArgs(ot2.TypeArguments).(*model.ObjectType)
 			}
 		}
 	}
@@ -209,11 +203,11 @@ func (f *Frame) Close() {
 func (f *Frame) CreateNames(parentNames []string) {
 	names := make([]string, 0, len(parentNames))
 	copy(names, parentNames)
-	types := make(map[intmod.IType]bool)
-	length := len(f.localVariableArray)
+	types := make(map[model.IType]bool)
+	length := len(f.LocalVariableArray)
 
 	for i := 0; i < length; i++ {
-		lv := f.localVariableArray[i]
+		lv := f.LocalVariableArray[i]
 
 		for lv != nil {
 			if _, ok := types[lv.Type()]; ok {
@@ -234,11 +228,11 @@ func (f *Frame) CreateNames(parentNames []string) {
 		}
 	}
 
-	if f.exceptionLocalVariable != nil {
-		if _, ok := types[f.exceptionLocalVariable.Type()]; ok {
-			types[f.exceptionLocalVariable.Type()] = true // Non unique type
+	if f.ExceptionLocalVariable != nil {
+		if _, ok := types[f.ExceptionLocalVariable.Type()]; ok {
+			types[f.ExceptionLocalVariable.Type()] = true // Non unique type
 		} else {
-			types[f.exceptionLocalVariable.Type()] = false // Unique type
+			types[f.ExceptionLocalVariable.Type()] = false // Unique type
 		}
 	}
 
@@ -246,62 +240,62 @@ func (f *Frame) CreateNames(parentNames []string) {
 		visit0r := NewGenerateLocalVariableNameVisitor(names, types)
 
 		for i := 0; i < length; i++ {
-			lv := f.localVariableArray[i]
+			lv := f.LocalVariableArray[i]
 			for lv != nil {
 				if lv.Name() == "" {
-					lv.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
+					lv.Type().(model.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
 					lv.SetName(visit0r.Name())
 				}
 				lv = lv.Next()
 			}
 		}
 
-		if f.exceptionLocalVariable != nil {
-			f.exceptionLocalVariable.Type().(intmod.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
-			f.exceptionLocalVariable.SetName(visit0r.Name())
+		if f.ExceptionLocalVariable != nil {
+			f.ExceptionLocalVariable.Type().(model.ITypeArgumentVisitable).AcceptTypeArgumentVisitor(visit0r)
+			f.ExceptionLocalVariable.SetName(visit0r.Name())
 		}
 	}
 
 	// Recursive call
-	if f.children != nil {
-		for _, child := range f.children {
+	if f.Children != nil {
+		for _, child := range f.Children.ToSlice() {
 			child.CreateNames(names)
 		}
 	}
 }
 
-func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) {
+func (f *Frame) UpdateLocalVariableInForStatements(typeMaker *visitor.TypeMaker) {
 	// Recursive call first
-	if f.children != nil {
-		for _, child := range f.children {
+	if f.Children != nil {
+		for _, child := range f.Children.ToSlice() {
 			child.UpdateLocalVariableInForStatements(typeMaker)
 		}
 	}
 
 	// Split local variable ranges in init 'for' statements
 	searchLocalVariableVisitor := visitor.NewSearchLocalVariableVisitor()
-	undeclaredInExpressionStatements := make([]intsrv.ILocalVariable, 0)
+	undeclaredInExpressionStatements := make([]ILocalVariable, 0)
 
-	for _, stat := range f.stat.Statements().ToSlice() {
+	for _, stat := range f.Statements.ToSlice() {
 		if stat.IsForStatement() {
-			if stat.Init() == nil {
-				if stat.Condition() != nil {
+			if stat.GetInit() == nil {
+				if stat.GetCondition() != nil {
 					searchLocalVariableVisitor.Init()
-					stat.Condition().Accept(searchLocalVariableVisitor)
+					stat.GetCondition().Accept(searchLocalVariableVisitor)
 					for _, variable := range searchLocalVariableVisitor.Variables() {
 						undeclaredInExpressionStatements = append(undeclaredInExpressionStatements, variable)
 					}
 				}
-				if stat.Update() != nil {
+				if stat.GetUpdate() != nil {
 					searchLocalVariableVisitor.Init()
-					stat.Update().Accept(searchLocalVariableVisitor)
+					stat.GetUpdate().Accept(searchLocalVariableVisitor)
 					for _, variable := range searchLocalVariableVisitor.Variables() {
 						undeclaredInExpressionStatements = append(undeclaredInExpressionStatements, variable)
 					}
 				}
-				if stat.Statements() != nil {
+				if stat.GetStatements() != nil {
 					searchLocalVariableVisitor.Init()
-					stat.Statements().AcceptStatement(searchLocalVariableVisitor)
+					stat.GetStatements().AcceptStatement(searchLocalVariableVisitor)
 					for _, variable := range searchLocalVariableVisitor.Variables() {
 						undeclaredInExpressionStatements = append(undeclaredInExpressionStatements, variable)
 					}
@@ -317,21 +311,21 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 	}
 
 	searchUndeclaredLocalVariableVisitor := visitor.NewSearchUndeclaredLocalVariableVisitor()
-	undeclaredInForStatements := make(map[intsrv.ILocalVariable][]intsrv.IClassFileForStatement)
+	undeclaredInForStatements := make(map[ILocalVariable][]*ClassFileForStatement)
 
-	for _, stat := range f.stat.Statements().ToSlice() {
+	for _, stat := range f.Statements.ToSlice() {
 		if stat.IsForStatement() {
-			fs := stat.(intsrv.IClassFileForStatement)
+			fs := stat.(*ClassFileForStatement)
 
-			if fs.Init() != nil {
+			if fs.GetInit() != nil {
 				searchUndeclaredLocalVariableVisitor.Init()
-				fs.Init().Accept(searchUndeclaredLocalVariableVisitor)
+				fs.GetInit().Accept(searchUndeclaredLocalVariableVisitor)
 				searchUndeclaredLocalVariableVisitor.RemoveAll(undeclaredInExpressionStatements)
 
 				for _, lv := range searchUndeclaredLocalVariableVisitor.Variables() {
 					list := undeclaredInForStatements[lv]
 					if list == nil {
-						list = make([]intsrv.IClassFileForStatement, 0)
+						list = make([]*ClassFileForStatement, 0)
 						undeclaredInForStatements[lv] = list
 					}
 					list = append(list, fs)
@@ -357,7 +351,7 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 			} else {
 				f.createNewLocalVariable(createLocalVariableVisitor, firstFS, lv)
 
-				if len(lv.References()) == 0 {
+				if lv.References().Size() == 0 {
 					lv.Frame().RemoveLocalVariable(lv)
 				}
 			}
@@ -365,8 +359,8 @@ func (f *Frame) UpdateLocalVariableInForStatements(typeMaker intsrv.ITypeMaker) 
 	}
 }
 
-func (f *Frame) createNewLocalVariable(createLocalVariableVisitor intsrv.ICreateLocalVariableVisitor,
-	fs intsrv.IClassFileForStatement, lv intsrv.ILocalVariable) {
+func (f *Frame) createNewLocalVariable(createLocalVariableVisitor *CreateLocalVariableVisitor,
+	fs *ClassFileForStatement, lv ILocalVariable) {
 	fromOffset := fs.FromOffset()
 	toOffset := fs.ToOffset()
 	createLocalVariableVisitor.Init(lv.Index(), fromOffset)
@@ -402,8 +396,8 @@ func (f *Frame) CreateDeclarations(containsLineNumber bool) {
 	}
 
 	// Recursive call
-	if f.children != nil {
-		for _, child := range f.children {
+	if f.Children != nil {
+		for _, child := range f.Children.ToSlice() {
 			child.CreateDeclarations(containsLineNumber)
 		}
 	}
@@ -419,7 +413,7 @@ func (f *Frame) createInlineDeclarations() {
 		for key, value := range mapped {
 			statements := key.Statements()
 			iterator := statements.ListIterator()
-			undeclaredLocalVariables := util.NewSetWithSlice[intsrv.ILocalVariable](value)
+			undeclaredLocalVariables := util.NewSetWithSlice[ILocalVariable](value)
 
 			for iterator.HasNext() {
 				state := iterator.Next()
@@ -427,7 +421,7 @@ func (f *Frame) createInlineDeclarations() {
 				state.AcceptStatement(searchUndeclaredLocalVariableVisitor)
 
 				//undeclaredLocalVariablesInStatement := searchUndeclaredLocalVariableVisitor.Variables()
-				undeclaredLocalVariablesInStatement := util.NewSetWithSlice[intsrv.ILocalVariable](searchUndeclaredLocalVariableVisitor.Variables())
+				undeclaredLocalVariablesInStatement := util.NewSetWithSlice[ILocalVariable](searchUndeclaredLocalVariableVisitor.Variables())
 				undeclaredLocalVariablesInStatement.RetainAll(undeclaredLocalVariables.ToSlice())
 
 				if !undeclaredLocalVariablesInStatement.IsEmpty() {
@@ -435,7 +429,7 @@ func (f *Frame) createInlineDeclarations() {
 
 					if state.IsExpressionStatement() {
 						f.createInlineDeclarations2(undeclaredLocalVariables,
-							undeclaredLocalVariablesInStatement, iterator, state.(intmod.IExpressionStatement))
+							undeclaredLocalVariablesInStatement, iterator, state.(model.IExpressionStatement))
 					} else if state.IsForStatement() {
 						f.createInlineDeclarations3(undeclaredLocalVariables,
 							undeclaredLocalVariablesInStatement, state.(intsrv.IClassFileForStatement))
@@ -449,14 +443,14 @@ func (f *Frame) createInlineDeclarations() {
 							iterator.Previous()
 						}
 
-						sorted := make([]intsrv.ILocalVariable, 0)
+						sorted := make([]ILocalVariable, 0)
 						sorted = append(sorted, undeclaredLocalVariablesInStatement.ToSlice()...)
 						sort.SliceIsSorted(sorted, func(i, j int) bool {
 							return sorted[i].Index() > sorted[j].Index()
 						})
 
 						for _, lv := range sorted {
-							_ = iterator.Add(_type.NewLocalVariableDeclarationStatement(lv.Type(),
+							_ = iterator.Add(model.NewLocalVariableDeclarationStatement(lv.Type(),
 								srvdecl.NewClassFileLocalVariableDeclarator(lv)))
 							lv.SetDeclared(true)
 							undeclaredLocalVariables.Remove(lv)
@@ -476,18 +470,18 @@ func (f *Frame) createInlineDeclarations() {
 	}
 }
 
-func (f *Frame) createMapForInlineDeclarations() map[intsrv.IFrame][]intsrv.ILocalVariable {
-	mapped := make(map[intsrv.IFrame][]intsrv.ILocalVariable)
-	i := len(f.localVariableArray)
+func (f *Frame) createMapForInlineDeclarations() map[IFrame][]ILocalVariable {
+	mapped := make(map[IFrame][]ILocalVariable)
+	i := len(f.LocalVariableArray)
 
 	for i > 0 {
 		i--
-		lv := f.localVariableArray[i]
+		lv := f.LocalVariableArray[i]
 		for lv != nil {
 			if lv.Frame() == f && !lv.IsDeclared() {
 				variablesToDeclare := mapped[f]
 				if variablesToDeclare == nil {
-					variablesToDeclare = make([]intsrv.ILocalVariable, 0)
+					variablesToDeclare = make([]ILocalVariable, 0)
 					mapped[f] = variablesToDeclare
 				}
 				variablesToDeclare = append(variablesToDeclare, lv)
@@ -500,16 +494,16 @@ func (f *Frame) createMapForInlineDeclarations() map[intsrv.IFrame][]intsrv.ILoc
 }
 
 func (f *Frame) createInlineDeclarations2(
-	undeclaredLocalVariables util.ISet[intsrv.ILocalVariable],
-	undeclaredLocalVariablesInStatement util.ISet[intsrv.ILocalVariable],
-	iterator util.IListIterator[intmod.IStatement],
-	es intmod.IExpressionStatement) {
+	undeclaredLocalVariables util.ISet[ILocalVariable],
+	undeclaredLocalVariablesInStatement util.ISet[ILocalVariable],
+	iterator util.IListIterator[model.IStatement],
+	es model.ExpressionStatement) {
 
-	if es.Expression().IsBinaryOperatorExpression() {
-		boe := es.Expression()
+	if es.Expression.IsBinaryOperatorExpression() {
+		boe := es.Expression
 
-		if boe.Operator() == "=" {
-			expressions := _type.NewExpressions()
+		if boe.GetOperator() == "=" {
+			expressions := model.NewExpressions()
 
 			f.splitMultiAssignment(math.MaxInt, undeclaredLocalVariablesInStatement, expressions, boe)
 			_ = iterator.Remove()
@@ -519,30 +513,30 @@ func (f *Frame) createInlineDeclarations2(
 			}
 
 			if expressions.IsEmpty() {
-				_ = iterator.Add(es)
+				_ = iterator.Add(&es)
 			}
 		}
 	}
 }
 
 func (f *Frame) splitMultiAssignment(toOffset int,
-	undeclaredLocalVariablesInStatement util.ISet[intsrv.ILocalVariable],
-	expressions intmod.IExpressions, expr intmod.IExpression) intmod.IExpression {
+	undeclaredLocalVariablesInStatement util.ISet[ILocalVariable],
+	expressions model.Expressions, expr model.IExpression) model.IExpression {
 
-	if expr.IsBinaryOperatorExpression() && expr.Operator() == "=" {
-		rightExpression := f.splitMultiAssignment(toOffset, undeclaredLocalVariablesInStatement, expressions, expr.RightExpression())
+	if expr.IsBinaryOperatorExpression() && expr.GetOperator() == "=" {
+		rightExpression := f.splitMultiAssignment(toOffset, undeclaredLocalVariablesInStatement, expressions, expr.GetRightExpression())
 
-		if expr.LeftExpression().IsLocalVariableReferenceExpression() {
-			lvre := expr.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression)
-			localVariable := lvre.LocalVariable().(intsrv.ILocalVariable)
+		if expr.GetLeftExpression().IsLocalVariableReferenceExpression() {
+			lvre := expr.GetLeftExpression().(*ClassFileLocalVariableReferenceExpression)
+			localVariable := lvre.LocalVariable().(ILocalVariable)
 
 			if undeclaredLocalVariablesInStatement.Contains(localVariable) && (localVariable.ToOffset() <= toOffset) {
 				// Split multi assignment
-				if rightExpression == expr.RightExpression() {
+				if rightExpression == expr.GetRightExpression() {
 					expressions.Add(expr)
 				} else {
-					expressions.Add(_type.NewBinaryOperatorExpression(
-						expr.LineNumber(), expr.Type(), lvre, "=", rightExpression, expr.Priority()))
+					expressions.Add(model.NewBinaryOperatorExpression(
+						expr.GetLineNumber(), expr.GetType(), lvre, "=", rightExpression, expr.GetPriority()))
 				}
 				// Return local variable
 				return lvre
@@ -553,39 +547,39 @@ func (f *Frame) splitMultiAssignment(toOffset int,
 	return expr
 }
 
-func (f *Frame) newDeclarationStatement(undeclaredLocalVariables util.ISet[intsrv.ILocalVariable],
-	undeclaredLocalVariablesInStatement util.ISet[intsrv.ILocalVariable], boe intmod.IExpression) intmod.ILocalVariableDeclarationStatement {
+func (f *Frame) newDeclarationStatement(undeclaredLocalVariables util.ISet[ILocalVariable],
+	undeclaredLocalVariablesInStatement util.ISet[ILocalVariable], boe model.IExpression) model.ILocalVariableDeclarationStatement {
 	reference := boe.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression)
-	localVariable := reference.LocalVariable().(intsrv.ILocalVariable)
+	localVariable := reference.LocalVariable().(ILocalVariable)
 
 	undeclaredLocalVariables.Remove(localVariable)
 	undeclaredLocalVariablesInStatement.Remove(localVariable)
 	localVariable.SetDeclared(true)
 
 	typ := localVariable.Type()
-	var variableInitializer intmod.IVariableInitializer
+	var variableInitializer model.IVariableInitializer
 
 	if boe.RightExpression().IsNewInitializedArray() {
-		if typ.IsObjectType() && typ.(intmod.IObjectType).TypeArguments() != nil {
-			variableInitializer = _type.NewExpressionVariableInitializer(boe.RightExpression())
+		if typ.IsObjectType() && typ.(*model.ObjectType).TypeArguments() != nil {
+			variableInitializer = model.NewExpressionVariableInitializer(boe.RightExpression())
 		} else {
-			variableInitializer = boe.RightExpression().(intmod.INewInitializedArray).ArrayInitializer()
+			variableInitializer = boe.RightExpression().(model.INewInitializedArray).ArrayInitializer()
 		}
 	} else {
-		variableInitializer = _type.NewExpressionVariableInitializer(boe.RightExpression())
+		variableInitializer = model.NewExpressionVariableInitializer(boe.RightExpression())
 	}
 
-	return _type.NewLocalVariableDeclarationStatement(typ,
+	return model.NewLocalVariableDeclarationStatement(typ,
 		srvdecl.NewClassFileLocalVariableDeclarator2(boe.LineNumber(),
-			reference.LocalVariable().(intsrv.ILocalVariable), variableInitializer))
+			reference.LocalVariable().(ILocalVariable), variableInitializer))
 }
 
-func (f *Frame) createInlineDeclarations3(undeclaredLocalVariables util.ISet[intsrv.ILocalVariable],
-	undeclaredLocalVariablesInStatement util.ISet[intsrv.ILocalVariable], fs intsrv.IClassFileForStatement) {
+func (f *Frame) createInlineDeclarations3(undeclaredLocalVariables util.ISet[ILocalVariable],
+	undeclaredLocalVariablesInStatement util.ISet[ILocalVariable], fs intsrv.IClassFileForStatement) {
 	init := fs.Init()
 
 	if init != nil {
-		expressions := _type.NewExpressions()
+		expressions := model.NewExpressions()
 		toOffset := fs.ToOffset()
 
 		if init.IsList() {
@@ -611,9 +605,9 @@ func (f *Frame) createInlineDeclarations3(undeclaredLocalVariables util.ISet[int
 }
 
 func (f *Frame) updateForStatement(
-	undeclaredLocalVariables util.ISet[intsrv.ILocalVariable],
-	undeclaredLocalVariablesInStatement util.ISet[intsrv.ILocalVariable],
-	forStatement intsrv.IClassFileForStatement, init intmod.IExpression) {
+	undeclaredLocalVariables util.ISet[ILocalVariable],
+	undeclaredLocalVariablesInStatement util.ISet[ILocalVariable],
+	forStatement intsrv.IClassFileForStatement, init model.IExpression) {
 
 	if !init.IsBinaryOperatorExpression() {
 		return
@@ -624,7 +618,7 @@ func (f *Frame) updateForStatement(
 	}
 
 	reference := init.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression)
-	localVariable := reference.LocalVariable().(intsrv.ILocalVariable)
+	localVariable := reference.LocalVariable().(ILocalVariable)
 
 	if localVariable.IsDeclared() || (localVariable.ToOffset() > forStatement.ToOffset()) {
 		return
@@ -634,27 +628,27 @@ func (f *Frame) updateForStatement(
 	undeclaredLocalVariablesInStatement.Remove(localVariable)
 	localVariable.SetDeclared(true)
 
-	var variableInitializer intmod.IVariableInitializer
+	var variableInitializer model.IVariableInitializer
 
 	if init.RightExpression().IsNewInitializedArray() {
-		variableInitializer = init.RightExpression().(intmod.INewInitializedArray).ArrayInitializer()
+		variableInitializer = init.RightExpression().(model.INewInitializedArray).ArrayInitializer()
 	} else {
-		variableInitializer = _type.NewExpressionVariableInitializer(init.RightExpression())
+		variableInitializer = model.NewExpressionVariableInitializer(init.RightExpression())
 	}
 
-	forStatement.SetDeclaration(_type.NewLocalVariableDeclaration(localVariable.Type(),
+	forStatement.SetDeclaration(model.NewLocalVariableDeclaration(localVariable.Type(),
 		srvdecl.NewClassFileLocalVariableDeclarator2(init.LineNumber(),
-			reference.LocalVariable().(intsrv.ILocalVariable), variableInitializer)))
+			reference.LocalVariable().(ILocalVariable), variableInitializer)))
 	forStatement.SetInit(nil)
 }
 
 func (f *Frame) updateForStatement2(
-	variablesToDeclare util.ISet[intsrv.ILocalVariable], foundVariables util.ISet[intsrv.ILocalVariable],
-	forStatement intsrv.IClassFileForStatement, init intmod.IExpressions) {
-	boes := util.NewDefaultList[intmod.IExpression]()
-	localVariables := util.NewDefaultList[intsrv.ILocalVariable]()
-	var type0 intmod.IType
-	var type1 intmod.IType
+	variablesToDeclare util.ISet[ILocalVariable], foundVariables util.ISet[ILocalVariable],
+	forStatement intsrv.IClassFileForStatement, init model.IExpressions) {
+	boes := util.NewDefaultList[model.IExpression]()
+	localVariables := util.NewDefaultList[ILocalVariable]()
+	var type0 model.IType
+	var type1 model.IType
 	minDimension := 0
 	maxDimension := 0
 
@@ -667,7 +661,7 @@ func (f *Frame) updateForStatement2(
 		}
 
 		localVariable := expr.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression).
-			LocalVariable().(intsrv.ILocalVariable)
+			LocalVariable().(ILocalVariable)
 
 		if localVariable.IsDeclared() || (localVariable.ToOffset() > forStatement.ToOffset()) {
 			return
@@ -682,7 +676,7 @@ func (f *Frame) updateForStatement2(
 			type2 := localVariable.Type()
 
 			if type1.IsPrimitiveType() && type2.IsPrimitiveType() {
-				typ := GetCommonPrimitiveType(type1.(intmod.IPrimitiveType), type2.(intmod.IPrimitiveType))
+				typ := GetCommonPrimitiveType(type1.(*model.PrimitiveType), type2.(*model.PrimitiveType))
 
 				if typ == nil {
 					return
@@ -716,30 +710,30 @@ func (f *Frame) updateForStatement2(
 	}
 
 	if minDimension == maxDimension {
-		forStatement.SetDeclaration(_type.NewLocalVariableDeclaration(type1, f.createDeclarators1(boes, false)))
+		forStatement.SetDeclaration(model.NewLocalVariableDeclaration(type1, f.createDeclarators1(boes, false)))
 	} else {
-		forStatement.SetDeclaration(_type.NewLocalVariableDeclaration(type0, f.createDeclarators1(boes, true)))
+		forStatement.SetDeclaration(model.NewLocalVariableDeclaration(type0, f.createDeclarators1(boes, true)))
 	}
 
 	forStatement.SetInit(nil)
 }
 
-func (f *Frame) createDeclarators1(boes util.IList[intmod.IExpression], setDimension bool) intmod.ILocalVariableDeclarators {
-	declarators := _type.NewLocalVariableDeclarators()
+func (f *Frame) createDeclarators1(boes util.IList[model.IExpression], setDimension bool) model.ILocalVariableDeclarators {
+	declarators := model.NewLocalVariableDeclarators()
 
 	for _, boe := range boes.ToSlice() {
 		reference := boe.LeftExpression().(intsrv.IClassFileLocalVariableReferenceExpression)
-		var variableInitializer intmod.IVariableInitializer
+		var variableInitializer model.IVariableInitializer
 		if boe.RightExpression().IsNewInitializedArray() {
-			variableInitializer = boe.RightExpression().(intmod.INewInitializedArray).ArrayInitializer()
+			variableInitializer = boe.RightExpression().(model.INewInitializedArray).ArrayInitializer()
 		} else {
-			variableInitializer = _type.NewExpressionVariableInitializer(boe.RightExpression())
+			variableInitializer = model.NewExpressionVariableInitializer(boe.RightExpression())
 		}
 		declarator := srvdecl.NewClassFileLocalVariableDeclarator2(boe.LineNumber(),
-			reference.LocalVariable().(intsrv.ILocalVariable), variableInitializer)
+			reference.LocalVariable().(ILocalVariable), variableInitializer)
 
 		if setDimension {
-			declarator.SetDimension(reference.LocalVariable().(intsrv.ILocalVariable).Dimension())
+			declarator.SetDimension(reference.LocalVariable().(ILocalVariable).Dimension())
 		}
 
 		declarators.Add(declarator)
@@ -750,18 +744,18 @@ func (f *Frame) createDeclarators1(boes util.IList[intmod.IExpression], setDimen
 
 func (f *Frame) createStartBlockDeclarations() {
 	addIndex := -1
-	i := len(f.localVariableArray)
+	i := len(f.LocalVariableArray)
 
 	for i > 0 {
 		i--
-		lv := f.localVariableArray[i]
+		lv := f.LocalVariableArray[i]
 		for lv != nil {
 			if lv.IsDeclared() {
 				if addIndex == -1 {
 					addIndex = f.AddIndex()
 				}
 
-				_ = f.stat.AddAt(addIndex, _type.NewLocalVariableDeclarationStatement(
+				_ = f.Statements.AddAt(addIndex, model.NewLocalVariableDeclarationStatement(
 					lv.Type(), srvdecl.NewClassFileLocalVariableDeclarator(lv)))
 				lv.SetDeclared(true)
 			}
@@ -774,12 +768,12 @@ func (f *Frame) createStartBlockDeclarations() {
 func (f *Frame) AddIndex() int {
 	addIndex := 0
 
-	if f.parent.Parent() == nil {
+	if f.Parent.Parent() == nil {
 		// Insert declarations after 'super' call invocation => Search index of SuperConstructorInvocationExpression.
-		length := f.stat.Size()
+		length := f.Statements.Size()
 
 		for addIndex < length {
-			state := f.stat.Get(addIndex)
+			state := f.Statements.Get(addIndex)
 			addIndex++
 			if state.IsExpressionStatement() {
 				expr := state.Expression()
@@ -798,11 +792,11 @@ func (f *Frame) AddIndex() int {
 }
 
 func (f *Frame) mergeDeclarations() {
-	size := f.stat.Size()
+	size := f.Statements.Size()
 
 	if size > 1 {
-		declarations := util.NewDefaultList[intmod.ILocalVariableDeclarationStatement]()
-		iterator := f.stat.ListIterator()
+		declarations := util.NewDefaultList[model.ILocalVariableDeclarationStatement]()
+		iterator := f.Statements.ListIterator()
 
 		for iterator.HasNext() {
 			previous := iterator.Next()
@@ -812,7 +806,7 @@ func (f *Frame) mergeDeclarations() {
 			}
 
 			if previous.IsLocalVariableDeclarationStatement() {
-				lvds1 := previous.(intmod.ILocalVariableDeclarationStatement)
+				lvds1 := previous.(model.ILocalVariableDeclarationStatement)
 				type1 := lvds1.Type()
 				type0 := type1.CreateType(0)
 				minDimension := type1.Dimension()
@@ -830,7 +824,7 @@ func (f *Frame) mergeDeclarations() {
 						break
 					}
 
-					lvds2 := stat.(intmod.ILocalVariableDeclarationStatement)
+					lvds2 := stat.(model.ILocalVariableDeclarationStatement)
 					lineNumber2 := lvds2.LocalVariableDeclarators().LineNumber()
 
 					if lineNumber1 != lineNumber2 {
@@ -842,7 +836,7 @@ func (f *Frame) mergeDeclarations() {
 					type2 := lvds2.Type()
 
 					if type1.IsPrimitiveType() && type2.IsPrimitiveType() {
-						t := GetCommonPrimitiveType(type1.(intmod.IPrimitiveType), type2.(intmod.IPrimitiveType))
+						t := GetCommonPrimitiveType(type1.(*model.PrimitiveType), type2.(*model.PrimitiveType))
 
 						if t == nil {
 							iterator.Previous()
@@ -880,9 +874,9 @@ func (f *Frame) mergeDeclarations() {
 					iterator.Previous()
 
 					if minDimension == maxDimension {
-						_ = iterator.Set(_type.NewLocalVariableDeclarationStatement(type1, f.createDeclarators2(declarations, false)))
+						_ = iterator.Set(model.NewLocalVariableDeclarationStatement(type1, f.createDeclarators2(declarations, false)))
 					} else {
-						_ = iterator.Set(_type.NewLocalVariableDeclarationStatement(type0, f.createDeclarators2(declarations, true)))
+						_ = iterator.Set(model.NewLocalVariableDeclarationStatement(type0, f.createDeclarators2(declarations, true)))
 					}
 
 					iterator.Next()
@@ -892,12 +886,12 @@ func (f *Frame) mergeDeclarations() {
 	}
 }
 
-func (f *Frame) createDeclarators2(declarations util.IList[intmod.ILocalVariableDeclarationStatement],
-	setDimension bool) intmod.ILocalVariableDeclarators {
-	declarators := _type.NewLocalVariableDeclarators()
+func (f *Frame) createDeclarators2(declarations util.IList[model.ILocalVariableDeclarationStatement],
+	setDimension bool) model.ILocalVariableDeclarators {
+	declarators := model.NewLocalVariableDeclarators()
 
 	for _, decl := range declarations.ToSlice() {
-		declarator := decl.LocalVariableDeclarators().(intmod.ILocalVariableDeclarator)
+		declarator := decl.LocalVariableDeclarators().(model.ILocalVariableDeclarator)
 
 		if setDimension {
 			declarator.SetDimension(decl.Type().Dimension())
@@ -909,7 +903,7 @@ func (f *Frame) createDeclarators2(declarations util.IList[intmod.ILocalVariable
 	return declarators
 }
 
-func NewGenerateLocalVariableNameVisitor(blackListNames []string, types map[intmod.IType]bool) *GenerateLocalVariableNameVisitor {
+func NewGenerateLocalVariableNameVisitor(blackListNames []string, types map[model.IType]bool) *GenerateLocalVariableNameVisitor {
 	return &GenerateLocalVariableNameVisitor{
 		blackListNames: blackListNames,
 		types:          types,
@@ -921,7 +915,7 @@ var IntegerNames = []string{"i", "j", "k", "m", "n"}
 type GenerateLocalVariableNameVisitor struct {
 	sb             string
 	blackListNames []string
-	types          map[intmod.IType]bool
+	types          map[model.IType]bool
 	name           string
 }
 
@@ -964,7 +958,7 @@ func (c *GenerateLocalVariableNameVisitor) uncapitalize(str string) {
 	}
 }
 
-func (c *GenerateLocalVariableNameVisitor) generate(typ intmod.IType) {
+func (c *GenerateLocalVariableNameVisitor) generate(typ model.IType) {
 	length := len(c.sb)
 	counter := 1
 
@@ -985,19 +979,19 @@ func (c *GenerateLocalVariableNameVisitor) generate(typ intmod.IType) {
 	c.blackListNames = append(c.blackListNames, c.name)
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitPrimitiveType(t intmod.IPrimitiveType) {
+func (c *GenerateLocalVariableNameVisitor) VisitPrimitiveType(t *model.PrimitiveType) {
 	c.sb = ""
 
 	switch t.Dimension() {
-	case intmod.FlagByte:
+	case model.FlagByte:
 		c.sb += "b"
-	case intmod.FlagChar:
+	case model.FlagChar:
 		c.sb += "c"
-	case intmod.FlagDouble:
+	case model.FlagDouble:
 		c.sb += "d"
-	case intmod.FlagFloat:
+	case model.FlagFloat:
 		c.sb += "f"
-	case intmod.FlagInt:
+	case model.FlagInt:
 		for _, in := range IntegerNames {
 			if !contains(c.blackListNames, in) {
 				c.blackListNames = append(c.blackListNames, in)
@@ -1005,11 +999,11 @@ func (c *GenerateLocalVariableNameVisitor) VisitPrimitiveType(t intmod.IPrimitiv
 			}
 		}
 		c.sb += "i"
-	case intmod.FlagLong:
+	case model.FlagLong:
 		c.sb += "l"
-	case intmod.FlagShort:
+	case model.FlagShort:
 		c.sb += "s"
-	case intmod.FlagBoolean:
+	case model.FlagBoolean:
 		c.sb += "bool"
 	default:
 	}
@@ -1017,7 +1011,7 @@ func (c *GenerateLocalVariableNameVisitor) VisitPrimitiveType(t intmod.IPrimitiv
 	c.generate(t)
 }
 
-func (c *GenerateLocalVariableNameVisitor) Visit(t intmod.IType, str string) {
+func (c *GenerateLocalVariableNameVisitor) Visit(t model.IType, str string) {
 	c.sb = ""
 
 	switch t.Dimension() {
@@ -1042,30 +1036,30 @@ func (c *GenerateLocalVariableNameVisitor) Visit(t intmod.IType, str string) {
 	c.generate(t)
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitObjectType(t intmod.IObjectType) {
-	c.Visit(t.(intmod.IType), t.Name())
+func (c *GenerateLocalVariableNameVisitor) VisitObjectType(t *model.ObjectType) {
+	c.Visit(t.(model.IType), t.Name())
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitInnerObjectType(t intmod.IInnerObjectType) {
-	c.Visit(t.(intmod.IType), t.Name())
+func (c *GenerateLocalVariableNameVisitor) VisitInnerObjectType(t model.IInnerObjectType) {
+	c.Visit(t.(model.IType), t.Name())
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitGenericType(t intmod.IGenericType) {
-	c.Visit(t.(intmod.IType), t.Name())
+func (c *GenerateLocalVariableNameVisitor) VisitGenericType(t model.IGenericType) {
+	c.Visit(t.(model.IType), t.Name())
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitTypeArguments(_ intmod.ITypeArguments) {}
+func (c *GenerateLocalVariableNameVisitor) VisitTypeArguments(_ model.ITypeArguments) {}
 
-func (c *GenerateLocalVariableNameVisitor) VisitDiamondTypeArgument(_ intmod.IDiamondTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitDiamondTypeArgument(_ model.IDiamondTypeArgument) {
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitWildcardExtendsTypeArgument(_ intmod.IWildcardExtendsTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitWildcardExtendsTypeArgument(_ model.IWildcardExtendsTypeArgument) {
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitWildcardSuperTypeArgument(_ intmod.IWildcardSuperTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitWildcardSuperTypeArgument(_ model.IWildcardSuperTypeArgument) {
 }
 
-func (c *GenerateLocalVariableNameVisitor) VisitWildcardTypeArgument(_ intmod.IWildcardTypeArgument) {
+func (c *GenerateLocalVariableNameVisitor) VisitWildcardTypeArgument(_ model.IWildcardTypeArgument) {
 }
 
 func contains(list []string, value string) bool {
@@ -1077,15 +1071,15 @@ func contains(list []string, value string) bool {
 	return false
 }
 
-func retainAll(src, target []intsrv.ILocalVariable) []intsrv.ILocalVariable {
+func retainAll(src, target []ILocalVariable) []ILocalVariable {
 	// target의 값을 Set으로 저장
-	targetSet := make(map[intsrv.ILocalVariable]struct{})
+	targetSet := make(map[ILocalVariable]struct{})
 	for _, v := range target {
 		targetSet[v] = struct{}{}
 	}
 
 	// src 슬라이스에서 target에 포함된 값만 남기기
-	result := make([]intsrv.ILocalVariable, 0)
+	result := make([]ILocalVariable, 0)
 	for _, v := range src {
 		if _, exists := targetSet[v]; exists {
 			result = append(result, v)

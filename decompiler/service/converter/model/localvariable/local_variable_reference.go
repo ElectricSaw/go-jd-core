@@ -1,45 +1,45 @@
 package localvariable
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewAbstractLocalVariable(index, offset int, name string) intsrv.ILocalVariable {
+func NewAbstractLocalVariable(index, offset int, name string) ILocalVariable {
 	return NewAbstractLocalVariableWithAll(index, offset, name, offset == 0)
 }
 
-func NewAbstractLocalVariableWithAll(index, offset int, name string, declared bool) intsrv.ILocalVariable {
-	return &AbstractLocalVariable{
+func NewAbstractLocalVariableWithAll(index, offset int, name string, declared bool) ILocalVariable {
+	return AbstractLocalVariable{
 		declared:         declared,
 		index:            index,
 		fromOffset:       offset,
 		toOffset:         offset,
 		name:             name,
-		references:       make([]intsrv.ILocalVariable, 0),
-		variablesOnRight: make([]intsrv.ILocalVariable, 0),
-		variablesOnLeft:  make([]intsrv.ILocalVariable, 0),
+		references:       util.NewDefaultList[ILocalVariable](),
+		variablesOnRight: util.NewSet[ILocalVariable](),
+		variablesOnLeft:  util.NewSet[ILocalVariable](),
 	}
 }
 
 type AbstractLocalVariable struct {
 	frame            IFrame
-	next             LocalVariable
+	next             ILocalVariable
 	declared         bool
 	index            int
 	fromOffset       int
 	toOffset         int
 	name             string
-	references       []intsrv.ILocalVariable
-	variablesOnRight []intsrv.ILocalVariable
-	variablesOnLeft  []intsrv.ILocalVariable
+	references       util.IList[ILocalVariable]
+	variablesOnRight util.ISet[ILocalVariable]
+	variablesOnLeft  util.ISet[ILocalVariable]
 }
 
-func (v *AbstractLocalVariable) Frame() intsrv.IFrame {
+func (v *AbstractLocalVariable) Frame() IFrame {
 	return v.frame
 }
 
-func (v *AbstractLocalVariable) Next() intsrv.ILocalVariable {
+func (v *AbstractLocalVariable) Next() ILocalVariable {
 	return v.next
 }
 
@@ -59,7 +59,7 @@ func (v *AbstractLocalVariable) ToOffset() int {
 	return v.toOffset
 }
 
-func (v *AbstractLocalVariable) Type() intmod.IType {
+func (v *AbstractLocalVariable) Type() model.IType {
 	return nil
 }
 
@@ -71,16 +71,25 @@ func (v *AbstractLocalVariable) Dimension() int {
 	return 0
 }
 
-func (v *AbstractLocalVariable) SetFrame(frame intsrv.IFrame) {
+func (v *AbstractLocalVariable) References() util.IList[ILocalVariable] {
+	return v.references
+}
+
+func (v *AbstractLocalVariable) SetFrame(frame IFrame) {
 	v.frame = frame
 }
 
-func (v *AbstractLocalVariable) SetNext(lv intsrv.ILocalVariable) {
-	v.next = lv
+func (v *AbstractLocalVariable) SetNext(localVariable ILocalVariable) {
+	v.next = localVariable
 }
 
 func (v *AbstractLocalVariable) SetDeclared(declared bool) {
 	v.declared = declared
+
+}
+
+func (v *AbstractLocalVariable) SetIndex(index int) {
+	v.index = index
 }
 
 func (v *AbstractLocalVariable) SetFromOffset(fromOffset int) {
@@ -96,76 +105,78 @@ func (v *AbstractLocalVariable) SetToOffset(offset int) {
 	}
 }
 
-func (v *AbstractLocalVariable) SetToOffsetWithForce(offset int, force bool) {
+func (v *AbstractLocalVariable) SetToOffsetForce(offset int, force bool) {
 	v.toOffset = offset
+}
+
+func (v *AbstractLocalVariable) SetType(t model.IType) {
 }
 
 func (v *AbstractLocalVariable) SetName(name string) {
 	v.name = name
 }
 
-func (v *AbstractLocalVariable) Accept(_ intsrv.ILocalVariableVisitor) {
+func (v *AbstractLocalVariable) SetDimension(dimension int) {
 }
 
-func (v *AbstractLocalVariable) References() []intsrv.ILocalVariable {
-	return v.references
+func (v *AbstractLocalVariable) Accept(_ ILocalVariableVisitor) {
 }
 
-func (v *AbstractLocalVariable) AddReference(reference intsrv.ILocalVariableReference) {
-	v.references = append(v.references, reference.(intsrv.ILocalVariable))
+func (v *AbstractLocalVariable) AddReference(reference ILocalVariableReference) {
+	v.references.Add(reference.(ILocalVariable))
 }
 
-func (v *AbstractLocalVariable) IsAssignableFrom(_ map[string]intmod.IType, _ intmod.IType) bool {
+func (v *AbstractLocalVariable) IsAssignableFrom(_ map[string]model.IType, _ model.IType) bool {
 	return false
 }
 
-func (v *AbstractLocalVariable) TypeOnRight(_ map[string]intmod.IType, _ intmod.IType) {
+func (v *AbstractLocalVariable) TypeOnRight(_ map[string]model.IType, _ model.IType) {
 }
 
-func (v *AbstractLocalVariable) TypeOnLeft(_ map[string]intmod.IType, _ intmod.IType) {
+func (v *AbstractLocalVariable) TypeOnLeft(_ map[string]model.IType, _ model.IType) {
 }
 
-func (v *AbstractLocalVariable) IsAssignableFromWithVariable(_ map[string]intmod.IType, _ intsrv.ILocalVariable) bool {
+func (v *AbstractLocalVariable) IsAssignableFromWithVariable(_ map[string]model.IType, _ ILocalVariable) bool {
 	return false
 }
 
-func (v *AbstractLocalVariable) VariableOnRight(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
+func (v *AbstractLocalVariable) VariableOnRight(_ map[string]model.IType, _ ILocalVariable) {
 }
 
-func (v *AbstractLocalVariable) VariableOnLeft(_ map[string]intmod.IType, _ intsrv.ILocalVariable) {
+func (v *AbstractLocalVariable) VariableOnLeft(_ map[string]model.IType, _ ILocalVariable) {
 }
 
-func (v *AbstractLocalVariable) FireChangeEvent(typeBounds map[string]intmod.IType) {
+func (v *AbstractLocalVariable) FireChangeEvent(typeBounds map[string]model.IType) {
 	if v.variablesOnLeft != nil {
-		for _, variable := range v.variablesOnLeft {
+		for _, variable := range v.variablesOnLeft.ToSlice() {
 			v.VariableOnRight(typeBounds, variable)
 		}
 	}
 	if v.variablesOnRight != nil {
-		for _, variable := range v.variablesOnRight {
+		for _, variable := range v.variablesOnRight.ToSlice() {
 			v.VariableOnLeft(typeBounds, variable)
 		}
 	}
 }
 
-func (v *AbstractLocalVariable) AddVariableOnLeft(variable intsrv.ILocalVariable) {
+func (v *AbstractLocalVariable) AddVariableOnLeft(variable ILocalVariable) {
 	if v.variablesOnLeft == nil {
-		v.variablesOnLeft = make([]intsrv.ILocalVariable, 0)
-		v.variablesOnLeft = append(v.variablesOnLeft, variable)
+		v.variablesOnLeft = util.NewSet[ILocalVariable]()
+		v.variablesOnLeft.Add(variable)
 		variable.AddVariableOnRight(v)
-	} else if !containsLv(v.variablesOnLeft, variable) {
-		v.variablesOnLeft = append(v.variablesOnLeft, variable)
+	} else if !v.variablesOnLeft.Contains(variable) {
+		v.variablesOnLeft.Add(variable)
 		variable.AddVariableOnRight(v)
 	}
 }
 
-func (v *AbstractLocalVariable) AddVariableOnRight(variable intsrv.ILocalVariable) {
+func (v *AbstractLocalVariable) AddVariableOnRight(variable ILocalVariable) {
 	if v.variablesOnRight == nil {
-		v.variablesOnRight = make([]intsrv.ILocalVariable, 0)
-		v.variablesOnRight = append(v.variablesOnRight, variable)
+		v.variablesOnRight = util.NewSet[ILocalVariable]()
+		v.variablesOnRight.Add(variable)
 		variable.AddVariableOnLeft(v)
-	} else if !containsLv(v.variablesOnRight, variable) {
-		v.variablesOnRight = append(v.variablesOnRight, variable)
+	} else if !v.variablesOnRight.Contains(variable) {
+		v.variablesOnRight.Add(variable)
 		variable.AddVariableOnLeft(v)
 	}
 }
@@ -174,29 +185,24 @@ func (v *AbstractLocalVariable) IsPrimitiveLocalVariable() bool {
 	return false
 }
 
-func (v *AbstractLocalVariable) LocalVariable() intsrv.ILocalVariableReference {
+func (v *AbstractLocalVariable) LocalVariable() ILocalVariableReference {
 	return nil
 }
 
-func (v *AbstractLocalVariable) SetLocalVariable(_ intsrv.ILocalVariableReference) {
+func (v *AbstractLocalVariable) SetLocalVariable(_ ILocalVariableReference) {
 
+}
+
+func (v *AbstractLocalVariable) String() string {
+	return "AbstractLocalVariable{}"
 }
 
 type AbstractNopLocalVariableVisitor struct {
 }
 
-func (v *AbstractNopLocalVariableVisitor) VisitGenericLocalVariable(_ intsrv.IGenericLocalVariable) {
+func (v *AbstractNopLocalVariableVisitor) VisitGenericLocalVariable(_ *GenericLocalVariable) {
 }
-func (v *AbstractNopLocalVariableVisitor) VisitObjectLocalVariable(_ intsrv.IObjectLocalVariable) {
+func (v *AbstractNopLocalVariableVisitor) VisitObjectLocalVariable(_ *ObjectLocalVariable) {
 }
-func (v *AbstractNopLocalVariableVisitor) VisitPrimitiveLocalVariable(_ intsrv.IPrimitiveLocalVariable) {
-}
-
-func containsLv(variables []intsrv.ILocalVariable, variable intsrv.ILocalVariable) bool {
-	for _, v := range variables {
-		if v == variable {
-			return true
-		}
-	}
-	return false
+func (v *AbstractNopLocalVariableVisitor) VisitPrimitiveLocalVariable(_ *PrimitiveLocalVariable) {
 }

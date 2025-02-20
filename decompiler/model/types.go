@@ -6,6 +6,10 @@ import (
 	"reflect"
 )
 
+/////////////////////////////////////////////////////////////////////////
+//  Global Variable
+/////////////////////////////////////////////////////////////////////////
+
 const (
 	FlagBoolean = 1 << iota
 	FlagChar
@@ -37,16 +41,16 @@ var (
 	PtMaybeIntType             = NewPrimitiveType("maybe_int", FlagInt, FlagInt, FlagInt)                                                                                                                             // Otherwise
 	PtMaybeNegativeBooleanType = NewPrimitiveType("maybe_negative_boolean", FlagBoolean|FlagByte|FlagShort|FlagInt, FlagBoolean|FlagByte|FlagShort|FlagInt, FlagBoolean|FlagByte|FlagShort|FlagInt)                   // Boolean or negative
 
-	descriptorToType = map[int]PrimitiveType{
-		int('B') - int('B'): PtTypeByte,
-		int('C') - int('B'): PtTypeChar,
-		int('D') - int('B'): PtTypeDouble,
-		int('F') - int('B'): PtTypeFloat,
-		int('I') - int('B'): PtTypeInt,
-		int('J') - int('B'): PtTypeLong,
-		int('S') - int('B'): PtTypeShort,
-		int('V') - int('B'): PtTypeVoid,
-		int('Z') - int('B'): PtTypeBoolean,
+	descriptorToType = map[int]*PrimitiveType{
+		int('B') - int('B'): &PtTypeByte,
+		int('C') - int('B'): &PtTypeChar,
+		int('D') - int('B'): &PtTypeDouble,
+		int('F') - int('B'): &PtTypeFloat,
+		int('I') - int('B'): &PtTypeInt,
+		int('J') - int('B'): &PtTypeLong,
+		int('S') - int('B'): &PtTypeShort,
+		int('V') - int('B'): &PtTypeVoid,
+		int('Z') - int('B'): &PtTypeBoolean,
 	}
 )
 
@@ -92,7 +96,11 @@ var (
 	OtTypeUndefinedObject = NewObjectType("class/lang/Object", "class.lang.Object", "Object")
 )
 
-func GetPrimitiveType(primitiveDescriptor int) PrimitiveType {
+/////////////////////////////////////////////////////////////////////////
+//  New Functions
+/////////////////////////////////////////////////////////////////////////
+
+func GetPrimitiveType(primitiveDescriptor int) *PrimitiveType {
 	return descriptorToType[primitiveDescriptor-66] // int('B')
 }
 
@@ -248,7 +256,12 @@ func NewUnmodifiableTypesWithSlice(types []IType) UnmodifiableTypes {
 	return t
 }
 
+/////////////////////////////////////////////////////////////////////////
+//  Interfaces
+/////////////////////////////////////////////////////////////////////////
+
 type IType interface {
+	GetName() string
 	GetDimension() int
 
 	CreateType(dimension int) IType
@@ -280,14 +293,23 @@ type ITypeVisitable interface {
 	AcceptTypeVisitor(visitor ITypeVisitor)
 }
 
+/////////////////////////////////////////////////////////////////////////
+//  Structures
+/////////////////////////////////////////////////////////////////////////
+
 type PrimitiveType struct {
 	util.DefaultBase[IType]
+
 	Name       string
 	Dimension  int
 	Flags      int
 	LeftFlags  int
 	RightFlags int
 	Descriptor string
+}
+
+func (t *PrimitiveType) GetName() string {
+	return t.Name
 }
 
 func (t *PrimitiveType) GetDimension() int {
@@ -338,8 +360,6 @@ func (t *PrimitiveType) HashCode() int {
 func (t *PrimitiveType) AcceptTypeVisitor(visitor ITypeVisitor) {
 	visitor.VisitPrimitiveType(t)
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *PrimitiveType) TypeArgumentFirst() ITypeArgument {
 	return t
@@ -401,8 +421,6 @@ func (t *PrimitiveType) AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor) 
 	visitor.VisitPrimitiveType(t)
 }
 
-/////////////////////////////////////////////////////////////////////
-
 func (t *PrimitiveType) JavaPrimitiveFlags() int {
 	if t.Flags&FlagBoolean != 0 {
 		return FlagBoolean
@@ -460,6 +478,10 @@ type ObjectType struct {
 	Descriptor    string
 }
 
+func (t *ObjectType) GetName() string {
+	return t.Name
+}
+
 func (t *ObjectType) GetDimension() int {
 	return t.Dimension
 }
@@ -470,7 +492,7 @@ func (t *ObjectType) CreateType(dimension int) IType {
 	} else if t.Descriptor[len(t.Descriptor)-1] != ';' {
 		if dimension == 0 {
 			tmp := GetPrimitiveType(int(t.Descriptor[t.Dimension]))
-			return &tmp
+			return tmp
 		} else {
 			tmp := NewObjectTypeWithDescAndDim(t.InternalName, t.Dimension)
 			return &tmp
@@ -522,8 +544,6 @@ func (t *ObjectType) HashCode() int {
 func (t *ObjectType) AcceptTypeVisitor(visitor ITypeVisitor) {
 	visitor.VisitObjectType(t)
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *ObjectType) TypeArgumentFirst() ITypeArgument {
 	return t
@@ -617,8 +637,6 @@ func (t *ObjectType) AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor) {
 	visitor.VisitObjectType(t)
 }
 
-/////////////////////////////////////////////////////////////////////
-
 func (t *ObjectType) Equals(o interface{}) bool {
 	if t == o {
 		return true
@@ -675,8 +693,6 @@ func (t *ObjectType) String() string {
 	return msg
 }
 
-/////////////////////////////////////////////////////////////////////
-
 func (t *ObjectType) IsTypeArgumentAssignableFromWithObj(typeBounds map[string]IType, objectType ObjectType) bool {
 	if t.Dimension != objectType.Dimension || t.InternalName != objectType.GetInternalName() {
 		return false
@@ -710,6 +726,10 @@ type InnerObjectType struct {
 	Dimension     int
 	Descriptor    string
 	OuterType     *ObjectType
+}
+
+func (t *InnerObjectType) GetName() string {
+	return t.Name
 }
 
 func (t *InnerObjectType) GetDimension() int {
@@ -764,8 +784,6 @@ func (t *InnerObjectType) HashCode() int {
 func (t *InnerObjectType) AcceptTypeVisitor(visitor ITypeVisitor) {
 	visitor.VisitInnerObjectType(t)
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *InnerObjectType) TypeArgumentFirst() ITypeArgument {
 	return t
@@ -859,8 +877,6 @@ func (t *InnerObjectType) AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor
 	visitor.VisitInnerObjectType(t)
 }
 
-/////////////////////////////////////////////////////////////////////
-
 func (t *InnerObjectType) Equals(o interface{}) bool {
 	if t == o {
 		return true
@@ -896,8 +912,6 @@ func (t *InnerObjectType) String() string {
 	}
 }
 
-/////////////////////////////////////////////////////////////////////
-
 func (t *InnerObjectType) CreateTypeWithArg(typeArguments ITypeArgument) IType {
 	tmp := NewInnerObjectTypeWithAll(t.InternalName, t.QualifiedName, t.Name, typeArguments, t.Dimension, t.OuterType)
 	return &tmp
@@ -905,6 +919,10 @@ func (t *InnerObjectType) CreateTypeWithArg(typeArguments ITypeArgument) IType {
 
 type Types struct {
 	util.DefaultList[IType]
+}
+
+func (t *Types) GetName() string {
+	return ""
 }
 
 func (t *Types) GetDimension() int {
@@ -995,13 +1013,15 @@ func (t *Types) String() string {
 	return "Types {}"
 }
 
-/////////////////////////////////////////////////////////////////////
-
 type GenericType struct {
 	util.DefaultBase[IType]
 	Name       string
 	Descriptor string
 	Dimension  int
+}
+
+func (t *GenericType) GetName() string {
+	return t.Name
 }
 
 func (t *GenericType) GetDimension() int {
@@ -1054,8 +1074,6 @@ func (t *GenericType) HashCode() int {
 func (t *GenericType) AcceptTypeVisitor(visitor ITypeVisitor) {
 	visitor.VisitGenericType(t)
 }
-
-/////////////////////////////////////////////////////////////////////
 
 func (t *GenericType) TypeArgumentFirst() ITypeArgument {
 	return t
@@ -1117,8 +1135,6 @@ func (t *GenericType) AcceptTypeArgumentVisitor(visitor ITypeArgumentVisitor) {
 	visitor.VisitGenericType(t)
 }
 
-/////////////////////////////////////////////////////////////////////
-
 func (t *GenericType) Equals(o interface{}) bool {
 	if o == t {
 		return true
@@ -1160,6 +1176,10 @@ func (t *GenericType) String() string {
 
 type UnmodifiableTypes struct {
 	util.DefaultList[IType]
+}
+
+func (t *UnmodifiableTypes) GetName() string {
+	return ""
 }
 
 func (t *UnmodifiableTypes) GetDimension() int {

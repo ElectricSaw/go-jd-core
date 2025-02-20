@@ -487,6 +487,7 @@ type DimensionTypes struct {
 	model.Types
 }
 
+func (t *DimensionTypes) GetName() string        { return "" }
 func (t *DimensionTypes) First() intmod.IType    { return model.PtTypeInt }
 func (t *DimensionTypes) Last() intmod.IType     { return model.PtTypeInt }
 func (t *DimensionTypes) Get(_ int) intmod.IType { return model.PtTypeInt }
