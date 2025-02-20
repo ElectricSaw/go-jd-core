@@ -2,67 +2,129 @@ package declaration
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewClassFileEnumDeclaration(annotationReferences intmod.IAnnotationReference, flags int,
-	internalTypeName, name string, interfaces intmod.IType,
-	bodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileEnumDeclaration {
-	d := &ClassFileEnumDeclaration{
-		EnumDeclaration: *model.NewEnumDeclarationWithAll(annotationReferences, flags,
-			internalTypeName, name, interfaces, nil, bodyDeclaration).(*model.EnumDeclaration),
+func NewClassFileEnumDeclaration(annotationReferences *model.AnnotationReference, flags int,
+	internalTypeName, name string, interfaces model.IType,
+	bodyDeclaration *ClassFileBodyDeclaration) ClassFileEnumDeclaration {
+	d := ClassFileEnumDeclaration{
+		AnnotationReferences: annotationReferences,
+		Flags:                flags,
+		InternalTypeName:     internalTypeName,
+		Name:                 name,
+		BodyDeclaration:      bodyDeclaration,
+		Interfaces:           interfaces,
 	}
 	if bodyDeclaration != nil {
-		d.firstLineNumber = bodyDeclaration.FirstLineNumber()
+		d.FirstLineNumber = bodyDeclaration.FirstLineNumber
 	}
-	d.SetValue(d)
+	d.SetValue(&d)
 	return d
 }
 
 type ClassFileEnumDeclaration struct {
-	model.EnumDeclaration
+	util.DefaultBase[model.IMemberDeclaration]
 
-	firstLineNumber int
+	AnnotationReferences *model.AnnotationReference
+	Flags                int
+	InternalTypeName     string
+	Name                 string
+	BodyDeclaration      model.IBodyDeclaration
+	Interfaces           model.IType
+	Constants            util.IList[model.IConstant]
+	FirstLineNumber      int
 }
 
-func (d *ClassFileEnumDeclaration) FirstLineNumber() int {
-	return d.firstLineNumber
+func (d *ClassFileEnumDeclaration) GetAnnotationReferences() *model.AnnotationReference {
+	return d.AnnotationReferences
 }
 
-func (d *ClassFileEnumDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ClassFileEnumDeclaration) GetFlag() int {
+	return d.Flags
+}
+
+func (d *ClassFileEnumDeclaration) GetName() string {
+	return d.Name
+}
+
+func (d *ClassFileEnumDeclaration) GetInterfaces() model.IType {
+	return d.Interfaces
+}
+
+func (d *ClassFileEnumDeclaration) GetConstants() util.IList[model.IConstant] {
+	return d.Constants
+}
+
+func (d *ClassFileEnumDeclaration) GetFirstLineNumber() int {
+	return d.FirstLineNumber
+}
+
+func (d *ClassFileEnumDeclaration) GetInternalTypeName() string {
+	return d.InternalTypeName
+}
+
+func (d *ClassFileEnumDeclaration) GetBodyDeclaration() model.IBodyDeclaration {
+	return d.BodyDeclaration
+}
+
+func (d *ClassFileEnumDeclaration) IsClassDeclaration() bool {
+	return false
+}
+
+func (d *ClassFileEnumDeclaration) AcceptDeclaration(visitor model.IDeclarationVisitor) {
 	visitor.VisitEnumDeclaration(d)
 }
 
 func (d *ClassFileEnumDeclaration) String() string {
-	return fmt.Sprintf("ClassFileEnumDeclaration{%s, firstLineNumber:%d}", d.InternalTypeName(), d.firstLineNumber)
+	return fmt.Sprintf("ClassFileEnumDeclaration{%s, firstLineNumber:%d}", d.InternalTypeName, d.FirstLineNumber)
 }
 
-func NewClassFileConstant(lineNumber int, name string, index int, arguments intmod.IExpression,
-	bodyDeclaration intmod.IBodyDeclaration) intsrv.IClassFileConstant {
-	c := &ClassFileConstant{
-		Constant: *model.NewConstant5(lineNumber, name, arguments, bodyDeclaration).(*model.Constant),
-		index:    index,
+func NewClassFileConstant(lineNumber int, name string, index int, arguments model.IExpression,
+	bodyDeclaration model.IBodyDeclaration) ClassFileConstant {
+	return ClassFileConstant{
+		LineNumber:      lineNumber,
+		Name:            name,
+		Arguments:       arguments,
+		BodyDeclaration: bodyDeclaration,
+		Index:           index,
 	}
-	c.SetValue(c)
-	return c
 }
 
 type ClassFileConstant struct {
-	model.Constant
-
-	index int
+	LineNumber           int
+	AnnotationReferences *model.AnnotationReference
+	Name                 string
+	Arguments            model.IExpression
+	BodyDeclaration      model.IBodyDeclaration
+	Index                int
 }
 
-func (d *ClassFileConstant) Index() int {
-	return d.index
+func (c *ClassFileConstant) GetLineNumber() int {
+	return c.LineNumber
 }
 
-func (d *ClassFileConstant) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
-	visitor.VisitEnumDeclarationConstant(d)
+func (c *ClassFileConstant) GetAnnotationReferences() *model.AnnotationReference {
+	return c.AnnotationReferences
 }
 
-func (d *ClassFileConstant) String() string {
-	return fmt.Sprintf("ClassFileConstant{%s : %d}", d.Name(), d.Index())
+func (c *ClassFileConstant) GetName() string {
+	return c.Name
+}
+
+func (c *ClassFileConstant) GetArguments() model.IExpression {
+	return c.Arguments
+}
+
+func (c *ClassFileConstant) GetBodyDeclaration() model.IBodyDeclaration {
+	return c.BodyDeclaration
+}
+
+func (c *ClassFileConstant) AcceptDeclaration(visitor model.IDeclarationVisitor) {
+	visitor.VisitEnumDeclarationConstant(c)
+}
+
+func (c *ClassFileConstant) String() string {
+	return fmt.Sprintf("ClassFileConstant{%s : %d}", c.Name, c.Index)
 }

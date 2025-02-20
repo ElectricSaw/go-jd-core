@@ -1,47 +1,71 @@
 package declaration
 
 import (
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"fmt"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewClassFileLocalVariableDeclarator(localVariable intsrv.ILocalVariable) intsrv.IClassFileLocalVariableDeclarator {
+func NewClassFileLocalVariableDeclarator(localVariable localvariable.ILocalVariable) ClassFileLocalVariableDeclarator {
 	return NewClassFileLocalVariableDeclarator2(-1, localVariable, nil)
 }
 
-func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable intsrv.ILocalVariable,
-	initializer intmod.IVariableInitializer) intsrv.IClassFileLocalVariableDeclarator {
-	d := &ClassFileLocalVariableDeclarator{
-		LocalVariableDeclarator: *model.NewLocalVariableDeclarator3(lineNumber, "", initializer).(*model.LocalVariableDeclarator),
-		localVariable:           localVariable,
+func NewClassFileLocalVariableDeclarator2(lineNumber int, localVariable localvariable.ILocalVariable,
+	initializer model.IVariableInitializer) ClassFileLocalVariableDeclarator {
+	d := ClassFileLocalVariableDeclarator{
+		DefaultBase:         *util.NewDefaultBase[model.ILocalVariableDeclarator]().(*util.DefaultBase[model.ILocalVariableDeclarator]),
+		LineNumber:          lineNumber,
+		Name:                "",
+		VariableInitializer: initializer,
+		LocalVariable:       localVariable,
 	}
-	d.SetValue(d)
+	d.SetValue(&d)
 	return d
 }
 
 type ClassFileLocalVariableDeclarator struct {
-	model.LocalVariableDeclarator
+	util.DefaultBase[model.ILocalVariableDeclarator]
 
-	localVariable intsrv.ILocalVariable
+	LineNumber          int
+	Name                string
+	Dimension           int
+	VariableInitializer model.IVariableInitializer
+	LocalVariable       localvariable.ILocalVariable
 }
 
-func (d *ClassFileLocalVariableDeclarator) Name() string {
-	return d.localVariable.Name()
+func (d *ClassFileLocalVariableDeclarator) GetLineNumber() int {
+	return d.LineNumber
+}
+
+func (d *ClassFileLocalVariableDeclarator) GetName() string {
+	return d.Name
+}
+
+func (d *ClassFileLocalVariableDeclarator) GetDimension() int {
+	return d.Dimension
+}
+
+func (d *ClassFileLocalVariableDeclarator) GetVariableInitializer() model.IVariableInitializer {
+	return d.VariableInitializer
 }
 
 func (d *ClassFileLocalVariableDeclarator) SetName(name string) {
-	d.localVariable.SetName(name)
+	d.LocalVariable.SetName(name)
 }
 
-func (d *ClassFileLocalVariableDeclarator) LocalVariable() intsrv.ILocalVariableReference {
-	return d.localVariable
+func (d *ClassFileLocalVariableDeclarator) GetLocalVariable() localvariable.ILocalVariableReference {
+	return d.LocalVariable
 }
 
-func (d *ClassFileLocalVariableDeclarator) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ClassFileLocalVariableDeclarator) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
+	d.LocalVariable = localVariable.(localvariable.ILocalVariable)
+}
+
+func (d *ClassFileLocalVariableDeclarator) AcceptDeclaration(visitor model.IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarator(d)
 }
 
-func (d *ClassFileLocalVariableDeclarator) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
-	d.localVariable = localVariable.(intsrv.ILocalVariable)
+func (d *ClassFileLocalVariableDeclarator) String() string {
+	return fmt.Sprintf("ClassFileLocalVariableDeclarator{ name=%s, dimension=%d, variable-initializer=%v }", d.Name, d.Dimension, d.VariableInitializer)
 }

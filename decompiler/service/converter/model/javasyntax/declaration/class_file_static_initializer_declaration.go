@@ -2,101 +2,129 @@ package declaration
 
 import (
 	"fmt"
-	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/classfile"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewClassFileStaticInitializerDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration,
-	classFile intcls.IClassFile, method intcls.IMethod,
-	bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
-	firstLineNumber int) intsrv.IClassFileStaticInitializerDeclaration {
+func NewClassFileStaticInitializerDeclaration(bodyDeclaration *ClassFileBodyDeclaration,
+	classFile *classfile.ClassFile, method *classfile.Method,
+	bindings map[string]model.ITypeArgument, typeBounds map[string]model.IType,
+	firstLineNumber int) ClassFileStaticInitializerDeclaration {
 	return NewClassFileStaticInitializerDeclaration2(bodyDeclaration, classFile, method,
 		bindings, typeBounds, firstLineNumber, nil)
 }
 
-func NewClassFileStaticInitializerDeclaration2(bodyDeclaration intsrv.IClassFileBodyDeclaration, classFile intcls.IClassFile,
-	method intcls.IMethod, bindings map[string]intmod.ITypeArgument, typeBounds map[string]intmod.IType,
-	firstLineNumber int, statements intmod.IStatement) intsrv.IClassFileStaticInitializerDeclaration {
-	d := &ClassFileStaticInitializerDeclaration{
-		StaticInitializerDeclaration: *model.NewStaticInitializerDeclaration(method.Descriptor(), statements).(*model.StaticInitializerDeclaration),
-		bodyDeclaration:              bodyDeclaration,
-		classFile:                    classFile,
-		method:                       method,
-		bindings:                     bindings,
-		typeBounds:                   typeBounds,
-		firstLineNumber:              firstLineNumber,
+func NewClassFileStaticInitializerDeclaration2(bodyDeclaration *ClassFileBodyDeclaration, classFile *classfile.ClassFile,
+	method *classfile.Method, bindings map[string]model.ITypeArgument, typeBounds map[string]model.IType,
+	firstLineNumber int, statements model.IStatement) ClassFileStaticInitializerDeclaration {
+	d := ClassFileStaticInitializerDeclaration{
+		Descriptor:      method.Descriptor,
+		Statements:      statements,
+		BodyDeclaration: bodyDeclaration,
+		ClassFile:       classFile,
+		Method:          method,
+		Bindings:        bindings,
+		TypeBounds:      typeBounds,
+		FirstLineNumber: firstLineNumber,
 	}
-	d.SetValue(d)
+	d.SetValue(&d)
 	return d
 }
 
 type ClassFileStaticInitializerDeclaration struct {
-	model.StaticInitializerDeclaration
+	util.DefaultBase[model.IMemberDeclaration]
 
-	bodyDeclaration intsrv.IClassFileBodyDeclaration
-	classFile       intcls.IClassFile
-	method          intcls.IMethod
-	bindings        map[string]intmod.ITypeArgument
-	typeBounds      map[string]intmod.IType
-	firstLineNumber int
+	Descriptor      string
+	Statements      model.IStatement
+	BodyDeclaration *ClassFileBodyDeclaration
+	ClassFile       *classfile.ClassFile
+	Method          *classfile.Method
+	Bindings        map[string]model.ITypeArgument
+	TypeBounds      map[string]model.IType
+	FirstLineNumber int
 }
 
-func (d *ClassFileStaticInitializerDeclaration) Flags() int {
+func (d *ClassFileStaticInitializerDeclaration) GetAnnotationReferences() *model.AnnotationReference {
+	return nil
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetFlags() int {
 	return 0
 }
 
-func (d *ClassFileStaticInitializerDeclaration) ClassFile() intcls.IClassFile {
-	return d.classFile
-}
-
-func (d *ClassFileStaticInitializerDeclaration) Method() intcls.IMethod {
-	return d.method
-}
-
-func (d *ClassFileStaticInitializerDeclaration) TypeParameters() intmod.ITypeParameter {
+func (d *ClassFileStaticInitializerDeclaration) GetTypeParameters() model.ITypeParameter {
 	return nil
 }
 
-func (d *ClassFileStaticInitializerDeclaration) ParameterTypes() intmod.IType {
+func (d *ClassFileStaticInitializerDeclaration) GetFormalParameters() *model.FormalParameter {
 	return nil
 }
 
-func (d *ClassFileStaticInitializerDeclaration) ReturnedType() intmod.IType {
+func (d *ClassFileStaticInitializerDeclaration) GetExceptionTypes() model.IType {
 	return nil
 }
 
-func (d *ClassFileStaticInitializerDeclaration) BodyDeclaration() intsrv.IClassFileBodyDeclaration {
-	return d.bodyDeclaration
+func (d *ClassFileStaticInitializerDeclaration) GetDescriptor() string {
+	return d.Descriptor
 }
 
-func (d *ClassFileStaticInitializerDeclaration) Bindings() map[string]intmod.ITypeArgument {
-	return d.bindings
+func (d *ClassFileStaticInitializerDeclaration) GetStatements() model.IStatement {
+	return d.Statements
 }
 
-func (d *ClassFileStaticInitializerDeclaration) TypeBounds() map[string]intmod.IType {
-	return d.typeBounds
+func (d *ClassFileStaticInitializerDeclaration) GetBodyDeclaration() *ClassFileBodyDeclaration {
+	return d.BodyDeclaration
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetClassFile() *classfile.ClassFile {
+	return d.ClassFile
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetMethod() *classfile.Method {
+	return d.Method
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetParameterTypes() model.IType {
+	return nil
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetBindings() map[string]model.ITypeArgument {
+	return d.Bindings
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetTypeBounds() map[string]model.IType {
+	return d.TypeBounds
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetReturnedType() model.IType {
+	return nil
+}
+
+func (d *ClassFileStaticInitializerDeclaration) GetFirstLineNumber() int {
+	return d.FirstLineNumber
 }
 
 func (d *ClassFileStaticInitializerDeclaration) SetFlags(flags int) {
+	// EMPTY
 }
 
-func (d *ClassFileStaticInitializerDeclaration) SetFormalParameters(formalParameters intmod.IFormalParameter) {
+func (d *ClassFileStaticInitializerDeclaration) SetFormalParameters(formalParameters *model.FormalParameter) {
+	// EMPTY
 }
 
-func (d *ClassFileStaticInitializerDeclaration) FirstLineNumber() int {
-	return d.firstLineNumber
+func (d *ClassFileStaticInitializerDeclaration) SetStatements(statement model.IStatement) {
+	d.Statements = statement
 }
 
-func (d *ClassFileStaticInitializerDeclaration) SetFirstLineNumber(lineNumber int) {
-	d.firstLineNumber = lineNumber
+func (d *ClassFileStaticInitializerDeclaration) IsClassDeclaration() bool {
+	return false
 }
 
-func (d *ClassFileStaticInitializerDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ClassFileStaticInitializerDeclaration) AcceptDeclaration(visitor model.IDeclarationVisitor) {
 	visitor.VisitStaticInitializerDeclaration(d)
 }
 
 func (d *ClassFileStaticInitializerDeclaration) String() string {
-	return fmt.Sprintf("ClassFileStaticInitializerDeclaration{%s, firstLineNumber=%d}", d.Description(), d.firstLineNumber)
+	return fmt.Sprintf("ClassFileStaticInitializerDeclaration{%s, firstLineNumber=%d}", d.Descriptor, d.FirstLineNumber)
 }

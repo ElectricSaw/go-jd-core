@@ -293,7 +293,7 @@ func (v *ObjectLocalVariable) IsPrimitiveLocalVariable() bool {
 	return false
 }
 
-func (v *ObjectLocalVariable) LocalVariable() ILocalVariableReference {
+func (v *ObjectLocalVariable) GetLocalVariable() ILocalVariableReference {
 	return nil
 }
 

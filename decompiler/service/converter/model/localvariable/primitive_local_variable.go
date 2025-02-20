@@ -350,7 +350,7 @@ func (v *PrimitiveLocalVariable) IsPrimitiveLocalVariable() bool {
 	return true
 }
 
-func (v *PrimitiveLocalVariable) LocalVariable() ILocalVariableReference {
+func (v *PrimitiveLocalVariable) GetLocalVariable() ILocalVariableReference {
 	return nil
 }
 

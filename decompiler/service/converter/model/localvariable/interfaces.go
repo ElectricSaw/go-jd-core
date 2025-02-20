@@ -22,7 +22,7 @@ type IFrame interface {
 }
 
 type ILocalVariableReference interface {
-	LocalVariable() ILocalVariableReference
+	GetLocalVariable() ILocalVariableReference
 	SetLocalVariable(localVariable ILocalVariableReference)
 }
 
@@ -62,7 +62,7 @@ type ILocalVariable interface {
 	AddVariableOnRight(variable ILocalVariable)
 	IsPrimitiveLocalVariable() bool
 
-	LocalVariable() ILocalVariableReference
+	GetLocalVariable() ILocalVariableReference
 	SetLocalVariable(localVariable ILocalVariableReference)
 
 	String() string

@@ -2,71 +2,90 @@ package declaration
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/service/converter/model/localvariable"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewClassFileFormalParameter(localVariable intsrv.ILocalVariable) intsrv.IClassFileFormalParameter {
+func NewClassFileFormalParameter(localVariable localvariable.ILocalVariable) ClassFileFormalParameter {
 	return NewClassFileFormalParameter3(nil, localVariable, false)
 }
 
-func NewClassFileFormalParameter2(localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
+func NewClassFileFormalParameter2(localVariable localvariable.ILocalVariable, varargs bool) ClassFileFormalParameter {
 	return NewClassFileFormalParameter3(nil, localVariable, varargs)
 }
 
-func NewClassFileFormalParameter3(annotationReferences intmod.IAnnotationReference,
-	localVariable intsrv.ILocalVariable, varargs bool) intsrv.IClassFileFormalParameter {
-	p := &ClassFileFormalParameter{
-		FormalParameter: *model.NewFormalParameter4(annotationReferences, nil, varargs, "").(*model.FormalParameter),
-		localVariable:   localVariable,
+func NewClassFileFormalParameter3(annotationReferences *model.AnnotationReference,
+	localVariable localvariable.ILocalVariable, varargs bool) ClassFileFormalParameter {
+	p := ClassFileFormalParameter{
+		DefaultBase:          *util.NewDefaultBase[model.IFormalParameter]().(*util.DefaultBase[model.IFormalParameter]),
+		AnnotationReferences: annotationReferences,
+		Varargs:              varargs,
+		LocalVariable:        localVariable,
 	}
-	p.SetValue(p)
+	p.SetValue(&p)
 	return p
 }
 
 type ClassFileFormalParameter struct {
-	model.FormalParameter
+	util.DefaultBase[model.IFormalParameter]
 
-	localVariable intsrv.ILocalVariable
+	AnnotationReferences *model.AnnotationReference
+	Final                bool
+	Type                 model.IType
+	Varargs              bool
+	Name                 string
+	LocalVariable        localvariable.ILocalVariable
 }
 
-func (p *ClassFileFormalParameter) Type() intmod.IType {
-	return p.localVariable.Type()
+func (p *ClassFileFormalParameter) GetAnnotationReferences() *model.AnnotationReference {
+	return p.AnnotationReferences
 }
 
-func (p *ClassFileFormalParameter) Name() string {
-	return p.localVariable.Name()
+func (p *ClassFileFormalParameter) IsFinal() bool {
+	return p.Final
 }
 
-func (p *ClassFileFormalParameter) LocalVariable() intsrv.ILocalVariableReference {
-	return p.localVariable
+func (p *ClassFileFormalParameter) GetType() model.IType {
+	return p.Type
 }
 
-func (p *ClassFileFormalParameter) SetLocalVariable(localVariable intsrv.ILocalVariableReference) {
-	p.localVariable = localVariable.(intsrv.ILocalVariable)
+func (p *ClassFileFormalParameter) IsVarargs() bool {
+	return p.Varargs
 }
 
-func (d *ClassFileFormalParameter) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
-	visitor.VisitFormalParameter(d)
+func (p *ClassFileFormalParameter) GetName() string {
+	return p.Name
+}
+
+func (p *ClassFileFormalParameter) GetLocalVariable() localvariable.ILocalVariableReference {
+	return p.LocalVariable
+}
+
+func (p *ClassFileFormalParameter) SetLocalVariable(localVariable localvariable.ILocalVariableReference) {
+	p.LocalVariable = localVariable.(localvariable.ILocalVariable)
+}
+
+func (p *ClassFileFormalParameter) AcceptDeclaration(visitor model.IDeclarationVisitor) {
+	visitor.VisitFormalParameter(p)
 }
 
 func (p *ClassFileFormalParameter) String() string {
 	s := "ClassFileFormalParameter{"
 
-	if p.AnnotationReferences() != nil {
-		s += fmt.Sprintf("%s ", p.AnnotationReferences())
+	if p.AnnotationReferences != nil {
+		s += fmt.Sprintf("%s ", p.AnnotationReferences)
 	}
 
-	t := p.localVariable.Type()
+	t := p.LocalVariable.Type()
 
-	if p.IsVarargs() {
-		s += fmt.Sprintf("%s... ", t.CreateType(t.Dimension()-1))
+	if p.Varargs {
+		s += fmt.Sprintf("%s... ", t.CreateType(t.GetDimension()-1))
 	} else {
 		s += fmt.Sprintf("%s ", t)
 	}
 
-	s += fmt.Sprintf("%s}", p.localVariable.Name())
+	s += fmt.Sprintf("%s}", p.LocalVariable.Name())
 
 	return s
 }

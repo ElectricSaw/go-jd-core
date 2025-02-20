@@ -11,10 +11,10 @@ func (v *AbstractJavaSyntaxVisitor) VisitCompilationUnit(compilationUnit *Compil
 // DeclarationVisitor
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(declaration *AnnotationDeclaration) {
-	v.SafeAcceptDeclaration(declaration.AnnotationDeclarators)
-	v.SafeAcceptDeclaration(declaration.BodyDeclaration)
-	v.SafeAcceptReference(declaration.AnnotationReferences)
+func (v *AbstractJavaSyntaxVisitor) VisitAnnotationDeclaration(declaration IAnnotationDeclaration) {
+	v.SafeAcceptDeclaration(declaration.GetAnnotationDeclarators())
+	v.SafeAcceptDeclaration(declaration.GetBodyDeclaration())
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitArrayVariableInitializer(declaration *ArrayVariableInitializer) {
@@ -25,52 +25,52 @@ func (v *AbstractJavaSyntaxVisitor) VisitArrayVariableInitializer(declaration *A
 	v.AcceptListDeclaration(list)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitBodyDeclaration(declaration *BodyDeclaration) {
-	v.SafeAcceptDeclaration(declaration.MemberDeclaration)
+func (v *AbstractJavaSyntaxVisitor) VisitBodyDeclaration(declaration IBodyDeclaration) {
+	v.SafeAcceptDeclaration(declaration.GetMemberDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(declaration *ClassDeclaration) {
-	superType := declaration.SuperType
+func (v *AbstractJavaSyntaxVisitor) VisitClassDeclaration(declaration IClassDeclaration) {
+	superType := declaration.GetSuperType()
 
 	if superType != nil {
 		superType.AcceptTypeVisitor(v)
 	}
 
-	v.SafeAcceptTypeParameter(declaration.TypeParameters)
-	v.SafeAcceptType(declaration.Interfaces)
-	v.SafeAcceptReference(declaration.AnnotationReferences)
-	v.SafeAcceptDeclaration(declaration.BodyDeclaration)
+	v.SafeAcceptTypeParameter(declaration.GetTypeParameters())
+	v.SafeAcceptType(declaration.GetInterfaces())
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
+	v.SafeAcceptDeclaration(declaration.GetBodyDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitConstructorDeclaration(declaration *ConstructorDeclaration) {
-	v.SafeAcceptReference(declaration.AnnotationReferences)
-	v.SafeAcceptDeclaration(declaration.FormalParameters)
-	v.SafeAcceptType(declaration.ExceptionTypes)
-	v.SafeAcceptStatement(declaration.Statements)
+func (v *AbstractJavaSyntaxVisitor) VisitConstructorDeclaration(declaration IConstructorDeclaration) {
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
+	v.SafeAcceptDeclaration(declaration.GetFormalParameters())
+	v.SafeAcceptType(declaration.GetExceptionTypes())
+	v.SafeAcceptStatement(declaration.GetStatements())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclaration(declaration *EnumDeclaration) {
+func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclaration(declaration IEnumDeclaration) {
 	v.VisitTypeDeclaration(declaration)
-	v.SafeAcceptType(declaration.Interfaces)
-	v.SafeAcceptListConstant(declaration.Constants.ToSlice())
-	v.SafeAcceptDeclaration(declaration.BodyDeclaration)
+	v.SafeAcceptType(declaration.GetInterfaces())
+	v.SafeAcceptListConstant(declaration.GetConstants().ToSlice())
+	v.SafeAcceptDeclaration(declaration.GetBodyDeclaration())
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclarationConstant(declaration *Constant) {
-	v.SafeAcceptReference(declaration.AnnotationReferences)
-	v.SafeAcceptExpression(declaration.Arguments)
-	v.SafeAcceptDeclaration(declaration.BodyDeclaration)
+func (v *AbstractJavaSyntaxVisitor) VisitEnumDeclarationConstant(declaration IConstant) {
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
+	v.SafeAcceptExpression(declaration.GetArguments())
+	v.SafeAcceptDeclaration(declaration.GetBodyDeclaration())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitExpressionVariableInitializer(declaration *ExpressionVariableInitializer) {
 	declaration.Expression.Accept(v)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(declaration *FieldDeclaration) {
-	t := declaration.Type
+func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclaration(declaration IFieldDeclaration) {
+	t := declaration.GetType()
 	t.AcceptTypeVisitor(v)
-	v.SafeAcceptReference(declaration.AnnotationReferences)
-	declaration.FieldDeclarators.AcceptDeclaration(v)
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
+	declaration.GetFieldDeclarators().AcceptDeclaration(v)
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarator(declaration *FieldDeclarator) {
@@ -85,10 +85,10 @@ func (v *AbstractJavaSyntaxVisitor) VisitFieldDeclarators(declarations *FieldDec
 	v.AcceptListDeclaration(list)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitFormalParameter(declaration *FormalParameter) {
-	t := declaration.Type
+func (v *AbstractJavaSyntaxVisitor) VisitFormalParameter(declaration IFormalParameter) {
+	t := declaration.GetType()
 	t.AcceptTypeVisitor(v)
-	v.SafeAcceptReference(declaration.AnnotationReferences)
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitFormalParameters(declarations *FormalParameters) {
@@ -103,10 +103,10 @@ func (v *AbstractJavaSyntaxVisitor) VisitInstanceInitializerDeclaration(declarat
 	v.SafeAcceptStatement(declaration.Statements)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitInterfaceDeclaration(declaration *InterfaceDeclaration) {
-	v.SafeAcceptType(declaration.Interfaces)
-	v.SafeAcceptReference(declaration.AnnotationReferences)
-	v.SafeAcceptDeclaration(declaration.BodyDeclaration)
+func (v *AbstractJavaSyntaxVisitor) VisitInterfaceDeclaration(declaration IInterfaceDeclaration) {
+	v.SafeAcceptType(declaration.GetInterfaces())
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
+	v.SafeAcceptDeclaration(declaration.GetBodyDeclaration())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclaration(declaration ILocalVariableDeclaration) {
@@ -116,8 +116,8 @@ func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclaration(declaration IL
 	declaration.GetLocalVariableDeclarators().AcceptDeclaration(v)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarator(declarator *LocalVariableDeclarator) {
-	v.SafeAcceptDeclaration(declarator.VariableInitializer)
+func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarator(declarator ILocalVariableDeclarator) {
+	v.SafeAcceptDeclaration(declarator.GetVariableInitializer())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarators(declarators *LocalVariableDeclarators) {
@@ -128,14 +128,14 @@ func (v *AbstractJavaSyntaxVisitor) VisitLocalVariableDeclarators(declarators *L
 	v.AcceptListDeclaration(list)
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(declaration *MethodDeclaration) {
-	t := declaration.ReturnedType
+func (v *AbstractJavaSyntaxVisitor) VisitMethodDeclaration(declaration IMethodDeclaration) {
+	t := declaration.GetReturnedType()
 	t.AcceptTypeVisitor(v)
 
-	v.SafeAcceptReference(declaration.AnnotationReferences)
-	v.SafeAcceptDeclaration(declaration.FormalParameter)
-	v.SafeAcceptType(declaration.ExceptionTypes)
-	v.SafeAcceptStatement(declaration.Statements)
+	v.SafeAcceptReference(declaration.GetAnnotationReferences())
+	v.SafeAcceptDeclaration(declaration.GetFormalParameters())
+	v.SafeAcceptType(declaration.GetExceptionTypes())
+	v.SafeAcceptStatement(declaration.GetStatements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitMemberDeclarations(declarations *MemberDeclarations) {
@@ -150,8 +150,8 @@ func (v *AbstractJavaSyntaxVisitor) VisitModuleDeclaration(_ *ModuleDeclaration)
 	// EMPTY
 }
 
-func (v *AbstractJavaSyntaxVisitor) VisitStaticInitializerDeclaration(declaration *StaticInitializerDeclaration) {
-	v.SafeAcceptStatement(declaration.Statements)
+func (v *AbstractJavaSyntaxVisitor) VisitStaticInitializerDeclaration(declaration IStaticInitializerDeclaration) {
+	v.SafeAcceptStatement(declaration.GetStatements())
 }
 
 func (v *AbstractJavaSyntaxVisitor) VisitTypeDeclarations(declarations *TypeDeclarations) {
@@ -745,7 +745,7 @@ func (v *AbstractJavaSyntaxVisitor) SafeAcceptTypeParameter(list ITypeParameter)
 	}
 }
 
-func (v *AbstractJavaSyntaxVisitor) SafeAcceptListConstant(list []*Constant) {
+func (v *AbstractJavaSyntaxVisitor) SafeAcceptListConstant(list []IConstant) {
 	if list != nil {
 		for _, value := range list {
 			value.AcceptDeclaration(v)

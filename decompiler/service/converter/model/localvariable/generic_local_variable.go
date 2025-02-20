@@ -190,7 +190,7 @@ func (v *GenericLocalVariable) IsPrimitiveLocalVariable() bool {
 	return false
 }
 
-func (v *GenericLocalVariable) LocalVariable() ILocalVariableReference {
+func (v *GenericLocalVariable) GetLocalVariable() ILocalVariableReference {
 	return nil
 }
 

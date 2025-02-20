@@ -2,186 +2,148 @@ package declaration
 
 import (
 	"fmt"
-	intcls "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/classpath"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
+	"github.com/ElectricSaw/go-jd-core/decompiler/classfile"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
 	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
-func NewClassFileBodyDeclaration(classFile intcls.IClassFile, bindings map[string]intmod.ITypeArgument,
-	typeBounds map[string]intmod.IType, outerBodyDeclaration intsrv.IClassFileBodyDeclaration) intsrv.IClassFileBodyDeclaration {
-	d := &ClassFileBodyDeclaration{
-		BodyDeclaration:      *model.NewBodyDeclaration(classFile.InternalTypeName(), nil).(*model.BodyDeclaration),
-		classFile:            classFile,
-		bindings:             bindings,
-		typeBounds:           typeBounds,
-		outerBodyDeclaration: outerBodyDeclaration,
+func NewClassFileBodyDeclaration(classFile *classfile.ClassFile, bindings map[string]model.ITypeArgument,
+	typeBounds map[string]model.IType, outerBodyDeclaration *ClassFileBodyDeclaration) ClassFileBodyDeclaration {
+	d := ClassFileBodyDeclaration{
+		DefaultBase:          *util.NewDefaultBase[model.IMemberDeclaration]().(*util.DefaultBase[model.IMemberDeclaration]),
+		InternalTypeName:     classFile.InternalTypeName,
+		MemberDeclaration:    nil,
+		ClassFile:            classFile,
+		Bindings:             bindings,
+		TypeBounds:           typeBounds,
+		OuterBodyDeclaration: outerBodyDeclaration,
 	}
-	d.SetValue(d)
+	d.SetValue(&d)
 	return d
 }
 
 type ClassFileBodyDeclaration struct {
-	model.BodyDeclaration
-	util.DefaultBase[intmod.IMemberDeclaration]
+	util.DefaultBase[model.IMemberDeclaration]
 
-	classFile                intcls.IClassFile
-	fieldDeclarations        []intsrv.IClassFileFieldDeclaration
-	methodDeclarations       []intsrv.IClassFileConstructorOrMethodDeclaration
-	innerTypeDeclarations    []intsrv.IClassFileTypeDeclaration
-	innerTypeMap             map[string]intsrv.IClassFileTypeDeclaration
-	firstLineNumber          int
-	outerTypeFieldName       string
-	syntheticInnerFieldNames []string
-	outerBodyDeclaration     intsrv.IClassFileBodyDeclaration
-	bindings                 map[string]intmod.ITypeArgument
-	typeBounds               map[string]intmod.IType
+	InternalTypeName         string
+	MemberDeclaration        model.IMemberDeclaration
+	ClassFile                *classfile.ClassFile
+	FieldDeclarations        util.IList[*ClassFileFieldDeclaration]
+	MethodDeclarations       util.IList[IClassFileConstructorOrMethodDeclaration]
+	InnerTypeDeclarations    util.IList[IClassFileTypeDeclaration]
+	InnerTypeMap             map[string]IClassFileTypeDeclaration
+	FirstLineNumber          int
+	OuterTypeFieldName       string
+	SyntheticInnerFieldNames []string
+	OuterBodyDeclaration     *ClassFileBodyDeclaration
+	Bindings                 map[string]model.ITypeArgument
+	TypeBounds               map[string]model.IType
 }
 
-func (d *ClassFileBodyDeclaration) FieldDeclarations() []intsrv.IClassFileFieldDeclaration {
-	return d.fieldDeclarations
+func (d *ClassFileBodyDeclaration) GetInternalTypeName() string {
+	return d.InternalTypeName
 }
 
-func (d *ClassFileBodyDeclaration) SetFieldDeclarations(fieldDeclarations []intsrv.IClassFileFieldDeclaration) {
+func (d *ClassFileBodyDeclaration) GetMemberDeclaration() model.IMemberDeclaration {
+	return d.MemberDeclaration
+}
+
+func (d *ClassFileBodyDeclaration) GetFirstLineNumber() int {
+	return d.FirstLineNumber
+}
+
+func (d *ClassFileBodyDeclaration) SetFieldDeclarations(fieldDeclarations util.IList[*ClassFileFieldDeclaration]) {
 	if fieldDeclarations != nil {
-		d.fieldDeclarations = fieldDeclarations
-		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(fieldDeclarations))
-		for _, v := range d.fieldDeclarations {
-			tmp = append(tmp, v.(intsrv.IClassFileMemberDeclaration))
+		d.FieldDeclarations = fieldDeclarations
+		tmp := make([]IClassFileMemberDeclaration, fieldDeclarations.Size())
+		for i := range d.FieldDeclarations.Size() {
+			tmp[i] = d.FieldDeclarations.Get(i)
 		}
 		d.UpdateFirstLineNumber(tmp)
 	}
 }
 
-func (d *ClassFileBodyDeclaration) MethodDeclarations() []intsrv.IClassFileConstructorOrMethodDeclaration {
-	return d.methodDeclarations
-}
-
-func (d *ClassFileBodyDeclaration) SetMethodDeclarations(methodDeclarations []intsrv.IClassFileConstructorOrMethodDeclaration) {
+func (d *ClassFileBodyDeclaration) SetMethodDeclarations(methodDeclarations util.IList[IClassFileConstructorOrMethodDeclaration]) {
 	if methodDeclarations != nil {
-		d.methodDeclarations = methodDeclarations
-		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(methodDeclarations))
-		for _, v := range d.methodDeclarations {
-			tmp = append(tmp, v)
+		d.MethodDeclarations = methodDeclarations
+		tmp := make([]IClassFileMemberDeclaration, methodDeclarations.Size())
+		for i := range d.MethodDeclarations.Size() {
+			tmp[i] = d.MethodDeclarations.Get(i)
 		}
 		d.UpdateFirstLineNumber(tmp)
 	}
 }
 
-func (d *ClassFileBodyDeclaration) InnerTypeDeclarations() []intsrv.IClassFileTypeDeclaration {
-	return d.innerTypeDeclarations
-}
-
-func (d *ClassFileBodyDeclaration) SetInnerTypeDeclarations(innerTypeDeclarations []intsrv.IClassFileTypeDeclaration) {
+func (d *ClassFileBodyDeclaration) SetInnerTypeDeclarations(innerTypeDeclarations util.IList[IClassFileTypeDeclaration]) {
 	if innerTypeDeclarations != nil {
-		d.innerTypeDeclarations = innerTypeDeclarations
-		tmp := make([]intsrv.IClassFileMemberDeclaration, 0, len(innerTypeDeclarations))
-		for _, v := range d.innerTypeDeclarations {
-			tmp = append(tmp, v)
+		d.InnerTypeDeclarations = innerTypeDeclarations
+		tmp := make([]IClassFileMemberDeclaration, innerTypeDeclarations.Size())
+		for i := range d.InnerTypeDeclarations.Size() {
+			tmp[i] = d.InnerTypeDeclarations.Get(i)
 		}
 		d.UpdateFirstLineNumber(tmp)
-		d.innerTypeMap = make(map[string]intsrv.IClassFileTypeDeclaration)
-		for _, innerType := range innerTypeDeclarations {
-			d.innerTypeMap[innerType.InternalTypeName()] = innerType
+		d.InnerTypeMap = make(map[string]IClassFileTypeDeclaration)
+		for _, innerType := range innerTypeDeclarations.ToSlice() {
+			d.InnerTypeMap[innerType.GetInternalTypeName()] = innerType
 		}
 	}
 }
 
-func (d *ClassFileBodyDeclaration) InnerTypeDeclaration(internalName string) intsrv.IClassFileTypeDeclaration {
-	decla := d.innerTypeMap[internalName]
+func (d *ClassFileBodyDeclaration) InnerTypeDeclaration(internalName string) IClassFileTypeDeclaration {
+	decla := d.InnerTypeMap[internalName]
 
-	if decla == nil && d.outerBodyDeclaration != nil {
-		return d.outerBodyDeclaration.InnerTypeDeclaration(internalName)
+	if decla == nil && d.OuterBodyDeclaration != nil {
+		return d.OuterBodyDeclaration.InnerTypeDeclaration(internalName)
 	}
 
 	return decla
 }
 
-func (d *ClassFileBodyDeclaration) RemoveInnerTypeDeclaration(internalName string) intsrv.IClassFileTypeDeclaration {
-	removed := d.innerTypeMap[internalName]
+func (d *ClassFileBodyDeclaration) RemoveInnerTypeDeclaration(internalName string) IClassFileTypeDeclaration {
+	removed := d.InnerTypeMap[internalName]
 
-	delete(d.innerTypeMap, internalName)
+	delete(d.InnerTypeMap, internalName)
 	d.removeInnerTypeDeclaration(removed)
 
 	return removed
 }
 
-func (d *ClassFileBodyDeclaration) removeInnerTypeDeclaration(removed intsrv.IClassFileTypeDeclaration) {
+func (d *ClassFileBodyDeclaration) removeInnerTypeDeclaration(removed IClassFileTypeDeclaration) {
 	var index int
-	for i, found := range d.innerTypeDeclarations {
+	for i, found := range d.InnerTypeDeclarations.ToSlice() {
 		if removed == found {
 			index = i
 			break
 		}
 	}
 
-	d.innerTypeDeclarations = append(d.innerTypeDeclarations[:index], d.innerTypeDeclarations[index+1:]...)
+	tmp := append(d.InnerTypeDeclarations.ToSlice()[:index], d.InnerTypeDeclarations.ToSlice()[index+1:]...)
+	d.InnerTypeDeclarations = util.NewDefaultListWithSlice[IClassFileTypeDeclaration](tmp)
 }
 
-func (d *ClassFileBodyDeclaration) UpdateFirstLineNumber(members []intsrv.IClassFileMemberDeclaration) {
+func (d *ClassFileBodyDeclaration) UpdateFirstLineNumber(members []IClassFileMemberDeclaration) {
 	for _, member := range members {
-		lineNumber := member.FirstLineNumber()
+		lineNumber := member.GetFirstLineNumber()
 
 		if lineNumber > 0 {
-			if d.firstLineNumber == 0 {
-				d.firstLineNumber = lineNumber
-			} else if d.firstLineNumber > lineNumber {
-				d.firstLineNumber = lineNumber
+			if d.FirstLineNumber == 0 {
+				d.FirstLineNumber = lineNumber
+			} else if d.FirstLineNumber > lineNumber {
+				d.FirstLineNumber = lineNumber
 			}
 			break
 		}
 	}
 }
 
-func (d *ClassFileBodyDeclaration) ClassFile() intcls.IClassFile {
-	return d.classFile
-}
-
-func (d *ClassFileBodyDeclaration) FirstLineNumber() int {
-	return d.firstLineNumber
-}
-
-func (d *ClassFileBodyDeclaration) OuterTypeFieldName() string {
-	return d.outerTypeFieldName
-}
-
-func (d *ClassFileBodyDeclaration) SetOuterBodyDeclaration(bodyDeclaration intsrv.IClassFileBodyDeclaration) {
-	d.outerBodyDeclaration = bodyDeclaration
-}
-
-func (d *ClassFileBodyDeclaration) SetOuterTypeFieldName(outerTypeFieldName string) {
-	d.outerTypeFieldName = outerTypeFieldName
-}
-
-func (d *ClassFileBodyDeclaration) SyntheticInnerFieldNames() []string {
-	return d.syntheticInnerFieldNames
-}
-
-func (d *ClassFileBodyDeclaration) SetSyntheticInnerFieldNames(names []string) {
-	d.syntheticInnerFieldNames = names
-}
-
-func (d *ClassFileBodyDeclaration) OuterBodyDeclaration() intsrv.IClassFileBodyDeclaration {
-	return d.outerBodyDeclaration
-}
-
-func (d *ClassFileBodyDeclaration) Bindings() map[string]intmod.ITypeArgument {
-	return d.bindings
-}
-
-func (d *ClassFileBodyDeclaration) TypeBounds() map[string]intmod.IType {
-	return d.typeBounds
-}
-
 func (d *ClassFileBodyDeclaration) IsClassDeclaration() bool {
 	return false
 }
 
-func (d *ClassFileBodyDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ClassFileBodyDeclaration) AcceptDeclaration(visitor model.IDeclarationVisitor) {
 	visitor.VisitBodyDeclaration(d)
 }
 
 func (d *ClassFileBodyDeclaration) String() string {
-	return fmt.Sprintf("ClassFileBodyDeclaration{firstLineNumber=%d}", d.firstLineNumber)
+	return fmt.Sprintf("ClassFileBodyDeclaration{firstLineNumber=%d}", d.FirstLineNumber)
 }

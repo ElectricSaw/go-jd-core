@@ -2,43 +2,87 @@ package declaration
 
 import (
 	"fmt"
-	intmod "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/model"
-	intsrv "github.com/ElectricSaw/go-jd-core/decompiler/interfaces/service"
 	"github.com/ElectricSaw/go-jd-core/decompiler/model"
+	"github.com/ElectricSaw/go-jd-core/decompiler/util"
 )
 
 func NewClassFileInterfaceDeclaration(
-	annotationReferences intmod.IAnnotationReference,
+	annotationReferences *model.AnnotationReference,
 	flags int,
 	internalTypeName string,
 	name string,
-	typeParameters intmod.ITypeParameter,
-	interfaces intmod.IType,
-	bodyDeclaration intsrv.IClassFileBodyDeclaration,
-) intsrv.IClassFileInterfaceDeclaration {
-	d := &ClassFileInterfaceDeclaration{
-		InterfaceDeclaration: *model.NewInterfaceDeclarationWithAll(annotationReferences,
-			flags, internalTypeName, name, bodyDeclaration, typeParameters, interfaces).(*model.InterfaceDeclaration),
-		firstLineNumber: bodyDeclaration.FirstLineNumber(),
+	typeParameters model.ITypeParameter,
+	interfaces model.IType,
+	bodyDeclaration *ClassFileBodyDeclaration,
+) ClassFileInterfaceDeclaration {
+	d := ClassFileInterfaceDeclaration{
+		DefaultBase:          *util.NewDefaultBase[model.IMemberDeclaration]().(*util.DefaultBase[model.IMemberDeclaration]),
+		AnnotationReferences: annotationReferences,
+		Flags:                flags,
+		InternalTypeName:     internalTypeName,
+		Name:                 name,
+		BodyDeclaration:      bodyDeclaration,
+		TypeParameters:       typeParameters,
+		Interfaces:           interfaces,
+		FirstLineNumber:      bodyDeclaration.FirstLineNumber,
 	}
-	d.SetValue(d)
+	d.SetValue(&d)
 	return d
 }
 
 type ClassFileInterfaceDeclaration struct {
-	model.InterfaceDeclaration
+	util.DefaultBase[model.IMemberDeclaration]
 
-	firstLineNumber int
+	AnnotationReferences *model.AnnotationReference
+	Flags                int
+	InternalTypeName     string
+	Name                 string
+	BodyDeclaration      model.IBodyDeclaration
+	TypeParameters       model.ITypeParameter
+	Interfaces           model.IType
+	FirstLineNumber      int
 }
 
-func (d *ClassFileInterfaceDeclaration) FirstLineNumber() int {
-	return d.firstLineNumber
+func (d *ClassFileInterfaceDeclaration) GetAnnotationReferences() *model.AnnotationReference {
+	return d.AnnotationReferences
 }
 
-func (d *ClassFileInterfaceDeclaration) AcceptDeclaration(visitor intmod.IDeclarationVisitor) {
+func (d *ClassFileInterfaceDeclaration) GetFlag() int {
+	return d.Flags
+}
+
+func (d *ClassFileInterfaceDeclaration) GetInternalTypeName() string {
+	return d.InternalTypeName
+}
+
+func (d *ClassFileInterfaceDeclaration) GetName() string {
+	return d.Name
+}
+
+func (d *ClassFileInterfaceDeclaration) GetBodyDeclaration() model.IBodyDeclaration {
+	return d.BodyDeclaration
+}
+
+func (d *ClassFileInterfaceDeclaration) GetTypeParameters() model.ITypeParameter {
+	return d.TypeParameters
+}
+
+func (d *ClassFileInterfaceDeclaration) GetInterfaces() model.IType {
+	return d.Interfaces
+}
+
+func (d *ClassFileInterfaceDeclaration) GetFirstLineNumber() int {
+	return d.FirstLineNumber
+}
+
+func (d *ClassFileInterfaceDeclaration) IsClassDeclaration() bool {
+	return false
+}
+
+func (d *ClassFileInterfaceDeclaration) AcceptDeclaration(visitor model.IDeclarationVisitor) {
 	visitor.VisitInterfaceDeclaration(d)
 }
 
 func (d *ClassFileInterfaceDeclaration) String() string {
-	return fmt.Sprintf("ClassFileInterfaceDeclaration{%s, firstLineNumber=%d}", d.InternalTypeName(), d.firstLineNumber)
+	return fmt.Sprintf("ClassFileInterfaceDeclaration{%s, firstLineNumber=%d}", d.InternalTypeName, d.FirstLineNumber)
 }

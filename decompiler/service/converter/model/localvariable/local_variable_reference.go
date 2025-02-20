@@ -185,7 +185,7 @@ func (v *AbstractLocalVariable) IsPrimitiveLocalVariable() bool {
 	return false
 }
 
-func (v *AbstractLocalVariable) LocalVariable() ILocalVariableReference {
+func (v *AbstractLocalVariable) GetLocalVariable() ILocalVariableReference {
 	return nil
 }
 

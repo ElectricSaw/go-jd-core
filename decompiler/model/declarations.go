@@ -123,7 +123,7 @@ func NewArrayVariableInitializer(typ IType) ArrayVariableInitializer {
 	return d
 }
 
-func NewEnumDeclaration(flags int, internalTypeName, name string, constants util.DefaultList[*Constant],
+func NewEnumDeclaration(flags int, internalTypeName, name string, constants util.IList[IConstant],
 	bodyDeclaration *BodyDeclaration) EnumDeclaration {
 	return NewEnumDeclarationWithAll(nil, flags,
 		internalTypeName, name, nil, constants, bodyDeclaration)
@@ -131,7 +131,7 @@ func NewEnumDeclaration(flags int, internalTypeName, name string, constants util
 
 func NewEnumDeclarationWithAll(annotationReferences *AnnotationReference,
 	flags int, internalTypeName, name string, interfaces IType,
-	constants util.DefaultList[*Constant], bodyDeclaration *BodyDeclaration) EnumDeclaration {
+	constants util.IList[IConstant], bodyDeclaration *BodyDeclaration) EnumDeclaration {
 	d := EnumDeclaration{
 		DefaultBase:          *util.NewDefaultBase[IMemberDeclaration]().(*util.DefaultBase[IMemberDeclaration]),
 		AnnotationReferences: annotationReferences,
@@ -192,6 +192,7 @@ func NewFieldDeclaration(flags int, typ IType, fieldDeclaration *FieldDeclarator
 func NewFieldDeclarationWithAll(annotationReferences *AnnotationReference, flags int,
 	typ IType, fieldDeclaration *FieldDeclarator) FieldDeclaration {
 	d := FieldDeclaration{
+		DefaultBase:          *util.NewDefaultBase[IMemberDeclaration]().(*util.DefaultBase[IMemberDeclaration]),
 		AnnotationReferences: annotationReferences,
 		Flags:                flags,
 		Type:                 typ,
@@ -252,7 +253,7 @@ func NewFormalParameter3(typ IType, varargs bool, name string) FormalParameter {
 
 func NewFormalParameter4(annotationReferences *AnnotationReference, typ IType, varargs bool, name string) FormalParameter {
 	p := FormalParameter{
-		DefaultBase:          *util.NewDefaultBase[*FormalParameter]().(*util.DefaultBase[*FormalParameter]),
+		DefaultBase:          *util.NewDefaultBase[IFormalParameter]().(*util.DefaultBase[IFormalParameter]),
 		AnnotationReferences: annotationReferences,
 		Type:                 typ,
 		Varargs:              varargs,
@@ -268,13 +269,13 @@ func NewFormalParameters() FormalParameters {
 
 func NewFormalParametersWithCapacity(capacity int) FormalParameters {
 	return FormalParameters{
-		DefaultList: *util.NewDefaultListWithCapacity[*FormalParameter](capacity).(*util.DefaultList[*FormalParameter]),
+		DefaultList: *util.NewDefaultListWithCapacity[IFormalParameter](capacity).(*util.DefaultList[IFormalParameter]),
 	}
 }
 
-func NewFormalParametersWithElements(formalParameter ...*FormalParameter) FormalParameters {
+func NewFormalParametersWithElements(formalParameter ...IFormalParameter) FormalParameters {
 	d := FormalParameters{
-		DefaultList: *util.NewDefaultListWithElements[*FormalParameter](formalParameter...).(*util.DefaultList[*FormalParameter]),
+		DefaultList: *util.NewDefaultListWithElements[IFormalParameter](formalParameter...).(*util.DefaultList[IFormalParameter]),
 	}
 	return d
 }
@@ -410,7 +411,7 @@ func NewMethodDeclaration6(annotationReferences *AnnotationReference,
 		Name:                   name,
 		TypeParameters:         typeParameters,
 		ReturnedType:           returnedType,
-		FormalParameter:        formalParameter,
+		FormalParameters:       formalParameter,
 		ExceptionTypes:         exceptionTypes,
 		Descriptor:             descriptor,
 		Statements:             statements,
@@ -506,28 +507,28 @@ type IDeclaration interface {
 }
 
 type IDeclarationVisitor interface {
-	VisitAnnotationDeclaration(declaration *AnnotationDeclaration)
+	VisitAnnotationDeclaration(declaration IAnnotationDeclaration)
 	VisitArrayVariableInitializer(declaration *ArrayVariableInitializer)
-	VisitBodyDeclaration(declaration *BodyDeclaration)
-	VisitClassDeclaration(declaration *ClassDeclaration)
-	VisitConstructorDeclaration(declaration *ConstructorDeclaration)
-	VisitEnumDeclaration(declaration *EnumDeclaration)
-	VisitEnumDeclarationConstant(declaration *Constant)
+	VisitBodyDeclaration(declaration IBodyDeclaration)
+	VisitClassDeclaration(declaration IClassDeclaration)
+	VisitConstructorDeclaration(declaration IConstructorDeclaration)
+	VisitEnumDeclaration(declaration IEnumDeclaration)
+	VisitEnumDeclarationConstant(declaration IConstant)
 	VisitExpressionVariableInitializer(declaration *ExpressionVariableInitializer)
-	VisitFieldDeclaration(declaration *FieldDeclaration)
+	VisitFieldDeclaration(declaration IFieldDeclaration)
 	VisitFieldDeclarator(declaration *FieldDeclarator)
 	VisitFieldDeclarators(declarations *FieldDeclarators)
-	VisitFormalParameter(declaration *FormalParameter)
+	VisitFormalParameter(declaration IFormalParameter)
 	VisitFormalParameters(declarations *FormalParameters)
 	VisitInstanceInitializerDeclaration(declaration *InstanceInitializerDeclaration)
-	VisitInterfaceDeclaration(declaration *InterfaceDeclaration)
+	VisitInterfaceDeclaration(declaration IInterfaceDeclaration)
 	VisitLocalVariableDeclaration(declaration ILocalVariableDeclaration)
-	VisitLocalVariableDeclarator(declarator *LocalVariableDeclarator)
+	VisitLocalVariableDeclarator(declarator ILocalVariableDeclarator)
 	VisitLocalVariableDeclarators(declarators *LocalVariableDeclarators)
-	VisitMethodDeclaration(declaration *MethodDeclaration)
+	VisitMethodDeclaration(declaration IMethodDeclaration)
 	VisitMemberDeclarations(declarations *MemberDeclarations)
 	VisitModuleDeclaration(declarations *ModuleDeclaration)
-	VisitStaticInitializerDeclaration(declaration *StaticInitializerDeclaration)
+	VisitStaticInitializerDeclaration(declaration IStaticInitializerDeclaration)
 	VisitTypeDeclarations(declarations *TypeDeclarations)
 }
 
@@ -542,7 +543,7 @@ type ITypeDeclaration interface {
 	GetFlag() int
 	GetInternalTypeName() string
 	GetName() string
-	GetBodyDeclaration() *BodyDeclaration
+	GetBodyDeclaration() IBodyDeclaration
 	IsClassDeclaration() bool
 	AcceptDeclaration(visitor IDeclarationVisitor)
 	String() string
@@ -550,6 +551,9 @@ type ITypeDeclaration interface {
 
 type ILocalVariableDeclarator interface {
 	GetLineNumber() int
+	GetName() string
+	GetDimension() int
+	GetVariableInitializer() IVariableInitializer
 	AcceptDeclaration(visitor IDeclarationVisitor)
 	String() string
 }
@@ -563,6 +567,11 @@ type IVariableInitializer interface {
 }
 
 type IFormalParameter interface {
+	GetAnnotationReferences() *AnnotationReference
+	IsFinal() bool
+	GetType() IType
+	IsVarargs() bool
+	GetName() string
 	AcceptDeclaration(visitor IDeclarationVisitor)
 	String() string
 }
@@ -580,6 +589,122 @@ type ILocalVariableDeclaration interface {
 	String() string
 }
 
+type IAnnotationDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlag() int
+	GetInternalTypeName() string
+	GetName() string
+	GetBodyDeclaration() IBodyDeclaration
+	GetAnnotationDeclarators() *FieldDeclarator
+	GetFirstLineNumber() int
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IBodyDeclaration interface {
+	GetInternalTypeName() string
+	GetMemberDeclaration() IMemberDeclaration
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IFieldDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlags() int
+	GetType() IType
+	GetFieldDeclarators() *FieldDeclarator
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	HashCode() int
+	String() string
+}
+
+type IClassDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlag() int
+	GetInternalTypeName() string
+	GetName() string
+	GetBodyDeclaration() IBodyDeclaration
+	GetTypeParameters() ITypeParameter
+	GetInterfaces() IType
+	GetSuperType() *ObjectType
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IConstructorDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlags() int
+	GetTypeParameters() ITypeParameter
+	GetFormalParameters() *FormalParameter
+	GetExceptionTypes() IType
+	GetDescriptor() string
+	GetStatements() IStatement
+
+	SetFlags(flags int)
+	SetFormalParameters(formalParameters *FormalParameter)
+	SetStatements(statement IStatement)
+
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IEnumDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlag() int
+	GetInternalTypeName() string
+	GetName() string
+	GetBodyDeclaration() IBodyDeclaration
+	GetInterfaces() IType
+	GetConstants() util.IList[IConstant]
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IConstant interface {
+	GetLineNumber() int
+	GetAnnotationReferences() *AnnotationReference
+	GetName() string
+	GetArguments() IExpression
+	GetBodyDeclaration() IBodyDeclaration
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IInterfaceDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlag() int
+	GetInternalTypeName() string
+	GetName() string
+	GetBodyDeclaration() IBodyDeclaration
+	GetTypeParameters() ITypeParameter
+	GetInterfaces() IType
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
+type IMethodDeclaration interface {
+	GetAnnotationReferences() *AnnotationReference
+	GetFlags() int
+	GetName() string
+	GetTypeParameters() ITypeParameter
+	GetReturnedType() IType
+	GetFormalParameters() *FormalParameter
+	GetExceptionTypes() IType
+	GetDescriptor() string
+	GetStatements() IStatement
+	GetDefaultAnnotationValue() IElementValue
+	IsStatic() bool
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
 /////////////////////////////////////////////////////////////////////////
 //  Structures
 /////////////////////////////////////////////////////////////////////////
@@ -591,7 +716,7 @@ type AnnotationDeclaration struct {
 	Flags                 int
 	InternalTypeName      string
 	Name                  string
-	BodyDeclaration       *BodyDeclaration
+	BodyDeclaration       IBodyDeclaration
 	AnnotationDeclarators *FieldDeclarator
 }
 
@@ -611,8 +736,16 @@ func (d *AnnotationDeclaration) GetName() string {
 	return d.Name
 }
 
-func (d *AnnotationDeclaration) GetBodyDeclaration() *BodyDeclaration {
+func (d *AnnotationDeclaration) GetBodyDeclaration() IBodyDeclaration {
 	return d.BodyDeclaration
+}
+
+func (d *AnnotationDeclaration) GetAnnotationDeclarators() *FieldDeclarator {
+	return d.AnnotationDeclarators
+}
+
+func (d *AnnotationDeclaration) GetFirstLineNumber() int {
+	return 0
 }
 
 func (d *AnnotationDeclaration) IsClassDeclaration() bool {
@@ -661,6 +794,14 @@ type BodyDeclaration struct {
 	MemberDeclaration IMemberDeclaration
 }
 
+func (d *BodyDeclaration) GetInternalTypeName() string {
+	return d.InternalTypeName
+}
+
+func (d *BodyDeclaration) GetMemberDeclaration() IMemberDeclaration {
+	return d.MemberDeclaration
+}
+
 func (d *BodyDeclaration) AcceptDeclaration(visitor IDeclarationVisitor) {
 	visitor.VisitBodyDeclaration(d)
 }
@@ -698,8 +839,20 @@ func (d *ClassDeclaration) GetName() string {
 	return d.Name
 }
 
-func (d *ClassDeclaration) GetBodyDeclaration() *BodyDeclaration {
+func (d *ClassDeclaration) GetBodyDeclaration() IBodyDeclaration {
 	return d.BodyDeclaration
+}
+
+func (d *ClassDeclaration) GetTypeParameters() ITypeParameter {
+	return d.TypeParameters
+}
+
+func (d *ClassDeclaration) GetInterfaces() IType {
+	return d.Interfaces
+}
+
+func (d *ClassDeclaration) GetSuperType() *ObjectType {
+	return d.SuperType
 }
 
 func (d *ClassDeclaration) IsClassDeclaration() bool {
@@ -726,6 +879,46 @@ type ConstructorDeclaration struct {
 	Statements           IStatement
 }
 
+func (d *ConstructorDeclaration) GetAnnotationReferences() *AnnotationReference {
+	return d.AnnotationReferences
+}
+
+func (d *ConstructorDeclaration) GetFlags() int {
+	return d.Flags
+}
+
+func (d *ConstructorDeclaration) GetTypeParameters() ITypeParameter {
+	return d.TypeParameters
+}
+
+func (d *ConstructorDeclaration) GetFormalParameters() *FormalParameter {
+	return d.FormalParameters
+}
+
+func (d *ConstructorDeclaration) GetExceptionTypes() IType {
+	return d.ExceptionTypes
+}
+
+func (d *ConstructorDeclaration) GetDescriptor() string {
+	return d.Descriptor
+}
+
+func (d *ConstructorDeclaration) GetStatements() IStatement {
+	return d.Statements
+}
+
+func (d *ConstructorDeclaration) SetFlags(flags int) {
+	d.Flags = flags
+}
+
+func (d *ConstructorDeclaration) SetFormalParameters(formalParameters *FormalParameter) {
+	d.FormalParameters = formalParameters
+}
+
+func (d *ConstructorDeclaration) SetStatements(statement IStatement) {
+	d.Statements = statement
+}
+
 func (d *ConstructorDeclaration) IsClassDeclaration() bool {
 	return false
 }
@@ -747,7 +940,7 @@ type EnumDeclaration struct {
 	Name                 string
 	BodyDeclaration      *BodyDeclaration
 	Interfaces           IType
-	Constants            util.DefaultList[*Constant]
+	Constants            util.IList[IConstant]
 }
 
 func (d *EnumDeclaration) GetAnnotationReferences() *AnnotationReference {
@@ -766,8 +959,16 @@ func (d *EnumDeclaration) GetName() string {
 	return d.Name
 }
 
-func (d *EnumDeclaration) GetBodyDeclaration() *BodyDeclaration {
+func (d *EnumDeclaration) GetBodyDeclaration() IBodyDeclaration {
 	return d.BodyDeclaration
+}
+
+func (d *EnumDeclaration) GetInterfaces() IType {
+	return d.Interfaces
+}
+
+func (d *EnumDeclaration) GetConstants() util.IList[IConstant] {
+	return d.Constants
 }
 
 func (d *EnumDeclaration) IsClassDeclaration() bool {
@@ -813,6 +1014,22 @@ type FieldDeclaration struct {
 	Flags                int
 	Type                 IType
 	FieldDeclarators     *FieldDeclarator
+}
+
+func (d *FieldDeclaration) GetAnnotationReferences() *AnnotationReference {
+	return d.AnnotationReferences
+}
+
+func (d *FieldDeclaration) GetFlags() int {
+	return d.Flags
+}
+
+func (d *FieldDeclaration) GetType() IType {
+	return d.Type
+}
+
+func (d *FieldDeclaration) GetFieldDeclarators() *FieldDeclarator {
+	return d.FieldDeclarators
 }
 
 func (d *FieldDeclaration) IsClassDeclaration() bool {
@@ -883,7 +1100,7 @@ func (d *FieldDeclarators) String() string {
 }
 
 type FormalParameter struct {
-	util.DefaultBase[*FormalParameter]
+	util.DefaultBase[IFormalParameter]
 
 	AnnotationReferences *AnnotationReference
 	Final                bool
@@ -892,21 +1109,41 @@ type FormalParameter struct {
 	Name                 string
 }
 
-func (d *FormalParameter) AcceptDeclaration(visitor IDeclarationVisitor) {
-	visitor.VisitFormalParameter(d)
+func (p *FormalParameter) GetAnnotationReferences() *AnnotationReference {
+	return p.AnnotationReferences
 }
 
-func (d *FormalParameter) String() string {
-	sb := "FormalParameter{"
+func (p *FormalParameter) IsFinal() bool {
+	return p.Final
+}
 
-	if d.AnnotationReferences != nil {
-		sb += fmt.Sprintf("%v ", d.AnnotationReferences)
+func (p *FormalParameter) GetType() IType {
+	return p.Type
+}
+
+func (p *FormalParameter) IsVarargs() bool {
+	return p.Varargs
+}
+
+func (p *FormalParameter) GetName() string {
+	return p.Name
+}
+
+func (p *FormalParameter) AcceptDeclaration(visitor IDeclarationVisitor) {
+	visitor.VisitFormalParameter(p)
+}
+
+func (p *FormalParameter) String() string {
+	sb := "FormalParameters{"
+
+	if p.AnnotationReferences != nil {
+		sb += fmt.Sprintf("%v ", p.AnnotationReferences)
 	}
 
-	if d.Varargs {
-		sb += fmt.Sprintf("%v... ", d.Type.CreateType(d.Type.GetDimension()-1))
+	if p.Varargs {
+		sb += fmt.Sprintf("%v... ", p.Type.CreateType(p.Type.GetDimension()-1))
 	} else {
-		sb += fmt.Sprintf("%v ", d.Type)
+		sb += fmt.Sprintf("%v ", p.Type)
 	}
 	sb += "}"
 
@@ -914,14 +1151,34 @@ func (d *FormalParameter) String() string {
 }
 
 type FormalParameters struct {
-	util.DefaultList[*FormalParameter]
+	util.DefaultList[IFormalParameter]
 }
 
-func (d *FormalParameters) AcceptDeclaration(visitor IDeclarationVisitor) {
-	visitor.VisitFormalParameters(d)
+func (p *FormalParameters) GetAnnotationReferences() *AnnotationReference {
+	return nil
 }
 
-func (d *FormalParameters) String() string {
+func (p *FormalParameters) IsFinal() bool {
+	return false
+}
+
+func (p *FormalParameters) GetType() IType {
+	return nil
+}
+
+func (p *FormalParameters) IsVarargs() bool {
+	return false
+}
+
+func (p *FormalParameters) GetName() string {
+	return ""
+}
+
+func (p *FormalParameters) AcceptDeclaration(visitor IDeclarationVisitor) {
+	visitor.VisitFormalParameters(p)
+}
+
+func (p *FormalParameters) String() string {
 	return fmt.Sprintf("FormalParameters{ }")
 }
 
@@ -951,7 +1208,7 @@ type InterfaceDeclaration struct {
 	Flags                int
 	InternalTypeName     string
 	Name                 string
-	BodyDeclaration      *BodyDeclaration
+	BodyDeclaration      IBodyDeclaration
 	TypeParameters       ITypeParameter
 	Interfaces           IType
 }
@@ -972,8 +1229,16 @@ func (d *InterfaceDeclaration) GetName() string {
 	return d.Name
 }
 
-func (d *InterfaceDeclaration) GetBodyDeclaration() *BodyDeclaration {
+func (d *InterfaceDeclaration) GetBodyDeclaration() IBodyDeclaration {
 	return d.BodyDeclaration
+}
+
+func (d *InterfaceDeclaration) GetTypeParameters() ITypeParameter {
+	return d.TypeParameters
+}
+
+func (d *InterfaceDeclaration) GetInterfaces() IType {
+	return d.Interfaces
 }
 
 func (d *InterfaceDeclaration) IsClassDeclaration() bool {
@@ -1027,6 +1292,18 @@ func (d *LocalVariableDeclarator) GetLineNumber() int {
 	return d.LineNumber
 }
 
+func (d *LocalVariableDeclarator) GetName() string {
+	return d.Name
+}
+
+func (d *LocalVariableDeclarator) GetDimension() int {
+	return d.Dimension
+}
+
+func (d *LocalVariableDeclarator) GetVariableInitializer() IVariableInitializer {
+	return d.VariableInitializer
+}
+
 func (d *LocalVariableDeclarator) AcceptDeclaration(visitor IDeclarationVisitor) {
 	visitor.VisitLocalVariableDeclarator(d)
 
@@ -1045,6 +1322,18 @@ func (d *LocalVariableDeclarators) GetLineNumber() int {
 		return UnknownLineNumber
 	}
 	return d.Get(0).GetLineNumber()
+}
+
+func (d *LocalVariableDeclarators) GetName() string {
+	return ""
+}
+
+func (d *LocalVariableDeclarators) GetDimension() int {
+	return 0
+}
+
+func (d *LocalVariableDeclarators) GetVariableInitializer() IVariableInitializer {
+	return nil
 }
 
 func (d *LocalVariableDeclarators) AcceptDeclaration(visitor IDeclarationVisitor) {
@@ -1079,11 +1368,51 @@ type MethodDeclaration struct {
 	Name                   string
 	TypeParameters         ITypeParameter
 	ReturnedType           IType
-	FormalParameter        *FormalParameter
+	FormalParameters       *FormalParameter
 	ExceptionTypes         IType
 	Descriptor             string
 	Statements             IStatement
 	DefaultAnnotationValue IElementValue
+}
+
+func (d *MethodDeclaration) GetAnnotationReferences() *AnnotationReference {
+	return d.AnnotationReferences
+}
+
+func (d *MethodDeclaration) GetFlags() int {
+	return d.Flags
+}
+
+func (d *MethodDeclaration) GetName() string {
+	return d.Name
+}
+
+func (d *MethodDeclaration) GetTypeParameters() ITypeParameter {
+	return d.TypeParameters
+}
+
+func (d *MethodDeclaration) GetReturnedType() IType {
+	return d.ReturnedType
+}
+
+func (d *MethodDeclaration) GetFormalParameters() *FormalParameter {
+	return d.FormalParameters
+}
+
+func (d *MethodDeclaration) GetExceptionTypes() IType {
+	return d.ExceptionTypes
+}
+
+func (d *MethodDeclaration) GetDescriptor() string {
+	return d.Descriptor
+}
+
+func (d *MethodDeclaration) GetStatements() IStatement {
+	return d.Statements
+}
+
+func (d *MethodDeclaration) GetDefaultAnnotationValue() IElementValue {
+	return d.DefaultAnnotationValue
 }
 
 func (d *MethodDeclaration) IsStatic() bool {
@@ -1135,7 +1464,7 @@ func (d *ModuleDeclaration) GetName() string {
 	return d.Name
 }
 
-func (d *ModuleDeclaration) GetBodyDeclaration() *BodyDeclaration {
+func (d *ModuleDeclaration) GetBodyDeclaration() IBodyDeclaration {
 	return d.BodyDeclaration
 }
 
@@ -1151,11 +1480,27 @@ func (d *ModuleDeclaration) String() string {
 	return fmt.Sprintf("ModuleDeclaration{ %s }", d.InternalTypeName)
 }
 
+type IStaticInitializerDeclaration interface {
+	GetDescriptor() string
+	GetStatements() IStatement
+	IsClassDeclaration() bool
+	AcceptDeclaration(visitor IDeclarationVisitor)
+	String() string
+}
+
 type StaticInitializerDeclaration struct {
 	util.DefaultBase[IMemberDeclaration]
 
 	Descriptor string
 	Statements IStatement
+}
+
+func (d *StaticInitializerDeclaration) GetDescriptor() string {
+	return d.Descriptor
+}
+
+func (d *StaticInitializerDeclaration) GetStatements() IStatement {
+	return d.Statements
 }
 
 func (d *StaticInitializerDeclaration) IsClassDeclaration() bool {
@@ -1195,7 +1540,27 @@ type Constant struct {
 	AnnotationReferences *AnnotationReference
 	Name                 string
 	Arguments            IExpression
-	BodyDeclaration      *BodyDeclaration
+	BodyDeclaration      IBodyDeclaration
+}
+
+func (c *Constant) GetLineNumber() int {
+	return c.LineNumber
+}
+
+func (c *Constant) GetAnnotationReferences() *AnnotationReference {
+	return c.AnnotationReferences
+}
+
+func (c *Constant) GetName() string {
+	return c.Name
+}
+
+func (c *Constant) GetArguments() IExpression {
+	return c.Arguments
+}
+
+func (c *Constant) GetBodyDeclaration() IBodyDeclaration {
+	return c.BodyDeclaration
 }
 
 func (c *Constant) AcceptDeclaration(visitor IDeclarationVisitor) {
